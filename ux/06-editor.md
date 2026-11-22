@@ -2746,7 +2746,7 @@ Origen: [plan 0.2.2, feature 4](../versiones/0.2.2/plan-4.md) y [propuesta 022](
 
 **Sustituye**: el banner `edi.banner.yasync` cuando la comprobación tiene algo que decir (ver «Banner al entrar»). Añade una sección a la pestaña «Funciones».
 
-**Coordinación con las features 10 y 11** (otro diseñador): las tres añaden secciones a «Funciones». Orden propuesto, de arriba abajo: Revisar (11) · Sincronizar con la voz (10) · **Comprobar la letra con la voz (4)** · Ajustar los silencios · Exportar video · Modo de reproducción · Estado de la canción. Si las features 10 u 11 no están, esta sección va justo antes de «Ajustar los silencios».
+**Coordinación con las features 5, 9, 10 y 11** (otro diseñador): todas añaden secciones a «Funciones». Orden de la pestaña, de arriba abajo (el mismo que en la sección de «Funciones» de la [Feature 10](#022--feature-10--sincronizar-con-la-voz-etapa-1)): Preparación automática (5) · Revisar la sincronía (11) · Sincronizar con la voz (10) · **Comprobar la letra con la voz (4)** · Ajustar los silencios · Exportar video · Exportar la letra (9) · Modo de reproducción · Estado de la canción. Una sección cuya feature no está, o que no se muestra en esa canción (por ejemplo, «Preparación automática» sin registro de preparación), simplemente no aparece y las demás conservan su orden; esta sección va siempre justo antes de «Ajustar los silencios».
 
 ### Sección de «Funciones»
 
@@ -2761,7 +2761,7 @@ Origen: [plan 0.2.2, feature 4](../versiones/0.2.2/plan-4.md) y [propuesta 022](
 
 | Elemento | Comportamiento |
 |---|---|
-| **Precondición** | 1) Al menos **3 líneas con inicio**; 2) **picos de voz listos** (el mismo estado que exige «Ajustar los silencios»). Si falla alguna: botón `aria-disabled` y enfocable, con el motivo debajo (regla de 8.6): `edi.comprobar.falta.lineas`, `edi.silencios.falta.separacion`, `edi.silencios.falta.preparando`, `edi.silencios.falta.error` [Reintentar] o `edi.silencios.falta.noDisponible` (se reutilizan las claves de AS). Inactivo en el modo «Sincronizar al ritmo» (pestaña inactiva). Con un borrador de tema abierto **sí** está disponible: no toca la apariencia. |
+| **Precondición** | 1) Al menos **5 líneas con inicio** (con menos, la medida es `no_comprobable`, ADR 0024 §1); 2) **picos de voz listos** (el mismo estado que exige «Ajustar los silencios»). Si falla alguna: botón `aria-disabled` y enfocable, con el motivo debajo (regla de 8.6): `edi.comprobar.falta.lineas`, `edi.silencios.falta.separacion`, `edi.silencios.falta.preparando`, `edi.silencios.falta.error` [Reintentar] o `edi.silencios.falta.noDisponible` (se reutilizan las claves de AS). Inactivo en el modo «Sincronizar al ritmo» (pestaña inactiva). Con un borrador de tema abierto **sí** está disponible: no toca la apariencia. |
 | **Pulsar** | Calcula sin aplicar (función pura de la feature 4 sobre los tiempos actuales del editor y los picos). Si tarda más de 300 ms, el botón pasa a `edi.comprobar.calculando`. Con el audio sonando, sigue sonando. Con el editor preciso abierto, primero aplica y cierra (como «Ajustar los silencios»). |
 | **Resultado `coincide`** | Sin diálogo: toast `edi.comprobar.toast.coincide` (`exito`, se cierra solo) y anuncio. Foco en el botón. |
 | **Resultado `desfasada`** | Diálogo «¿Corregir el desfase?» (abajo). |
@@ -2813,7 +2813,7 @@ Origen: [plan 0.2.2, feature 4](../versiones/0.2.2/plan-4.md) y [propuesta 022](
 
 ### Banner al entrar (solo en borradores)
 
-Al abrir el editor de un **borrador** con ≥ 3 líneas con inicio y los picos listos, la comprobación se calcula una vez por visita, en segundo plano. Según el veredicto, el sitio del banner `edi.banner.yasync` muestra:
+Al abrir el editor de un **borrador** con ≥ 5 líneas con inicio y los picos listos, la comprobación se calcula una vez por visita, en segundo plano. Según el veredicto, el sitio del banner `edi.banner.yasync` muestra:
 
 | Veredicto | Banner |
 |---|---|
@@ -2829,7 +2829,7 @@ Al abrir el editor de un **borrador** con ≥ 3 líneas con inicio y los picos l
 
 | Estado | Presentación |
 |---|---|
-| Vacío (menos de 3 líneas con inicio) | Botón `aria-disabled` con `edi.comprobar.falta.lineas`. |
+| Vacío (menos de 5 líneas con inicio) | Botón `aria-disabled` con `edi.comprobar.falta.lineas`. |
 | Cargando (picos preparándose o cálculo > 300 ms) | Motivo `edi.silencios.falta.preparando` (se habilita solo al estar listos) o botón `edi.comprobar.calculando`. |
 | Error (picos con error, voz ausente) | Motivo con [Reintentar] o `edi.silencios.falta.noDisponible`. Un fallo al guardar la corrección deja los tiempos como estaban (toast de guardado de siempre). |
 | Sin red | No aplica: todo es local. |
@@ -2852,7 +2852,7 @@ Al abrir el editor de un **borrador** con ≥ 3 líneas con inicio y los picos l
 | `edi.funciones.comprobar.ayuda` | Compara los tiempos de la letra con la voz separada. Si toda la letra va adelantada o atrasada, la mueve. |
 | `edi.funciones.comprobar.boton` | Comprobar la letra con la voz… |
 | `edi.comprobar.calculando` | Comprobando… |
-| `edi.comprobar.falta.lineas` | Para comprobar la letra hacen falta al menos 3 líneas sincronizadas. |
+| `edi.comprobar.falta.lineas` | Para comprobar la letra hacen falta al menos 5 líneas sincronizadas. |
 | `edi.comprobar.toast.coincide` | La letra coincide con la voz. |
 | `edi.comprobar.dudosa` | **No está claro si la letra coincide con la voz.** Parte coincide y parte no; puede deberse a coros o a partes sin letra. No hemos cambiado nada. — [Cerrar] |
 | `edi.comprobar.noCoincide.titulo` | La letra no encaja con la voz |
@@ -2874,7 +2874,7 @@ Al abrir el editor de un **borrador** con ≥ 3 líneas con inicio y los picos l
 
 ### Criterios de aceptación (0.2.2 · feature 4, editor)
 
-- F4-E1. La pestaña «Funciones» tiene la sección «Comprobar la letra con la voz» antes de «Ajustar los silencios», con su botón secundario; con menos de 3 líneas con inicio, la separación sin terminar o los picos sin preparar, el botón es `aria-disabled` y muestra su motivo debajo, que se actualiza en vivo.
+- F4-E1. La pestaña «Funciones» tiene la sección «Comprobar la letra con la voz» justo antes de «Ajustar los silencios» y en el orden común de la pestaña (Preparación automática · Revisar la sincronía · Sincronizar con la voz · Comprobar la letra con la voz · Ajustar los silencios · Exportar video · Exportar la letra · Modo de reproducción · Estado de la canción, omitiendo las que no existan), con su botón secundario; con menos de 5 líneas con inicio, la separación sin terminar o los picos sin preparar, el botón es `aria-disabled` y muestra su motivo debajo, que se actualiza en vivo.
 - F4-E2. Con una letra que coincide, pulsar el botón muestra `edi.comprobar.toast.coincide` y no cambia `cancion.json`.
 - F4-E3. Con una letra movida −800 ms respecto a la voz (fixture), el diálogo dice «0,8 s adelantada» y el número de líneas; «Corregir el desfase» mueve +800 ms (± 50 ms) todos los inicios, fines fijados y pausas con tiempo, sin cambiar textos ni la duración de ninguna línea, en una sola operación; un Ctrl/Cmd + Z lo devuelve todo y quita la línea «Desfase corregido».
 - F4-E4. Una línea con tiempos por palabra hechos a mano conserva sus palabras tras la corrección, movidas la misma cantidad (el barrido sigue coincidiendo con la voz), y no aparece `edi.toast.palabras`; el diálogo mostró `edi.desfase.palabras`.
@@ -2995,7 +2995,7 @@ Esta sección está diseñada **suponiendo que la prueba técnica sale bien**. L
 |---|---|
 | **Confianza** | Lo seguro que está el motor de cada línea. La interfaz usa tres niveles con texto: **Alta**, **Media**, **Baja** (los umbrales salen de la prueba técnica). |
 | **Tiempos por palabra automáticos** | Los que pone esta función. Se guardan distinguidos de los hechos a mano (`origen_palabras: "auto"`, por confirmar en 0157) y **se pintan palabra a palabra**, como los hechos a mano. Solo se ponen en líneas de confianza **Alta**. |
-| **Fin de origen conocido** | Para saber qué fines puede cambiar, la app distingue quién fijó cada fin: el usuario (a mano), la letra importada, «Ajustar los silencios», la preparación automática o esta función (campo por confirmar en 0157). Los fines de canciones anteriores a 0.2.2 no lo dicen: se tratan como **hechos a mano**. |
+| **Fin de origen conocido** | Para saber qué fines puede cambiar, la app distingue quién fijó cada fin con el campo `origen_fin` de la línea ([ADR 0024](../adr/0024-encaje-de-la-letra-con-la-voz-y-lineas-dudosas.md) §4, respuesta a 0157 §16b). Valores: `letra` (venía con la letra importada: LRCLIB o `.lrc`), `silencios` («Ajustar los silencios» o «Fin al final de la voz»), `preparacion` (la preparación automática) y `alineacion` (esta función). **No hay valor `manual`**: un fin fijado **sin** `origen_fin` es un fin **a mano**; cualquier edición del fin por el usuario quita el campo. Los fines de canciones anteriores a 0.2.2 no lo tienen: cuentan como **hechos a mano**. |
 | **Idioma de la letra** | Hace falta para elegir el modelo. La app lo detecta del texto y lo guarda en la canción; el usuario puede cambiarlo. Idiomas admitidos: los que fije el ADR (provisionalmente español e inglés). |
 
 ### Qué cambia y qué respeta
@@ -3005,8 +3005,8 @@ Esta sección está diseñada **suponiendo que la prueba técnica sale bien**. L
 | Pausa, o línea sin inicio (y la línea anterior a una sin inicio: no se puede acotar su tramo) | No cambia | No cambia |
 | Con tiempos por palabra **hechos a mano** | No cambia | No cambian |
 | **Dada por buena** en la revisión guiada (feature 11) | No cambia | No cambian |
-| Fin automático, o fijado por «Ajustar los silencios», la preparación automática o una sincronización anterior | **Fin nuevo** con confianza Alta o Media | **Automáticas** con confianza Alta |
-| Fin **fijado a mano**, o que venía con la letra, o de origen desconocido | **Se conserva** (salvo que se marque «Recalcular también los fines fijados») | Automáticas dentro de `[inicio, fin]` con confianza Alta |
+| Fin automático, o fijado con `origen_fin` `letra` (venía con la letra), `silencios`, `preparacion` o `alineacion` | **Fin nuevo** con confianza Alta o Media | **Automáticas** con confianza Alta |
+| Fin **fijado a mano** (fijado y sin `origen_fin`, incluidos los de canciones anteriores a 0.2.2) | **Se conserva** (salvo que se marque «Recalcular también los fines fijados») | Automáticas dentro de `[inicio, fin]` con confianza Alta |
 | Confianza **Baja** | No cambia | No cambian; la línea queda **señalada para revisar** (feature 11) |
 | Con tiempos por palabra importados (0.2.1 no los usa) | Como su caso de arriba | Si la línea cambia, se borran sin aviso (regla de 8.1) |
 
@@ -3143,7 +3143,13 @@ Lista revelada (hasta 8 filas visibles, scroll propio, orden de la letra):
 
 «Sincronizar esta línea con la voz» (menú contextual de la fila y panel Sincronía):
 
-- Analiza solo esa línea (normalmente menos de 2 s; el botón pasa a `edi.alinear.linea.cargando`). Sin diálogo de vista previa: el cambio es pequeño, se ve en la línea de tiempo y se deshace con Ctrl/Cmd + Z.
+- Analiza solo esa línea. Sin diálogo de vista previa: el cambio es pequeño, se ve en la línea de tiempo y se deshace con Ctrl/Cmd + Z.
+- **Progreso** ([ADR 0028](../adr/0028-sincronia-automatica-por-alineacion-forzada-prueba-tecnica-y-etapa-1.md) §3.2, respuesta a 0157 §19). El editor mantiene el modelo cargado mientras está abierto y se ha usado en los últimos 5 min; cargarlo tarda segundos.
+  - **Modelo ya cargado** (meta < 2 s por línea): el botón del panel Sincronía pasa a `edi.alinear.linea.cargando` (`aria-disabled`, icono de carga, ancho fijo) hasta el resultado. Sin barra.
+  - **Modelo sin cargar** (la primera vez en la visita, o tras 5 min sin usarlo): bajo el botón aparece un progreso en línea en `t-pequeno`: `edi.alinear.linea.preparando` con barra **indeterminada** y [Cancelar] (fantasma), que pasa a `edi.alinear.linea.cargando` al empezar a escuchar la línea. Si hay una separación en curso, el trabajo espera su turno y el texto es `edi.alinear.fase.cola`. Lanzada desde el menú contextual, el panel Sincronía de esa línea muestra el mismo progreso.
+  - Si la prueba técnica mide más de 2 s por línea con el modelo cargado, el progreso en línea (sin la fase de carga) se muestra **también** en ese caso.
+  - [Cancelar] (y Esc con el foco en el progreso) detiene el análisis sin cambiar nada; el foco vuelve al botón. Mientras dura, el resto del editor sigue disponible, pero si la línea cambia (inicio, fin o texto) antes del resultado, el resultado se descarta con `edi.alinear.linea.obsoleta` (no se aplica nada). **(Decisión provisional: forma del progreso, [Cancelar] y descarte; pregunta [0167](../preguntas/0167-progreso-de-sincronizar-una-sola-linea-con-la-voz.md).)**
+  - Se anuncian (`role="status"`) el inicio de la carga del modelo y el resultado; nunca cada fase.
 - **Sí** cambia un fin fijado a mano (el usuario lo pidió para esa línea) y **sustituye** unos tiempos por palabra automáticos anteriores. Con palabras **hechas a mano**, pide confirmación en línea (`edi.alinear.linea.manuales`: [Cancelar] [Sustituir]).
 - Resultado: toast `edi.alinear.linea.toast` con [Deshacer]; al terminar suena el tramo de la línea (como Mayús + L) si «Escuchar al ajustar» está activado. Con confianza Baja no cambia nada y dice `edi.alinear.linea.baja`.
 - Si hace falta descargar el modelo o elegir idioma, abre el paso 1.
@@ -3174,7 +3180,7 @@ Si la preparación desatendida hizo el paso de fines con esta función, el rengl
 │   voz (sincronía automática). 5 líneas para revisar.   │
 │     [Quitar la sincronía automática]                   │  la misma acción de la sección
 ```
-Si la preparación usó «Ajustar los silencios» porque faltaba el modelo, el renglón es el de la feature 5 (`edi.prep.fines`) con la nota `edi.prep.alineacion.sinModelo` y [Sincronizar con la voz…].
+Si la preparación usó «Ajustar los silencios» (siempre en su variante prudente: solo fines automáticos, sin cuenta 3·2·1; spec 04) porque faltaba el modelo, el renglón es el de la feature 5 (`edi.prep.fines`) con la nota `edi.prep.alineacion.sinModelo` y [Sincronizar con la voz…].
 
 ### No disponible
 
@@ -3265,6 +3271,8 @@ Regla de 8.6: botón `aria-disabled`, enfocable, con el motivo visible debajo y 
 | `edi.alinear.toast.quitada` | Sincronía automática quitada de {a} líneas. — [Deshacer] |
 | `edi.alinear.linea` | Sincronizar esta línea con la voz |
 | `edi.alinear.linea.cargando` | Escuchando la línea… |
+| `edi.alinear.linea.preparando` | Preparando la escucha (tarda unos segundos la primera vez)… — [Cancelar] |
+| `edi.alinear.linea.obsoleta` | La línea cambió mientras la escuchábamos. No hemos cambiado nada. — [Volver a sincronizar la línea] |
 | `edi.alinear.linea.manuales` | Esta línea tiene tiempos por palabra hechos a mano. ¿Sustituirlos? — [Cancelar] [Sustituir] |
 | `edi.alinear.linea.toast` | Línea {n} sincronizada con la voz. — [Deshacer] |
 | `edi.alinear.linea.baja` | No reconocemos bien la voz en esta línea. No hemos cambiado nada. |
@@ -3293,7 +3301,7 @@ Regla de 8.6: botón `aria-disabled`, enfocable, con el motivo visible debajo y 
 **Análisis y vista previa**
 - F10-E4. El análisis muestra «línea {i} de {n}» con barra determinada; «Cancelar» y Esc lo detienen y `cancion.json` no cambia (comparación byte a byte). Antes de «Aplicar» nunca se escribe nada.
 - F10-E5. Con un doble del motor que devuelve, para una letra de 10 líneas, 6 de confianza Alta, 2 Media y 2 Baja: la vista previa cuenta fines (8), palabras (6) y bajas (2); desmarcar «Añadir tiempos por palabra» quita el renglón de palabras sin volver a analizar; la lista revelada muestra una fila por línea con su fin anterior y nuevo y su confianza en texto.
-- F10-E6. Reglas de respeto (test de la función pura que combina el resultado del motor con la letra): una línea con palabras hechas a mano no cambia en nada; una dada por buena en la revisión no cambia; una con el fin fijado a mano conserva su fin y recibe palabras dentro de él; con «Recalcular también los fines fijados» ese fin cambia; una de confianza Baja no cambia y queda señalada; una pausa y una línea sin inicio no cambian; ningún inicio cambia nunca.
+- F10-E6. Reglas de respeto (test de la función pura que combina el resultado del motor con la letra): una línea con palabras hechas a mano no cambia en nada; una dada por buena en la revisión no cambia; una con el fin fijado a mano (fijado y sin `origen_fin`) conserva su fin y recibe palabras dentro de él; una con `origen_fin` `letra`, `silencios`, `preparacion` o `alineacion` recibe el fin nuevo y queda con `origen_fin: "alineacion"`; con «Recalcular también los fines fijados» ese fin cambia; una de confianza Baja no cambia y queda señalada; una pausa y una línea sin inicio no cambian; ningún inicio cambia nunca.
 - F10-E7. Con más de la mitad de las líneas en confianza Baja aparece `edi.alinear.pocaConfianza` con sus acciones y «Aplicar» sigue disponible. Sin ningún cambio posible, no hay vista previa y aparece `edi.alinear.nada`.
 
 **Aplicar y deshacer**
@@ -3303,6 +3311,7 @@ Regla de 8.6: botón `aria-disabled`, enfocable, con el motivo visible debajo y 
 - F10-E11. Mover después el inicio o el fin de una línea con palabras automáticas (cualquier vía de 8.2) las quita y muestra `edi.toast.palabrasAuto`; [Volver a sincronizar la línea] las recalcula con sus límites nuevos; [Deshacer] devuelve límites y palabras.
 - F10-E12. Abrir en el editor preciso una línea con palabras automáticas las muestra como «automática» con `edi.preciso.recuento.auto`; aplicar tras mover una palabra deja la línea como hecha a mano (◈) y una nueva sincronización de toda la canción ya no la cambia; aplicar sin cambios la deja automática.
 - F10-E13. «Sincronizar esta línea con la voz» del menú contextual y del panel cambia solo esa línea, sin vista previa, en un paso del historial, también si su fin estaba fijado a mano; con palabras hechas a mano pide `edi.alinear.linea.manuales`; con confianza Baja no cambia nada y muestra `edi.alinear.linea.baja`.
+- F10-E13b. Con el modelo sin cargar (doble del worker con fase `cargando_modelo`), «Sincronizar esta línea con la voz» muestra bajo el botón `edi.alinear.linea.preparando` con barra indeterminada y [Cancelar], después `edi.alinear.linea.cargando`, y anuncia el inicio y el resultado; una segunda línea dentro de los 5 min siguientes muestra solo `edi.alinear.linea.cargando`. [Cancelar] no cambia `cancion.json`. Si la línea se edita antes del resultado, no se aplica nada y aparece `edi.alinear.linea.obsoleta`.
 - F10-E14. «Ajustar los silencios» sobre una canción con palabras automáticas ajusta esas líneas, les quita las palabras y lo cuenta en su diálogo con `edi.silencios.auto`; «Corregir el desfase» las mueve con su línea.
 
 **Teclado, accesibilidad y capturas**

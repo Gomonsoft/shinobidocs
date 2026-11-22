@@ -741,7 +741,7 @@ Si la versión nueva es **preliminar**, haz antes una copia de tus canciones.
 
 ### Qué comprueba la app y cómo desactivarlo
 
-Como mucho una vez al día, la app pregunta a GitHub, donde se publican las versiones, cuál es la última. **No envía datos tuyos ni de tus canciones**: solo la petición, con el nombre y la versión de la app. GitHub ve tu dirección IP y el idioma de tu equipo, como cualquier web que visitas. Sin conexión no pasa nada: la app no muestra ningún error.
+Como mucho una vez al día, la app pregunta a GitHub, donde se publican las versiones, cuál es la última. **No envía datos tuyos ni de tus canciones**: solo el nombre y la versión de la app y los datos técnicos de cualquier petición web. GitHub ve tu dirección IP y el idioma de tu equipo, como cualquier web que visitas. Sin conexión no pasa nada: la app no muestra ningún error.
 
 Para desactivarlo, entra en **Ajustes → Acerca de** y desmarca **Avisarme cuando haya una versión nueva**. Podrás seguir buscando a mano con **Buscar actualizaciones**.
 ```
@@ -800,7 +800,7 @@ Las compilaciones de desarrollo **no avisan** de versiones nuevas ni se conectan
 
 31. **README.** En E½ y E1, «Descargar» contiene el párrafo «¿Ya la tienes instalada?» de §F3.1 con el enlace a `INSTALAR.md#actualizar-a-una-versión-nueva`; en E0 no aparece.
 32. **Guía.** `INSTALAR.md` tiene la sección «Actualizar a una versión nueva» con los 4 pasos en lista numerada real y la subsección «Qué comprueba la app y cómo desactivarlo»; el índice la enlaza y todos sus enlaces internos funcionan en la vista de GitHub.
-33. **Mismo texto de privacidad.** Lo que dice la guía sobre qué se envía coincide con `aj.act.privacidad` (spec 08): GitHub, como mucho una vez al día, solo el nombre y la versión de la app, la dirección IP y el idioma visibles para GitHub, y cómo desactivarlo.
+33. **Mismo texto de privacidad.** Lo que dice la guía sobre qué se envía coincide con `aj.act.privacidad` (spec 08): GitHub, como mucho una vez al día, solo el nombre y la versión de la app y los datos técnicos de cualquier petición web, la dirección IP y el idioma visibles para GitHub, y cómo desactivarlo.
 34. **Notas.** Las notas de la primera versión con el aviso incluyen la entrada «Aviso de versión nueva» de §F3.3; ninguna nota posterior dice «No hay autoactualización» sin la frase fija nueva.
 35. **Canal de desarrollo.** El cuerpo de cada compilación de desarrollo y el README de `shinobi-karaoke-builds` llevan las frases de §F3.4.
 36. **Enlaces.** Con una versión preliminar y con una estable publicadas, las direcciones de §F3.5 responden sin autenticar y descargan el archivo de esa versión (comprobación del día de la publicación).

@@ -280,7 +280,7 @@ flowchart LR
 | **Buscar la letra** | Al completarse la fuente (hace falta la duración real), **en paralelo** con la separación. | La búsqueda de siempre (ADR 0005), sin que el usuario entre en Letra. Envía título, artista, álbum y duración a LRCLIB. Solo si «Buscar la letra automáticamente» está activado (spec 08) o si el usuario pulsó «Preparar». | < 2 s (máx. 10 s) |
 | **Comprobar la letra con la voz** | Al terminar la separación y estar lista la forma de onda de la voz. | Comprueba cada candidata con tiempos (feature 4). | < 2 s |
 | **Aplicar** | Si hay una candidata **segura**. | Guarda la letra (con el desfase ya corregido si era `desfasada`). | instantáneo |
-| **Ajustar los fines** | Tras aplicar la letra. | Con la feature 10 disponible, su alineación (la define su spec). Sin ella, «Ajustar los silencios» en versión prudente: solo fija el fin de las líneas con **fin automático**, nunca cambia un fin que traía la letra ni activa la cuenta 3·2·1 **(decisión provisional)**. | < 2 s |
+| **Ajustar los fines** | Tras aplicar la letra. | Con la feature 10 disponible (y el modelo del idioma ya descargado), su alineación (la define su spec). Si no, o si la alineación falla: «Ajustar los silencios» en su **variante prudente** ([ADR 0025](../adr/0025-preparacion-desatendida-y-datos-de-la-cancion-automaticos.md) §2, respuesta a 0153 §11; ADR 0018, revisión 0.2.2): solo fija el fin de las líneas con **fin automático**, nunca cambia un fin que traía la letra ni uno fijado a mano, no activa la cuenta 3·2·1 ni toca nada del estilo, y marca esos fines como puestos por la preparación (para «Quitar esos fines», spec 06). Nunca usa la versión completa de «Ajustar los silencios» del editor. | < 2 s |
 
 **Candidata segura** (todas a la vez; **decisión provisional**, umbral estricto de la propuesta):
 1. es la coincidencia exacta de LRCLIB (título, artista y duración a 2 s o menos);
@@ -631,7 +631,7 @@ Esta sección concreta el paso **«Ajustar los fines»** de [la cadena de la fea
 
 ### Cuándo se usa la sincronía automática y cuándo no
 
-Se usa si se cumplen **todas**; si falla alguna, el paso hace lo que define la feature 5 («Ajustar los silencios» en versión prudente) y el resultado dice por qué:
+Se usa si se cumplen **todas**; si falla alguna, el paso hace lo que define la feature 5 («Ajustar los silencios» en su variante prudente: solo fines automáticos, sin cuenta 3·2·1; ADR 0025 §2) y el resultado dice por qué:
 
 | Condición | Si no se cumple, el resultado dice |
 |---|---|

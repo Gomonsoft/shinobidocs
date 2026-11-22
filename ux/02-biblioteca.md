@@ -1406,7 +1406,7 @@ Mismo diálogo para un paquete de canciones y para una copia de seguridad; la co
 │ Se importaron 2 de 3 canciones.                              │
 │ ✓ Arrópame — Importada                                       │
 │ ✓ A Pesar de Mí — Sustituida (la anterior está en la papelera) │
-│ ✕ Sinmigo — El paquete está incompleto: faltan sus pistas.   │
+│ ✕ Sinmigo — Sus archivos están dañados en el paquete.        │
 │ Temas: 1 importado («Neón (importado)»).                     │
 │                                              [Cerrar]        │
 ```
@@ -1419,7 +1419,9 @@ Mismo diálogo para un paquete de canciones y para una copia de seguridad; la co
 |---|---|---|
 | `PAQUETE_NO_VALIDO` | Este archivo no es un paquete de Shinobi Karaoke. | Elige un archivo `.shinobi` creado con «Exportar paquete» o «Crear copia de seguridad». |
 | `PAQUETE_VERSION_NUEVA` | Este paquete es de una versión más nueva de Shinobi Karaoke. | Actualiza la aplicación para poder importarlo. No se ha cambiado nada. |
-| `PAQUETE_INCOMPLETO` | El paquete está dañado o incompleto. | Puede que la copia se interrumpiera. Las canciones que se puedan leer se muestran en la lista; las demás aparecen como no disponibles. (Si no se puede leer ninguna: «No se puede leer ninguna canción de este paquete.») |
+| `PAQUETE_INCOMPLETO` | El paquete está dañado o incompleto. | Puede que la copia se interrumpiera o que el archivo se cortara al copiarlo. No se puede abrir y no se ha cambiado nada. Si tienes otra copia de este paquete, prueba con ella. |
+
+**Paquete cortado frente a canción dañada** ([ADR 0027](../adr/0027-copia-de-seguridad-paquete-de-cancion-y-exportar-lrc.md), respuesta a 0157 §5). El índice de un paquete está al final del archivo: un paquete **cortado** (truncado) no se puede listar, así que se rechaza **entero** en el paso 1 con `PAQUETE_INCOMPLETO` y no llega al paso 2 (no hay lista parcial). Como la app escribe los paquetes en un temporal y solo los renombra al terminar, esto solo pasa con copias rotas fuera de la app. Lo que sí se detecta **canción a canción** es un archivo **dañado** dentro de un paquete que se puede leer (su comprobación no coincide con la del manifiesto): esa canción falla en el paso 3 con `paq.imp.fallo.incompleta` en el resultado y las demás se importan.
 | `SIN_ESPACIO` | No queda espacio en el disco. | Libera espacio y vuelve a intentarlo. Las canciones ya importadas se conservan. |
 
 ### Exportar la letra a `.lrc`
@@ -1499,7 +1501,7 @@ Mismo diálogo para un paquete de canciones y para una copia de seguridad; la co
 | `paq.imp.estado.nueva` | Nueva |
 | `paq.imp.estado.existe` | Ya la tienes. La del paquete es más reciente ({fecha}; la tuya, {fecha}). · Ya la tienes. La del paquete es más antigua ({fecha}; la tuya, {fecha}). |
 | `paq.imp.estado.igual` | Ya la tienes igual: se omite |
-| `paq.imp.estado.noDisponible` | No se puede leer en este paquete |
+| `paq.imp.estado.noDisponible` | (deja de usarse: un paquete cortado se rechaza entero con `PAQUETE_INCOMPLETO` y una canción dañada se detecta al importarla, con `paq.imp.fallo.incompleta`) |
 | `paq.imp.paraExistentes` | Para las que ya tienes: Omitir · Sustituir · Conservar las dos · (varias respuestas) Mixto |
 | `paq.imp.aria.decision` | Qué hacer con «{título}» |
 | `paq.imp.nota.sustituir` | La tuya irá a la papelera de tu sistema. |
@@ -1516,7 +1518,7 @@ Mismo diálogo para un paquete de canciones y para una copia de seguridad; la co
 | `paq.imp.progreso` | Importando «{título}»… {i} de {n} |
 | `paq.imp.resultado` | Se importaron {a} de {n} canciones. · (todas) Se importaron {n} canciones. |
 | `paq.imp.fila` | Importada · Sustituida (la anterior está en la papelera) · Importada como «{título} (importada)» · Omitida: ya la tenías · {motivo de fallo} |
-| `paq.imp.fallo.incompleta` | El paquete está incompleto: faltan sus pistas. |
+| `paq.imp.fallo.incompleta` | Sus archivos están dañados en el paquete. No se ha importado. |
 | `paq.imp.fallo.guardar` | No se pudo guardar. — [Copiar detalles] |
 | `paq.imp.toast` | {n} canciones importadas. · (n = 1) «{título}» importada. |
 | `paq.imp.error` | (títulos y textos de la tabla «Errores de lectura») — [Elegir otro archivo] [Cerrar] |
@@ -1539,7 +1541,7 @@ Mismo diálogo para un paquete de canciones y para una copia de seguridad; la co
 - F9-7. «Sustituir» deja la canción del paquete en la biblioteca y la anterior en la papelera del sistema; «Conservar las dos» añade una canción nueva con el título «{título} (importada)» y otro identificador, sin tocar la existente. El selector de una fila cambia solo esa canción y el control general pasa a «Mixto».
 - F9-8. Un paquete **ligero** importado en un equipo sin la canción crea un borrador sin audio con su letra y sus tiempos, cuya tarjeta dice «Falta descargar el audio» (origen YouTube) o «Falta preparar el audio» (archivo); tras volver a obtener el audio y separar, los tiempos siguen ahí. Importado con «Sustituir» sobre una canción existente con pistas, cambia letra, tiempos y estilo y conserva las pistas (los archivos de audio no cambian byte a byte).
 - F9-9. Temas: un tema idéntico no se duplica; uno con el mismo identificador y otro aspecto entra como «{nombre} (importado)» y las canciones existentes que usaban el original no cambian de aspecto; una canción importada que heredaba su tema del álbum queda con ese tema asignado y se ve igual que en origen.
-- F9-10. Un archivo que no es un paquete, uno de un esquema más nuevo y uno truncado muestran `PAQUETE_NO_VALIDO`, `PAQUETE_VERSION_NUEVA` y `PAQUETE_INCOMPLETO` con sus textos; en ninguno de los tres casos cambia la biblioteca. Con un paquete truncado del que se leen 2 de 3 canciones, esas 2 se pueden importar y la tercera aparece como no disponible.
+- F9-10. Un archivo que no es un paquete, uno de un esquema más nuevo y uno truncado muestran `PAQUETE_NO_VALIDO`, `PAQUETE_VERSION_NUEVA` y `PAQUETE_INCOMPLETO` con sus textos; en ninguno de los tres casos cambia la biblioteca. Un paquete truncado se rechaza **entero** en el paso 1 (no se muestra ninguna lista parcial). Con un paquete legible de 3 canciones en el que un archivo de una de ellas no coincide con su comprobación del manifiesto, se importan las otras 2 y el resultado muestra la tercera con ✕ y `paq.imp.fallo.incompleta`.
 - F9-11. Cancelar una importación a mitad conserva las canciones ya importadas completas y no deja ninguna a medias (la carpeta de preparación queda vacía).
 - F9-12. Arrastrar un `.shinobi` sobre la Biblioteca abre el diálogo de importar con ese archivo; arrastrar un audio sigue abriendo la vista 03. El estado vacío muestra el enlace de restaurar o importar.
 - F9-13. «Exportar la letra (.lrc)…» abre el diálogo «Guardar» del sistema con el nombre propuesto y escribe un LRC en UTF-8 con la cabecera, una marca por línea con inicio (con el desplazamiento aplicado), marcas vacías en el fin de las líneas seguidas de 2 s o más de silencio y sin las líneas sin inicio (test de la función pura con una letra de ejemplo: texto exacto esperado). Volver a importar ese archivo en una canción nueva da los mismos inicios (± 10 ms) y los mismos fines en las líneas con marca vacía.
@@ -1574,9 +1576,9 @@ La tarjeta completa está en [Feature 5 · Tarjeta «Lista para revisar»](#tarj
 
 | Elemento | Comportamiento |
 |---|---|
-| **Línea de revisión** | Bajo la línea de paso «Lista para revisar»: `bib.revision.linea` con el número de líneas dudosas **pendientes** (las que la app señala y el usuario aún no ha dado por buenas ni ha corregido). Con 0: `bib.revision.sinDudas` con icono `check` en `texto-2`. El número lo da main en el resumen de la canción y se actualiza en vivo. Icono + texto; color `aviso` solo en el icono. |
+| **Línea de revisión** | Bajo la **insignia** «◔ Lista para revisar» de la feature 5 (y bajo su línea de origen, si la hay), en el sitio de la línea de paso: una «Lista para revisar» no tiene línea de paso propia. Texto: `bib.revision.linea` con el número de líneas dudosas **pendientes** (las que la app señala y el usuario aún no ha dado por buenas ni ha corregido). Con 0: `bib.revision.sinDudas` con icono `check` en `texto-2`. El número lo da main en el resumen de la canción y se actualiza en vivo. Icono + texto; color `aviso` solo en el icono. |
 | **«Revisar»** (feature 5) | Abre el editor con la **revisión guiada ya empezada** en la primera línea pendiente (spec 06). Con 0 pendientes, abre el editor con el panel de fin de revisión («No vemos nada raro…»), desde donde se marca como lista. |
-| **Menú ⋯** | En un borrador «Lista para revisar» se añaden, tras «Continuar»: **«Marcar como lista»** y **«Marcar como letra lista»** (`bib.revision.menu`). Hacen lo mismo que los botones del dock del editor, sin abrirlo: con líneas pendientes, antes muestran `bib.revision.dialogo`; al marcar, la tarjeta se resalta 2 s y sale `bib.toast.lista` / `bib.toast.letraLista` (con el aviso de primera activación de «Letra lista» si no está silenciado). **(Decisión provisional.)** Durante una sesión en otra pantalla siguen disponibles (no abren el editor). |
+| **Menú ⋯** | En un borrador «Lista para revisar» se añaden, tras «Probar» (en esta tarjeta «Revisar» sustituye a «Continuar»; orden completo en el menú ⋯ de la feature 5): **«Marcar como lista»** y **«Marcar como letra lista»** (`bib.revision.menu`). Hacen lo mismo que los botones del dock del editor, sin abrirlo: con líneas pendientes, antes muestran `bib.revision.dialogo`; al marcar, la tarjeta se resalta 2 s y sale `bib.toast.lista` / `bib.toast.letraLista` (con el aviso de primera activación de «Letra lista» si no está silenciado). **(Decisión provisional.)** Durante una sesión en otra pantalla siguen disponibles (no abren el editor). |
 | **[Marcar como lista] del toast tras «Probar»** (`bib.prep.toast.probada`, feature 5) | Misma regla que el ítem del menú: con líneas pendientes muestra antes `bib.revision.dialogo`. |
 | **Tarjetas Lista y Letra lista** | No muestran línea de revisión aunque el editor señale líneas (evita insistir en canciones que el usuario ya dio por terminadas). La revisión sigue disponible en el editor. |
 | **Lectores de pantalla** | `bib.aria.tarjeta` añade la línea de revisión a la línea de paso. |
@@ -1613,7 +1615,7 @@ La tarjeta completa está en [Feature 5 · Tarjeta «Lista para revisar»](#tarj
 
 Origen: [plan 0.2.2, feature 5](../versiones/0.2.2/plan-4.md) y [propuesta 020](../propuestas/020-preparacion-desatendida.md). La cadena de preparación, sus reglas y sus avisos: [04 · 0.2.2 · Feature 5](04-progreso-pipeline.md#022--feature-5--preparación-desatendida). Letra: [05 · 0.2.2 · Feature 5](05-letra.md#022--feature-5--preparación-desatendida-la-vista-letra). Contratos pendientes: [0153](../preguntas/0153-contratos-de-las-features-4-a-7-para-las-specs.md). Decisiones provisionales: [0154](../preguntas/0154-decisiones-provisionales-de-ux-de-las-features-4-a-7.md). Esta sección **amplía** la vista.
 
-**Sustituye**: las filas «Sin letra» y «Todo hecho salvo marcar» de la tabla «Línea de paso de un borrador», la fila «Borrador» de «Estados», la anatomía de la tarjeta de un borrador terminado y el menú ⋯ del borrador (ítems nuevos). En el wireframe de la feature 11 de esta spec, las líneas «(✎ Borrador)» y «Lista para revisar» se leen como la **insignia** «Lista para revisar» definida aquí; su línea «⚑ {n} líneas por revisar» ocupa el sitio de la línea de paso.
+**Sustituye**: las filas «Sin letra» y «Todo hecho salvo marcar» de la tabla «Línea de paso de un borrador», la fila «Borrador» de «Estados», la anatomía de la tarjeta de un borrador terminado y el menú ⋯ del borrador (ítems nuevos). El wireframe de la feature 11 de esta spec usa ya la **insignia** «◔ Lista para revisar» definida aquí (no «✎ Borrador» con una línea de paso); su línea «⚑ {n} líneas por revisar» ocupa el sitio de la línea de paso, bajo la línea de origen.
 
 ### Cómo se relacionan los estados
 

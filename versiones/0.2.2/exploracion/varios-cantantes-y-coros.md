@@ -105,7 +105,7 @@ Una canción sin partes se ve **exactamente igual que hoy**: sin chips en la lis
 | Distribución (subfase 2.1) | Tres columnas, dock, divisores, rieles, persistencia, «Qué cede primero», mínimo 1024 × 576 | Nada en la etapa 1. En la etapa 3, el modo «Reparto» ensancha la lista (§3.6). |
 | Lista de líneas | Fila, tiempos, ▶, selección, seguimiento, banderas ⚑ de la feature 11, ◈ del editor preciso, menú contextual, «Corregir la letra» | Chip de parte al principio de la fila. **Selección múltiple** (en todas las canciones: es la puerta para repartir). Ítem «¿Quién canta?…» en el menú contextual (en todas). |
 | Panel Sincronía | Todo | Fila «Canta» con el chip y su menú bajo el texto de la línea. Con varias líneas seleccionadas, panel de selección múltiple (§3.4). |
-| Línea de tiempo | Regla, onda, tiradores, zoom, vista general, doble clic, Bloquear enunciado | Una **pista por parte en uso** (carriles) en lugar de la pista única de líneas; arrastre vertical de una región a otro carril (§3.5). |
+| Línea de tiempo | Regla, onda, tiradores, zoom, vista general, doble clic, Bloquear enunciado | Un **carril por cantante de la canción** (también el recién añadido, aunque aún no tenga líneas) más «Todos» y «Coro» si tienen líneas, en lugar de la pista única de líneas; arrastre vertical de una región a otro carril (§3.5). |
 | Panel Estilo | Todo | Sección «Cantantes y coros» con los colores del tema (§7.2). |
 | Funciones | Todo | Sección «Cantantes y coros» (§3.7). |
 | Vista previa | Mismo render | Colores e insignias de las partes (§6). |
@@ -182,7 +182,11 @@ El riel del panel minimizado añade el chip bajo «Fin» (abre el menú).
 
 ### 3.5 Línea de tiempo con carriles
 
-**Etapas 1 y 2** (sin superposición): una pista por parte **en uso**, en el orden Cantante 1–4, Todos, Coro. Cada pista lleva a la izquierda una etiqueta de 72 px con el chip y el nombre.
+**Etapas 1 y 2** (sin superposición): en el orden Cantante 1–4, Todos, Coro, una pista (carril) por:
+- **cada cantante de la canción**: el Cantante 1 y cada cantante que el usuario ha añadido, **tenga o no líneas**. El carril de un cantante aparece en cuanto se añade y solo desaparece al quitar ese cantante (indicación del usuario, pregunta [0160](../../../preguntas/0160-decisiones-provisionales-de-ux-de-varios-cantantes-y-coros.md), 2026-11-22: los cantantes los añade el usuario en cada canción y cada uno tiene su carril desde que se crea, para poder arrastrarle líneas);
+- **«Todos» y «Coro»**, solo cuando tienen alguna línea (no se «añaden»: están siempre disponibles en el menú «¿Quién canta?»).
+
+Cada pista lleva a la izquierda una etiqueta de 72 px con el chip y el nombre.
 
 ```
 Línea de tiempo  [−][+][Zoom a la línea][Ver canción completa][Centrar en el cabezal] [Juntar carriles] [⌄]
@@ -197,6 +201,7 @@ Vista general   ├────────────[ intervalo visible ]─�
 
 | Aspecto | Comportamiento |
 |---|---|
+| **Carril vacío** | El de un cantante sin líneas (recién añadido, o al que se le han quitado todas): mismo alto y misma etiqueta que los demás; dentro, centrado en la parte visible, el texto `edi.partes.carrilVacio` en `t-pequeno` `texto-3` (no es un control). Admite soltar regiones y es destino de **Alt + ↑/↓** como cualquier carril. Cuenta para el alto y para «Qué cede primero». Con «Juntar carriles» activo no se ve (no hay carriles), y la asignación se hace con el menú o C. Al vaciarse, el carril **no** desaparece: solo «Quitar cantante» lo retira. |
 | **Alto** | Onda 28 px; cada carril 24 px (mínimo 16). Al tener más de un carril, el alto por defecto de la sección crece 24 px por carril extra: con dos cantantes y coro, 264 px en lugar de 216. Es un **alto efectivo**: la preferencia del usuario (subfase 2.1) no se reescribe. |
 | **Qué cede primero** | Se añade un paso entre el 2 y el 3 de la subfase 2.1: los carriles bajan de 24 a 16 px; si aún no cabe, se **juntan solos** en una pista (estado temporal, como «minimizada por falta de espacio»). A 1280 × 720 (zona superior ≈ 300 px) caben tres carriles a 24 px dejando ≥ 230 px arriba; seis carriles (4 cantantes, Todos y Coro) dejan ≈ 160 px, por encima del mínimo de 136. |
 | **Juntar carriles** | Botón alternable (`aria-pressed`) en la fila de controles: todas las regiones en una pista, con una franja superior de 3 px en el color de la parte y la inicial al principio de la región. Se recuerda para todas las canciones. Es también el aspecto de una canción sin partes (sin franja). |
@@ -544,6 +549,7 @@ Ninguna cambia lo que ve el usuario en 0.2.2 ni añade criterios de aceptación 
 | `edi.partes.sugerenciaCoro` | {n} líneas van entre paréntesis: suelen ser coros. |
 | `edi.partes.marcarCoro` | Marcarlas como coro |
 | `edi.partes.nuevoCarril` | Suelta aquí para un cantante nuevo |
+| `edi.partes.carrilVacio` | Arrastra aquí las líneas de {nombre} |
 | `edi.partes.juntar` | Juntar carriles |
 | `edi.partes.reparto` | Reparto · Lista |
 | `edi.coros.nivel` | Voz en los coros |
@@ -562,13 +568,13 @@ Ninguna cambia lo que ve el usuario en 0.2.2 ni añade criterios de aceptación 
 1. Una canción sin partes se ve igual que antes en lista, línea de tiempo, Estilo y reproductor (capturas comparadas), y abrirla no escribe nada.
 2. Con la tecla C, el menú contextual, el chip y el arrastre entre carriles se asigna una línea a cualquier parte; cada vía es un paso de deshacer y se anuncia.
 3. Con tres líneas seleccionadas (Ctrl + clic y Mayús + ↑/↓), C › 2 las asigna en un paso; I y O solo actúan sobre la principal.
-4. «+ Añadir cantante» desde el menú de una canción sin partes crea Cantante 2 y asigna la selección en un solo paso de deshacer.
-5. A 1280 × 720 al 100 % y al 125 % con tres carriles no hay scroll de página y la zona superior mide ≥ 136 px; a 1024 × 576 los carriles se juntan solos sin cambiar la preferencia.
+4. «+ Añadir cantante» desde el menú de una canción sin partes crea Cantante 2 y asigna la selección en un solo paso de deshacer.5. A 1280 × 720 al 100 % y al 125 % con tres carriles no hay scroll de página y la zona superior mide ≥ 136 px; a 1024 × 576 los carriles se juntan solos sin cambiar la preferencia.
 6. En el reproductor, la línea activa de Luis barre en su color, lleva la insignia «L» y su subrayado (si está activo) es de su color; una línea de coro se dibuja entre paréntesis sin duplicar los que ya tenga el texto.
 7. Con la insignia, ninguna línea pasa del 80 % del ancho y la línea activa conserva el ancla de la feature 1.
 8. En Letra lista, el texto de cada línea va entero en el color de su parte y la ya cantada en gris.
 9. Con un color de parte < 3:1 sobre el fondo aparece `edi.contraste.parte`; dos partes parecidas dan el ⓘ, no un ⚠.
 10. «Corregir la letra» conserva la parte de las líneas sin cambios y da a una línea cambiada la parte de la anterior.
+11. «Repartir entre varios cantantes» y «+ Añadir cantante» de Funciones crean un cantante **sin líneas** cuyo carril aparece al momento en la línea de tiempo, vacío, con `edi.partes.carrilVacio`; arrastrar una región a ese carril (o Alt + ↓ hasta él) se la asigna en un paso de deshacer. Si se le quitan todas sus líneas, el carril sigue; «Quitar cantante» lo retira. «Todos» y «Coro» solo tienen carril mientras tienen líneas (indicación del usuario, 0160).
 
 Etapa 2: con la voz guía silenciada, en una línea de coro la voz suena al nivel de la canción ± 1 dB y fuera de ella no suena; las rampas no producen chasquidos (verificación manual); el video «Solo instrumental» con la casilla marcada contiene la voz solo en los tramos de coro.
 
@@ -586,7 +592,7 @@ Aplicadas en este documento; el usuario puede cambiar cualquiera en [0160](../..
 | 6 | «Todos» | Color propio e insignia con las iniciales juntas |
 | 7 | Dónde viven los colores | En el tema; Cantante 1 = color de lo ya cantado |
 | 8 | Entrada a la función | Sin modo especial: menú de la fila, tecla C y sección en Funciones |
-| 9 | Línea de tiempo | Un carril por parte en uso, con «Juntar carriles» y arrastre vertical |
+| 9 | Línea de tiempo | Un carril por cantante de la canción, visible desde que se añade aunque no tenga líneas (indicación del usuario, 0160), más «Todos» y «Coro» si tienen líneas; con «Juntar carriles» y arrastre vertical |
 | 10 | Selección múltiple | Solo para asignar; los tiempos, de uno en uno |
 | 11 | Modo «Reparto» | Solo en la etapa 3, con la superposición |
 | 12 | Voz en los coros | Por canción, 50 % por defecto, suena aunque la voz guía esté silenciada, manda el mayor de los dos niveles |

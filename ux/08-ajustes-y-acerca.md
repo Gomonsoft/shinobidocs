@@ -546,8 +546,8 @@ Qué **no** hace: no descarga el instalador dentro de la app, no instala, no rei
 - La comprobación no bloquea nada: mientras dura no hay ningún indicador, salvo en la búsqueda a mano.
 
 ### Qué sale del equipo (privacidad)
-- **Una petición** a GitHub, donde se publican las versiones, para leer la lista de versiones publicadas. Nada más.
-- La petición lleva solo el **nombre y la versión de la app** y los datos técnicos de cualquier petición web (por ejemplo, el idioma preferido). **No lleva** ningún identificador de la instalación o del equipo, ni el sistema operativo, ni datos de la biblioteca, las canciones, los temas o la configuración. No hay cuentas ni cookies.
+- **Una petición** a GitHub, donde se publican las versiones, para leer la lista de versiones publicadas. No hay ninguna otra conexión para el aviso.
+- La petición lleva el **nombre y la versión de la app** y los **datos técnicos de cualquier petición web** (cabeceras estándar del navegador interno, como el idioma preferido o la compresión admitida; ADR 0023, respuesta a 0156 §15). La spec no promete «nada más»: la lista exacta de cabeceras la fija el ADR y la comprueba F3-A5. **No lleva** ningún identificador de la instalación o del equipo, ni el sistema operativo, ni datos de la biblioteca, las canciones, los temas o la configuración. No hay cuentas ni cookies.
 - GitHub ve la **dirección IP** desde la que llega, como en cualquier visita a una web. La app no puede evitarlo y lo dice.
 - La app **no abre** ninguna dirección que venga en la respuesta: los enlaces de «Ver novedades» y «Descargar» los construye ella con la versión, siempre dentro del repositorio del proyecto.
 - El aviso se puede **desactivar** con una casilla en este mismo bloque; desactivado, la app no se conecta para esto.
@@ -580,9 +580,9 @@ Bloque «Actualizaciones», dentro de «Acerca de», justo debajo de la línea d
 │  ☑ Avisarme cuando haya una versión nueva                                │  casilla
 │    Como mucho una vez al día, Shinobi Karaoke pregunta a GitHub, donde   │  aj.act.privacidad (t-pequeno, texto-2)
 │    se publican las versiones, cuál es la última. No envía datos tuyos    │
-│    ni de tus canciones: solo la petición, con el nombre y la versión de  │
-│    la app. GitHub ve tu dirección IP y el idioma de tu equipo, como      │
-│    cualquier web que visitas.                                            │
+│    ni de tus canciones: solo el nombre y la versión de la app y los      │
+│    datos técnicos de cualquier petición web. GitHub ve tu dirección IP   │
+│    y el idioma de tu equipo, como cualquier web que visitas.             │
 │                                                                          │
 │  [Ver licencia]  [Créditos y licencias de terceros]  …                   │
 ```
@@ -711,7 +711,7 @@ Bloque «Actualizaciones», dentro de «Acerca de», justo debajo de la línea d
 | `aj.act.ultima` | Última comprobación: hoy a las {hh:mm}. · Última comprobación: ayer. · Última comprobación: {fecha}. · (ninguna) Aún no se ha podido comprobar. |
 | `aj.act.error` | No se pudo comprobar ahora. Revisa tu conexión a internet e inténtalo más tarde. |
 | `aj.act.avisar` | Avisarme cuando haya una versión nueva |
-| `aj.act.privacidad` | Como mucho una vez al día, Shinobi Karaoke pregunta a GitHub, donde se publican las versiones, cuál es la última. No envía datos tuyos ni de tus canciones: solo la petición, con el nombre y la versión de la app. GitHub ve tu dirección IP y el idioma de tu equipo, como cualquier web que visitas. |
+| `aj.act.privacidad` | Como mucho una vez al día, Shinobi Karaoke pregunta a GitHub, donde se publican las versiones, cuál es la última. No envía datos tuyos ni de tus canciones: solo el nombre y la versión de la app y los datos técnicos de cualquier petición web. GitHub ve tu dirección IP y el idioma de tu equipo, como cualquier web que visitas. |
 | `aj.act.desactivado` | El aviso está desactivado: Shinobi Karaoke no busca versiones nuevas por su cuenta. Puedes buscarlas a mano. |
 | `aj.act.desarrollo` | Las compilaciones de desarrollo no buscan versiones nuevas. Las versiones publicadas están en la web del proyecto. |
 | `aj.act.local` | Las compilaciones locales no buscan versiones nuevas. |
@@ -920,7 +920,7 @@ Origen: [plan 0.2.2, feature 10](../versiones/0.2.2/plan-4.md) y propuesta [019]
 | Lista de idiomas | Una fila por idioma admitido (los que fije el ADR; provisionalmente español e inglés), con su estado: `Instalado · {tamaño}`, `No instalado · hay que descargar {tamaño}`, `Descargando… {p} %`, `Error`. Tamaños leídos del manifiesto, como los modelos de separación. |
 | **Descargar** | Empieza la descarga en segundo plano (barra en la fila, [Cancelar]; lo descargado se conserva y la próxima vez continúa). Sigue al salir de Ajustes; al cerrar la app se interrumpe sin diálogo. Errores en línea bajo la fila con los textos de descarga de modelos de spec 01 (`SIN_CONEXION`, `SIN_ESPACIO`, servidor, verificación) y [Reintentar]. Al terminar: toast `aj.alinear.toast.instalado`. |
 | **Quitar** | Diálogo `aj.alinear.quitar` (foco en «Cancelar»). Libera el espacio; no cambia ninguna canción ya sincronizada. No disponible mientras ese modelo se está usando (`aj.alinear.quitar.enUso`). |
-| **Usarla al preparar canciones automáticamente** | Casilla, marcada por defecto. Controla el paso «Sincronizar con la voz» de la preparación desatendida (feature 5; [04 · Feature 10](04-progreso-pipeline.md#022--feature-10--sincronizar-con-la-voz-en-la-preparación)). La preparación **nunca descarga un modelo por su cuenta**: sin el modelo del idioma, usa «Ajustar los silencios» y lo dice en el resultado. Sin ningún modelo instalado, la casilla sigue marcada y la ayuda añade `aj.alinear.preparar.sinModelos`. |
+| **Usarla al preparar canciones automáticamente** | Casilla, marcada por defecto. Controla el paso «Sincronizar con la voz» de la preparación desatendida (feature 5; [04 · Feature 10](04-progreso-pipeline.md#022--feature-10--sincronizar-con-la-voz-en-la-preparación)). La preparación **nunca descarga un modelo por su cuenta**: sin el modelo del idioma, usa «Ajustar los silencios» en su variante prudente (solo fines automáticos, sin activar la cuenta 3·2·1; spec 04 · Feature 5) y lo dice en el resultado. Sin ningún modelo instalado, la casilla sigue marcada y la ayuda añade `aj.alinear.preparar.sinModelos`. |
 | No disponible | Si el motor de alineación no se puede usar en este equipo (plataforma, memoria, motor de audio sin esa parte), la sección muestra solo `aj.alinear.noDisponible` (o `aj.alinear.reparar` con [Reparar el motor de audio] si lo que falta es una parte del motor que se puede reinstalar). |
 | Copiar información para soporte | Añade una línea `Sincronía automática: {idiomas instalados o «sin modelos» o «no disponible»}`. |
 

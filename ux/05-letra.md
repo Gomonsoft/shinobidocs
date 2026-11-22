@@ -247,7 +247,7 @@ La comprobación da un **veredicto** por letra:
 | Veredicto | Qué significa para el usuario | Icono y color | Texto en el candidato |
 |---|---|---|---|
 | `coincide` | Las líneas empiezan donde empieza la voz. | `check` · `exito` | `let.comp.coincide` |
-| `desfasada` | Toda la letra va adelantada o atrasada la misma cantidad `d` (entre 0,15 s y 5 s); movida esa cantidad, coincide. | `move-horizontal` · `info` | `let.comp.adelantada` / `let.comp.atrasada` |
+| `desfasada` | Toda la letra va adelantada o atrasada la misma cantidad `d` (entre 0,5 s y 5 s); movida esa cantidad, coincide. | `move-horizontal` · `info` | `let.comp.adelantada` / `let.comp.atrasada` |
 | `dudosa` | Ni encaja con claridad ni falla con claridad (mucha voz sin letra por coros, pocas líneas, voz muy tenue). | `circle-help` · `texto-2` | `let.comp.dudosa` |
 | `no_coincide` | Muchas líneas caen en silencio o hay tramos largos de voz sin letra, también después de probar a moverla. Un desfase que no es constante entra aquí: no se arregla moviendo. | `triangle-alert` · `aviso` | `let.comp.noCoincide` |
 | `pendiente` | Aún no hay voz separada o su forma de onda se está preparando. | `clock` · `texto-3` | `let.comp.pendiente` |
@@ -255,7 +255,7 @@ La comprobación da un **veredicto** por letra:
 | (sin tiempos) | Letra «Solo texto». | — | No se muestra línea de comprobación. |
 
 - **«Adelantada»** = la letra sale antes que la voz; se corrige moviéndola **más tarde**. «Atrasada», al revés.
-- El desfase se muestra con un decimal («0,8 s») y se aplica con precisión de milisegundo. Por debajo de 0,15 s no se propone nada: es `coincide`.
+- El desfase se muestra con un decimal («0,8 s») y se aplica con precisión de milisegundo. Por debajo de 0,5 s no se propone nada: es `coincide` (valor del [ADR 0024](../adr/0024-encaje-de-la-letra-con-la-voz-y-lineas-dudosas.md) §1, medido con la biblioteca del usuario: por debajo, la medida no distingue una letra correcta; pregunta [0159](../preguntas/0159-decisiones-provisionales-del-arquitecto-de-0-2-2.md) n.º 7).
 - Los umbrales entre veredictos los fija el arquitecto y los calibra QA con las 12 canciones Lista del usuario (ADR de la feature 4). La spec fija el comportamiento: ante la duda, `dudosa`, nunca una corrección.
 - La corrección nunca deja una línea fuera del audio: si el desplazamiento que mejor encaja sacaría un inicio por debajo de 0 o más allá de la duración, el veredicto es `no_coincide`.
 
@@ -342,7 +342,7 @@ La comprobación da un **veredicto** por letra:
 | **Quitar la corrección** | Devuelve todos los tiempos a como estaban antes de corregir (mueve la letra la misma cantidad en sentido contrario, también las líneas ajustadas después: es un movimiento de toda la letra). La línea pasa a `let.comp.actual.adelantada` / `atrasada` con [Corregir el desfase]. Sin diálogo: es reversible con el otro botón. Disponible mientras la canción recuerde una corrección (`0153` §2); desaparece al sustituir la letra. |
 | **Ver por qué** (C, `no_coincide`) | Despliega bajo la línea (`aria-expanded`) los mismos motivos del bloque de vista previa. |
 | **Pegar e importar** | Un LRC pegado o importado se comprueba igual al llegar a C. No hay comprobación en B (el texto aún no es una letra). |
-| **Letra sin tiempos o con menos de 3 líneas con inicio** | No se comprueba ni se muestra línea de comprobación. |
+| **Letra sin tiempos o con menos de 5 líneas con inicio** (`no_comprobable`, ADR 0024 §1) | No se comprueba ni se muestra línea de comprobación. |
 | **Canción Lista o Letra lista** | C muestra el veredicto, pero **no** se corrige sola nunca; [Corregir el desfase] sigue disponible. |
 
 ### Estados
