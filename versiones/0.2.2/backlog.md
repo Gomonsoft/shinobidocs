@@ -12,7 +12,7 @@ Ver el [plan](plan-4.md) y el [flujo de Git](../../workflow.md). **Una feature =
 | 2 | **1** · Letra en pantalla | 0287–0292 | L | 0339 | alpha.1 |
 | 3 | **2** · Subrayado y aviso de daltonismo | 0293–0295 | S–M | 1 | alpha.1 |
 | 2 | Contratos de la letra (4, 5, 10, 11) | 0296 | M | 0339 | — |
-| 3 | **4** · Comprobar la letra contra la voz | 0297–0301, 0367 | M | 0296 | alpha.1 |
+| 3 | **4** · Comprobar la letra contra la voz | 0297–0301, 0367–0369 | M | 0296 | alpha.1 |
 | 4 | **6** · Datos automáticos | 0302–0305 | S–M | 0339 | alpha.2 |
 | 5 | **5** · Preparación desatendida | 0306–0312 | L | 4, 6 (0302) | alpha.2 |
 | 6 | **11** · Revisión guiada | 0334–0337 | M | 0296; UI tras 4 y 5 | alpha.2 |
@@ -89,7 +89,9 @@ flowchart LR
 | [0299 · Vista Letra](../../tareas/0299-comprobacion-en-la-vista-letra.md) | M | 0298 |
 | [0300 · Editor](../../tareas/0300-comprobar-la-letra-en-el-editor.md) | M | 0297, 0296 |
 | [0367 · Comprobación diferida y remates](../../tareas/0367-comprobacion-diferida-y-remates-de-la-feature-4.md) | M | 0298, 0299, 0300 |
-| [0301 · Verificación, calibración e informe](../../tareas/0301-verificacion-e-informe-de-la-feature-4.md) | S | 0297–0300, 0367 |
+| [0369 · «Quitar la corrección» impide la diferida](../../tareas/0369-quitar-la-correccion-impide-la-diferida.md) | S | 0367 |
+| [0368 · Script `calibrar:encaje`](../../tareas/0368-script-de-calibracion-del-encaje.md) | S | 0297 |
+| [0301 · Verificación, calibración e informe](../../tareas/0301-verificacion-e-informe-de-la-feature-4.md) | S | 0297–0300, 0367–0369 |
 
 **Hecha cuando**: con las canciones del usuario se repite la separación «10/10 propias, 0 ajenas aceptadas» (o se ajustan las constantes con nota en el ADR), una letra desplazada ±0,8 s se corrige y se puede quitar en un paso, y ninguna letra correcta se marca `desfasada`.
 

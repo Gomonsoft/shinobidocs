@@ -181,3 +181,10 @@ detectarDudosas(letra, voz | null, { duracionMs, p })
 - `letras.guardar` admite `desfase_ms` (±30 s): main aplica `corregirDesfase({ offset_ms: 0 }, desfase_ms)` y guarda `offset_ms` y `desfase_corregido_ms` con la letra nueva. La letra queda `intacta`.
 - **Comprobación diferida** (spec 05, F4-L7): cuando los picos de una canción quedan listos tras separar, si su letra guardada está `intacta`, sin corrección previa, con tiempos y la canción no es Lista ni Letra lista, main la evalúa con `evaluarEncaje`. Si sale `desfasada`, aplica la corrección por el mismo camino que `guardarTiempos` y emite un aviso con [Deshacer] para el toast. Dentro de una tanda de varias canciones no hay toast por canción. La preparación desatendida (ADR 0025 §2, paso `comprobando`) usa la misma función y no la duplica.
 
+## Revisión 2026-11-22 · Quitar la corrección impide que vuelva sola (pregunta 0207)
+
+- Campo opcional **`letra.desfase_descartado: true`** (lectura tolerante; 0.2.1 lo descarta). Main lo pone al escribir una letra cuando quita una corrección que existía (`desfase_corregido_ms` guardado y la petición trae `null`): vista Letra, editor o [Deshacer] del toast de la diferida.
+- Con la marca, la comprobación diferida y la preparación desatendida **no** corrigen solas esa letra, aunque se regeneren los picos (re-separar pistas o caché borrada). El usuario puede corregirla a mano y la propuesta se sigue mostrando.
+- `intacta` no cambia: solo la retiran los cambios de tiempos de línea, y la preparación la necesita para seguir con los fines (ADR 0025).
+- Una letra nueva (`letras.guardar`) nace sin la marca.
+

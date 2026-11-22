@@ -1,7 +1,7 @@
 # 0301 — Feature 4 · Verificación, calibración e informe
 - Estado: En curso (calibración con canciones reales pendiente del usuario)
 - Paso del pipeline: 3
-- Depende de: 0297–0300, 0367
+- Depende de: 0297–0300, 0367–0369
 - ADRs: 0024
 - Spec UX: docs/ux/05-letra.md y 06-editor.md (0.2.2 · Feature 4)
 - Tamaño: S
@@ -11,7 +11,7 @@
 Cerrar la feature 4 y repetir la calibración.
 
 ## Criterios de aceptación
-- [ ] Script de solo lectura (fuera del repositorio o en `app/scripts/`, sin letras en el repositorio) que repite la tabla de ADR 0024 con las canciones del usuario y negativos fabricados; constantes ajustadas si hace falta, con nota en el ADR.
+- [ ] Ejecutar (el usuario, en su equipo) el script de la tarea 0368 que repite la tabla de ADR 0024 con las canciones del usuario y negativos fabricados; constantes ajustadas si hace falta, con nota en el ADR.
 - [x] Informe `docs/versiones/0.2.2/informe-feature-4.md`.
 
 ## Pruebas de feedback
