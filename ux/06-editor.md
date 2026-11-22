@@ -2550,6 +2550,7 @@ Esta sección **amplía** el panel Estilo y la vista previa. Respeta la [subfase
 ### Vista previa
 
 - Mismo render que el reproductor y el video: muestra las `N` líneas con su cambio de línea mientras suena. Es más pequeña, así que con 7 líneas las lejanas son diminutas: es una vista de composición, y «Probar a pantalla completa» sigue a un clic.
+- **Escala (precisión de la revisión de capturas, 2026-11-22)**: la vista previa es el fotograma del reproductor **reducido**: `S` = 7,5 % del alto del lienzo, **sin** el mínimo de 32 px (ese mínimo es para pantallas reales, sistema visual §10), y todas las demás medidas (ancho del 88 %, ancla, separaciones, recorte, indicadores) se calculan sobre el lienzo. Así, a cualquier tamaño del lienzo y escala de la interfaz, la vista previa muestra **las mismas líneas en las mismas posiciones relativas** que el reproductor (amplía F1-E11 y F1-E15). La píldora «Ejemplo» va arriba a la izquierda, a 8 px de los bordes, y nunca sobre la letra.
 - **En pausa** (modo estático): la línea seleccionada como activa con la mitad resaltada, las `P` líneas anteriores como ya cantadas (en gris) y las `F` siguientes como futuras, en orden de lista y saltando las pausas, **tengan o no tiempos**. Cambiar de selección no anima. No se aplica la retirada a los 2 s (no hay tiempo que corra).
 - **Reproduciendo**: lo que vería el reproductor en esa posición, sin el silencio previo. Las líneas sin inicio no ocupan puesto.
 - **Editor preciso de línea**: no cambia.
@@ -2810,6 +2811,7 @@ Origen: [plan 0.2.2, feature 4](../versiones/0.2.2/plan-4.md) y [propuesta 022](
 - Hasta 6 tramos visibles, con scroll propio si hay más. **[Ir]** cierra el diálogo, lleva el cabezal al principio del tramo, lo centra en la línea de tiempo (zoom sin cambiar) y selecciona la primera línea del tramo si la hay. No reproduce.
 - **[Buscar otra letra]** vacía el guardado y abre la vista Letra en «Buscar otra letra» (mismo camino que «Corregir la letra»).
 - Foco inicial en «Cerrar». No cambia ningún dato.
+- **Sin frases repetidas** (respuesta a [0209](../preguntas/0209-texto-repetido-en-el-dialogo-la-letra-no-encaja-con-la-voz.md)): los motivos van como lista con viñetas, en el orden «líneas sin voz», «voz sin letra», «desfase variable». Si aparece el motivo `let.comp.detalle.variable`, **no** se muestra el pie `edi.comprobar.noCoincide.pie` (dicen lo mismo); sin ese motivo, el pie sí. Los textos de cantidad usan su variante de singular (`let.comp.detalle.silencio`, n = 1: «1 de 6 líneas **cae** donde no hay voz»).
 
 ### Banner al entrar (solo en borradores)
 

@@ -368,7 +368,9 @@ Comportamiento en [Reproductor · Feature 1](07-reproductor.md#022--feature-1--l
 | Apilado | Desde la activa hacia fuera: una línea de dos renglones empuja a las que tiene detrás; la activa crece la mitad hacia cada lado. |
 | **Ancla** (centro de la activa) | `47 % del alto + (alto_encima − alto_debajo) / 2`, donde `alto_encima` y `alto_debajo` son lo que ocupan, con líneas de un renglón, las ya cantadas y las futuras con sus separaciones. Con `S` = 7,5 % del alto da la tabla de [07](07-reproductor.md#puestos-y-ancla): 38,0 · 34,3 · 42,9 · 30,7 · **39,3** · 27,1 · 35,6 · 42,9 · 23,4 · 32,0 · 39,3 %. **Excepción**: con 2 líneas, 45 % (el valor de §10). Se calcula una vez por configuración y tamaño de ventana, nunca por línea. |
 | Recorte | No se dibuja una futura cuya caja pase del 86 % del alto (ni las siguientes), ni una ya cantada cuya caja quede por encima del 10 %. |
-| Indicadores de espera | Barra: centro en `ancla − 0,9 × S`. Cuenta: centro en el ancla. Puntos: sobre la línea +1, como en §10. |
+| Indicadores de espera | Barra: centro en `ancla − 0,9 × S`. Cuenta: centro en el ancla. Puntos: centro vertical **a mitad del hueco** entre el borde inferior de la caja de la activa (o de la cuenta) y el borde superior de la caja de la +1 (precisión de la revisión de capturas, 2026-11-22: «sobre la línea +1» los dejaba pegados a ella). |
+| Más de dos renglones | Si una línea no cabe en 2 renglones ni reducida al 75 %, se parte en **3 renglones equilibrados** al 75 % (sin bajar más ni cortar texto). Caso raro (líneas de más de ~70 caracteres en 4:3); el recorte del 86 % y el 10 % sigue aplicándose (precisión de la revisión de capturas, 2026-11-22). |
+| Vista previa del editor | El mismo cálculo sobre el lienzo de la vista previa, con `S` = 7,5 % de su alto **sin** el mínimo de 32 px de §10 (06 · Feature 1, «Vista previa»). |
 
 **Gris de la letra y suelo de contraste**
 

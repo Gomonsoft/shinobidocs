@@ -862,7 +862,7 @@ Según el hueco entre el fin de una línea y el inicio de la siguiente:
 
 ### Líneas de dos renglones y recorte
 
-- Los renglones de cada línea se calculan **una vez, a tamaño `S`**, con la regla de siempre (88 % del ancho, máximo 2 renglones equilibrados y, si no cabe, reducción hasta el 75 %). En los demás puestos la línea es **esa misma forma reducida** al 70 % o al 60 % (decisión provisional 9).
+- Los renglones de cada línea se calculan **una vez, a tamaño `S`**, con la regla de siempre (88 % del ancho, máximo 2 renglones equilibrados y, si no cabe, reducción hasta el 75 %). Si ni así cabe, **3 renglones equilibrados** al 75 % (caso raro en 4:3; precisión de la revisión de capturas, 2026-11-22). En los demás puestos la línea es **esa misma forma reducida** al 70 % o al 60 % (decisión provisional 9).
 - Consecuencia: una línea de dos renglones ocupa dos renglones pequeños también como futura o ya cantada, aunque reducida cabría en uno. A cambio, **no se recoloca ninguna palabra** en toda su vida y el barrido por renglón de 0.2.0 no cambia.
 - El bloque crece desde la activa: una línea de dos renglones por debajo empuja hacia abajo a las siguientes; una por encima, hacia arriba; la activa crece la mitad hacia cada lado y su centro no se mueve.
 - **Recorte**: una futura cuyo borde inferior pase del **86 % del alto** no se dibuja (ni las que van detrás); una ya cantada cuyo borde superior quede por encima del **10 %**, tampoco. **Nunca se dibuja una línea cortada.** Una línea que deja de caber o vuelve a caber se funde con el cambio de línea que lo provoca.
@@ -871,7 +871,7 @@ Según el hueco entre el fin de una línea y el inicio de la siguiente:
 
 | Con | Comportamiento |
 |---|---|
-| **Indicadores de espera** | Mismas posiciones reservadas, ahora **relativas al ancla**: barra a 0,9 × `S` por encima, cuenta en el puesto de la activa, puntos sobre la línea +1. La separación de 0,6 × `S` a cada lado de la activa garantiza que la barra no toque la línea ya cantada ni los puntos toquen la +1. Mostrar u ocultar indicadores no mueve ninguna línea. Con 2 líneas todo queda donde estaba. |
+| **Indicadores de espera** | Mismas posiciones reservadas, ahora **relativas al ancla**: barra a 0,9 × `S` por encima, cuenta en el puesto de la activa, puntos **a mitad del hueco** entre la caja de la activa y la de la +1 (no pegados a la +1; sistema visual). La separación de 0,6 × `S` a cada lado de la activa garantiza que la barra no toque la línea ya cantada ni los puntos toquen la +1. Mostrar u ocultar indicadores no mueve ninguna línea. Con 2 líneas todo queda donde estaba. |
 | **Indicadores y salida de la línea** | Durante la salida en dos tiempos, los indicadores del hueco **aparecen con el avance de esa salida** (su opacidad sigue la misma curva), para que la línea que sube no cruce la barra. Su contenido (relleno de la barra, número) sigue el tiempo como siempre. Con `D = 0` aparecen al instante. |
 | **Primera entrada** | Pantalla de título hasta 4 s antes de la primera línea, como hoy. Después: puesto de la activa libre (ahí van los indicadores) y las futuras +1…+F ya a la vista. El bloque aparece con un fundido de 250 ms (instantáneo con `D = 0`). El silencio previo no cambia. |
 | **Pausas largas** (decisión provisional 8) | Indicadores en sus sitios y **todas las futuras a la vista** durante el hueco: se puede leer la estrofa que viene. La línea ya cantada se retira a los 2 s, haya o no indicadores. |
