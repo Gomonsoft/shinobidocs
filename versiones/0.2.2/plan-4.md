@@ -1,15 +1,32 @@
-# Plan de Shinobi Karaoke 0.2.2 (en exploración)
+# Plan de Shinobi Karaoke 0.2.2
 
-La 0.2.2 parte de [0.2.1](../0.2.1/plan-3.md). Este documento es un **plan en exploración**: recoge la feature que el usuario pidió el 2026-11-21 y la lista de mejoras que proponen los diseñadores. **Nada de aquí está autorizado para implementarse** hasta que el usuario lo apruebe, feature por feature.
+La 0.2.2 parte de [0.2.1](../0.2.1/plan-3.md). El 2026-11-21 el usuario autorizó definir las propuestas aceptadas: «vamos a meter las que ya se aceptaron por defecto; cada feature será el equivalente a una fase; ahora trabajaremos por feature, pues la app ya tiene estructura».
 
-## Resumen
+## Cómo se trabaja en esta versión
 
-| # | Feature | Origen | Estado |
-|---|---|---|---|
-| 1 | Letra en pantalla con varios enunciados, enunciado pasado y transiciones con movimiento | Usuario, 2026-11-21 | En exploración · diseño en curso |
-| — | Mejoras de experiencia por feature existente | Diseñador UX (exploración) | Pendiente de la investigación; ver [Propuestas por aprobar](#propuestas-por-aprobar) |
+- **Una feature = una fase.** Cada una tiene su spec, su parte de ADR, sus tareas, su verificación y su informe, y se integra por separado.
+- **Decisiones:** por defecto se aplica la opción recomendada por el agente ([regla de decisión](#regla-de-decisión)).
+- **Estado actual:** en definición (diseñador y arquitecto). La implementación empieza cuando el usuario lo indique.
 
-## Feature 1 · Letra en pantalla con varios enunciados
+## Features de la versión
+
+El orden es el propuesto por la sesión principal; el arquitecto lo ajusta según las dependencias.
+
+| Feature | Propuesta | Qué es | Tamaño | Estado |
+|---|---|---|---|---|
+| 1 | [018](../../propuestas/018-letra-en-pantalla-con-varios-enunciados.md) | Letra en pantalla con varios enunciados, línea pasada y transiciones | L | En definición |
+| 2 | [033](../../propuestas/033-legibilidad-y-resaltado-accesible.md) | Resaltado que no dependa solo del color | S–M | En definición |
+| 3 | [026](../../propuestas/026-aviso-de-version-nueva.md) | Aviso de versión nueva | S | En definición |
+| 4 | [022](../../propuestas/022-comprobar-la-letra-contra-el-audio.md) | Comprobar la letra contra el audio y corregir el desfase | M | En definición |
+| 5 | [020](../../propuestas/020-preparacion-desatendida.md) | Preparación desatendida hasta «lista para revisar» | M–L | En definición |
+| 6 | [024](../../propuestas/024-datos-de-la-cancion-automaticos.md) | Datos de la canción automáticos | S–M | En definición |
+| 7 | [021](../../propuestas/021-importacion-por-lotes.md) | Importación por lotes | L | En definición |
+| 8 | [028](../../propuestas/028-acciones-por-lotes-en-la-biblioteca.md) | Acciones por lotes en la Biblioteca | M | En definición |
+| 9 | [025](../../propuestas/025-copia-de-seguridad-y-paquete-de-cancion.md) | Copia de seguridad, paquete de canción y exportar la letra | M | En definición |
+| 10 | [019](../../propuestas/019-sincronia-automatica-por-alineacion-forzada.md) | Sincronía automática por alineación de la voz: prueba técnica y etapa 1 | L | En definición |
+| 11 | [023](../../propuestas/023-revision-guiada-de-lineas-dudosas.md) | Revisión guiada de líneas dudosas | M | En definición |
+
+## Feature 1 · Letra en pantalla con varios enunciados (propuesta 018)
 
 ### Qué pidió el usuario
 
@@ -71,7 +88,7 @@ Resumen de la [exploración](exploracion/letra-en-pantalla.md); hay una [maqueta
 
 Diseño recomendado aplicado por defecto, pendiente de que el usuario lo vea. Tras la aprobación del usuario: spec en `docs/ux/07-reproductor.md` y `06-editor.md`, ADR del arquitecto y desglose en tareas.
 
-## Propuestas por aprobar
+## Propuestas y su decisión
 
 Las rellena la sesión principal con lo que propongan los diseñadores. Cada fila enlaza a su archivo en `docs/propuestas/`. El usuario marca la decisión.
 
