@@ -50,3 +50,5 @@ Sin efecto visible en 0.2.2. Decisión del usuario del 2026-11-22: la función v
 - Críticos pendientes: los ejecuta la sesión principal al integrar (no se ejecutaron E2E).
 
 **Ajuste por ADR 0029 §1 (remate)**: la reserva se alineó con el ADR. `letra.partes = { cantantes: [{ id: c1..c4, nombre: string | null }] (1–4), voz_en_coros }` (nombre no válido se lee `null`) y `lineas[].parte` ∈ `c2`, `c3`, `c4`, `todos`, `coro` (`c1` no se escribe: se lee como ausente). Sigue sin uso. Tests de conservación de `editar.test.ts` y `servicio.test.ts` con ids tipados; añadido un caso de tolerancia en `letra.test.ts`. La normalización (`normalizarReparto`) y los invariantes estrictos de escritura no se implementan (son de la feature 3).
+
+**Cambio por la pregunta 0172 (2026-11-22)**: `ServicioLetras.guardarTiempos` quita `revisada` de todas las líneas si el `offset_ms` recibido es distinto del guardado (aunque el cliente la envíe); `intacta` y `origen_fin` no cambian. Repetir el mismo valor la conserva. Test en `main/letras/servicio.test.ts` («cambiar offset_ms retira revisada…»).
