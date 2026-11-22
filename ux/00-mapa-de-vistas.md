@@ -144,6 +144,172 @@ flowchart LR
     PRE -- "Anterior / Siguiente (aplica)" --> PRE
 ```
 
+### 0.2.2 · features 1 a 3
+No hay vistas nuevas ni cambia la navegación. Cambios dentro de las existentes:
+- **Reproductor, vista previa y video** ([07 · Feature 1](07-reproductor.md#022--feature-1--letra-en-pantalla-con-varios-enunciados)): de 2 a 7 líneas a la vez (5 por defecto), línea ya cantada en gris y cambio de línea con «Desplazamiento», «Fundido» o «Sin animación». Se configura en **Editor › Estilo › «Letra en pantalla»** ([06 · Feature 1](06-editor.md#022--feature-1--letra-en-pantalla)), heredable con el tema y con «Cambiar solo en esta canción».
+- **Resaltado que no depende solo del color** ([07 · Feature 2](07-reproductor.md#022--feature-2--resaltado-que-no-depende-solo-del-color)): «Subrayar lo ya cantado» en Editor › Estilo › Letra, «Subrayar siempre lo ya cantado» en Ajustes › Reproductor y un aviso de contraste nuevo para colores que se confunden con daltonismo.
+- **Aviso de versión nueva** ([08 · Feature 3](08-ajustes-y-acerca.md#022--feature-3--aviso-de-versión-nueva)): cambia el **marco de la ventana**. El botón ⚙ de la barra superior puede llevar un **punto** cuando hay una versión nueva (ver §2). El detalle y las acciones están en **Ajustes › Acerca de › «Actualizaciones»**, con un aviso al principio de Ajustes. Sin diálogos ni toasts, y nada en el reproductor ni en la ventana del público. La app no descarga ni instala: «Ver novedades» y «Descargar» abren el navegador.
+
+```mermaid
+flowchart LR
+    ARR([Arranque o cada 24 h]) -. "consulta en segundo plano<br/>(si el aviso está activado y la compilación es publicada)" .-> EST{¿Versión nueva?}
+    EST -- "no, sin red o error" --> NADA[Nada visible]
+    EST -- "sí" --> PUNTO[Punto en ⚙]
+    PUNTO -- "⚙ / Ctrl+," --> AJ[8 · Ajustes<br/>aviso al principio]
+    AJ -- "Ver" --> ACT[Acerca de › Actualizaciones]
+    ACT -- "Ver novedades / Descargar" --> NAV([Navegador])
+    ACT -- "Buscar actualizaciones" --> EST
+```
+
+### 0.2.2 · Features 4 a 7 — flujo de entrada
+
+Cuatro features que, juntas, convierten «añadir una canción» en «añado un álbum y vuelvo cuando está listo para revisar». Decisiones provisionales: [0154](../preguntas/0154-decisiones-provisionales-de-ux-de-las-features-4-a-7.md). Contratos pendientes: [0153](../preguntas/0153-contratos-de-las-features-4-a-7-para-las-specs.md). Specs:
+- **Feature 4 · Comprobar la letra**: [05 · Feature 4](05-letra.md#022--feature-4--comprobar-la-letra-contra-el-audio-y-corregir-el-desfase) y [06 · Feature 4](06-editor.md#022--feature-4--comprobar-la-letra-con-la-voz-y-corregir-el-desfase).
+- **Feature 5 · Preparación desatendida**: [04 · Feature 5](04-progreso-pipeline.md#022--feature-5--preparación-desatendida), [02 · Feature 5](02-biblioteca.md#022--feature-5--lista-para-revisar-y-bandeja-de-pendientes), [05 · Feature 5](05-letra.md#022--feature-5--preparación-desatendida-la-vista-letra), [06 · Feature 5](06-editor.md#022--feature-5--preparación-desatendida-lo-que-el-editor-cuenta) y [08 · Feature 5](08-ajustes-y-acerca.md#022--feature-5--letras-y-preparación-automática).
+- **Feature 6 · Datos automáticos**: [03 · Feature 6](03-anadir-cancion.md#022--feature-6--datos-de-la-canción-automáticos).
+- **Feature 7 · Importación por lotes**: [03 · Feature 7](03-anadir-cancion.md#022--feature-7--importación-por-lotes), [04 · Feature 7](04-progreso-pipeline.md#022--feature-7--cola-de-preparación-de-un-lote) y [02 · Feature 7](02-biblioteca.md#022--feature-7--lotes-en-la-biblioteca).
+
+**Vistas.** No hay vistas nuevas en el inventario; sí un **modo nuevo** de una existente:
+
+| # | Vista | Spec | Tipo | Se llega desde |
+|---|---|---|---|---|
+| 3b | **Añadir varias canciones** (tabla de revisión del lote) | [03 · Feature 7](03-anadir-cancion.md#022--feature-7--importación-por-lotes) | Modo de la vista 3, sin stepper de canción (cabecera «Nuevas canciones») | Elegir o soltar varios archivos o una carpeta; pegar varios enlaces o el de una lista; soltar varios archivos sobre la Biblioteca |
+
+Cambios dentro de las existentes:
+- **Añadir canción** (03): datos propuestos con su procedencia, autocompletado con los valores de la biblioteca, unificar grafías e «Intercambiar título y artista»; entrada de varios archivos, carpeta, varios enlaces o lista.
+- **Progreso** (04): la canción sigue sola tras separar (buscar la letra, comprobarla con la voz, ajustar los fines) hasta un resultado: «Lista para revisar», «Elige la letra», «No encontramos la letra» o «Letra pendiente». La acción principal de la vista pasa a ser «Volver a la biblioteca».
+- **Panel de actividad** (04): **cola de preparación** con progreso global, «Pausar», «Cancelar lo que falta…», «Reintentar las fallidas», paradas automáticas y diálogo «Resultado de la preparación». El botón de la barra superior dice «Preparando {i} de {n}».
+- **Biblioteca** (02): insignia **«Lista para revisar»** con «Revisar» y «Probar»; líneas de paso nuevas para la letra; **bandeja de pendientes** bajo la barra de herramientas; «Preparar» en el ⋯ de un borrador; avisos de reanudación; soltar varios archivos abre el lote.
+- **Letra** (05): cada candidata dice si coincide con el audio; la vista se abre con lo que la preparación ya encontró.
+- **Editor** (06): «Comprobar la letra con la voz…» y «Preparación automática» en «Funciones»; banners de desfase y de canción preparada.
+- **Ajustes** (08): sección «Letras y preparación automática» con la casilla «Buscar la letra automáticamente al añadir una canción».
+- Diálogos nuevos: «¿Corregir el desfase de la letra?» y «La letra no encaja con la voz» (06), «¿Cancelar las canciones que faltan?» y «Resultado de la preparación» (04), «¿Descartar este lote?» (03).
+
+**Stepper.** Los cuatro pasos no cambian. El paso 3 (Letra) gana dos indicadores: ⟳ mientras la app busca o comprueba la letra, y **!** («necesita tu atención», `aviso`) cuando la preparación terminó sin letra segura. En el modo lote no hay stepper.
+
+**Estados de una canción** (detalle en 02 · Feature 5): ✎ Borrador → ◔ Lista para revisar → ✓ Lista o ▤ Letra lista. «Lista para revisar» es un borrador al que solo le falta el visto bueno; el paso a Lista lo da siempre el usuario.
+
+```mermaid
+flowchart TD
+    BIB[2 · Biblioteca] -- "+ Añadir canción" --> ADD[3 · Añadir canción]
+    BIB -- "soltar varios archivos" --> LOTE
+    ADD -- "1 archivo o 1 video" --> DATOS[Revisar datos<br/>propuestos · feature 6]
+    ADD -- "varios archivos · carpeta ·<br/>varios enlaces · lista" --> LOTE[3b · Tabla del lote<br/>datos propuestos · duplicados · límite]
+    DATOS -- "Continuar" --> PROG[4 · Progreso]
+    LOTE -- "Añadir N canciones" --> BIB2[2 · Biblioteca<br/>cola de preparación en marcha]
+    PROG -- "Volver a la biblioteca" --> BIB2
+    BIB2 -. "cada canción, sola" .-> CAD[[Separar → buscar la letra →<br/>comprobar con la voz · feature 4 →<br/>ajustar los fines]]
+    CAD --> REV[◔ Lista para revisar]
+    CAD --> ELI[Elige la letra]
+    CAD --> NOE[No encontramos la letra<br/>o letra pendiente]
+    CAD --> ERR[✕ Error]
+    ELI -- "Elegir la letra" --> LET[5 · Letra<br/>candidatas ya comprobadas]
+    NOE -- "Añadir la letra" --> LET
+    LET -- "Usar esta letra<br/>(la preparación termina sola)" --> REV
+    ERR -- "Reintentar / Reintentar las fallidas" --> CAD
+    REV -- "Revisar" --> EDI[6 · Editor<br/>revisión guiada · feature 11]
+    REV -- "Probar" --> REP[7 · Reproductor<br/>sin cambiar el estado]
+    REP -- "Marcar como lista (toast)" --> LISTA
+    EDI -- "Marcar como lista / letra lista" --> LISTA[✓ Lista · ▤ Letra lista]
+    LISTA -- "▶ Reproducir" --> REP2[7 · Reproductor]
+```
+
+**De punta a punta: «añado un álbum y vuelvo cuando está listo para revisar»**
+
+```mermaid
+sequenceDiagram
+    actor U as Usuario
+    participant App as Shinobi Karaoke
+    participant BG as Cola de preparación
+    participant L as LRCLIB
+    U->>App: Pega el enlace de una lista (o suelta una carpeta)
+    App->>U: Tabla con título, artista y álbum propuestos (feature 6),<br/>duplicados desmarcados, tamaño y tiempo aproximados
+    U->>App: Corrige alguna celda, si hace falta, y «Añadir 12 canciones»
+    App->>BG: 12 borradores en cola (descargas y separaciones, de una en una)
+    App->>U: Biblioteca con «Preparando 1 de 12»
+    Note over U: Se va. No hace falta mirar.
+    loop por cada canción
+        BG->>BG: Descargar y preparar el audio
+        BG->>L: Buscar la letra (título, artista, álbum, duración)
+        BG->>BG: Separar voz e instrumental
+        BG->>BG: Comprobar la letra con la voz, corregir el desfase (feature 4)
+        BG->>BG: Ajustar los fines
+    end
+    BG-->>App: Tanda terminada
+    App->>U: «12 canciones preparadas: 9 listas para revisar · 2 esperan letra · 1 con error»
+    U->>App: Bandeja «Listas para revisar» → «Revisar» en cada una
+    U->>App: Escucha, corrige lo señalado y «Marcar como lista»
+    U->>App: Bandeja «Esperan letra» → «Elegir la letra» o «Añadir la letra»
+```
+
+**Acción principal de un borrador** (amplía la tabla «Continuar» de §3):
+
+| Situación de la canción | Botón de la tarjeta | Vista que abre |
+|---|---|---|
+| Buscando o comprobando la letra, ajustando los fines | (sin botón; línea ⟳) | — |
+| Elige la letra | Elegir la letra | 5 Letra, resultados ya cargados |
+| No encontramos la letra · Instrumental | Añadir la letra | 5 Letra, con su aviso |
+| Letra pendiente (sin conexión o servicio caído) | Reintentar | Ninguna: repite la búsqueda |
+| Lista para revisar | Revisar (y Probar) | 6 Editor (7 Reproductor) |
+| Las demás | Como en la tabla de §3 | |
+
+**Qué puede hacerse por separado**
+
+| Feature | Necesita | Qué da sin las demás |
+|---|---|---|
+| **4** · Comprobar la letra | Nada (usa los picos de voz que ya existen) | Veredicto por candidata en Letra y corrección del desfase en Letra y en el editor. |
+| **6** · Datos automáticos | Nada | Mejores propuestas, autocompletado, unificar e intercambiar al añadir una canción. Completar el álbum con LRCLIB funciona en cuanto se aplica una letra de LRCLIB, con o sin la 5. |
+| **5** · Preparación desatendida | La 4 para elegir sola. Sin ella, la cadena busca y deja siempre «Elige la letra» | La canción llega sola a «Lista para revisar»; bandeja de pendientes; «Preparar»; reanudación al reabrir. |
+| **7** · Importación por lotes | La 6 para que la tabla no dé trabajo. Sin la 5, deja borradores sin letra y lo avisa | Un álbum con una sola acción; cola con progreso global, pausa y resumen. |
+
+Orden recomendado de implementación: **4 → 6 → 5 → 7**. Las features 8 («Preparar» varias canciones), 10 (alineación en el paso de fines) y 11 (revisión guiada al pulsar «Revisar») se enganchan en puntos ya previstos en estas specs.
+
+**Atajos.** Ninguno global nuevo. En la tabla del lote: ↑/↓ entre filas, Espacio en la casilla, Ctrl/Cmd + Intro para añadir, Ctrl/Cmd + Z para deshacer la última edición, Mayús + Intro para un renglón nuevo en el campo de enlaces. Ninguna acción automática ni de cola tiene atajo de una tecla.
+
+**Errores y avisos nuevos o que cambian** (se suman al índice de §7):
+
+| Código o situación | Spec | Título visible |
+|---|---|---|
+| `URL_NO_SOPORTADA` (cambia: las listas ya se admiten) | 03 | «Este enlace no se puede usar» |
+| `LISTA_NO_DISPONIBLE` (provisional, 0153) | 03 | «No podemos abrir esta lista» |
+| carpeta sin audio | 03 | «En esa carpeta no hay archivos de audio ni de video» |
+| sin espacio para el lote | 03 | «No hay espacio para todas» |
+| cola parada por YouTube, sin conexión, sin espacio, motor o errores repetidos | 04 | Avisos `act.cola.*` del panel de actividad |
+| letra pendiente | 02, 04 | «No pudimos buscar la letra: sin conexión a internet» |
+| letra que no coincide con el audio | 05, 06 | «No coincide con tu audio: puede ser otra versión» |
+
+### 0.2.2 · features 8 a 11
+No hay vistas nuevas: todo son diálogos, secciones y un modo dentro de las vistas existentes. Decisiones provisionales: [0158](../preguntas/0158-decisiones-provisionales-de-ux-de-las-features-8-a-11.md). Contratos pendientes: [0157](../preguntas/0157-contratos-de-las-features-8-a-11-para-las-specs.md).
+
+- **Acciones por lotes** ([02 · Feature 8](02-biblioteca.md#022--feature-8--acciones-por-lotes-en-la-biblioteca)): la barra del modo selección de la Biblioteca gana «Preparar» y el menú «Más acciones» (A la cola, Exportar video…, Exportar paquete…, Exportar la letra…, Editar datos…, Eliminar…). «Preparar» alimenta la cola de preparación de la feature 7. **Exportar varios videos** ([10 · Feature 8](10-exportacion.md#022--feature-8--exportar-varias-canciones)) es una variante del diálogo de exportación: mismas opciones, una carpeta, progreso y resultado por canción.
+- **Copia de seguridad, paquete y letra** ([02 · Feature 9](02-biblioteca.md#022--feature-9--copia-de-seguridad-paquete-de-canción-y-exportar-la-letra), [08 · Feature 9](08-ajustes-y-acerca.md#022--feature-9--copia-de-seguridad)): tres **diálogos** nuevos. «Exportar paquete» (menú ⋯ de la tarjeta y selección múltiple), «Crear copia de seguridad» (Ajustes) e «Importar paquete / Restaurar copia» (Ajustes, estado vacío de la Biblioteca o arrastrando el archivo). «Exportar la letra (.lrc)…» usa el diálogo «Guardar» del sistema, desde el ⋯ de la tarjeta, la selección múltiple y Editor › Funciones. Es **copia personal**: ningún texto ni acción habla de compartir.
+- **Sincronizar con la voz** ([06 · Feature 10](06-editor.md#022--feature-10--sincronizar-con-la-voz-etapa-1)): sección nueva de Editor › Funciones con un diálogo de tres pasos (idioma y modelo, escucha, vista previa del cambio) y una acción por línea en el menú contextual. Los modelos por idioma se ven y se gestionan en **Ajustes › Sincronía automática** ([08 · Feature 10](08-ajustes-y-acerca.md#022--feature-10--sincronía-automática-modelos-por-idioma)); el primer arranque no cambia. En la preparación desatendida es el paso «Ajustar los fines» ([04 · Feature 10](04-progreso-pipeline.md#022--feature-10--sincronizar-con-la-voz-en-la-preparación)). Solo se implementa si la prueba técnica cumple su criterio.
+- **Revisión guiada** ([06 · Feature 11](06-editor.md#022--feature-11--revisión-guiada-de-líneas-dudosas), [02 · Feature 11](02-biblioteca.md#022--feature-11--revisión-guiada-en-la-biblioteca)): un **modo del editor** (no una vista): una tarjeta sobre el panel Sincronía que lleva de una línea dudosa a la siguiente. Se entra con «Revisar» de una tarjeta «Lista para revisar», desde Funciones o con R. La tarjeta de la Biblioteca muestra cuántas líneas quedan por revisar; el paso a «Lista» lo da siempre el usuario.
+
+```mermaid
+flowchart LR
+    BIB[2 · Biblioteca] -- "Seleccionar › Preparar" --> COLA[Cola de preparación<br/>04 · feature 7]
+    COLA -- "paso «Ajustar los fines»<br/>sincronía automática o silencios" --> LPR([Lista para revisar])
+    LPR -- "Revisar" --> REV{{6 · Editor<br/>revisión guiada}}
+    REV -- "Está bien (N) / corregir / siguiente" --> REV
+    REV -- "sin pendientes: Marcar como lista" --> BIB
+    BIB -- "⋯ Marcar como lista<br/>(avisa si quedan dudosas)" --> BIB
+    EDI[6 · Editor › Funciones] -- "Sincronizar con la voz…" --> ALI{{Idioma y modelo → escucha<br/>→ vista previa}}
+    ALI -- "Aplicar (un paso de deshacer)" --> EDI
+    ALI -- "Revisar n líneas" --> REV
+    BIB -- "Seleccionar › Más acciones › Exportar video…" --> LOTE{{10 · Exportar videos<br/>lote}}
+    LOTE -- "resultado por canción" --> BIB
+    BIB -- "⋯ / Más acciones › Exportar paquete…" --> PAQ{{Exportar paquete}}
+    AJ[8 · Ajustes › Copia de seguridad] -- "Crear copia…" --> PAQ
+    PAQ -- "archivo .shinobi" --> FUERA([Otro equipo o disco])
+    FUERA -- "Restaurar o importar… / arrastrar" --> IMP{{Importar paquete<br/>revisar conflictos}}
+    AJ -- "Restaurar o importar…" --> IMP
+    IMP -- "resultado por canción" --> BIB
+```
+
+- **Atajos nuevos** (solo Editor): **R** (empezar o terminar la revisión guiada), **N** (en la revisión: está bien y siguiente) y **Ctrl/Cmd + ↓ / ↑** (línea dudosa siguiente o anterior). En la Biblioteca, **Supr** en modo selección abre «Eliminar…» de la selección. Ninguna acción por lotes ni «Sincronizar con la voz» tienen atajo de una tecla.
+- **Errores nuevos** (códigos provisionales, 0157): `PAQUETE_NO_VALIDO` («Este archivo no es un paquete de Shinobi Karaoke.»), `PAQUETE_VERSION_NUEVA` («Este paquete es de una versión más nueva de Shinobi Karaoke.»), `PAQUETE_INCOMPLETO` («El paquete está dañado o incompleto.»), y para la sincronía automática `ALINEACION_NO_DISPONIBLE` («La sincronía automática no está disponible en este equipo.»), `IDIOMA_NO_ADMITIDO` («La sincronía automática todavía no funciona en este idioma.») y `MODELO_NO_DISPONIBLE` reutilizado para el modelo del idioma. Textos completos en las specs 02 y 06.
+
 ## 2. Estructura de la ventana
 
 ```
@@ -160,6 +326,7 @@ flowchart LR
 - `‹contexto›`: en Biblioteca, nada; en el espacio de canción, el **stepper** con el título de la canción.
 - `+ Añadir canción` (primario) solo aparece en la Biblioteca (en el resto de vistas no hay dos primarios).
 - La barra superior no existe en Primer arranque ni en el Reproductor.
+- **0.2.2, feature 3**: el botón ⚙ muestra un **punto** (8 px, `info`, arriba a la derecha del icono) cuando hay una versión nueva que el usuario aún no ha visto en Ajustes; su tooltip y su nombre accesible pasan a «Ajustes · hay una versión nueva». El punto se apaga al abrir Ajustes. No aparece en compilaciones de desarrollo o locales ni con el aviso desactivado ([08 · Feature 3](08-ajustes-y-acerca.md#022--feature-3--aviso-de-versión-nueva), [sistema visual](sistema-visual.md#022--feature-3--aviso-de-versión-nueva)).
 
 ### Espacio de canción (vistas 3–6)
 Las vistas de creación comparten cabecera con stepper:

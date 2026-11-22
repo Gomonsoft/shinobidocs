@@ -97,3 +97,11 @@ Estado del arte relevante (noviembre 2026):
 - GitHub restablece youtube-dl tras la retirada DMCA (2020): https://github.blog/news-insights/policy-news-and-insights/standing-up-for-developers-youtube-dl-is-back/
 - Demanda de discográficas contra el host de la web de youtube-dl: https://news.slashdot.org/story/22/01/16/025217
 - Resumen de riesgos de descarga y copia privada en la UE (fuente secundaria): https://cocondesneiges.pages.dev/en/automation/how-to-download-youtube-videos-legally/
+
+## Revisión para 0.2.2
+
+Fecha: 2026-11-21. Detalle en el [ADR 0025](0025-preparacion-desatendida-y-datos-de-la-cancion-automaticos.md) §6 y el [ADR 0026](0026-importacion-por-lotes-y-acciones-por-lotes-en-la-biblioteca.md) §1–§3.
+
+- **Listas de YouTube**: dejan de rechazarse en el modo lote de Añadir canción. Se leen con `info-lista-youtube` (modo plano) y se descargan vídeo a vídeo (`noplaylist=True` sigue en `descargar-youtube`). Las mezclas automáticas (`RD…`) y los canales siguen rechazados (`URL_NO_SOPORTADA`); lista privada, vacía o inexistente: `LISTA_NO_DISPONIBLE`. Tope de 50, pausa de 3 a 8 s entre descargas y aviso legal propio para listas (`config.aviso_youtube_listas_aceptado`, provisional).
+- **Metadatos**: además de `title`, `artist` y `album`, se leen `album_artist`, `track` y `date` (archivo) y `track`, `artists`, `album`, `album_artist`, `track_number` y `release_year` (yt-dlp). Heurística del nombre de archivo en `shared/metadatosNombre.ts`, álbum vacío desde LRCLIB y origen visible por campo (`metadatos.origen`).
+- **Archivo local en lote**: `leer-etiquetas` lee cabeceras sin decodificar; la decodificación pasa a la cola (`importar-archivo-cola`) con `fuente.ruta_pendiente` hasta completarse. El flujo de un solo archivo no cambia.

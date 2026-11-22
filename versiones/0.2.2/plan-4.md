@@ -6,25 +6,25 @@ La 0.2.2 parte de [0.2.1](../0.2.1/plan-3.md). El 2026-11-21 el usuario autoriz�
 
 - **Una feature = una fase.** Cada una tiene su spec, su parte de ADR, sus tareas, su verificación y su informe, y se integra por separado.
 - **Decisiones:** por defecto se aplica la opción recomendada por el agente ([regla de decisión](#regla-de-decisión)).
-- **Estado actual:** en definición (diseñador y arquitecto). La implementación empieza cuando el usuario lo indique.
+- **Estado actual:** definida (specs, ADR 0022–0028 y tareas 0284–0339 en el [backlog](backlog.md)). La implementación empieza cuando el usuario lo indique.
 
 ## Features de la versión
 
-El orden es el propuesto por la sesión principal; el arquitecto lo ajusta según las dependencias.
+El número de feature es el de la propuesta original; el **orden** de implementación y las entregas los fija el arquitecto en el [backlog](backlog.md) según las dependencias (2026-11-21). La tarea [0339](../../tareas/0339-contratos-compartidos-de-0-2-2.md) (contratos compartidos) va antes que todas.
 
-| Feature | Propuesta | Qué es | Tamaño | Estado |
-|---|---|---|---|---|
-| 1 | [018](../../propuestas/018-letra-en-pantalla-con-varios-enunciados.md) | Letra en pantalla con varios enunciados, línea pasada y transiciones | L | En definición |
-| 2 | [033](../../propuestas/033-legibilidad-y-resaltado-accesible.md) | Resaltado que no dependa solo del color | S–M | En definición |
-| 3 | [026](../../propuestas/026-aviso-de-version-nueva.md) | Aviso de versión nueva | S | En definición |
-| 4 | [022](../../propuestas/022-comprobar-la-letra-contra-el-audio.md) | Comprobar la letra contra el audio y corregir el desfase | M | En definición |
-| 5 | [020](../../propuestas/020-preparacion-desatendida.md) | Preparación desatendida hasta «lista para revisar» | M–L | En definición |
-| 6 | [024](../../propuestas/024-datos-de-la-cancion-automaticos.md) | Datos de la canción automáticos | S–M | En definición |
-| 7 | [021](../../propuestas/021-importacion-por-lotes.md) | Importación por lotes | L | En definición |
-| 8 | [028](../../propuestas/028-acciones-por-lotes-en-la-biblioteca.md) | Acciones por lotes en la Biblioteca | M | En definición |
-| 9 | [025](../../propuestas/025-copia-de-seguridad-y-paquete-de-cancion.md) | Copia de seguridad, paquete de canción y exportar la letra | M | En definición |
-| 10 | [019](../../propuestas/019-sincronia-automatica-por-alineacion-forzada.md) | Sincronía automática por alineación de la voz: prueba técnica y etapa 1 | L | En definición |
-| 11 | [023](../../propuestas/023-revision-guiada-de-lineas-dudosas.md) | Revisión guiada de líneas dudosas | M | En definición |
+| Feature | Propuesta | Qué es | Tamaño | Orden | Tareas | Entrega | ADR | Estado |
+|---|---|---|---|---|---|---|---|---|
+| 1 | [018](../../propuestas/018-letra-en-pantalla-con-varios-enunciados.md) | Letra en pantalla con varios enunciados, línea pasada y transiciones | L | 2 | 0287–0292 | alpha.1 | [0022](../../adr/0022-letra-en-pantalla-varias-lineas-y-subrayado-de-lo-cantado.md) | Definida (spec, ADR y tareas) |
+| 2 | [033](../../propuestas/033-legibilidad-y-resaltado-accesible.md) | Resaltado que no dependa solo del color (subrayado y aviso de daltonismo) | S–M | 3 | 0293–0295 | alpha.1 | 0022 | Definida |
+| 3 | [026](../../propuestas/026-aviso-de-version-nueva.md) | Aviso de versión nueva | S | 1 | 0284–0286 | alpha.1 | [0023](../../adr/0023-aviso-de-version-nueva-con-github-releases.md) | Definida |
+| 4 | [022](../../propuestas/022-comprobar-la-letra-contra-el-audio.md) | Comprobar la letra contra el audio y corregir el desfase | M | 3 | 0296–0301 | alpha.1 | [0024](../../adr/0024-encaje-de-la-letra-con-la-voz-y-lineas-dudosas.md) | Definida (umbrales calibrados con la biblioteca del usuario) |
+| 5 | [020](../../propuestas/020-preparacion-desatendida.md) | Preparación desatendida hasta «Lista para revisar» | L | 5 | 0306–0312 | alpha.2 | [0025](../../adr/0025-preparacion-desatendida-y-datos-de-la-cancion-automaticos.md) | Definida |
+| 6 | [024](../../propuestas/024-datos-de-la-cancion-automaticos.md) | Datos de la canción automáticos | S–M | 4 | 0302–0305 | alpha.2 | 0025 | Definida |
+| 7 | [021](../../propuestas/021-importacion-por-lotes.md) | Importación por lotes | L | 7 | 0313–0317 | alpha.3 | [0026](../../adr/0026-importacion-por-lotes-y-acciones-por-lotes-en-la-biblioteca.md) | Definida (listas de YouTube: legal provisional) |
+| 8 | [028](../../propuestas/028-acciones-por-lotes-en-la-biblioteca.md) | Acciones por lotes en la Biblioteca | M | 8 | 0318–0322 | alpha.3 | 0026 | Definida |
+| 9 | [025](../../propuestas/025-copia-de-seguridad-y-paquete-de-cancion.md) | Copia de seguridad, paquete de canción y exportar la letra | M–L | 8 | 0323–0327 | alpha.3 | [0027](../../adr/0027-copia-de-seguridad-paquete-de-cancion-y-exportar-lrc.md) | Definida (paquete con audio: legal provisional) |
+| 10 | [019](../../propuestas/019-sincronia-automatica-por-alineacion-forzada.md) | Sincronía automática por alineación de la voz: prueba técnica y etapa 1 | M + L | 1 (prueba) · 9 (etapa 1) | 0328 · 0329–0333 | prueba en alpha.1 · etapa en alpha.4 | [0028](../../adr/0028-sincronia-automatica-por-alineacion-forzada-prueba-tecnica-y-etapa-1.md) (Propuesto) | Prueba técnica definida; etapa 1 condicionada |
+| 11 | [023](../../propuestas/023-revision-guiada-de-lineas-dudosas.md) | Revisión guiada de líneas dudosas | M | 6 | 0334–0337 | alpha.2 | 0024 | Definida |
 
 ## Feature 1 · Letra en pantalla con varios enunciados (propuesta 018)
 

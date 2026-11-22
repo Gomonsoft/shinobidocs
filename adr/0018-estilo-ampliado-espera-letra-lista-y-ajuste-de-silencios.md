@@ -401,3 +401,12 @@ Fecha: 2026-11-21. Detalle en el [ADR 0021](0021-sincronia-simplificada-y-editor
 - **Idéntica en las cuatro superficies**: vive en `PantallaLetra` y su CSS, y en la exportación la fracción llega por el modo fotograma (`tiempoFijoMs`), sin animaciones CSS. Se comprueba con una prueba del componente en modo fotograma, sin píxeles.
 - **«Ajustar los silencios»** (§6): incluye las líneas con palabras **importadas** (su fin cambia y sus palabras se descartan, ADR 0021 §4) y sigue excluyendo las líneas con palabras **manuales**. Los recuentos del diálogo cuentan las primeras como líneas normales.
 - **Letra lista** (§5) no cambia: sigue sin barrido ni resaltado por palabra, también con palabras manuales.
+
+## Revisión para 0.2.2
+
+Fecha: 2026-11-21. Detalle en el [ADR 0022](0022-letra-en-pantalla-varias-lineas-y-subrayado-de-lo-cantado.md), el [0024](0024-encaje-de-la-letra-con-la-voz-y-lineas-dudosas.md) y el [0025](0025-preparacion-desatendida-y-datos-de-la-cancion-automaticos.md).
+
+- **§1, excepción**: `estilo.pantalla` ausente vale el predeterminado **nuevo** (5 líneas), no el comportamiento anterior. Es decisión del plan (provisional).
+- **§3, reemplazos**: el de «Letra en pantalla» va en `apariencia.reemplazo_pantalla` (clave hermana, por compatibilidad con 0.2.1), con las mismas reglas que `reemplazos.espera`.
+- **§3, posiciones de los indicadores**: relativas al ancla de la línea activa (con 2 líneas, las de siempre).
+- **§6, «Ajustar los silencios»**: parámetros nuevos `soloIds` (una línea: «Fin al final de la voz»), `soloFinesAutomaticos` y `activarComodin` (variante prudente de la preparación desatendida); anota `origen_fin`.

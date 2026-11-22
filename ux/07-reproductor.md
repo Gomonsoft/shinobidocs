@@ -9,6 +9,7 @@
 - 0.2.0, fase 4 (2026-11-11): reproductor en otra pantalla (ventana secundaria), transición con cuenta entre canciones de la cola, en espera, fin de la cola, fallo de una entrada, reanudación y recuperación. Ver [Fase 4 de 0.2.0 — ventana secundaria y cola](#fase-4-de-020--ventana-secundaria-y-cola). Preguntas: [0048](../preguntas/0048-escucha-editor-durante-evento.md) y [0049](../preguntas/0049-politica-cola-de-reproduccion.md) (respondidas), [0058](../preguntas/0058-interfaz-de-la-sesion-en-vivo-y-la-cola.md) (arquitecto → UX, respondida), [0059](../preguntas/0059-conductas-de-la-sesion-en-vivo-ante-incidencias.md) (usuario, respondida: 1B, 2A, 3B, 4A), [0060](../preguntas/0060-letra-y-controles-de-sonido-durante-la-sesion.md) (usuario, respondida: 1A, 2A) y [0061](../preguntas/0061-reproductor-en-otra-pantalla-con-wayland.md) (arquitecto → UX, respondida).
 - 0.2.0, fase 5 (2026-11-20): degradados radial y cónico con movimiento ligado a la canción, indicadores de espera (puntos, barra y cuenta 3·2·1) y modo Letra lista sin barrido. Ver [Fase 5 de 0.2.0 — estilo, espera y Letra lista](#fase-5-de-020--estilo-espera-y-letra-lista).
 - 0.2.1, fases 8 y 9 (2026-11-21): barrido progresivo en lugar de las palabras importadas, barrido palabra a palabra con las hechas a mano, sin `,` / `.` en la prueba desde el editor y barra de espera como barra de carga. Ver [Fase 8 de 0.2.1](#fase-8-de-021--sin-palabras-importadas-ni-desplazamiento-y-barra-de-carga).
+- 0.2.2, features 1 y 2 (2026-11-21): de 2 a 7 líneas a la vez con línea ya cantada y cambio de línea animado ([Feature 1](#022--feature-1--letra-en-pantalla-con-varios-enunciados)), y subrayado de lo ya cantado para que el resaltado no dependa solo del color ([Feature 2](#022--feature-2--resaltado-que-no-depende-solo-del-color)). Decisiones provisionales: [0155](../preguntas/0155-decisiones-provisionales-de-ux-de-0-2-2-features-1-a-3.md). Contratos: [0156](../preguntas/0156-contratos-de-las-features-1-a-3-de-0-2-2-para-las-specs.md).
 
 ## Objetivo
 Cantar: instrumental + letra sincronizada con el estilo de la canción, **a pantalla completa, sin distracciones y legible a unos 5 m** (salón, televisor de 55", proyector). Empieza al instante y se sale con una tecla.
@@ -707,3 +708,313 @@ Origen: [plan 0.2.1, fases 8 y 9](../versiones/0.2.1/plan-3.md#fase-8--sincroní
 - R8-7. Capturas en `docs/ux/revision-0.2.1-fase-8/` con nombre `reproductor-{ancho}x{alto}-{estado}.png` a 1920 × 1080 y 1280 × 720: `barra-carga-inicio`, `barra-carga-mitad`, `barra-carga-letra-lista`, `palabras-importadas-progresivo`.
 
 **Verificación manual** (guía de 0.2.1): la barra de carga se entiende a 5 m en una TV de 55" con fondos claros y oscuros y con un tema de colores parecidos; en Letra lista se distingue el relleno de la pista.
+
+## 0.2.2 · Feature 1 — Letra en pantalla con varios enunciados
+
+Origen: [plan 0.2.2, feature 1](../versiones/0.2.2/plan-4.md#feature-1--letra-en-pantalla-con-varios-enunciados-propuesta-018), [propuesta 018](../propuestas/018-letra-en-pantalla-con-varios-enunciados.md) y [exploración](../versiones/0.2.2/exploracion/letra-en-pantalla.md) (datos medidos, referentes y alternativas descartadas). Las once decisiones del plan se aplican **por defecto** y son **provisionales** hasta que el usuario las vea ([0155](../preguntas/0155-decisiones-provisionales-de-ux-de-0-2-2-features-1-a-3.md)). Configuración en el editor: [06 · Feature 1](06-editor.md#022--feature-1--letra-en-pantalla). Valores: [sistema visual · Feature 1](sistema-visual.md#022--feature-1--letra-en-pantalla). Video: [10 · Feature 1](10-exportacion.md#022--feature-1--letra-en-pantalla-en-el-video). Contratos técnicos (esquema, modelo de render, gris y suelo de contraste): [ADR 0022](../adr/0022-letra-en-pantalla-varias-lineas-y-subrayado-de-lo-cantado.md), que responde a [0156](../preguntas/0156-contratos-de-las-features-1-a-3-de-0-2-2-para-las-specs.md) §1–§13.
+
+Vale igual para el reproductor local, la prueba desde el editor, la ventana secundaria, la vista previa del editor y el video (un solo modelo de render, función pura del tiempo de la canción).
+
+**Sustituye**: las filas «Línea actual + siguiente», «Cambio de línea» y la frase «la línea actual desaparece y queda solo la siguiente» de «Letra»; «Máximo 2 líneas visibles (actual + siguiente) para que el ojo no busque» de «Legibilidad a distancia»; «sin transición entre líneas» de «Accesibilidad» (ver «Movimiento reducido»); el criterio 8 (número de líneas); en la primera fase de 0.2.0, «en 00:15.80 desaparece la actual» (ahora empieza su salida hacia el puesto de la línea ya cantada); en la fase 5, las posiciones «al 45 % del alto» de la barra y la cuenta (ahora **relativas al centro de la línea activa**), la fila «El texto no se mueve» (se precisa abajo) y el criterio R9 en lo que toca al número de líneas; en «Modo Letra lista», «la transición entre líneas (200 ms)». Controles, atajos, pantalla de título, silencio previo, pantalla final, cola, voz guía y las reglas de cuándo sale cada indicador de espera **no cambian**.
+
+### Conceptos
+
+| Término | Definición |
+|---|---|
+| **Línea** | Un enunciado de la letra (`tipo: "linea"`) con inicio. Ocupa uno o dos renglones en pantalla. Las líneas sin inicio y las pausas (♪) no cuentan: no ocupan puesto. |
+| **Activa** | La línea que suena: desde su inicio hasta su fin efectivo. |
+| **Futuras** | Las siguientes líneas con inicio, en orden. |
+| **Ya cantada** (pasada) | Una línea cuyo fin efectivo ya pasó y que sigue a la vista, encima de la activa. |
+| **Puesto** | Lugar de una línea respecto a la activa: 0 = activa; +1, +2… = futuras, hacia abajo; −1, −2 = ya cantadas, hacia arriba. |
+| `S` | Tamaño de la línea activa: `máx(32 px, 7,5 % del alto)`, como hasta ahora. **No cambia con el número de líneas.** |
+| `N`, `P`, `F` | Líneas a la vez (2–7), líneas ya cantadas (0–2) y futuras: `F = N − 1 − P`. |
+| **Ancla** | Altura fija del centro de la línea activa para una configuración. No cambia en toda la canción. |
+| **Hueco** | Tiempo entre el fin efectivo de una línea y el inicio de la siguiente. |
+| `D` | Duración nominal del cambio de línea: 350 ms («Desplazamiento»), 250 ms («Fundido») o 0 («Sin animación» y movimiento reducido). |
+
+### Configuración que usa
+
+El bloque **«Letra en pantalla»** del estilo, resuelto al empezar la canción o la entrada de la cola (instantánea), con la misma precedencia que los indicadores de espera: el propio de la canción si lo tiene y, si no, el del estilo efectivo.
+
+| Dato | Valores | Si falta el dato |
+|---|---|---|
+| Líneas a la vez (`N`) | 2, 3, 4, 5, 6, 7 | **5** |
+| Líneas ya cantadas | 0, 1, 2 | **1** |
+| Cambio de línea | Desplazamiento · Fundido · Sin animación | **Desplazamiento** |
+
+- **Líneas ya cantadas efectivas** (`P`): `mín(elegidas, máximo para N)`; el máximo es 0 con 2 o 3 líneas, 1 con 4 o 5 y 2 con 6 o 7.
+- **Bibliotecas y temas existentes**: no tienen el dato, así que se ven con 5 líneas, 1 ya cantada y desplazamiento desde que se instala 0.2.2, **sin reescribir ningún archivo** (decisión provisional 2). Para volver al aspecto de 0.2.1 se elige «2» en el tema.
+- Con **2 líneas** y «Sin animación», el fotograma es el de 0.2.1: activa al 45 % y siguiente al 70 %.
+- **Volver a 0.2.1**: una canción o un tema de 0.2.2 se abre en 0.2.1 con 2 líneas; si 0.2.1 lo vuelve a guardar, pierde estos ajustes y al regresar a 0.2.2 se ve con los predeterminados (ADR 0022 §1). Se avisa en las notas de la versión.
+
+### Wireframes
+
+**Predeterminado: 5 líneas, 1 ya cantada, a mitad de una línea**
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│                                                                          │
+│                                                                          │
+│                     y la ciudad se queda sin voz                         │ ← −1 ya cantada: 60 %, gris
+│                                                                          │
+│              ████████████████░░░░░░░░░░░░░░░░░                           │
+│              Guardo en la manga un verso doblado                         │ ← 0 activa: S, centro al 39,3 %
+│                                                                          │
+│                  que nadie sabe de dónde llegó                           │ ← +1: 70 %
+│                   Paso a paso, sin hacer ruido                           │ ← +2: 60 %, más tenue
+│                   cruzo la noche de puntillas                            │ ← +3: 60 %, más tenue
+│                                                                          │
+│                                                                          │
+└──────────────────────────────────────────────────────────────────────────┘
+```
+
+**Pausa larga con los tres indicadores** (la línea ya cantada se retiró a los 2 s)
+```
+│                                                                          │
+│                ▕██████████████░░░░░░░░░░░░░░░░░░░░░░▏                    │ ← barra: ancla − 0,9 × S
+│                                  2                                       │ ← cuenta: en el ancla (puesto de la activa, vacío)
+│                                 ●●                                       │ ← puntos: sobre la línea +1
+│                  que nadie sabe de dónde llegó                           │ ← +1
+│                   Paso a paso, sin hacer ruido                           │ ← +2
+│                   cruzo la noche de puntillas                            │ ← +3
+```
+
+**2 líneas** (aspecto de 0.2.1)
+```
+│                 ███████████████░░░░░░░░░░░░░░░                           │
+│                 Is this the real life? Is this just                      │ ← activa, centro al 45 %
+│                     Caught in a landslide                                │ ← +1: 70 %
+```
+
+### Puestos y ancla
+
+Tamaño, opacidad y color de cada puesto: [sistema visual · Feature 1](sistema-visual.md#022--feature-1--letra-en-pantalla). Resumen: la activa a `S` y al 100 %; la +1 al 70 % de `S` y al 100 % (como hoy); las demás futuras al 60 % de `S`, cada vez más tenues; las ya cantadas al 60 % de `S`, en gris.
+
+| N | Sin ya cantadas (P = 0) | 1 ya cantada | 2 ya cantadas |
+|---|---|---|---|
+| 2 | activa + 1 futura · ancla al **45,0 %** | no disponible | no disponible |
+| 3 | activa + 2 futuras · 38,0 % | no disponible | no disponible |
+| 4 | activa + 3 futuras · 34,3 % | 1 + activa + 2 futuras · 42,9 % | no disponible |
+| **5** | activa + 4 futuras · 30,7 % | **1 + activa + 3 futuras · 39,3 %** (predeterminado) | no disponible |
+| 6 | activa + 5 futuras · 27,1 % | 1 + activa + 4 futuras · 35,6 % | 2 + activa + 3 futuras · 42,9 % |
+| 7 | activa + 6 futuras · 23,4 % | 1 + activa + 5 futuras · 32,0 % | 2 + activa + 4 futuras · 39,3 % |
+
+- El ancla se calcula para que el bloque, con todas las líneas de un renglón, quede centrado en el 47 % del alto (fórmula en el sistema visual). Con 2 líneas se conserva el 45 % de siempre.
+- La línea activa **no se mueve de altura** en toda la canción: ni al cambiar de línea, ni al vaciarse los puestos futuros al final, ni con líneas de dos renglones.
+- El bloque mayor (7 líneas) ocupa del 18 % al 76 % del alto con líneas de un renglón: fuera de las franjas de controles (0–12 % y 82–100 %). La regla «ningún elemento de interfaz entre el 25 % y el 75 %» no cambia (la letra no es interfaz). Con los controles visibles, una franja puede tapar una línea lejana durante 3 s; se acepta.
+
+### Línea ya cantada
+
+| Aspecto | Comportamiento |
+|---|---|
+| **Cuándo existe** | Con `P ≥ 1`. Una línea pasa a ya cantada al **salir** (ver «Cambio de línea»): sube al puesto −1, encoge al 60 % y pierde el color. |
+| **Color** | **Gris de la letra**: el gris neutro con la misma luminancia que el color de letra del estilo (sistema visual), al 55 % de opacidad (40 % en el puesto −2). Con letra blanca es blanco al 55 %. |
+| **De qué color parte** | Del color de lo ya cantado (la línea termina barrida entera) y se funde a gris durante la salida. En Letra lista, del color de la letra a gris. |
+| **Contraste** | Mínimo 3:1 contra el peor punto del fondo (suelo de contraste del sistema visual). No se exige distinguirla por color de las futuras: se distingue por su posición, encima de la activa. Sin avisos nuevos. |
+| **Retirada** | Si tras su fin pasan **2 s** sin que empiece otra línea, todas las ya cantadas se funden en su sitio durante 400 ms y desaparecen. **No vuelven** al acabar la pausa: tras un hueco de más de 2 s solo pueden ser ya cantadas las líneas posteriores a ese hueco. |
+| **Sin ya cantadas** (`P = 0`) | Al salir, la línea sube hacia el puesto −1 y se funde hasta desaparecer (antes desaparecía de golpe). |
+| **Con 2** | La anterior pasa de −1 a −2 (40 %) y la que estaba en −2 sube un puesto más y se funde. |
+
+### Cambio de línea
+
+Cada línea produce dos sucesos, conocidos de antemano:
+
+| Suceso | Instante | Qué mueve |
+|---|---|---|
+| **Entrada** de una línea | Su inicio | Las futuras suben un puesto: la +1 pasa a activa (crece del 70 % al 100 %), las demás de +k a +k−1 y aparece una nueva por abajo. |
+| **Salida** de una línea | Su fin efectivo | La activa pasa a −1 (encoge al 60 % y se vuelve gris). Las ya cantadas suben un puesto y la más antigua se funde. |
+
+Según el hueco entre el fin de una línea y el inicio de la siguiente:
+
+| Caso | Condición | Qué se ve |
+|---|---|---|
+| **Relevo** (el más frecuente: 2 de cada 3 cambios en las canciones de referencia, ADR 0022) | Hueco **menor que `D`** | **Un solo movimiento** del bloque entero, en el inicio de la línea siguiente. La línea que acaba espera en su sitio, barrida entera, ese instante (menos de 350 ms). |
+| **Dos tiempos** (decisión provisional 7) | Hueco **igual o mayor que `D`**, o no hay línea siguiente | Al acabar la línea, sale (sube y se apaga) y el puesto de la activa queda libre; al empezar la siguiente, sube el resto. Es el fin de línea visible de 0.2.0. |
+
+**Duración**
+- **Entrada y relevo**: `mín(D, 60 % de la duración de la línea que entra)`, contando su duración de inicio a fin efectivo. Si queda **por debajo de 120 ms, el cambio es instantáneo**. Así el movimiento termina siempre antes de que esa línea acabe, y dos cambios nunca se solapan ni se acumulan en cola. Ejemplos: una línea de 0,27 s entra en 162 ms; una de 15 ms (dato de sincronía defectuoso) cambia al instante.
+- **Salida en dos tiempos**: `D` completa (el hueco es al menos `D`, así que termina antes de la entrada siguiente).
+- **Curva** (los dos tipos): desaceleración cúbica, `1 − (1 − x)³`, sin rebote: recorre el 78 % del camino en el primer 40 % del tiempo.
+
+**Tipos**
+
+| Tipo | Qué se ve | `D` |
+|---|---|---|
+| **Desplazamiento** (predeterminado) | Cada línea viaja de forma continua de su puesto al siguiente: posición, tamaño, opacidad y color se interpolan con la curva. La línea que entra por abajo llega desde el puesto siguiente al último con opacidad 0. | 350 ms |
+| **Fundido** | Nadie viaja. En cada puesto, la línea que lo deja se funde mientras sube 0,3 × `S`, y la que llega aparece desde 0,3 × `S` más abajo, ya con el tamaño y el color de su puesto nuevo. Va mejor en canciones rápidas, para quien se marea con desplazamientos largos y en video a 24–30 FPS. | 250 ms |
+| **Sin animación** | Los puestos cambian al instante. Es también lo que se ve con movimiento reducido. | 0 |
+
+- El **barrido** avanza con su reloj de siempre mientras la línea entra: es del texto y viaja con él. En «Fundido», el barrido se ve en la copia que llega al puesto de la activa.
+- Durante un cambio puede haber **una línea más** que `N` a la vista (la que entra por abajo y la que sale por arriba). En reposo, nunca más de `N`.
+
+**Casos límite** (iguales para los tres tipos)
+
+| Caso | Comportamiento |
+|---|---|
+| **Buscar** (barra, ←/→, J/L, ⏮) | Se pinta el estado del instante de destino. **El salto no se anima.** Si el destino cae dentro de un cambio de línea, se ve en ese punto y continúa. Buscar a un instante pinta lo mismo que llegar a él reproduciendo. |
+| **Pausa** | La letra se congela en el fotograma exacto, también a mitad de un cambio. |
+| **Reanudar** | Continúa desde ese mismo punto, sin reiniciar la animación. |
+| **Movimiento reducido** | Como «Sin animación»: puestos al instante, también la retirada de las ya cantadas y la aparición del bloque. Se conservan puestos, tamaños, opacidades y el gris (son estados, no movimiento). El barrido y la barra de espera siguen avanzando (son contenido). |
+| **Cambio de tamaño de la ventana** | Se recalculan renglones y puestos y se pinta el instante actual. |
+| **Últimas líneas** | Los puestos futuros se van quedando vacíos; el ancla no cambia. |
+| **Líneas sin inicio** (lista incompleta) | No ocupan puesto: las futuras son las siguientes líneas con inicio. |
+
+### Líneas de dos renglones y recorte
+
+- Los renglones de cada línea se calculan **una vez, a tamaño `S`**, con la regla de siempre (88 % del ancho, máximo 2 renglones equilibrados y, si no cabe, reducción hasta el 75 %). En los demás puestos la línea es **esa misma forma reducida** al 70 % o al 60 % (decisión provisional 9).
+- Consecuencia: una línea de dos renglones ocupa dos renglones pequeños también como futura o ya cantada, aunque reducida cabría en uno. A cambio, **no se recoloca ninguna palabra** en toda su vida y el barrido por renglón de 0.2.0 no cambia.
+- El bloque crece desde la activa: una línea de dos renglones por debajo empuja hacia abajo a las siguientes; una por encima, hacia arriba; la activa crece la mitad hacia cada lado y su centro no se mueve.
+- **Recorte**: una futura cuyo borde inferior pase del **86 % del alto** no se dibuja (ni las que van detrás); una ya cantada cuyo borde superior quede por encima del **10 %**, tampoco. **Nunca se dibuja una línea cortada.** Una línea que deja de caber o vuelve a caber se funde con el cambio de línea que lo provoca.
+
+### Convivencia con lo existente
+
+| Con | Comportamiento |
+|---|---|
+| **Indicadores de espera** | Mismas posiciones reservadas, ahora **relativas al ancla**: barra a 0,9 × `S` por encima, cuenta en el puesto de la activa, puntos sobre la línea +1. La separación de 0,6 × `S` a cada lado de la activa garantiza que la barra no toque la línea ya cantada ni los puntos toquen la +1. Mostrar u ocultar indicadores no mueve ninguna línea. Con 2 líneas todo queda donde estaba. |
+| **Indicadores y salida de la línea** | Durante la salida en dos tiempos, los indicadores del hueco **aparecen con el avance de esa salida** (su opacidad sigue la misma curva), para que la línea que sube no cruce la barra. Su contenido (relleno de la barra, número) sigue el tiempo como siempre. Con `D = 0` aparecen al instante. |
+| **Primera entrada** | Pantalla de título hasta 4 s antes de la primera línea, como hoy. Después: puesto de la activa libre (ahí van los indicadores) y las futuras +1…+F ya a la vista. El bloque aparece con un fundido de 250 ms (instantáneo con `D = 0`). El silencio previo no cambia. |
+| **Pausas largas** (decisión provisional 8) | Indicadores en sus sitios y **todas las futuras a la vista** durante el hueco: se puede leer la estrofa que viene. La línea ya cantada se retira a los 2 s, haya o no indicadores. |
+| **Pausas (♪)** | Siguen sin dibujarse: solo cuentan como hueco. |
+| **Final de canción** | La última línea sale, pasa a ya cantada y a los 2 s se retira: quedan el fondo y, al acabar el audio, la pantalla final (sin cambios). |
+| **Letra lista** | Sin color de lo ya cantado en ningún momento, tampoco durante un cambio: la activa se distingue por tamaño, puesto y opacidad; la ya cantada, por gris, tamaño y puesto. El paso a gris es aquí la única señal de avance. Indicadores en el color de la letra, como hoy. |
+| **Barrido palabra a palabra** (0.2.1) | Sin cambios y solo en la activa. Una futura no tiene barrido; una ya cantada no lo necesita. |
+| **4:3** | Mismas reglas. Hay más líneas de dos renglones (≈ 1 de cada 3 frente a 1 de cada 9), así que el recorte actúa más con 6 y 7 líneas. |
+| **Ventana secundaria y cola** | Nada nuevo: la configuración viaja en el estilo de la instantánea de cada entrada. La cuenta entre canciones, la espera y la tarjeta «A continuación» no cambian. |
+| **Modo ventana (⛶ / F)** | Las proporciones se calculan sobre el alto de la ventana, como hoy. |
+
+### Legibilidad a distancia (TV de 55", 68,5 cm de alto de imagen, a 5 m)
+
+| Puesto | Cuerpo | Altura de mayúscula | Relación con 5 m | Lectura |
+|---|---|---|---|---|
+| Activa | 5,1 cm | 3,6 cm | 1/139 | Cumple la regla de 1/150, como hoy, con cualquier `N` (decisión provisional 10). |
+| +1 (70 %) | 3,6 cm | 2,5 cm | 1/200 | Legible para anticipar, como hoy. |
+| Resto (60 %) | 3,1 cm | 2,2 cm | 1/232 | Se lee con algo de esfuerzo a 5 m y con comodidad a 3–4 m. Es contexto: reconocer la estrofa, no leerla palabra a palabra. |
+
+La línea que se canta no se lee peor con 7 líneas; lo que aumenta es el ruido visual. Por eso el predeterminado es 5.
+
+### Estados (feature 1, reproductor)
+
+| Estado | Presentación |
+|---|---|
+| Cantando una línea | Activa en el ancla con su barrido; ya cantadas arriba y futuras abajo, según `N` y `P`. |
+| Cambio de línea en curso | Bloque en movimiento o fundido, según el tipo. |
+| Hueco menor que `D` | La línea que acaba espera en su sitio hasta el relevo. |
+| Hueco de `D` a 2 s | Puesto de la activa libre; ya cantada arriba; futuras abajo. |
+| Hueco de más de 2 s | Como el anterior, sin ya cantadas; indicadores si tocan. |
+| Antes de la primera línea (tras el título) | Puesto de la activa libre; futuras a la vista; indicadores si tocan. |
+| Tras la última línea | Ya cantada 2 s; luego solo el fondo. |
+| En pausa | Fotograma congelado, también a mitad de un cambio. |
+| Movimiento reducido o «Sin animación» | Los mismos puestos, sin interpolaciones. |
+| Letra lista | Igual, sin color de lo ya cantado. |
+
+### Accesibilidad (feature 1, reproductor)
+
+- La letra sigue siendo `aria-hidden`; no hay anuncios nuevos. `rep.espera.aria` no cambia.
+- **Movimiento reducido** (`prefers-reduced-motion: reduce` del sistema donde se ve la ventana): ninguna interpolación de posición, tamaño ni opacidad entre puestos. Además, quien no quiera reducir todo el movimiento del sistema puede elegir «Fundido» (recorrido corto) o «Sin animación» en el tema.
+- La letra no rebota ni se desenfoca. Ningún movimiento dura más de 400 ms ni parpadea.
+- El estado de una línea nunca depende solo del color: activa, futura y ya cantada se distinguen por **puesto y tamaño**.
+- Contraste: las líneas atenuadas mantienen 3:1 siempre que la letra lo tenga al 100 %; si no, lo dice el aviso de contraste de siempre en el editor.
+
+### Microcopy (feature 1, reproductor)
+
+Sin textos nuevos en el reproductor. Los del panel Estilo están en [06 · Feature 1](06-editor.md#microcopy-feature-1-editor).
+
+### Criterios de aceptación de la feature 1 (reproductor)
+
+**Puestos**
+- F1-R1. Con «Líneas a la vez» de 2 a 7, en reposo (a mitad de una línea y a mitad de un hueco) se dibujan como máximo `N` líneas; durante un cambio de línea, como máximo `N + 1` (test del modelo de render).
+- F1-R2. Con 2 líneas y «Sin animación», el modelo del fotograma coincide con el de 0.2.1: activa con su centro al 45 % y siguiente al 70 % (test de regresión del modelo).
+- F1-R3. Para cada combinación de la tabla «Puestos y ancla», el centro de la activa está en el porcentaje indicado ± 0,5 % del alto y es el mismo en todos los instantes de la canción (test geométrico a 1920 × 1080 y 1280 × 720, con líneas de uno y de dos renglones).
+- F1-R4. La línea activa mide el 7,5 % del alto con cualquier `N`; la +1 mide el 70 % de la activa y las demás el 60 %.
+- F1-R5. Una canción sin el bloque «Letra en pantalla» (biblioteca de 0.2.1) se reproduce con 5 líneas, 1 ya cantada y desplazamiento, y abrirla o reproducirla no reescribe `cancion.json` ni `temas.json`.
+
+**Línea ya cantada**
+- F1-R6. Con 1 ya cantada, al salir una línea pasa al puesto −1 al 60 % de tamaño, con el gris de la letra y el 55 % de opacidad (o la del suelo de contraste, si es mayor). Con 2, la anterior pasa a −2 al 40 %. Con 0, la línea que sale no queda a la vista al terminar la salida.
+- F1-R7. Con «2» elegido y 5 líneas, se ve 1 ya cantada; con 3 líneas, ninguna (test del modelo con el valor efectivo).
+- F1-R8. En un hueco de 8 s, las ya cantadas están a la vista hasta 2,0 s después del fin de la línea y han desaparecido a los 2,4 s; al entrar la línea siguiente no reaparecen, y cuando esa línea sale es la única ya cantada aunque `P = 2`.
+- F1-R9. Tras la última línea no queda ninguna línea en pantalla 2,4 s después de su fin.
+
+**Cambio de línea**
+- F1-R10. «Desplazamiento»: a mitad de un relevo de 350 ms (t = 175 ms), el centro, la escala, la opacidad y el color de cada línea son los interpolados entre sus dos puestos con `1 − (1 − x)³` (test del modelo, ± 1 px a 1080p).
+- F1-R11. «Fundido»: durante el cambio ninguna línea se dibuja a más de 0,3 × `S` del centro de un puesto entero, y la duración nominal es 250 ms.
+- F1-R12. Con un hueco de 100 ms entre dos líneas hay un solo movimiento, que empieza en el inicio de la segunda; con un hueco de 1,3 s, la primera sale en su fin efectivo, el puesto de la activa queda libre y la segunda entra en su inicio (test del modelo con las líneas 00:12.40–00:15.80 y 00:17.10–00:20.30).
+- F1-R13. Una línea de 0,27 s entra en 162 ms; una de 0,15 s y una de 15 ms cambian al instante; en una secuencia de diez líneas de 0,3 s no hay ningún salto de posición entre fotogramas consecutivos mayor que el de la curva (test del modelo a 60 FPS).
+- F1-R14. Buscar a cualquier instante pinta el mismo modelo que llegar a él reproduciendo (función pura del tiempo: test con 50 instantes al azar, incluidos instantes dentro de un cambio). El salto no produce animación.
+- F1-R15. En pausa a mitad de un cambio, la letra queda congelada (dos fotogramas separados 1 s son iguales); al reanudar continúa desde el mismo avance.
+- F1-R16. Con movimiento reducido emulado no hay ninguna interpolación de posición, tamaño ni opacidad entre puestos (ni en la retirada ni en la aparición del bloque); la línea ya cantada sigue viéndose en gris; el barrido y la barra de espera siguen avanzando.
+
+**Dos renglones y recorte**
+- F1-R17. Una línea de 60 caracteres tiene los mismos cortes de renglón en todos los puestos por los que pasa, a 16:9 y a 4:3.
+- F1-R18. Ninguna línea se dibuja cortada: con 7 líneas en 4:3 y líneas de dos renglones, la futura cuya caja pasa del 86 % del alto no se dibuja, ni las siguientes; lo mismo por encima del 10 %.
+
+**Convivencia**
+- F1-R19. En un hueco de 8 s con indicadores, la barra, la cuenta y los puntos tienen las mismas coordenadas relativas al ancla con 0, 1, 2 y 3 indicadores activos y con cualquier `N` y `P`; no solapan ninguna línea en reposo; las futuras están a la vista durante todo el hueco. Amplía R5.
+- F1-R20. Las reglas de cuándo sale cada indicador (umbral, primera entrada, últimos 3 s de la cuenta, relleno de la barra) dan el mismo resultado que en 0.2.1 para la misma canción (tests R7, R8 y R8-3 sin cambios en sus valores, con las posiciones referidas al ancla).
+- F1-R21. En Letra lista ningún píxel de la letra tiene el color de lo ya cantado, tampoco a mitad de la salida de una línea (captura) ni en ningún tipo de cambio.
+- F1-R22. El barrido palabra a palabra de una línea con tiempos hechos a mano avanza igual que en 0.2.1 mientras la línea entra (mismo ancho pintado relativo para el mismo tiempo).
+- F1-R23. La vista previa del editor, el reproductor, la ventana secundaria y un fotograma exportado dan el mismo modelo en el mismo instante, también a mitad de un cambio de línea (test compartido).
+- F1-R24. Con el fondo `#F2E8D5` y letra `#111111`, y con el tema «Shinobi», cada puesto atenuado tiene contraste ≥ 3:1 contra el peor punto del fondo (test del suelo de contraste).
+- F1-R25. Capturas en `docs/ux/revision-0.2.2-feature-1/` con nombre `reproductor-{ancho}x{alto}-{estado}.png` a 1920 × 1080 y 1280 × 720: `cinco-lineas`, `siete-lineas-dos-cantadas`, `dos-lineas`, `cambio-desplazamiento-mitad`, `cambio-fundido-mitad`, `pausa-larga-indicadores`, `dos-renglones`, `letra-lista`, y `cuatro-tercios-siete-lineas` a 1440 × 1080.
+
+**Verificación manual** (guía de 0.2.2): legibilidad a 5 m en una TV de 55" con 5 y con 7 líneas; que ninguna de las dos animaciones maree en la canción rápida de referencia (101 líneas en 3:29); 4:3 en proyector con 5 y con 7; fluidez en la ventana secundaria de un equipo modesto con el fondo en movimiento; que el relevo y los dos tiempos se entiendan en los primeros versos de una canción lenta.
+
+## 0.2.2 · Feature 2 — Resaltado que no depende solo del color
+
+Origen: [plan 0.2.2, feature 2](../versiones/0.2.2/plan-4.md#features-de-la-versión) y [propuesta 033](../propuestas/033-legibilidad-y-resaltado-accesible.md). Configuración: [06 · Feature 2](06-editor.md#022--feature-2--resaltado-que-no-depende-solo-del-color) (tema) y [08 · Feature 2](08-ajustes-y-acerca.md#022--feature-2--subrayar-siempre-lo-ya-cantado) (este equipo). Valores: [sistema visual · Feature 2](sistema-visual.md#022--feature-2--resaltado-accesible). **Alcance (decisión provisional, [0155](../preguntas/0155-decisiones-provisionales-de-ux-de-0-2-2-features-1-a-3.md)):** de la propuesta 033 entran el **subrayado de lo ya cantado** y el **aviso de colores que se confunden**; el fondo de lectura, el contorno de la letra y el tema «Alta legibilidad» quedan para más adelante.
+
+Vale para el reproductor local, la prueba desde el editor, la ventana secundaria, la vista previa del editor y el video. Esta sección **amplía** la spec; no sustituye nada.
+
+### Problema
+
+En karaoke, la parte cantada de la línea activa se distingue de la que falta **solo por el color**. Para una persona con daltonismo, dos colores de luminosidad parecida pueden verse casi iguales. Las demás distinciones de la pantalla ya no dependen del color: la línea activa, las futuras y la ya cantada se distinguen por puesto y tamaño (feature 1).
+
+### Subrayado de lo ya cantado
+
+```
+│              Guardo en la manga un verso doblado                         │ ← activa
+│              ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔                                            │ ← subrayado: llega hasta donde llega el barrido
+│                  que nadie sabe de dónde llegó                           │ ← +1 (sin subrayado)
+```
+
+| Aspecto | Comportamiento |
+|---|---|
+| **Cuándo se ve** | Si el estilo de la canción tiene «Subrayar lo ya cantado» **o** este equipo tiene activado «Subrayar siempre lo ya cantado» en Ajustes. Se resuelve al empezar la canción o la entrada de la cola. Por defecto, apagado: nada cambia en las canciones existentes. |
+| **Qué es** | Una línea bajo el texto de la **línea activa**, en el color de lo ya cantado, que **avanza con el barrido**: en cada instante mide exactamente lo que mide la parte pintada de cada renglón. No aparece de golpe ni tiene animación propia. |
+| **Dos renglones** | Cada renglón tiene su subrayado; avanzan en orden de lectura, como el barrido. |
+| **Palabra a palabra** (0.2.1) | Sigue el relleno de cada palabra: espera entre palabras donde espera el barrido, y el espacio que sigue a una palabra se subraya al empezar la siguiente. |
+| **Otras líneas** | Las futuras no llevan subrayado. La línea ya cantada **tampoco**: ya se distingue por su puesto. |
+| **Cambio de línea** (feature 1) | El subrayado es parte de la línea activa y viaja con ella. Al salir la línea, se funde con el avance de la salida y ha desaparecido al llegar al puesto −1. En «Fundido», lo lleva solo la copia del puesto de la activa. |
+| **La letra no se mueve** | El subrayado cabe en la caja de la línea: activarlo no cambia la posición ni el tamaño de ninguna línea ni indicador. |
+| **Letra lista** | No hay barrido, así que no hay subrayado en el reproductor ni en el video. (La vista previa del editor sí lo muestra, porque siempre enseña el barrido.) |
+| **Barra de espera** | Con el subrayado activo, la pista de la barra usa el color de la letra al **35 % de opacidad** (como en Letra lista) y el relleno, el color de lo ya cantado: el avance se lee por la forma y la intensidad, no solo por el tono. Puntos y cuenta no cambian (no dependen del color para entenderse). |
+| **Pausa y búsqueda** | Derivado del tiempo, como el barrido: en pausa se congela; al buscar, mide lo que toca. |
+| **Movimiento reducido** | Sigue avanzando: es contenido, como el barrido. |
+| **Video** | Usa **solo** lo que diga el estilo de la canción; el ajuste de este equipo no se aplica (10 · Feature 2). |
+| **Contraste** | El subrayado tiene el color de lo ya cantado: lo cubre «Resaltado vs fondo» (≥ 3:1). Sin comprobaciones nuevas en el reproductor. |
+
+### Estados (feature 2, reproductor)
+
+| Estado | Presentación |
+|---|---|
+| Subrayado apagado | Como hasta ahora. |
+| Subrayado activo, cantando | Línea bajo la parte cantada de la activa. |
+| Subrayado activo, hueco con barra | Barra con la pista al 35 %. |
+| Subrayado activo, Letra lista | Sin subrayado (no hay barrido). |
+
+### Accesibilidad (feature 2, reproductor)
+
+- Cumple «el color nunca es el único portador de significado» también en la letra: con el subrayado, el avance se ve por **forma**.
+- El subrayado es decorativo para lectores de pantalla (la letra es `aria-hidden`).
+
+### Criterios de aceptación de la feature 2 (reproductor)
+
+- F2-R1. Con el subrayado activo, a mitad de una línea de un renglón el subrayado mide lo mismo que la parte pintada del barrido (± 1 px a 1080p) y empieza en el borde izquierdo del texto; al 0 % no se ve y al 100 % ocupa todo el ancho del texto (test del modelo de render).
+- F2-R2. En una línea de dos renglones de 120 y 60 px, al 75 % el subrayado mide 120 px en el primero y 15 px en el segundo.
+- F2-R3. En una línea con tiempos por palabra hechos a mano, entre el fin de una palabra y el inicio de la siguiente el subrayado no avanza, y el espacio entre ambas se subraya al empezar la segunda.
+- F2-R4. Las cajas de todas las líneas y de los indicadores tienen las mismas coordenadas con el subrayado activo y apagado (test geométrico con 2, 5 y 7 líneas).
+- F2-R5. Las líneas futuras y la ya cantada no tienen subrayado; a mitad de la salida de una línea el subrayado tiene la opacidad `1 − avance`, y al terminarla no existe.
+- F2-R6. En una canción Letra lista con el subrayado activo (por el tema o por Ajustes), el reproductor no dibuja ningún subrayado ni ningún píxel del color de lo ya cantado.
+- F2-R7. Con el subrayado activo, la pista de la barra de espera es el color de la letra al 35 % y el relleno el color de lo ya cantado; apagado, la pista es el color de la letra al 100 % (como en 0.2.1).
+- F2-R8. Con «Subrayar siempre lo ya cantado» activado en Ajustes, una canción cuyo tema no lo tiene se reproduce con subrayado en el reproductor local y en la ventana secundaria; al desactivarlo, la siguiente reproducción sale sin él.
+- F2-R9. Capturas en `docs/ux/revision-0.2.2-feature-2/` con nombre `reproductor-{ancho}x{alto}-{estado}.png` a 1920 × 1080: `subrayado-mitad`, `subrayado-dos-renglones`, `subrayado-barra-espera`, y una con letra `#E53935` y resaltado `#43A047` (`subrayado-rojo-verde`).
+
+**Verificación manual** (guía de 0.2.2): con un simulador de daltonismo (o un filtro de escala de grises del sistema) y el par rojo/verde anterior, el avance se sigue sin el color; el subrayado se ve a 5 m en una TV de 55" y no molesta la lectura de la línea siguiente.

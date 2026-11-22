@@ -407,3 +407,32 @@ B6b solo la ven los Mac con chip Apple en macOS 13 (todos pueden actualizar grat
 20. Al pulsar "Usar el modelo Rápido", B2 muestra la fase del modelo en curso con `pa.fase.modelo.rapido` y "X MB de 59 MB" (tamaño del manifiesto) y el mensaje `pa.modo.rapido.aceptado`; la barra total no retrocede. Al terminar se muestra B3 con `pa.listo.modelo` (Rápido, con el procesador), el tiempo de Rápido y `pa.listo.rapido`. `config.json` queda con `rapido_aceptado` y `modo: 'rapido'`.
 21. Si la descarga de Rápido falla tras aceptar, B4 muestra el error sin oferta; "Reintentar" vuelve a descargar Rápido sin pedir otra vez el consentimiento.
 22. Lectores de pantalla: el banner de B4 con la oferta se anuncia completo una vez; el diálogo lee título y cuerpo al abrirse; al aceptar se anuncia `rapido.anuncio.descargando`.
+
+## 0.2.2 · Feature 3 — Mención del aviso de versión nueva
+
+Origen: [propuesta 026](../propuestas/026-aviso-de-version-nueva.md) («mención en el texto de primer arranque»). Detalle del aviso y de lo que se envía: [08 · Feature 3](08-ajustes-y-acerca.md#022--feature-3--aviso-de-versión-nueva). El aviso está **activado por defecto** (decisión provisional, [0155](../preguntas/0155-decisiones-provisionales-de-ux-de-0-2-2-features-1-a-3.md) §9), así que la bienvenida lo dice antes de que el usuario haga nada. Esta sección **amplía** B1; no cambia fases, botones ni requisitos.
+
+**B1 — Bienvenida** (línea nueva, en `t-pequeno` `texto-3`, justo encima de «Shinobi Karaoke es software libre (GPL-3.0) · Licencias»)
+```
+│                      [ Preparar Shinobi Karaoke ]  (primario, grande)    │
+│                                                                          │
+│     Shinobi Karaoke comprueba como mucho una vez al día si hay una       │  pa.actualizaciones
+│     versión nueva. Puedes desactivarlo en «Licencias» o, después, en     │
+│     Ajustes → Acerca de.                                                 │
+│                 Shinobi Karaoke es software libre (GPL-3.0) · Licencias  │
+```
+
+| Elemento | Comportamiento |
+|---|---|
+| `pa.actualizaciones` | Texto fijo, sin controles. Solo en B1 (no en B2–B6). En compilaciones de desarrollo y locales **no se muestra** (no comprueban nada). |
+| «Licencias» | Abre el diálogo Acerca de, que desde 0.2.2 incluye el bloque «Actualizaciones» con la casilla «Avisarme cuando haya una versión nueva» y su texto de privacidad (spec 08). Desmarcarla ahí vale desde ese momento. |
+| Quien actualiza desde una versión anterior | No pasa por B1: se entera por las notas de la versión (spec 09 · Feature 3) y por Ajustes → Acerca de. |
+
+### Microcopy (feature 3, primer arranque)
+| Clave | Texto |
+|---|---|
+| `pa.actualizaciones` | Shinobi Karaoke comprueba como mucho una vez al día si hay una versión nueva. Puedes desactivarlo en «Licencias» o, después, en Ajustes → Acerca de. |
+
+### Criterios de aceptación de la feature 3 (primer arranque)
+- F3-P1. En una compilación publicada, B1 muestra `pa.actualizaciones` encima de la línea de licencia, sin scroll a 1280 × 800 ni a 1024 × 576; en una compilación de desarrollo o local no aparece.
+- F3-P2. Desde B1, «Licencias» abre el diálogo Acerca de con el bloque «Actualizaciones»; desmarcar la casilla ahí persiste y, tras completar la instalación, Ajustes → Acerca de la muestra desmarcada.

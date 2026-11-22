@@ -162,3 +162,14 @@ Fecha: 2026-11-21. El detalle está en el [ADR 0021](0021-sincronia-simplificada
 - **Al importar**, el fin fijado de una línea puede salir del fin de su última palabra con `end_ms` explícito si la línea no trae un `end_ms` válido (ADR 0021 §5).
 - **Desplazamiento global** (decisión 5): se retira de la interfaz; `offset_ms` se sigue leyendo, validando y aplicando (ADR 0021 §8). La corrección de Bluetooth deja de remitir a él.
 - **Velocidad** (decisión 5 y revisión de la fase 5): las mismas (0,5×, 0,75×, 1×). Fuera del editor preciso sigue bajando el tono. Dentro de la ventana, por debajo de 1×, el tono se conserva con un tramo estirado por WSOLA sobre el mismo reloj (ADR 0021 §9).
+
+## Revisión para 0.2.2
+
+Fecha: 2026-11-21. Detalle en los ADR [0024](0024-encaje-de-la-letra-con-la-voz-y-lineas-dudosas.md), [0025](0025-preparacion-desatendida-y-datos-de-la-cancion-automaticos.md), [0027](0027-copia-de-seguridad-paquete-de-cancion-y-exportar-lrc.md) y [0028](0028-sincronia-automatica-por-alineacion-forzada-prueba-tecnica-y-etapa-1.md).
+
+- **Cuándo se consulta LRCLIB** (sustituye a «solo cuando el usuario entra en el paso Letra o pulsa Buscar»): también al pulsar «Preparar» y **automáticamente al completarse la fuente** si `config.preparacion.automatica` está activo (activado por defecto, provisional). Con el interruptor apagado, las búsquedas automáticas en cola no salen. Las cabeceras y los datos enviados no cambian.
+- **Mitigación legal**: sigue guardándose solo la letra elegida (por el usuario o por la app en su nombre, con el origen visible). Del resto de candidatos solo se guardan sus ids y metadatos (`preparacion.busqueda`), nunca sus textos; se piden por id (`/api/get/{id}`) al volver a la vista.
+- **Ritmo**: la cola automática deja ≥ 1,5 s entre peticiones (≤ 40 por minuto) y cede el paso a las búsquedas interactivas.
+- **Desfase global**: se vuelve a usar `offset_ms`, ahora sin control manual, para la corrección automática de la comprobación (`letra.desfase_corregido_ms`, `letra.intacta`).
+- **Exportar LRC**: deja de estar «sin interfaz» (ADR 0027 §4).
+- **Decisión 6** (alineación automática fuera del MVP): la sustituye el ADR 0028.

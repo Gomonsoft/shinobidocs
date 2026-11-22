@@ -334,3 +334,120 @@ Comportamiento en [Editor · Fase 8](06-editor.md#fase-8-de-021--sincronía-y-ed
 | **Encabezado de grupo por fecha** | Como el de la fase 3, sin tema ni [Tema…]; «Sin agrupar» con su explicación en `t-pequeno` `texto-2`. |
 
 Contraste (0.2.1): los textos nuevos usan `texto-1/2/3` sobre `fondo-1/2/3` (≥ 4,7:1, §2.2); bordes y tiradores que distinguen estados, ≥ 3:1 (objetos gráficos). La barra de carga no añade comprobaciones: la pista la cubre «Letra vs fondo», el relleno «Resaltado vs fondo» y su diferencia «Resaltado vs letra» (§9).
+
+## 0.2.2 · Feature 1 — Letra en pantalla
+
+Comportamiento en [Reproductor · Feature 1](07-reproductor.md#022--feature-1--letra-en-pantalla-con-varios-enunciados), [Editor · Feature 1](06-editor.md#022--feature-1--letra-en-pantalla) y [Exportación · Feature 1](10-exportacion.md#022--feature-1--letra-en-pantalla-en-el-video). **Sustituye** en §10 las filas «Línea siguiente — tamaño», «Posición» y «Transición entre líneas», y en los indicadores de espera (fase 5 y 0.2.1) toda posición referida «al 45 % del alto», que pasa a referirse al **ancla** (centro de la línea activa). El tamaño de la línea activa (`S` = `max(32px, 7.5vh)`), el peso, la interlínea 1,2, el ancho máximo del 88 %, la sombra y la pantalla de título no cambian. Cómo se calculan (modelo de puestos, gris, suelo de contraste): [ADR 0022](../adr/0022-letra-en-pantalla-varias-lineas-y-subrayado-de-lo-cantado.md) §2–§4.
+
+**Puestos** (0 = activa; +k = futuras, hacia abajo; −k = ya cantadas, hacia arriba)
+
+| Puesto | Tamaño | Opacidad objetivo | Color |
+|---|---|---|---|
+| −3 (solo de paso, al salir con 2 ya cantadas) | 60 % de `S` | 0 % | gris de la letra |
+| −2 (segunda ya cantada) | 60 % de `S` | 40 % | gris de la letra |
+| −1 (ya cantada) | 60 % de `S` | 55 % (0 % si no hay ya cantadas: es solo de paso) | gris de la letra |
+| 0 (activa) | `S` | 100 % | letra, con el barrido en el color de lo ya cantado |
+| +1 (siguiente) | 70 % de `S` | 100 % | letra |
+| +2 | 60 % de `S` | 80 % | letra |
+| +3 | 60 % de `S` | 65 % | letra |
+| +4 | 60 % de `S` | 55 % | letra |
+| +5 | 60 % de `S` | 50 % | letra |
+| +6 | 60 % de `S` | 45 % | letra |
+| El siguiente al último futuro (solo de paso, al entrar) | 60 % de `S` (70 % si es el +1) | 0 % | letra |
+
+- El tamaño de un puesto multiplica la **forma** de la línea (sus renglones calculados a `S` y su reducción propia de hasta el 75 %); nunca se recalculan los renglones al cambiar de puesto.
+- **Sombra**: la de §10 en todas las líneas, proporcional a su tamaño.
+
+**Separación y ancla**
+
+| Elemento | Valor |
+|---|---|
+| Caja de una línea | Alto = renglones × 1,2 × su tamaño. |
+| Separación junto a la activa | 0,6 × `S` entre la caja de la activa y la de −1, y entre la activa y la de +1 (la de hoy; ahí viven la barra y los puntos de espera). |
+| Separación entre las demás | 0,25 × `S`. |
+| Apilado | Desde la activa hacia fuera: una línea de dos renglones empuja a las que tiene detrás; la activa crece la mitad hacia cada lado. |
+| **Ancla** (centro de la activa) | `47 % del alto + (alto_encima − alto_debajo) / 2`, donde `alto_encima` y `alto_debajo` son lo que ocupan, con líneas de un renglón, las ya cantadas y las futuras con sus separaciones. Con `S` = 7,5 % del alto da la tabla de [07](07-reproductor.md#puestos-y-ancla): 38,0 · 34,3 · 42,9 · 30,7 · **39,3** · 27,1 · 35,6 · 42,9 · 23,4 · 32,0 · 39,3 %. **Excepción**: con 2 líneas, 45 % (el valor de §10). Se calcula una vez por configuración y tamaño de ventana, nunca por línea. |
+| Recorte | No se dibuja una futura cuya caja pase del 86 % del alto (ni las siguientes), ni una ya cantada cuya caja quede por encima del 10 %. |
+| Indicadores de espera | Barra: centro en `ancla − 0,9 × S`. Cuenta: centro en el ancla. Puntos: sobre la línea +1, como en §10. |
+
+**Gris de la letra y suelo de contraste**
+
+| Elemento | Valor |
+|---|---|
+| **Gris de la letra** | Gris neutro (R = G = B) con la **misma luminancia relativa** (WCAG) que `letra.color`. Ejemplos (± 1 por canal): `#FFFFFF` → `#FFFFFF`; `#FFD400` → `#D8D8D8`; `#111111` → `#111111`. Con letra blanca o negra, la ya cantada se distingue solo por opacidad, tamaño y puesto. |
+| Paso a gris | Durante la salida, mezcla lineal en sRGB del color de partida (el de lo ya cantado; en Letra lista, el de la letra) al gris, con el avance de la salida. |
+| **Suelo de contraste** | Para cada puesto atenuado, la opacidad usada es `máx(opacidad objetivo, opacidad mínima que da 3:1)` contra **cada** muestra del fondo de §9 (el color de la línea compuesto sobre esa muestra frente a esa muestra), con tope del 100 %. Se calcula una vez por estilo resuelto, no por fotograma, y es igual con o sin movimiento del fondo. Con el tema «Shinobi» no actúa (el puesto −2 queda en ≈ 3,1:1 en la zona más clara del degradado). |
+| Si la letra no llega a 3:1 al 100 % | Todos los puestos atenuados van al 100 % y lo dice el aviso de contraste de siempre (§9). **Sin avisos nuevos.** |
+
+**Cambio de línea**
+
+| Elemento | Valor |
+|---|---|
+| Duración nominal `D` | Desplazamiento **350 ms** · Fundido **250 ms** · Sin animación y movimiento reducido **0**. |
+| Duración efectiva | `mín(D, 60 % de la duración de la línea que entra)`; por debajo de **120 ms**, instantáneo. La salida en dos tiempos dura `D`. |
+| Curva | `1 − (1 − x)³` (desaceleración cúbica, sin rebote). Equivale aproximadamente a `cubic-bezier(0.33, 1, 0.68, 1)`. |
+| Desplazamiento | Se interpolan el centro, el tamaño, la opacidad y el color de cada línea entre la disposición anterior y la nueva. |
+| Fundido | La copia que se va: opacidad `objetivo × (1 − a)` y sube `0,3 × S × a`. La copia que llega: opacidad `objetivo × a` y parte de `0,3 × S × (1 − a)` por debajo. `a` es el avance con la curva. |
+| Retirada de las ya cantadas | A los **2 s** del fin de la línea sin otra entrada: fundido lineal de **400 ms**, sin movimiento. |
+| Aparición del bloque tras el título | Fundido lineal de **250 ms**. |
+| Indicadores durante la salida | Opacidad igual al avance de la salida. |
+| Movimiento reducido | Todo lo anterior es instantáneo. Amplía §4: el cambio de puesto es desplazamiento y escalado, así que se elimina; el barrido y la barra de espera siguen (contenido). |
+| Límites | Ningún movimiento de la letra dura más de 400 ms, rebota ni desenfoca. |
+
+**Interfaz del editor**
+
+| Componente | Tratamiento visual |
+|---|---|
+| **Control segmentado numérico** («Líneas a la vez») | Control segmentado de §6 con **6** opciones de una cifra (amplía el límite de 2–4): segmentos de igual ancho, mínimo 40 × 32 px, que ocupan el ancho del panel. Cabe a 300 px. |
+| **«Líneas ya cantadas»** | Control segmentado de §6 con 3 opciones. Opción no disponible: como en §6, con el motivo **en texto debajo del control** (`t-pequeno`, `texto-2`, icono `info` 16 px), no solo en un tooltip. |
+| **«Cambio de línea»** | «Grupo de modo» de la fase 3: radios verticales de 20 px, etiqueta `t-cuerpo-fuerte` y descripción `t-pequeno` `texto-2`. No es un control segmentado porque sus tres textos no caben en una fila a 300 px. |
+| Resumen dinámico y procedencia | `t-pequeno`, `texto-3` y `texto-2`, como en «Indicadores de espera». |
+| Píldora «Ejemplo» | La de la fase 5, sin cambios. |
+
+Contraste (feature 1): los textos nuevos de la interfaz usan `texto-1/2/3` sobre `fondo-1/2` (≥ 4,7:1). En la letra, cada puesto mantiene ≥ 3:1 (texto grande: el menor mide el 60 % de `S`, ≥ 19 px en el mínimo de 32 px) si la letra lo tiene al 100 %. El estado de una línea no depende solo del color: lo dan el puesto y el tamaño.
+
+## 0.2.2 · Feature 2 — Resaltado accesible
+
+Comportamiento en [Reproductor · Feature 2](07-reproductor.md#022--feature-2--resaltado-que-no-depende-solo-del-color), [Editor · Feature 2](06-editor.md#022--feature-2--resaltado-que-no-depende-solo-del-color) y [Ajustes · Feature 2](08-ajustes-y-acerca.md#022--feature-2--subrayar-siempre-lo-ya-cantado). **Amplía** §9 con una comprobación y §10 con el subrayado.
+
+**Render de la letra**
+
+| Elemento | Valor |
+|---|---|
+| **Subrayado de lo ya cantado** | Solo en la línea activa y solo si está activado. Línea continua (no se interrumpe en los rasgos descendentes) en `color_resaltado`, de grosor `máx(2 px, 0,07 × tamaño de la línea)` (≈ 6 px en 1080p), con su borde superior a `0,12 × tamaño` por debajo de la línea base. Extremos rectos. Sombra de §10. |
+| Longitud | En cada renglón, desde el borde izquierdo del texto hasta el frente del barrido de ese renglón: la misma medida que la parte pintada. |
+| Caja | Queda dentro de la caja de la línea (interlínea 1,2): no cambia ninguna medida de la disposición. |
+| Salida de la línea | Opacidad `1 − avance de la salida`. |
+| **Barra de espera con subrayado activo** | Pista: `letra.color` al 35 % de opacidad. Relleno: `color_resaltado`. (Sin subrayado: pista al 100 %, como en 0.2.1. En Letra lista: como en 0.2.1.) |
+
+**Comprobación nueva de §9**
+
+| Comprobación | Cálculo | Umbral | Nivel |
+|---|---|---|---|
+| Resaltado vs letra con daltonismo | Se simulan la protanopía y la deuteranopía sobre `color` y `color_resaltado` y se mide el ΔE (CIE76) de cada par simulado; cuenta el menor. Solo se evalúa si el ΔE normal es ≥ 25 (si no, ya avisa «Resaltado vs letra»). Método exacto (matrices de Machado et al. 2009, severidad 1,0, en RGB lineal; umbral provisional): [ADR 0022](../adr/0022-letra-en-pantalla-varias-lineas-y-subrayado-de-lo-cantado.md) §5 | < 25 | ⚠ «Con daltonismo, lo ya cantado puede no distinguirse de la letra» |
+
+- Con el subrayado activado **en el estilo**, esta comprobación no avisa y «Resaltado vs letra» (ΔE < 25) baja a ⓘ: el avance se ve por la forma.
+- El par predeterminado (`#FFFFFF` y `#FFD400`) no debe avisar; el par `#E53935` y `#43A047` sí (criterio F2-E5 del editor).
+
+**Interfaz**
+
+| Componente | Tratamiento visual |
+|---|---|
+| Casilla «Subrayar lo ya cantado» (editor) | Casilla de 20 px como las de «Indicadores de espera», con ayuda en `t-pequeno` `texto-2`. Notas de estado debajo: icono `info` 16 px + `t-pequeno` `texto-2`. |
+| Casilla «Subrayar siempre lo ya cantado» (Ajustes) | Casilla de 20 px con etiqueta `t-cuerpo` y ayuda `t-pequeno` `texto-3`, como la ayuda de «Cuenta entre canciones». |
+
+Contraste (feature 2): el subrayado es un objeto gráfico en `color_resaltado` (≥ 3:1 si pasa «Resaltado vs fondo»). Textos de interfaz en `texto-1/2/3` sobre `fondo-1/2` (≥ 4,7:1).
+
+## 0.2.2 · Feature 3 — Aviso de versión nueva
+
+Comportamiento en [Ajustes · Feature 3](08-ajustes-y-acerca.md#022--feature-3--aviso-de-versión-nueva) y [mapa de vistas](00-mapa-de-vistas.md#022--features-1-a-3).
+
+| Componente | Tratamiento visual |
+|---|---|
+| **Punto de versión nueva** | Círculo de 8 px en `info` con un borde de 2 px `fondo-1` (para separarlo del icono), en la esquina superior derecha del botón ⚙ de la barra superior, a 4 px del borde. Sin animación ni parpadeo. No es la única señal: el tooltip y el nombre accesible del botón cambian. `info` sobre `fondo-1`: 8,6:1. No usa `acento` (reservado a la acción principal) ni `aviso` (no es un problema). |
+| **Bloque «Actualizaciones»** (Acerca de) | `h3` en `t-cuerpo-fuerte`. Línea de estado en `t-cuerpo`: «al día» con icono `check` 16 px en `exito`; «versión nueva» con icono `circle-arrow-up` 16 px en `info` y el número en `t-cuerpo-fuerte`; «no se pudo comprobar» con icono `alert-triangle` 16 px en `aviso`; los demás, sin icono, en `texto-2`. Fecha de la última comprobación en `t-pequeno` `texto-3`. |
+| Acciones | «Ver novedades» y «Descargar»: botones secundarios de 36 px (ninguno es primario: el primario de la app sigue siendo «Añadir canción»). «Buscar actualizaciones»: botón fantasma; cargando = spinner + «Buscando…», ancho fijo. |
+| Nota tras «Descargar» | Aviso en línea `info` de §6. |
+| Casilla «Avisarme cuando haya una versión nueva» | Casilla de 20 px con etiqueta `t-cuerpo` y, debajo, el texto de privacidad en `t-pequeno` `texto-2` (no `texto-3`: es información que importa). |
+
+Contraste (feature 3): textos en `texto-1/2/3` sobre `fondo-1` (≥ 6,1:1); iconos de estado con sus colores de §2.3, siempre acompañados de texto.

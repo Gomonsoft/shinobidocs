@@ -215,3 +215,10 @@ Consultadas el 2026-11-21.
 - SoundTouch (WSOLA y parámetros por defecto): https://www.surina.net/soundtouch/
 - FSF, compatibilidad de MPL-2.0 y LGPL-2.1 con GPL-3.0: https://www.gnu.org/licenses/license-list.html
 - Feedback de alpha.1 y datos de la biblioteca del usuario: [feedback-alpha-1.md](../versiones/0.2.0/feedback-alpha-1.md) §1.4 y §1.5.
+
+## Revisión para 0.2.2
+
+Fecha: 2026-11-21. Detalle en el [ADR 0028](0028-sincronia-automatica-por-alineacion-forzada-prueba-tecnica-y-etapa-1.md) §3.3 y el [0024](0024-encaje-de-la-letra-con-la-voz-y-lineas-dudosas.md) §1.
+
+- **§1**: `origen_palabras` admite `"auto"` (sincronía con la voz) si la etapa 1 entra. Se pintan como las manuales (§2) y cuentan en `finEfectivo` (§3). 0.2.1 las lee como importadas.
+- **§4**: la regla de descarte se aplica también a las automáticas; editarlas en el editor preciso las convierte en `manual`. La corrección del desfase global no las descarta porque no cambia ningún tiempo de línea (va en `offset_ms`).

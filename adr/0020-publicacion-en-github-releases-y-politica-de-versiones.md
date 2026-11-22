@@ -331,3 +331,7 @@ Hasta que existan, la nocturna se omite en verde y el resto del workflow funcion
 - `gh release create`, `gh release list`, `gh workflow run`: https://cli.github.com/manual/gh_release_create , https://cli.github.com/manual/gh_release_list , https://cli.github.com/manual/gh_workflow_run
 - GPL-3.0, §6(d): https://www.gnu.org/licenses/gpl-3.0.html#section6
 - Referentes de la propuesta 017: RPCS3 (`rpcs3-binaries-*`, etiquetas `build-<hash>`, título `<versión>-<N>`) y DroidDeck (notas en dos partes)
+
+## Revisión para 0.2.2
+
+Fecha: 2026-11-21. La app consulta la API de *Releases* para avisar de versiones nuevas, sin autoactualizar ([ADR 0023](0023-aviso-de-version-nueva-con-github-releases.md)); `publish: null` no cambia. Las etiquetas deben seguir el formato de §2 y los nombres de instalador sin versión (`app/electron-builder.yml`), porque la app construye los enlaces a partir de ellos. Numeración de las entregas de 0.2.2: `0.2.2-alpha.N`.

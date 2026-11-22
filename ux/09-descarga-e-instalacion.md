@@ -704,3 +704,104 @@ Las capturas se hacen **con el instalador real**, en la prueba manual. No se usa
 28. **Canal en el README.** La sección «Descargar» no enlaza a `shinobi-karaoke-builds`; la sección «Desarrollo» lo hace con el texto de §1.5. El README de `shinobi-karaoke-builds` empieza por el aviso de que no es el sitio para quien solo quiere usar la app, con enlace a `…/shinobi-karaoke#descargar`.
 29. **Trazabilidad.** Instalada una compilación del canal, su número en Ajustes → Acerca de coincide con el título de su *Release*, y el commit de Acerca de con el de la etiqueta `build-{SHA_COMPLETO}` (08 · Fase 10, AC7).
 30. **Prueba con la primera Release.** P17–P19 quedan anotados (texto literal de Chrome y Edge, botones en tema claro y oscuro) en la guía manual de la fase 10, y los textos de §1.1b, §2 y §3 se ajustan a lo observado.
+
+## 0.2.2 · Feature 3 — Aviso de versión nueva
+
+Origen: [plan 0.2.2, feature 3](../versiones/0.2.2/plan-4.md#features-de-la-versión) y [propuesta 026](../propuestas/026-aviso-de-version-nueva.md): opción **B** de la [pregunta 0037](../preguntas/0037-autoactualizacion-de-la-app.md) (la app avisa de una versión nueva; **no** descarga ni instala). Lo que hace la app: [08 · Feature 3](08-ajustes-y-acerca.md#022--feature-3--aviso-de-versión-nueva). Decisiones provisionales: [0155](../preguntas/0155-decisiones-provisionales-de-ux-de-0-2-2-features-1-a-3.md) §9–§13. Contratos: [0156](../preguntas/0156-contratos-de-las-features-1-a-3-de-0-2-2-para-las-specs.md) §14–§20.
+
+Esta sección **amplía** los textos de fuera de la app. **Sustituye**: en la cabecera de esta spec, «0037 no cambia ningún texto de hoy» (ahora cambia los de abajo); en «Fuera de alcance» de la fase 10, la autoactualización sigue fuera, pero el **aviso** entra. Los nombres de los instaladores, los estados E0, E½ y E1, los botones y el canal de desarrollo no cambian.
+
+### §F3.1 README, sección «Descargar» (E½ y E1)
+
+Se añade un párrafo entre «Cómo instalarla» y el aviso «Descarga Shinobi Karaoke solo desde aquí…»:
+
+```markdown
+**¿Ya la tienes instalada?** La app te avisa cuando hay una versión nueva, en **Ajustes → Acerca de**, y te lleva a su descarga. No se actualiza sola: mira [cómo actualizar](INSTALAR.md#actualizar-a-una-versión-nueva).
+```
+
+En E0 no se añade (no hay nada instalado).
+
+### §F3.2 `INSTALAR.md`: sección «Actualizar a una versión nueva»
+
+Sección nueva entre «Después de instalar» y «¿Sigue sin abrirse?». El índice del principio la enlaza: `… · [Después de instalar](#después-de-instalar) · [Actualizar](#actualizar-a-una-versión-nueva) · [¿Sigue sin abrirse?](#sigue-sin-abrirse) · …`
+
+```markdown
+## Actualizar a una versión nueva
+
+Shinobi Karaoke **no se actualiza solo**. Cuando hay una versión nueva, verás un punto en el botón de **Ajustes** (el engranaje) y, en **Ajustes → Acerca de**, la línea **Hay una versión nueva**.
+
+1. Pulsa **Ver novedades** para leer qué cambia.
+2. Pulsa **Descargar**. Se abre tu navegador con el instalador de tu sistema (en Linux, el mismo tipo de archivo que ya usas: `.deb` o AppImage). Si en su lugar se abre la página de la versión, descarga desde ella el archivo de tu sistema.
+3. Cierra Shinobi Karaoke.
+4. Abre el archivo descargado e instálalo como la primera vez: [Windows](#windows), [Mac](#mac-con-chip-apple) o [Linux](#linux). En Mac, al arrastrar la app a **Aplicaciones**, elige **Reemplazar**. ⟦P20⟧ Con el AppImage, sustituye el archivo antiguo por el nuevo.
+
+La versión nueva se instala encima de la anterior: **tus canciones se conservan** y el motor de audio se reutiliza, salvo que la versión lo cambie (en ese caso, la app descarga solo la parte que haga falta). Tu navegador y tu sistema pueden volver a avisarte, como la primera vez.
+
+Si la versión nueva es **preliminar**, haz antes una copia de tus canciones.
+
+### Qué comprueba la app y cómo desactivarlo
+
+Como mucho una vez al día, la app pregunta a GitHub, donde se publican las versiones, cuál es la última. **No envía datos tuyos ni de tus canciones**: solo la petición, con el nombre y la versión de la app. GitHub ve tu dirección IP y el idioma de tu equipo, como cualquier web que visitas. Sin conexión no pasa nada: la app no muestra ningún error.
+
+Para desactivarlo, entra en **Ajustes → Acerca de** y desmarca **Avisarme cuando haya una versión nueva**. Podrás seguir buscando a mano con **Buscar actualizaciones**.
+```
+
+- La frase de la copia remite a la copia de seguridad de la feature 9 si entra en la misma versión («en **Ajustes → Copia de seguridad**»); si no, usa el texto de la carpeta **biblioteca** del aviso E½.
+- «Desinstalar» no cambia: actualizar no desinstala.
+
+### §F3.3 Notas de la versión
+
+- **En la versión que estrena el aviso** (0.2.2), «Novedades» lleva obligatoriamente esta entrada, porque es un acceso a internet nuevo y quien actualiza no ve la bienvenida:
+
+```markdown
+- **Aviso de versión nueva.** Como mucho una vez al día, la app comprueba si hay una versión nueva y te lo dice en **Ajustes → Acerca de**, con el enlace a la descarga. No instala nada sola. Para comprobarlo pregunta a GitHub; no envía datos tuyos ni de tus canciones. Puedes desactivarlo en **Ajustes → Acerca de**.
+```
+
+- **Frase fija sobre actualizaciones**, para cualquier nota que hable de ello (sustituye a «No hay autoactualización: cada versión se descarga e instala a mano» de 0.2.1): `La app avisa de las versiones nuevas, pero no se actualiza sola: cada versión se descarga e instala a mano.`
+- La cabecera y el aviso de versión preliminar (§3) no cambian.
+- Consecuencia para publicar: la app anuncia una versión en cuanto su *Release* es pública (no en borrador). Por eso la *Release* se sigue publicando **después** de adjuntar los instaladores (ADR 0020 §4): nunca se anuncia una versión sin archivos.
+
+### §F3.4 Canal de compilaciones de desarrollo
+
+Las compilaciones de desarrollo **no avisan** de versiones nuevas ni se conectan para comprobarlo. Se añade una frase al final del bloque de cita del cuerpo de cada compilación (§3b) y una viñeta al README de `shinobi-karaoke-builds`:
+
+```markdown
+> Esta compilación no avisa cuando hay otra más nueva: vuelve a esta página para descargarla.
+```
+
+```markdown
+- Las compilaciones de desarrollo no avisan de versiones nuevas. Para tener la última, vuelve a [la compilación más reciente](https://github.com/Gomonsoft/shinobi-karaoke-builds/releases/latest).
+```
+
+### §F3.5 Enlaces que abre la app
+
+| Acción en la app | Dirección | Notas |
+|---|---|---|
+| Ver novedades | `https://github.com/Gomonsoft/shinobi-karaoke/releases/tag/v{versión}` | Vale para preliminares y estables. |
+| Descargar (Windows) | `https://github.com/Gomonsoft/shinobi-karaoke/releases/download/v{versión}/Shinobi-Karaoke-Windows-x64.exe` | Nombres de §4 (0040), sin versión en el archivo. |
+| Descargar (Mac) | `…/releases/download/v{versión}/Shinobi-Karaoke-Mac-chip-Apple.dmg` | |
+| Descargar (Linux) | `…/releases/download/v{versión}/Shinobi-Karaoke-Linux-x64.AppImage` si la app se ejecuta como AppImage; `…/shinobi-karaoke-linux-x64.deb` si no | ADR 0023 §5. |
+| Descargar (la versión no trae ese archivo) | La página de la versión (la de «Ver novedades») | Por ejemplo, si el AppImage deja de publicarse (0045). |
+| Guía de instalación | `https://github.com/Gomonsoft/shinobi-karaoke/blob/main/INSTALAR.md#actualizar-a-una-versión-nueva` | |
+
+- Todas están dentro del repositorio del proyecto, ya admitido en la lista de enlaces de la app. La app las construye con la versión; nunca usa direcciones de la respuesta de GitHub.
+- No se usa `/releases/latest`: no resuelve con preliminares (ADR 0020 §2) y la app ya sabe qué versión anuncia.
+- La dirección de la consulta (la lista de versiones de la API de GitHub) no es un enlace que se abra: está en el [ADR 0023](../adr/0023-aviso-de-version-nueva-con-github-releases.md) §1.
+
+### §F3.6 Prueba manual
+
+| Id | Texto o comportamiento | Probar en |
+|---|---|---|
+| P20 | En Mac, al arrastrar la app nueva a **Aplicaciones** con la anterior instalada, el nombre del botón («Reemplazar») y si macOS pide algo más | macOS 14 y actual, español de España y de México |
+| P21 | La descarga directa abierta desde la app muestra los mismos avisos del navegador que desde el README (P4, P18) y el archivo descargado es el de la versión anunciada | Chrome y Edge en Windows; Safari y Chrome en Mac |
+| P22 | Instalar encima en Windows (NSIS), con el `.deb` y sustituyendo el AppImage conserva las canciones y el motor de audio | Windows 10/11, Ubuntu 24.04 |
+
+### Criterios de la feature 3 de 0.2.2
+
+31. **README.** En E½ y E1, «Descargar» contiene el párrafo «¿Ya la tienes instalada?» de §F3.1 con el enlace a `INSTALAR.md#actualizar-a-una-versión-nueva`; en E0 no aparece.
+32. **Guía.** `INSTALAR.md` tiene la sección «Actualizar a una versión nueva» con los 4 pasos en lista numerada real y la subsección «Qué comprueba la app y cómo desactivarlo»; el índice la enlaza y todos sus enlaces internos funcionan en la vista de GitHub.
+33. **Mismo texto de privacidad.** Lo que dice la guía sobre qué se envía coincide con `aj.act.privacidad` (spec 08): GitHub, como mucho una vez al día, solo el nombre y la versión de la app, la dirección IP y el idioma visibles para GitHub, y cómo desactivarlo.
+34. **Notas.** Las notas de la primera versión con el aviso incluyen la entrada «Aviso de versión nueva» de §F3.3; ninguna nota posterior dice «No hay autoactualización» sin la frase fija nueva.
+35. **Canal de desarrollo.** El cuerpo de cada compilación de desarrollo y el README de `shinobi-karaoke-builds` llevan las frases de §F3.4.
+36. **Enlaces.** Con una versión preliminar y con una estable publicadas, las direcciones de §F3.5 responden sin autenticar y descargan el archivo de esa versión (comprobación del día de la publicación).
+37. **Nada promete autoactualización.** Ningún texto del README, de la guía ni de las notas dice que la app se actualiza sola, y ninguno recomienda descargar desde un sitio distinto del repositorio del proyecto.

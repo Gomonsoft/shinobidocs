@@ -593,3 +593,240 @@ Si una exportación termina con `PERFIL_NO_SOPORTADO` porque la captura no consi
 - V36. Con dos `iniciar` de la misma canción (doble), el segundo responde `CANCION_EXPORTANDOSE` y A muestra `exp.error.cancionExportandose` con [Ver exportación], que lleva al estado de la primera; «Exportar» está `aria-disabled` mientras la primera siga; `DESTINO_OCUPADO` solo aparece con dos canciones distintas al mismo archivo.
 - V37. En un video exportado, la barra de espera es la barra de carga de la fase 8 (modelo de fotograma igual al del reproductor para el mismo tiempo, R8-6) y una línea con palabras importadas se barre de forma progresiva.
 - V38. Capturas en `docs/ux/revision-0.2.1-fase-7/` con nombre `exportacion-{ancho}x{alto}-{escala}-{estado}.png` a 1280 × 800 al 100 %: `perfil-captura`, `fallo-captura`, `fallo-captura-pasajera`, `destino-sin-permiso`, `cancion-exportandose`.
+
+## 0.2.2 · Feature 1 — Letra en pantalla en el video
+
+Origen: [plan 0.2.2, feature 1](../versiones/0.2.2/plan-4.md#feature-1--letra-en-pantalla-con-varios-enunciados-propuesta-018) y decisión provisional 11 («la exportación usa lo del tema»). Qué se ve: [07 · Feature 1](07-reproductor.md#022--feature-1--letra-en-pantalla-con-varios-enunciados). Valores: [sistema visual · Feature 1](sistema-visual.md#022--feature-1--letra-en-pantalla).
+
+**Sustituye** en «Qué contiene el video»: «línea actual y siguiente» (ahora, las líneas de la configuración «Letra en pantalla» de la canción) y «la siguiente línea sube en 200 ms» (ahora, el cambio de línea elegido en el estilo). El formulario, los perfiles, los formatos, el progreso y los errores **no cambian**.
+
+| Aspecto | Comportamiento |
+|---|---|
+| **Configuración** | El video usa el bloque «Letra en pantalla» **efectivo de la canción** en la instantánea: el propio de la canción si lo tiene y, si no, el del estilo. **No hay control nuevo en el diálogo.** Una canción anterior a 0.2.2 se exporta con 5 líneas, 1 ya cantada y desplazamiento; para exportarla como antes, se elige «2» en su tema. |
+| **Mismo fotograma** | Para el mismo tiempo de canción, el fotograma del video tiene el mismo modelo que el reproductor: mismas líneas, puestos, tamaños, opacidades, colores y avance del cambio de línea. Todo se calcula a partir de `n / FPS`; no depende de animaciones en curso. |
+| **Cambio de línea** | Se exporta siempre el tipo elegido en el estilo. **El movimiento reducido del equipo no se aplica** (regla de siempre: el video es contenido). |
+| **FPS** | A 24 FPS, un desplazamiento de 350 ms son 8 fotogramas y un fundido de 250 ms, 6; a 60 FPS, 21 y 15. Los cambios acortados (líneas muy cortas) tienen menos fotogramas; por debajo de 120 ms son instantáneos. |
+| **Sin silencio previo** | Como hasta ahora: tras la pantalla de título, el bloque aparece con su fundido de 250 ms. |
+| **Proporción 4:3** | Mismas reglas; el recorte actúa más con 6 y 7 líneas. |
+| **Marca de agua** | Sin cambios. Queda por debajo del límite inferior de la letra (86 % del alto): ninguna línea la pisa. |
+| **Muestra del formulario** | Sigue pintando un fotograma fijo con el render compartido: ahora muestra las líneas de la configuración de la canción (sin animación). |
+| **Estimación de tamaño y tiempo** | Más movimiento puede aumentar algo el archivo. Las estimaciones conservan su factor corrector; el arquitecto decide si hay que volver a medirlo ([0156](../preguntas/0156-contratos-de-las-features-1-a-3-de-0-2-2-para-las-specs.md) §9). |
+| **Letra lista** | Sin color de lo ya cantado en ningún fotograma, tampoco durante un cambio. |
+| **Exportar varias canciones** (feature 8) | Cada canción del lote usa su propia configuración efectiva. |
+
+### Criterios de aceptación de la feature 1 (exportación)
+
+- F1-V1. El diálogo «Exportar video» no tiene ningún control de número de líneas ni de cambio de línea.
+- F1-V2. Para 20 fotogramas muestreados (entre ellos, tres dentro de un cambio de línea, uno en un hueco con indicadores y uno tras la última línea), el modelo que pinta el anfitrión de exportación es idéntico al del reproductor en `n × 1000 / FPS − desplazamiento` (amplía V17).
+- F1-V3. Una canción con bloque propio de 7 líneas y «Fundido» se exporta con esa configuración aunque su tema diga 5 y «Desplazamiento»; una canción de 0.2.1 se exporta con 5 · 1 · Desplazamiento.
+- F1-V4. Con movimiento reducido activado en el sistema, el video contiene los cambios de línea animados (a 30 FPS, en los 10 fotogramas siguientes al inicio de una línea de 3 s el centro de esa línea se acerca al ancla de forma monótona).
+- F1-V5. A 24 y a 60 FPS, un relevo de 350 ms ocupa 8 y 21 fotogramas (± 1) y el primer fotograma posterior deja cada línea exactamente en su puesto.
+- F1-V6. En un video 4:3 de 1600 × 1200 con 7 líneas, ninguna línea aparece cortada ni solapa la marca de agua (sondas en la caja de la marca en tres fotogramas).
+- F1-V7. La muestra del formulario dibuja el número de líneas de la configuración de la canción.
+
+**Verificación manual** (guía de 0.2.2): un video a 24 FPS y otro a 60 FPS de la canción rápida de referencia, vistos en una TV, con «Desplazamiento» y con «Fundido»: el movimiento no va a tirones y coincide con el reproductor.
+
+## 0.2.2 · Feature 2 — El subrayado en el video
+
+Origen: [propuesta 033](../propuestas/033-legibilidad-y-resaltado-accesible.md). Qué es: [07 · Feature 2](07-reproductor.md#022--feature-2--resaltado-que-no-depende-solo-del-color).
+
+| Aspecto | Comportamiento |
+|---|---|
+| **Cuándo sale** | Si el **estilo efectivo de la canción** tiene «Subrayar lo ya cantado». El ajuste «Subrayar siempre lo ya cantado» de este equipo **no se aplica** al video (como el movimiento reducido: es una preferencia del equipo, y el archivo se verá en otros). Sin control nuevo en el diálogo. |
+| **Cómo sale** | Igual que en el reproductor para el mismo tiempo: bajo la parte cantada de la línea activa, avanzando con el barrido, y con la pista de la barra de espera al 35 %. |
+| **Letra lista** | Sin subrayado (no hay barrido). |
+| **Muestra del formulario** | Lo pinta si el estilo lo tiene. |
+
+### Criterios de aceptación de la feature 2 (exportación)
+
+- F2-V1. Con el subrayado en el estilo, el modelo de un fotograma a mitad de una línea incluye el subrayado con la misma medida relativa que el reproductor (test compartido con F2-R1).
+- F2-V2. Con el ajuste del equipo activado y el estilo sin subrayado, el video **no** lleva subrayado; con el estilo con subrayado y el ajuste desactivado, sí.
+- F2-V3. Una canción Letra lista exportada no tiene subrayado ni ningún píxel del color de lo ya cantado.
+
+## 0.2.2 · Feature 8 — Exportar varias canciones
+
+Origen: [plan 0.2.2, feature 8](../versiones/0.2.2/plan-4.md), propuestas [028](../propuestas/028-acciones-por-lotes-en-la-biblioteca.md) y [006](../propuestas/006-exportar-varias-canciones-a-video.md). Punto de entrada, reglas comunes de los lotes y resumen de lote: [02 · 0.2.2 · Feature 8](02-biblioteca.md#022--feature-8--acciones-por-lotes-en-la-biblioteca). Esta sección define la **variante de lote** del diálogo «Exportar video»; la exportación de una sola canción no cambia.
+
+**Sustituye**: en «Objetivo», la frase «no exporta varias canciones a la vez en una sola acción»; en «Varias exportaciones», nada (sigue habiendo una exportación a la vez y una por canción): un lote son varias exportaciones en la cola de siempre, con las mismas opciones y la misma carpeta.
+
+### Conceptos
+
+| Concepto | Definición |
+|---|---|
+| **Lote de exportación** | Varias canciones exportadas con **las mismas opciones** (audio, proporción, resolución, FPS, formato) a **una carpeta**, una tras otra, por la cola de exportación existente. |
+| **Carpeta de destino** | Se elige una carpeta, no un archivo. Cada video usa su nombre propuesto (`exp.nombre`). |
+| **Nombre repetido** | Un archivo que ya existe en la carpeta con el nombre de un video del lote, o dos canciones del lote con el mismo nombre propuesto. |
+
+### Punto de entrada
+
+«Exportar video…» de «Más acciones» en el modo selección de la Biblioteca (02 · Feature 8). Aplica a las Listas y Letra lista seleccionadas (también incompletas) que no se estén exportando ya. Con **una** sola canción aplicable se abre el diálogo de una canción (A), no el de lote.
+
+### G — Diálogo «Exportar videos» (lote)
+
+Mismo diálogo de 720 px y mismas reglas que A; cambian la cabecera, el destino y la lista.
+
+```
+┌ Exportar 7 videos ───────────────────────────────────────────────────────────┐
+│ 7 canciones · 28 min en total                                  [▸ Ver cuáles] │
+├──────────────────────────────────────────┬───────────────────────────────────┤
+│ Audio                                    │ Muestra                           │
+│ [Solo instrumental|Instrumental y voz]   │ ┌───────────────────────────────┐ │
+│ Proporción                               │ │   (primera canción del lote)  │ │
+│ [16:9 · Panorámica|4:3 · Clásica]        │ │             (Shinobi Karaoke) │ │
+│ Resolución                               │ └───────────────────────────────┘ │
+│ [1920 × 1080 · Full HD             ▾]    │ 1920 × 1080 · 30 FPS · MKV        │
+│ Fotogramas por segundo  [24|30|60]       │ Cada video usa el estilo de su    │
+│ Formato                              ⓘ   │ canción.                          │
+│ [MKV (AV1 + Opus)|WebM (VP9 + Opus)]     │                                   │
+│                                          │                                   │
+│ Guardar en la carpeta                                                        │
+│ [D:\Videos\Karaoke                                         ] [Cambiar…]      │
+│ Si ya existe un video con el mismo nombre                                    │
+│ [Conservar los dos|Sustituir|Omitir esa canción]                             │
+│                                                                              │
+│ Ocuparán unos 280 MB · tardarán unos 55 minutos                              │
+│ ┌──────────────────────────────────────────────────────────────────────────┐ │
+│ │ ⓘ 2 de estas canciones ya tienen un video en esta carpeta: se guardarán   │ │
+│ │   con « (2)» en el nombre.                                                │ │
+│ └──────────────────────────────────────────────────────────────────────────┘ │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                              [Cancelar]  [Exportar 7 videos]  │
+└──────────────────────────────────────────────────────────────────────────────┘
+```
+
+| Elemento | Comportamiento |
+|---|---|
+| Cabecera | `exp.lote.cabecera`: número de canciones y duración total. «Ver cuáles» revela la lista (scroll propio, hasta 200 px): «{título} — {artista} · {duración} → {nombre del archivo}», con su nota si la tiene (`exp.lote.nota.*`). Las seleccionadas que no aplican van al final, atenuadas, con su motivo (regla 1 de 02 · Feature 8). |
+| Audio, proporción, resolución, FPS, formato | Iguales que en A, comunes a todo el lote. Perfiles no soportados, sustituciones automáticas y `exp.cargando`: sin cambios. «Instrumental y voz»: una canción sin pista de voz utilizable se exporta **solo con instrumental** y su fila lo dice (`exp.lote.nota.sinVoz`); la opción no se desactiva por ello. |
+| **Guardar en la carpeta** | Campo de solo lectura + [Cambiar…], que abre el diálogo **«Elegir carpeta»** del sistema desde main. Propuesta: la última carpeta usada para exportar (la misma preferencia que A); si no existe, la de vídeos del sistema. No se puede elegir la carpeta de datos de la app. |
+| **Si ya existe un video con el mismo nombre** | Control segmentado, se recuerda: **Conservar los dos** (por defecto **(decisión provisional)**: el nuevo se guarda con « (2)», « (3)»…) · **Sustituir** (como en A: el anterior se conserva hasta que el nuevo termina bien) · **Omitir esa canción**. Solo cuenta para archivos que ya están en la carpeta. Dos canciones **del mismo lote** con el mismo nombre propuesto se numeran siempre (nunca se pisan entre sí). |
+| Estimación | `exp.lote.estimacion`: suma de las estimaciones de cada canción. Mismas reglas de formato de cifras que A. |
+| Notas | Las de A que apliquen, en plural (`exp.lote.aviso.*`): archivos existentes (según la opción elegida), espacio insuficiente para el total, sesión en otra pantalla, perfil costoso, canciones «Letra lista» (sin barrido), canciones incompletas. Ninguna bloquea. |
+| Muestra | El fotograma de la **primera** canción del lote, con `exp.lote.muestra`. |
+| **Exportar {n} videos** | Primario; {n} = canciones que se exportarán (sin las omitidas por nombre). Main valida la carpeta **una vez** antes de empezar (sin permiso: error bajo el campo, como V35) y toma la **instantánea de cada canción en ese momento**, como en una exportación en cola. El diálogo pasa a H. |
+| Recordar opciones | Se recuerdan las mismas que en A, más la respuesta a «si ya existe». |
+| Teclado | Como A. Orden: … Formato → [Cambiar…] → «si ya existe» → Cancelar → Exportar. Esc = Cancelar. |
+
+### H — Exportando el lote
+
+```
+┌ Exportando 7 videos ─────────────────────────────────────────────┐
+│ 1920 × 1080 · 30 FPS · Solo instrumental · MKV · en D:\Videos\Karaoke │
+│ 2 de 7 terminados                          quedan unos 38 minutos │
+│ ██████████░░░░░░░░░░░░░░░░░░░░░░░                                  │
+│ ┌────────────────────────────────────────────────────────────────┐ │
+│ │ ✓ Bohemian Rhapsody — Queen · 38 MB                            │ │
+│ │ ✓ La flaca — Jarabe de Palo · 29 MB                            │ │
+│ │ ⟳ Despacito — Luis Fonsi · Creando el video… 42 %         [✕]  │ │
+│ │ 🕒 Arrópame — Artista · En cola                            [✕]  │ │
+│ │ 🕒 Valiente — Artista · En cola                            [✕]  │ │
+│ │ – Lucía — Sin artista · Omitida: ya había un video con ese nombre │
+│ └────────────────────────────────────────────────────────────────┘ │
+│ Puedes cerrar este cuadro: la exportación continúa.                │
+├────────────────────────────────────────────────────────────────────┤
+│ [Cancelar las que faltan]                [Seguir en segundo plano] │
+└────────────────────────────────────────────────────────────────────┘
+```
+
+| Elemento | Comportamiento |
+|---|---|
+| Progreso global | «{i} de {n} terminados» + barra (canciones terminadas más la fracción de la que está en curso) + tiempo restante del lote (`prog.eta`; «Calculando tiempo…» los primeros 15 s). Nunca retrocede. |
+| Filas | Icono + texto: ✓ terminado (con su tamaño) · ⟳ en curso (fase y porcentaje, como B) · 🕒 en cola · ✕ error (con el título del error) · – omitida o cancelada (con el motivo). La lista tiene scroll propio y mantiene visible la fila en curso. |
+| [✕] de una fila | En cola: la retira sin confirmación. En curso: confirmación en línea de B3 para esa canción. El resto del lote sigue. |
+| **Cancelar las que faltan** | Fantasma. Confirmación en línea `exp.lote.cancelar` con el foco en «Seguir exportando»: cancela la que está en curso (con limpieza) y retira las que esperan. **Los videos ya terminados se conservan.** |
+| **Seguir en segundo plano** | Primario y foco inicial; Esc equivale. El lote se sigue en las tarjetas (línea `bib.exp.linea` / `bib.exp.cola` de cada canción), en el panel de actividad (las exportaciones del lote se agrupan en **una fila** `act.exp.lote`, «Exportando 7 videos · 2 de 7», con la barra del video en curso, [Ir] que reabre H y [✕] que equivale a «Cancelar las que faltan»; va aparte de la cola de preparación de la feature 7) y en «Ver exportación» de cualquiera de sus canciones (abre H, no B). |
+| **Un fallo no detiene el lote** | La canción fallida queda en ✕ y sigue la siguiente. **Excepción**: `SIN_ESPACIO` y `DESTINO_NO_DISPONIBLE` (la carpeta dejó de poder escribirse) detienen el lote: las que faltan quedan como `exp.lote.fila.noIntentada`, porque fallarían igual. |
+| Otras exportaciones | Si ya había una exportación en curso o en cola (suelta o de otro lote), las del lote esperan detrás. Una canción que ya se estaba exportando no entra en el lote (motivo `bib.acc.motivo.exportando`). |
+| Sesión, suspensión, cerrar la app | Sin cambios: reglas de «Interacción con otras acciones» y «Cerrar la app durante una exportación», aplicadas a cada exportación del lote. Tras un cierre inesperado, un solo `exp.toast.interrumpida` para todo el lote. |
+
+### I — Resultado del lote
+
+```
+┌ Videos exportados ───────────────────────────────────────────────┐
+│ Se exportaron 5 de 7 videos · 142 MB · tardó 41 min               │
+│ En D:\Videos\Karaoke                                              │
+│ ┌────────────────────────────────────────────────────────────────┐ │
+│ │ ✓ Bohemian Rhapsody — Queen · Bohemian Rhapsody — Queen (karaoke).mkv │
+│ │ ✓ …                                                            │ │
+│ │ ✕ Valiente — Artista · Tu equipo se quedó sin memoria. [Copiar detalles] │
+│ │ – Lucía — Sin artista · Omitida: ya había un video con ese nombre │ │
+│ └────────────────────────────────────────────────────────────────┘ │
+├────────────────────────────────────────────────────────────────────┤
+│ [Reintentar las fallidas]            [Cerrar] [Mostrar la carpeta] │
+└────────────────────────────────────────────────────────────────────┘
+```
+- Con el diálogo abierto, H pasa a I al terminar el último video. Foco en «Mostrar la carpeta» (primario) si hubo algún video; si no, en «Reintentar las fallidas» o «Cerrar».
+- Con el diálogo cerrado: toast `exp.lote.toast` con [Ver resultado] (abre I) y, con la ventana sin foco, notificación como en spec 04 §3. **Un solo toast por lote**: los videos de un lote no muestran `exp.toast.ok` ni `exp.toast.error` uno a uno.
+- **Reintentar las fallidas**: vuelve a encolar las ✕ y las no intentadas con las mismas opciones y carpeta, con una instantánea nueva; el diálogo vuelve a H solo con ellas. Si todas fallaron con un código que no se arregla repitiendo (tabla de la fase 7), el botón es **[Cambiar opciones]** (vuelve a G con las fallidas).
+- «Mostrar la carpeta» abre la carpeta del lote (sin seleccionar ningún archivo).
+- «Copiar detalles» de una fila copia lo mismo que en D, con la línea de versión común.
+
+### Estados (lote)
+
+| Estado | Presentación |
+|---|---|
+| Vacío | No aplica: sin canciones aplicables, la acción está inactiva en la Biblioteca. |
+| Cargando perfiles | Como A (`exp.cargando`). |
+| Formulario | G. |
+| Validando | «Exportando…» en el primario, controles inactivos. |
+| En cola (todo el lote espera a otra exportación) | H con todas las filas 🕒 y `exp.cola`. |
+| Procesando | H. |
+| Cancelando | Fila en curso con `exp.cancelando`; botones inactivos. |
+| Resultado completo / parcial / todo fallido | I con sus recuentos; el título es `exp.lote.resultado.titulo` o su variante de fallo. |
+| Lote detenido por espacio o carpeta | I con el banner `error` del código y las no intentadas. |
+| Sin perfiles | F (como hoy). |
+
+### Teclado y accesibilidad (lote)
+
+- G, H e I son estados del mismo diálogo modal. Foco inicial: G → «Audio»; H → «Seguir en segundo plano»; I → «Mostrar la carpeta».
+- Las listas son `role="list"`; cada fila se lee como «{título}, {artista}: {estado}». Los [✕] tienen nombre `exp.lote.aria.quitar`.
+- Anuncios (`aria-live="polite"`): inicio del lote, cada canción terminada o fallida («2 de 7: «La flaca» exportada»), fin del lote. Nunca los porcentajes. El banner de lote detenido, con `role="alert"`.
+- «Si ya existe…» es un `radiogroup` con etiqueta visible.
+- A 1024 × 576 el diálogo cabe con scroll en el cuerpo y sin scroll horizontal; cabecera y botones quedan visibles.
+
+### Microcopy (feature 8, exportación)
+
+| Clave | Texto |
+|---|---|
+| `exp.lote.titulo` | Exportar {n} videos |
+| `exp.lote.cabecera` | {n} canciones · {duración total} en total — [Ver cuáles] |
+| `exp.lote.nota.sinVoz` | Sin pista de voz: se exporta solo con instrumental |
+| `exp.lote.nota.existe` | Ya hay un video con este nombre |
+| `exp.lote.nota.letraLista` | Letra lista: sin barrido |
+| `exp.lote.nota.incompleta` | Tiene líneas sin sincronizar que no saldrán |
+| `exp.lote.carpeta` | Guardar en la carpeta — [Cambiar…] |
+| `exp.lote.existe` | Si ya existe un video con el mismo nombre · Conservar los dos · Sustituir · Omitir esa canción |
+| `exp.lote.estimacion` | Ocuparán unos {tamaño} · tardarán unos {n} minutos |
+| `exp.lote.aviso.existe` | {k} de estas canciones ya tienen un video en esta carpeta: se guardarán con « (2)» en el nombre. · (sustituir) {k} videos de esta carpeta se sustituirán cuando los nuevos estén terminados. · (omitir) {k} canciones no se exportarán porque ya tienen un video en esta carpeta. |
+| `exp.lote.aviso.espacio` | Puede que no quepan: ocuparán unos {tamaño} y quedan {libre} libres en ese disco. |
+| `exp.lote.muestra` | Cada video usa el estilo de su canción. |
+| `exp.lote.boton` | Exportar {n} videos · Exportar 1 video |
+| `exp.lote.progreso.titulo` | Exportando {n} videos |
+| `exp.lote.progreso` | {i} de {n} terminados |
+| `exp.lote.fila` | {tamaño} · Creando el video… {p} % · En cola · {título del error} · Omitida: ya había un video con ese nombre · Cancelada |
+| `exp.lote.fila.noIntentada` | No se intentó: el lote se detuvo. |
+| `exp.lote.aria.quitar` | Quitar «{título}» de este lote |
+| `exp.lote.cancelarBoton` | Cancelar las que faltan |
+| `exp.lote.cancelar` | ¿Cancelar las {k} que faltan? Los {i} videos ya terminados se conservan. — [Seguir exportando] [Cancelar las que faltan] |
+| `exp.lote.resultado.titulo` | Videos exportados · (ninguno) No se pudo exportar ningún video |
+| `exp.lote.resultado` | Se exportaron {a} de {n} videos · {tamaño} · tardó {tiempo} · (todos) Se exportaron {n} videos · {tamaño} · tardó {tiempo} — En {carpeta} |
+| `exp.lote.detenido` | El lote se detuvo: {título del error}. {explicación del error} |
+| `exp.lote.reintentar` | Reintentar las fallidas |
+| `exp.lote.mostrar` | Mostrar la carpeta |
+| `exp.lote.toast` | Se exportaron {a} de {n} videos. — [Ver resultado] · (todos) {n} videos exportados. — [Ver resultado] · (ninguno) No se pudo exportar ningún video. — [Ver resultado] |
+| `act.exp.lote` | Exportando {n} videos · {i} de {n} |
+
+### Criterios de aceptación de la feature 8 (exportación)
+
+- F8-V1. Con 7 Listas seleccionadas, «Exportar video…» abre G con el título «Exportar 7 videos», la duración total, las mismas opciones que A, «Guardar en la carpeta» con [Cambiar…] (que abre el selector de carpetas del sistema) y la estimación sumada. Con una sola canción aplicable se abre A.
+- F8-V2. Las opciones elegidas valen para todos los videos del lote; cada archivo usa `exp.nombre` de su canción; la muestra es la de la primera canción.
+- F8-V3. Con dos videos ya presentes en la carpeta: «Conservar los dos» los escribe con « (2)» y no toca los existentes; «Sustituir» los sustituye solo cuando el nuevo termina bien (cancelar a mitad conserva el anterior); «Omitir esa canción» no los exporta y el botón dice «Exportar 5 videos». La elección se recuerda. Dos canciones del lote con el mismo título y artista producen dos archivos distintos.
+- F8-V4. Al confirmar, las 7 exportaciones entran en la cola de exportación en el orden de la lista y se procesan de una en una; H muestra «{i} de {n} terminados», la fila en curso con su porcentaje y las demás en cola; las tarjetas muestran su línea de exportación.
+- F8-V5. Un fallo (doble: `MEMORIA_INSUFICIENTE` en la tercera) marca esa fila con ✕ y el lote sigue con la cuarta. `SIN_ESPACIO` o `DESTINO_NO_DISPONIBLE` detienen el lote y las restantes quedan como «No se intentó».
+- F8-V6. [✕] de una fila en cola la retira sin confirmación; «Cancelar las que faltan» pide confirmación, cancela la que está en curso sin dejar temporales y conserva los videos terminados.
+- F8-V7. Al terminar con el diálogo cerrado aparece **un** toast `exp.lote.toast` (ninguno por video) y [Ver resultado] abre I con una fila por canción; «Reintentar las fallidas» vuelve a H solo con las ✕ y las no intentadas; «Mostrar la carpeta» abre la carpeta.
+- F8-V8. «Ver exportación» del ⋯ de una canción del lote y [Ir] de la fila del lote en el panel de actividad (una sola fila `act.exp.lote` para todo el lote) abren H (o I si ya terminó).
+- F8-V9. Con una sesión en otra pantalla, el lote se puede lanzar y G muestra `exp.nota.sesion`. Cerrar la app con el lote en marcha cuenta todas sus exportaciones en el diálogo de cierre.
+- F8-V10. Captura en `docs/ux/revision-0.2.2-feature-8/` con nombre `exportacion-{ancho}x{alto}-{escala}-{estado}.png` a 1280 × 800 al 100 % y 1280 × 720 al 125 %: `lote-formulario`, `lote-ver-cuales`, `lote-exportando`, `lote-cancelar`, `lote-resultado-parcial`, `lote-detenido`.
+
+**Verificación manual**: exportar las 12 canciones Lista reales a una carpeta en un USB a 720p y a 1080p y anotar el tiempo y el tamaño totales frente a la estimación; desconectar el USB a mitad de lote y comprobar el aviso de lote detenido; reproducir tres de los videos en un reproductor externo.

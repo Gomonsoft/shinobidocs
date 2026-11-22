@@ -2457,3 +2457,1107 @@ Con el foco en la ventana no actúan: L, Mayús + L, P, Supr, F, Ctrl/Cmd + E, I
 - P23. Capturas en `docs/ux/revision-0.2.1-fase-9/` con nombre `editor-{ancho}x{alto}-{escala}-{estado}.png` a 1280 × 720 al 100 % y al 125 %: `preciso-abierto`, `preciso-marcando`, `preciso-palabra-seleccionada`, `preciso-texto-repartido`, `preciso-descartar`, `preciso-sin-onda`, `lista-indicador`, `toast-palabras-descartadas`, y `preciso-1024x576-125` en el tamaño mínimo de ventana.
 
 **Verificación manual** (guía de `docs/Test-manuales/0.2.1/`): marcar a mano una línea rápida y una lenta de una canción real a 0,5× y a 1× y comprobar que el barrido coincide con la voz en el reproductor; que el bucle a 0,5× y 0,75× conserva el tono y se entiende la voz (y que la primera vuelta grave, si se nota, no molesta); que mover y redimensionar la ventana es cómodo con un portátil de 1366 × 768; que Esc aplicando no sorprende.
+
+## 0.2.2 · Feature 1 — Letra en pantalla
+
+Origen: [plan 0.2.2, feature 1](../versiones/0.2.2/plan-4.md#feature-1--letra-en-pantalla-con-varios-enunciados-propuesta-018), [propuesta 018](../propuestas/018-letra-en-pantalla-con-varios-enunciados.md) y [exploración](../versiones/0.2.2/exploracion/letra-en-pantalla.md) §f y §g. Lo que ve el público (puestos, línea ya cantada, cambio de línea, casos límite): [07 · Feature 1](07-reproductor.md#022--feature-1--letra-en-pantalla-con-varios-enunciados). Valores: [sistema visual · Feature 1](sistema-visual.md#022--feature-1--letra-en-pantalla). Contratos (bloque `pantalla` del estilo, reemplazo por canción y procedencia): [ADR 0022](../adr/0022-letra-en-pantalla-varias-lineas-y-subrayado-de-lo-cantado.md) §1, que responde a [0156](../preguntas/0156-contratos-de-las-features-1-a-3-de-0-2-2-para-las-specs.md). Decisiones provisionales: [0155](../preguntas/0155-decisiones-provisionales-de-ux-de-0-2-2-features-1-a-3.md).
+
+Esta sección **amplía** el panel Estilo y la vista previa. Respeta la [subfase 2.1](#subfase-21--layout-adaptable-y-paneles) (todo dentro del panel, entre 300 y 480 px; nada añade scroll de página) y los modos D1–D4 de la [fase 3](#fase-3-de-020--temas-y-biblioteca).
+
+**Sustituye**: en «Vista previa», «línea actual y siguiente» y «la siguiente línea debajo» (ahora, las líneas de la configuración efectiva); en la fase 5, «salvo los indicadores de espera, que admiten un cambio solo para la canción» (ahora también «Letra en pantalla»). Orden de secciones del panel Estilo desde 0.2.2: Tema · Fondo · Letra · **Letra en pantalla** · Indicadores de espera · aviso de contraste.
+
+**Dónde vive (decisión provisional 1 del plan):** en el **tema**, como el resto del aspecto: se hereda por canción, álbum y artista, y admite un cambio **solo para la canción** (bloque completo, como los indicadores de espera). No hay ajuste global en Ajustes ni control en el diálogo de exportación. Motivos: es disposición de la letra, es el único sitio con la vista previa al lado, y el video sale igual sin reglas nuevas.
+
+### Conceptos
+
+- **Bloque «Letra en pantalla»**: tres valores, `Líneas a la vez` (2–7), `Líneas ya cantadas` (Ninguna, 1 o 2) y `Cambio de línea` (Desplazamiento, Fundido o Sin animación).
+- **Valores por defecto**: 5 líneas, 1 ya cantada, Desplazamiento. Son también los de **todas las canciones y temas existentes**, que no guardan el bloque: al abrirlos muestran estos valores y no se escribe nada hasta que el usuario cambia algo.
+- **Quién manda**: el bloque **propio de la canción** si lo tiene y, si no, el del **estilo efectivo** (tema o tema personalizado). La procedencia la da main, como en los indicadores de espera.
+- Se usa «línea», no «enunciado»: es la palabra del editor y del reproductor.
+
+### Wireframes
+
+**Sección en D2 (tema personalizado) y D3 (editando un tema)**, después de «Letra» y antes de «Indicadores de espera»
+```
+│ Letra en pantalla                                 │  h3
+│ Cuántas líneas se ven a la vez y cómo cambian.    │  t-pequeno, texto-2
+│                                                   │
+│ Líneas a la vez                                   │
+│ [ 2 │ 3 │ 4 │ 5 │ 6 │ 7 ]                         │  control segmentado (5 elegido)
+│                                                   │
+│ Líneas ya cantadas                                │
+│ [ Ninguna │ 1 │ 2 ]                               │  control segmentado (1 elegido)
+│ La línea que acabas de cantar sube y se apaga.    │  t-pequeno, texto-2
+│ ⓘ Dos líneas ya cantadas: disponible con 6 o 7    │  motivo de la opción no disponible
+│   líneas.                                         │
+│                                                   │
+│ Cambio de línea                                   │
+│ ◉ Desplazamiento                                  │  grupo de radios vertical
+│   Todas las líneas suben un puesto.               │
+│ ○ Fundido                                         │
+│   Cada línea se funde hacia su nuevo sitio, con   │
+│   menos movimiento.                               │
+│ ○ Sin animación                                   │
+│   Las líneas cambian de golpe.                    │
+│                                                   │
+│ Se ven la línea que suena, 1 ya cantada y las 3   │  resumen dinámico (t-pequeno, texto-3)
+│ siguientes.                                       │
+│ (ⓘ Tu sistema pide reducir el movimiento: en este │  solo si aplica
+│  equipo las líneas cambiarán sin animación.)      │
+│ [▶ Ver un ejemplo]                                │  botón secundario
+```
+
+**Sección en D1 y D4** (tema vinculado; resumen)
+```
+│ Letra en pantalla                                 │
+│ 5 líneas · 1 ya cantada · desplazamiento          │  `edi.pantalla.resumen.corto`
+│ Del tema «Noche ninja»                            │  procedencia (t-pequeno, texto-2)
+│ [Cambiar solo en esta canción]  [▶ Ver un ejemplo]│
+```
+
+**D1 y D4 con el bloque propio de la canción**
+```
+│ Letra en pantalla                                 │
+│ Propia de esta canción. El resto del aspecto      │  `edi.pantalla.propia`
+│ sigue el tema «Noche ninja».                      │
+│ (los tres controles, editables como en D2)        │
+│ [Usar la del tema]  [▶ Ver un ejemplo]            │
+```
+
+### Componentes e interacciones
+
+| Elemento | Comportamiento |
+|---|---|
+| **Líneas a la vez** | Control segmentado con 2, 3, 4, 5, 6 y 7 (`role="radiogroup"`, nombre `edi.pantalla.lineas`). Cada cambio es un paso de deshacer y se ve en la vista previa en < 100 ms. |
+| **Líneas ya cantadas** | Control segmentado «Ninguna / 1 / 2». «1» está disponible con 4 líneas o más; «2», con 6 o 7. Las opciones no disponibles siguen visibles y enfocables con `aria-disabled`, y su motivo va **en texto debajo** (`edi.pantalla.pasadas.minimo1` con 2 o 3 líneas; `edi.pantalla.pasadas.minimo2` con 4 o 5), enlazado con `aria-describedby`. Cada cambio es un paso de deshacer. |
+| **Elección recordada** | Si se bajan las líneas y la elección deja de ser válida, se **aplica** la mayor permitida y el control la muestra elegida, pero se **conserva la elegida**: al volver a subir las líneas, se recupera sola (con «2» y 7 líneas, pasar a 5 muestra «1» y volver a 7 muestra «2»). Elegir una opción a mano sustituye la recordada. |
+| **Cambio de línea** | Grupo de radios vertical con descripción (`role="radiogroup"`, nombre `edi.pantalla.cambio`): «Desplazamiento», «Fundido» y «Sin animación». Cada cambio es un paso de deshacer. Al elegir una opción **con el audio en pausa**, la vista previa reproduce el ejemplo una vez; sonando, el cambio se aplica a lo que suena. |
+| **Resumen dinámico** | `edi.pantalla.resumen`, con las líneas ya cantadas **efectivas**. |
+| **Movimiento reducido** | Si el sistema lo pide, bajo el resumen aparece `edi.pantalla.reducido` (`info`). Los controles siguen editables: el valor se guarda para otros equipos y para el video. |
+| **Ver un ejemplo** | El mismo mecanismo de «Indicadores de espera»: solo con el audio en pausa (sonando, el botón pausa primero). Sin audio, la vista previa muestra **12,5 s** con la configuración efectiva y la letra de la canción a partir de la línea seleccionada: cuatro líneas de 2 s seguidas (tres relevos), una salida en dos tiempos con un hueco de 3 s **sin indicadores de espera** y la entrada de la línea siguiente. Si no quedan bastantes líneas tras la seleccionada, empieza antes. Píldora «Ejemplo» arriba a la izquierda. El botón pasa a «■ Detener el ejemplo»; Esc, cualquier tecla de transporte o un cambio de selección lo detienen. No mueve el cabezal ni entra en el historial. Con movimiento reducido, los cambios son instantáneos. Si está en marcha el ejemplo de espera, lo sustituye (y al revés): solo hay un ejemplo a la vez. |
+| **Procedencia** (D1, D4) | `edi.pantalla.origen`: «Del tema «{tema}»», del estilo incluido o del aspecto guardado; con bloque propio, `edi.pantalla.propia`. |
+| **Cambiar solo en esta canción** (D1, D4) | Copia el bloque efectivo a la canción como **propio** y hace editable la sección; el resto del aspecto sigue vinculado al tema. Un paso de deshacer. Foco: la opción elegida de «Líneas a la vez». Anuncio `edi.pantalla.anuncio.propia`. |
+| **Usar la del tema** | Quita el bloque propio. Un paso de deshacer, sin confirmación. Foco: «Cambiar solo en esta canción». |
+| **Elegir otro tema, «Volver a heredar»** | El bloque propio **se conserva**. |
+| **Personalizar** | La copia del estilo incluye el bloque efectivo (el propio, si lo hay). En D2 el bloque es parte del estilo propio y no hay «Cambiar solo en esta canción». |
+| **Volver a «Temas definidos»** | El estilo propio se descarta con su bloque (deshacible); la canción usa el del tema. |
+| **Eliminar el tema** | La copia «Tema personalizado» guarda el bloque que la canción veía. |
+| **Editar tema (D3)** | La sección edita el bloque **del tema**. Si la canción tiene bloque propio, la vista previa de D3 muestra el del borrador del tema y bajo la sección aparece `edi.pantalla.d3.propia`. |
+| **«Guardar como tema nuevo…», duplicar, «Aplicar tema…»** | El bloque viaja con el estilo, como el fondo o los indicadores. |
+| **Modo «Sincronizar al ritmo»** | El panel Estilo está inactivo, como siempre. La vista previa sigue sonando con la configuración efectiva: ver más líneas futuras ayuda a marcar. |
+| **Contraste** | Sin avisos nuevos: las líneas atenuadas tienen un suelo de 3:1 si la letra lo cumple, y si no, ya lo dice el aviso de la letra. |
+
+### Vista previa
+
+- Mismo render que el reproductor y el video: muestra las `N` líneas con su cambio de línea mientras suena. Es más pequeña, así que con 7 líneas las lejanas son diminutas: es una vista de composición, y «Probar a pantalla completa» sigue a un clic.
+- **En pausa** (modo estático): la línea seleccionada como activa con la mitad resaltada, las `P` líneas anteriores como ya cantadas (en gris) y las `F` siguientes como futuras, en orden de lista y saltando las pausas, **tengan o no tiempos**. Cambiar de selección no anima. No se aplica la retirada a los 2 s (no hay tiempo que corra).
+- **Reproduciendo**: lo que vería el reproductor en esa posición, sin el silencio previo. Las líneas sin inicio no ocupan puesto.
+- **Editor preciso de línea**: no cambia.
+- La descripción `edi.previa.aria` no cambia.
+
+### Estados (feature 1, editor)
+
+| Estado | Presentación |
+|---|---|
+| Bloque del tema | D1/D4: resumen con procedencia. |
+| Bloque propio de la canción | D1/D4: controles editables con «Usar la del tema». |
+| Tema personalizado o editando un tema | D2/D3: controles editables. |
+| Opción no disponible | `aria-disabled` con su motivo debajo. |
+| Sistema con movimiento reducido | Nota `edi.pantalla.reducido`; vista previa sin interpolaciones. |
+| Ejemplo en curso | Píldora «Ejemplo»; botón «■ Detener el ejemplo». |
+| Canción o tema anterior a 0.2.2 | 5 · 1 · Desplazamiento, sin escribir nada al abrir. |
+
+### Accesibilidad (feature 1, editor)
+
+- Los tres controles son `radiogroup` con nombre visible; ←/→ (y ↑/↓) mueven la selección entre opciones **disponibles e indisponibles** (las indisponibles se enfocan y leen su motivo, pero no se eligen); Inicio/Fin, primera y última.
+- Los motivos de no disponible son texto visible, no solo tooltip.
+- Anuncios (`aria-live="polite"`), una vez por acción: bloque propio activado o retirado, e inicio y fin del ejemplo (`edi.pantalla.anuncio.ejemplo`). No se anuncia cada cambio de línea del ejemplo.
+- Objetivos ≥ 32 px de alto; los segmentos numéricos miden al menos 40 × 32 px.
+- Movimiento reducido: el ejemplo y la vista previa cambian de línea al instante.
+
+### Microcopy (feature 1, editor)
+
+| Clave | Texto |
+|---|---|
+| `edi.pantalla.titulo` | Letra en pantalla |
+| `edi.pantalla.ayuda` | Cuántas líneas se ven a la vez y cómo cambian. |
+| `edi.pantalla.lineas` | Líneas a la vez |
+| `edi.pantalla.pasadas` | Líneas ya cantadas |
+| `edi.pantalla.pasadas.ninguna` | Ninguna |
+| `edi.pantalla.pasadas.ayuda` | La línea que acabas de cantar sube y se apaga. |
+| `edi.pantalla.pasadas.minimo1` | Líneas ya cantadas: disponible con 4 líneas o más. |
+| `edi.pantalla.pasadas.minimo2` | Dos líneas ya cantadas: disponible con 6 o 7 líneas. |
+| `edi.pantalla.cambio` | Cambio de línea |
+| `edi.pantalla.cambio.desplazamiento` | Desplazamiento |
+| `edi.pantalla.cambio.desplazamiento.ayuda` | Todas las líneas suben un puesto. |
+| `edi.pantalla.cambio.fundido` | Fundido |
+| `edi.pantalla.cambio.fundido.ayuda` | Cada línea se funde hacia su nuevo sitio, con menos movimiento. |
+| `edi.pantalla.cambio.ninguna` | Sin animación |
+| `edi.pantalla.cambio.ninguna.ayuda` | Las líneas cambian de golpe. |
+| `edi.pantalla.resumen` | Se ven la línea que suena, 1 ya cantada y las {f} siguientes. · (2 ya cantadas) Se ven la línea que suena, 2 ya cantadas y las {f} siguientes. · (ninguna) Se ven la línea que suena y las {f} siguientes. · (f = 1) … y la siguiente. |
+| `edi.pantalla.resumen.corto` | {n} líneas · 1 ya cantada · {cambio} · (2) {n} líneas · 2 ya cantadas · {cambio} · (ninguna) {n} líneas · {cambio} — `{cambio}`: desplazamiento · fundido · sin animación |
+| `edi.pantalla.reducido` | Tu sistema pide reducir el movimiento: en este equipo las líneas cambiarán sin animación. |
+| `edi.pantalla.origen` | Del tema «{tema}» · (estilo incluido) Del estilo incluido de Shinobi Karaoke · (respaldo) Del aspecto guardado en esta canción |
+| `edi.pantalla.propia` | Propia de esta canción. El resto del aspecto sigue el tema «{tema}». |
+| `edi.pantalla.soloCancion` | Cambiar solo en esta canción |
+| `edi.pantalla.usarTema` | Usar la del tema |
+| `edi.pantalla.d3.propia` | Esta canción tiene su propia letra en pantalla: fuera de esta edición seguirá usándola. |
+| `edi.pantalla.ejemplo` | Ver un ejemplo · Detener el ejemplo |
+| `edi.pantalla.anuncio.propia` | Letra en pantalla propia de esta canción. · (al retirarla) Esta canción vuelve a usar la letra en pantalla del tema. |
+| `edi.pantalla.anuncio.ejemplo` | Mostrando un ejemplo de cambios de línea en la vista previa. · (al terminar) Fin del ejemplo. |
+
+La píldora del ejemplo reutiliza `edi.espera.ejemplo.etiqueta` («Ejemplo»).
+
+### Criterios de aceptación de la feature 1 (editor)
+
+- F1-E1. En D2 y D3, el panel Estilo muestra «Letra en pantalla» entre «Letra» e «Indicadores de espera» con los tres controles; en D1 y D4, el resumen `edi.pantalla.resumen.corto` con su procedencia, «Cambiar solo en esta canción» y «Ver un ejemplo».
+- F1-E2. Una canción y un tema de 0.2.1 muestran 5 · 1 · Desplazamiento y la vista previa dibuja 5 líneas; abrirlos no escribe `cancion.json` ni `temas.json` (comparación del archivo antes y después).
+- F1-E3. Cada valor de «Líneas a la vez» (2 a 7) se guarda, se ve en la vista previa en < 100 ms y se deshace en un paso; el resumen dinámico dice lo que se ve (con 5 y 1: «…1 ya cantada y las 3 siguientes.»; con 2: «…y la siguiente.»).
+- F1-E4. Con 2 o 3 líneas, «1» y «2» son `aria-disabled` y se lee `edi.pantalla.pasadas.minimo1`; con 4 o 5, solo «2», con `edi.pantalla.pasadas.minimo2`; con 6 o 7, ninguna. Las indisponibles reciben el foco y no se pueden elegir.
+- F1-E5. Con 7 líneas y «2», pasar a 5 muestra «1» elegido y la vista previa con una ya cantada; volver a 7 muestra «2» sin tocar ese control. Guardar con 5 y reabrir conserva la recuperación al volver a 7.
+- F1-E6. Las tres opciones de «Cambio de línea» se guardan y se deshacen en un paso; al elegir una con el audio en pausa, la vista previa reproduce el ejemplo una vez; sonando, no se interrumpe el audio.
+- F1-E7. «Ver un ejemplo» dura 12,5 s, muestra tres relevos, una salida con hueco de 3 s sin indicadores y una entrada, con la píldora «Ejemplo»; no suena audio, no mueve el cabezal ni añade pasos al historial; Esc lo detiene; se anuncia al empezar y al terminar; iniciar el ejemplo de espera lo sustituye.
+- F1-E8. En D1, «Cambiar solo en esta canción» hace editable la sección sin desvincular el tema (procedencia del tema intacta, `tema.usos` igual) y la procedencia de la sección pasa a `edi.pantalla.propia`; cambiar un valor no cambia el tema ni otra canción; «Usar la del tema» lo retira; los dos se deshacen en un paso. Elegir otro tema o «Volver a heredar» conserva el bloque propio.
+- F1-E9. Editar el bloque en D3 y guardar en el tema cambia las canciones que lo usan salvo las que tienen bloque propio (comprobar una de cada); con bloque propio, D3 muestra `edi.pantalla.d3.propia`.
+- F1-E10. El bloque se guarda con «Guardar como tema nuevo…», se reaplica al asignar ese tema a otra canción y sobrevive a eliminar el tema (copia «Tema personalizado» con los mismos valores). Una canción con bloque propio y tema de artista conserva el bloque al cambiar el tema del artista.
+- F1-E11. En pausa, la vista previa muestra la línea seleccionada como activa a medio barrer, las `P` anteriores en gris y las `F` siguientes, también si no tienen tiempos; cambiar de selección no produce animación.
+- F1-E12. Con `prefers-reduced-motion: reduce` emulado se ve `edi.pantalla.reducido`, los controles siguen guardando su valor y la vista previa y el ejemplo cambian de línea sin interpolación.
+- F1-E13. A 300, 360 y 480 px de ancho del panel, la sección no produce scroll de página ni corta texto; los seis segmentos de «Líneas a la vez» caben en una fila con ≥ 40 px de ancho cada uno.
+- F1-E14. Los tres controles se manejan solo con teclado como grupos de radio, con nombre accesible y el motivo de las opciones no disponibles en su descripción.
+- F1-E15. «Probar a pantalla completa» y la vista previa usan la misma configuración efectiva (bloque propio si lo hay), también con cambios sin guardar.
+- F1-E16. Capturas en `docs/ux/revision-0.2.2-feature-1/` con nombre `editor-{ancho}x{alto}-{escala}-{estado}.png` a 1280 × 720 al 100 % y al 125 %: `pantalla-d2`, `pantalla-d1`, `pantalla-d1-propia`, `pantalla-no-disponible`, `pantalla-ejemplo`, `pantalla-reducido`, `previa-pausa-siete`, y `pantalla-300px` con el panel al mínimo.
+
+**Verificación manual** (guía de 0.2.2): que se entienda a la primera qué hace cada control y la diferencia entre «Desplazamiento» y «Fundido» con el ejemplo; que con 7 líneas la vista previa siga sirviendo para componer.
+
+## 0.2.2 · Feature 2 — Resaltado que no depende solo del color
+
+Origen: [plan 0.2.2, feature 2](../versiones/0.2.2/plan-4.md#features-de-la-versión) y [propuesta 033](../propuestas/033-legibilidad-y-resaltado-accesible.md). Lo que ve el público: [07 · Feature 2](07-reproductor.md#022--feature-2--resaltado-que-no-depende-solo-del-color). Valores y cálculo del aviso: [sistema visual · Feature 2](sistema-visual.md#022--feature-2--resaltado-accesible). Ajuste de este equipo: [08 · Feature 2](08-ajustes-y-acerca.md#022--feature-2--subrayar-siempre-lo-ya-cantado). Decisiones provisionales (alcance, una sola opción de refuerzo, ajuste del equipo, apagado por defecto): [0155](../preguntas/0155-decisiones-provisionales-de-ux-de-0-2-2-features-1-a-3.md) §4–§8.
+
+Esta sección **amplía** la sección «Letra» del panel Estilo y el aviso de contraste. **Sustituye** la fila «Resaltado vs letra ΔE < 25» y la fila «Todo ≥ 4,5:1 y ΔE ≥ 25» de «Niveles del aviso de contraste» (ver abajo).
+
+### Wireframes
+
+**«Letra» en D2 y D3** (se añade la casilla bajo «Color de lo ya cantado»)
+```
+│ Letra                                             │
+│ Fuente  [ Atkinson Hyperlegible Next          ▾ ] │
+│ Color de la letra        [■ #FFFFFF]              │
+│ Color de lo ya cantado   [■ #FFD400]              │
+│ ☐ Subrayar lo ya cantado                          │  casilla
+│   Marca el avance también con una línea, para     │  t-pequeno, texto-2
+│   quien no distingue bien los colores.            │
+│ (ⓘ Ajustes ya lo activa en todas las canciones de │  solo con el ajuste del equipo activado
+│  este equipo. Esta casilla decide lo que se       │
+│  guarda en el tema y lo que sale en el video.)    │
+```
+
+**Resumen en D1 y D4**
+```
+│ Letra   Atkinson Hyperlegible Next                │
+│         ■ Letra #FFFFFF   ■ Lo ya cantado #FFD400 │
+│         Lo ya cantado, subrayado                  │  solo si está activado en el estilo
+```
+
+**Aviso nuevo** (en el bloque del aviso de contraste)
+```
+│ ⚠ Con daltonismo, lo ya cantado puede no          │
+│   distinguirse de la letra.                       │
+│   [Subrayar lo ya cantado]                        │
+│   [Sugerir un color de resaltado]                 │
+```
+
+### Componentes e interacciones
+
+| Elemento | Comportamiento |
+|---|---|
+| **Subrayar lo ya cantado** | Casilla, **desmarcada** por defecto (también en canciones y temas existentes y en temas nuevos). Es parte del estilo: se guarda en temas, en «Personalizar», en «Guardar como tema nuevo…» y en las copias al eliminar un tema. No tiene «Cambiar solo en esta canción»: para una sola canción, «Personalizar». Cada cambio es un paso de deshacer y se ve en la vista previa en < 100 ms. En D1 y D4 es de solo lectura (línea `edi.subrayado.resumen` del resumen). |
+| **Vista previa** | Muestra el subrayado si lo tiene el estilo **o** lo activa Ajustes en este equipo: reproduciendo, avanza con el barrido; en pausa, bajo la mitad resaltada de la línea seleccionada. También en una canción Letra lista (el editor siempre enseña el barrido). |
+| **Nota del ajuste del equipo** | Con «Subrayar siempre lo ya cantado» activado en Ajustes, bajo la casilla aparece `edi.subrayado.global` (`info`). La casilla sigue editable y con su propio valor. |
+| **Nota de Letra lista** | En una canción Letra lista, bajo la casilla aparece `edi.contraste.soloEditor` («Solo afecta al editor: esta canción se reproduce sin barrido.»), salvo en D3. |
+| **Probar a pantalla completa** | Como el reproductor: con subrayado si lo tiene el estilo o lo activa Ajustes; sin él en Letra lista. |
+| **Exportar** | El video usa solo el valor del estilo ([10 · Feature 2](10-exportacion.md#022--feature-2--el-subrayado-en-el-video)). |
+
+**Niveles del aviso de contraste desde 0.2.2** (filas que cambian; las demás, igual)
+
+| Condición | Se muestra | Acciones rápidas |
+|---|---|---|
+| Resaltado vs letra ΔE < 25, **sin** subrayado en el estilo | ⚠ `edi.contraste.diferencia` | «Sugerir un color de resaltado» y **«Subrayar lo ya cantado»** (`edi.contraste.subrayar`). |
+| Resaltado vs letra ΔE < 25, **con** subrayado en el estilo | ⓘ `edi.contraste.diferencia.subrayado` (`info`); no enciende el punto de la pestaña | «Sugerir un color de resaltado». |
+| ΔE ≥ 25 pero los colores se confunden con daltonismo (sistema visual), **sin** subrayado en el estilo | ⚠ `edi.contraste.daltonismo` | «Subrayar lo ya cantado» y «Sugerir un color de resaltado». |
+| Lo anterior, **con** subrayado en el estilo | Nada | — |
+| Todo ≥ 4,5:1, ΔE ≥ 25 y (sin confusión con daltonismo o con subrayado) | ✓ `edi.contraste.ok` | — |
+
+- **«Subrayar lo ya cantado»** (acción rápida) marca la casilla: un paso de deshacer; el foco pasa a la casilla.
+- **«Sugerir un color de resaltado»** añade una condición a su regla: entre los sugeridos de §8 con ΔE ≥ 25 respecto a la letra, se prefieren los que **tampoco se confunden con daltonismo**; entre ellos, el de mayor contraste con el fondo. Si ninguno cumple, la regla de siempre.
+- Solo cuenta el subrayado **del estilo**: el ajuste de este equipo no quita el aviso, porque el tema se verá en otros equipos y en el video.
+- **D1 y D4**: como los demás avisos, sin acciones rápidas y con `tema.contraste.ayuda`.
+- **Letra lista**: el aviso de daltonismo se presenta como `ⓘ` con `edi.contraste.soloEditor` y no enciende el punto de la pestaña (misma regla que los otros avisos del resaltado); en D3 se mantiene como `⚠`.
+- El aviso se anuncia al cambiar de nivel, como los demás (`role="status"`).
+
+### Estados (feature 2, editor)
+
+| Estado | Presentación |
+|---|---|
+| Sin subrayado | Casilla desmarcada; vista previa como hasta ahora. |
+| Con subrayado en el estilo | Casilla marcada; subrayado en la vista previa; resumen con `edi.subrayado.resumen`. |
+| Ajuste del equipo activado | Nota `edi.subrayado.global`; subrayado en la vista previa aunque la casilla esté desmarcada. |
+| Colores que se confunden | ⚠ con sus acciones; punto `aviso` en la pestaña «Estilo». |
+| Letra lista | Nota `edi.contraste.soloEditor`; avisos del resaltado como ⓘ. |
+
+### Accesibilidad (feature 2, editor)
+
+- La casilla tiene nombre visible y su ayuda en `aria-describedby`; las notas de estado también.
+- El aviso nuevo lleva icono y texto, y sus acciones son botones con nombre.
+- El subrayado de la vista previa es decorativo (`aria-hidden`, como toda la vista previa).
+
+### Microcopy (feature 2, editor)
+
+| Clave | Texto |
+|---|---|
+| `edi.subrayado` | Subrayar lo ya cantado |
+| `edi.subrayado.ayuda` | Marca el avance también con una línea, para quien no distingue bien los colores. |
+| `edi.subrayado.global` | Ajustes ya lo activa en todas las canciones de este equipo. Esta casilla decide lo que se guarda en el tema y lo que sale en el video. |
+| `edi.subrayado.resumen` | Lo ya cantado, subrayado |
+| `edi.contraste.daltonismo` | Con daltonismo, lo ya cantado puede no distinguirse de la letra. |
+| `edi.contraste.diferencia.subrayado` | El color de lo ya cantado apenas se distingue del de la letra; el avance se verá por el subrayado. |
+| `edi.contraste.subrayar` | Subrayar lo ya cantado |
+
+### Criterios de aceptación de la feature 2 (editor)
+
+- F2-E1. En D2 y D3, «Letra» muestra la casilla «Subrayar lo ya cantado» bajo «Color de lo ya cantado», desmarcada en una canción y un tema de 0.2.1 (sin escribir nada al abrir); marcarla se ve en la vista previa en < 100 ms y se deshace en un paso.
+- F2-E2. Con la casilla marcada, la vista previa muestra el subrayado avanzando con el barrido al reproducir y bajo la mitad resaltada en pausa; D1 y D4 muestran `edi.subrayado.resumen`.
+- F2-E3. El valor se guarda en un tema («Guardar como tema nuevo…»), se aplica a otra canción al asignarle ese tema y sobrevive a eliminar el tema (copia con el mismo valor).
+- F2-E4. Con el ajuste del equipo activado y la casilla desmarcada, la vista previa y «Probar a pantalla completa» muestran el subrayado y se ve `edi.subrayado.global`; el archivo de la canción no cambia.
+- F2-E5. Con letra `#FFFFFF` y resaltado `#FFD400` no aparece `edi.contraste.daltonismo`; con letra `#E53935` y resaltado `#43A047` aparece como ⚠ con las dos acciones y el punto `aviso` en la pestaña (test unitario de la comprobación con los dos pares).
+- F2-E6. «Subrayar lo ya cantado» del aviso marca la casilla, quita el aviso y se deshace en un paso; con el ajuste del equipo activado y la casilla desmarcada, el aviso **sigue** saliendo.
+- F2-E7. Con letra `#FFFFFF`, resaltado `#F2F3F7` y la casilla marcada, el aviso de diferencia sale como ⓘ con `edi.contraste.diferencia.subrayado` y la pestaña no lleva punto; desmarcada, como ⚠ con las dos acciones.
+- F2-E8. «Sugerir un color de resaltado» con letra `#E53935` propone un color que no se confunde con daltonismo y, al aplicarlo, `edi.contraste.daltonismo` desaparece.
+- F2-E9. En una Letra lista, el aviso de daltonismo sale como ⓘ con `edi.contraste.soloEditor`, y la casilla lleva esa misma nota; en D3 sale como ⚠.
+- F2-E10. En D1 con colores que se confunden, el aviso se muestra con `tema.contraste.ayuda` y sin acciones rápidas.
+- F2-E11. Capturas en `docs/ux/revision-0.2.2-feature-2/` con nombre `editor-{ancho}x{alto}-{escala}-{estado}.png` a 1280 × 720 al 100 %: `subrayado-casilla`, `subrayado-previa`, `aviso-daltonismo`, `subrayado-nota-ajustes`, `subrayado-letra-lista`.
+
+**Verificación manual** (guía de 0.2.2): que el texto del aviso se entienda sin saber qué es el ΔE; que el aviso no salga con los temas habituales del usuario (si sale en más de uno, revisar el umbral con el arquitecto).
+
+## 0.2.2 · Feature 4 — Comprobar la letra con la voz y corregir el desfase
+
+Origen: [plan 0.2.2, feature 4](../versiones/0.2.2/plan-4.md) y [propuesta 022](../propuestas/022-comprobar-la-letra-contra-el-audio.md). Concepto, veredictos y textos compartidos: [05 · 0.2.2 · Feature 4](05-letra.md#022--feature-4--comprobar-la-letra-contra-el-audio-y-corregir-el-desfase). Contratos pendientes: [0153](../preguntas/0153-contratos-de-las-features-4-a-7-para-las-specs.md). Decisiones provisionales: [0154](../preguntas/0154-decisiones-provisionales-de-ux-de-las-features-4-a-7.md). Esta sección **amplía** el editor; respeta la [subfase 2.1](#subfase-21--layout-adaptable-y-paneles) (nada añade scroll de página).
+
+**Qué recupera**: el caso que cubría el «Desplazamiento de toda la letra» retirado en 0.2.1 ([8.5](#85--sin-desplazamiento-de-toda-la-letra)), sin controles manuales: la app mide el desfase y propone un único movimiento. No vuelven las teclas `,` y `.` ni ningún campo de desplazamiento.
+
+**Sustituye**: el banner `edi.banner.yasync` cuando la comprobación tiene algo que decir (ver «Banner al entrar»). Añade una sección a la pestaña «Funciones».
+
+**Coordinación con las features 10 y 11** (otro diseñador): las tres añaden secciones a «Funciones». Orden propuesto, de arriba abajo: Revisar (11) · Sincronizar con la voz (10) · **Comprobar la letra con la voz (4)** · Ajustar los silencios · Exportar video · Modo de reproducción · Estado de la canción. Si las features 10 u 11 no están, esta sección va justo antes de «Ajustar los silencios».
+
+### Sección de «Funciones»
+
+```
+│ Comprobar la letra con la voz                          │  h3
+│ Compara los tiempos de la letra con la voz separada.   │  t-pequeno, texto-2
+│ Si toda la letra va adelantada o atrasada, la mueve.   │
+│ [⟷ Comprobar la letra con la voz…]                     │  botón secundario, icono `move-horizontal`
+│ ⓘ Desfase corregido: toda la letra 0,8 s más tarde.    │  solo si la canción recuerda una corrección
+│   [Quitar la corrección]                               │  botón fantasma
+```
+
+| Elemento | Comportamiento |
+|---|---|
+| **Precondición** | 1) Al menos **3 líneas con inicio**; 2) **picos de voz listos** (el mismo estado que exige «Ajustar los silencios»). Si falla alguna: botón `aria-disabled` y enfocable, con el motivo debajo (regla de 8.6): `edi.comprobar.falta.lineas`, `edi.silencios.falta.separacion`, `edi.silencios.falta.preparando`, `edi.silencios.falta.error` [Reintentar] o `edi.silencios.falta.noDisponible` (se reutilizan las claves de AS). Inactivo en el modo «Sincronizar al ritmo» (pestaña inactiva). Con un borrador de tema abierto **sí** está disponible: no toca la apariencia. |
+| **Pulsar** | Calcula sin aplicar (función pura de la feature 4 sobre los tiempos actuales del editor y los picos). Si tarda más de 300 ms, el botón pasa a `edi.comprobar.calculando`. Con el audio sonando, sigue sonando. Con el editor preciso abierto, primero aplica y cierra (como «Ajustar los silencios»). |
+| **Resultado `coincide`** | Sin diálogo: toast `edi.comprobar.toast.coincide` (`exito`, se cierra solo) y anuncio. Foco en el botón. |
+| **Resultado `desfasada`** | Diálogo «¿Corregir el desfase?» (abajo). |
+| **Resultado `no_coincide`** | Diálogo informativo «La letra no encaja con la voz» (abajo). |
+| **Resultado `dudosa`** | Diálogo informativo `edi.comprobar.dudosa` con [Cerrar]. No propone nada. |
+| **Línea «Desfase corregido»** | Visible mientras la canción recuerde una corrección (hecha aquí, en Letra o por la preparación automática). [Quitar la corrección] devuelve todos los tiempos a como estaban antes de corregir, en **un paso** del historial, con el toast `edi.desfase.toast.quitada` y [Deshacer]. |
+
+### Diálogo «¿Corregir el desfase?» (480 px)
+
+```
+┌ ¿Corregir el desfase de la letra? ───────────────────────┐
+│ Toda la letra va 0,8 s adelantada respecto a la voz.     │  `edi.desfase.explicacion`
+│ Moveremos sus 52 líneas 0,8 s más tarde. No cambian el   │
+│ texto ni la duración de cada línea.                      │
+│                                                          │
+│ · También se mueven los fines fijados y los tiempos por  │  `edi.desfase.palabras` (solo si hay
+│   palabra hechos a mano de 3 líneas.                     │   líneas con palabras hechas a mano)
+│ Puedes deshacerlo de una vez con Ctrl+Z.                 │  `edi.silencios.deshacer` (⌘Z en macOS)
+│                          [Cancelar] [Corregir el desfase]│
+└──────────────────────────────────────────────────────────┘
+```
+
+| Aspecto | Regla |
+|---|---|
+| **Qué mueve** | Todos los inicios, los fines fijados y las pausas con tiempo, la misma cantidad. Los fines automáticos se recalculan solos. Los **tiempos por palabra hechos a mano se mueven con su línea** y no se descartan: es la única excepción a la regla de [8.2](#82--regla-editar-el-inicio-o-el-fin-descarta-los-tiempos-por-palabra), porque un movimiento igual para todo no rompe su relación con la línea **(decisión provisional; contrato en 0153 §3)**. Las palabras importadas se borran como en cualquier edición. |
+| **Botones** | Foco inicial en «Corregir el desfase» (primario; se deshace en un paso). Esc = Cancelar: no cambia nada y el foco vuelve al botón de origen. |
+| **Aplicar** | **Una sola operación** del historial. Autoguardado normal. Toast `edi.desfase.toast` con [Deshacer] (= Ctrl/Cmd + Z). Las regiones de la línea de tiempo se resaltan 2 s con borde `info` (sin fundido con movimiento reducido). La selección, el zoom y la pista de escucha no cambian; el cabezal se queda donde estaba; un bucle activo adopta los límites nuevos de su línea. |
+| **Después** | La sección muestra «Desfase corregido…» con [Quitar la corrección]. Deshacer con Ctrl/Cmd + Z quita también esa línea; rehacer la devuelve. |
+| **Si cambia algo con el diálogo abierto** | Al confirmar se recalcula con los tiempos vigentes; si el desfase cambia en más de 50 ms o el veredicto es otro, no se aplica: el diálogo muestra los datos nuevos con `edi.silencios.obsoleto` arriba (`role="alert"`). |
+| **Canción Lista o Letra lista** | Igual: el botón y el diálogo funcionan; la canción sigue Lista. |
+
+### Diálogo «La letra no encaja con la voz» (480 px)
+
+```
+┌ La letra no encaja con la voz ───────────────────────────┐
+│ Puede ser la letra de otra versión de la canción.        │  `edi.comprobar.noCoincide`
+│ · 9 de 52 líneas caen donde no hay voz.                  │  `let.comp.detalle.silencio`
+│     2:10 – 2:41                               [Ir]       │
+│ · Hay voz sin letra en 2 tramos.                         │  `let.comp.detalle.vozSinLetra`
+│     1:12 – 1:40                               [Ir]       │
+│     3:02 – 3:15                               [Ir]       │
+│ No se puede arreglar moviendo toda la letra.             │
+│                        [Buscar otra letra]  [Cerrar]     │
+└──────────────────────────────────────────────────────────┘
+```
+- Hasta 6 tramos visibles, con scroll propio si hay más. **[Ir]** cierra el diálogo, lleva el cabezal al principio del tramo, lo centra en la línea de tiempo (zoom sin cambiar) y selecciona la primera línea del tramo si la hay. No reproduce.
+- **[Buscar otra letra]** vacía el guardado y abre la vista Letra en «Buscar otra letra» (mismo camino que «Corregir la letra»).
+- Foco inicial en «Cerrar». No cambia ningún dato.
+
+### Banner al entrar (solo en borradores)
+
+Al abrir el editor de un **borrador** con ≥ 3 líneas con inicio y los picos listos, la comprobación se calcula una vez por visita, en segundo plano. Según el veredicto, el sitio del banner `edi.banner.yasync` muestra:
+
+| Veredicto | Banner |
+|---|---|
+| `coincide`, `dudosa`, `pendiente`, `no_disponible` | El de siempre (`edi.banner.yasync` o el que toque). Nada nuevo. |
+| `desfasada` (sin corregir) | `edi.banner.desfase` (`info`) con [Corregir el desfase] (abre el diálogo) y [Ahora no]. |
+| `no_coincide` | `edi.banner.noCoincide` (`aviso`) con [Ver por qué] (abre el diálogo informativo) y [Buscar otra letra]. |
+
+- [Ahora no] y cerrar el banner lo ocultan hasta el final de la visita. No sale en canciones Lista o Letra lista (ya se dieron por buenas): ahí queda el botón de «Funciones».
+- El banner no roba el foco; se anuncia una vez (`role="status"`).
+- Durante el modo «Sincronizar al ritmo» no se muestra.
+
+### Estados (0.2.2 · feature 4, editor)
+
+| Estado | Presentación |
+|---|---|
+| Vacío (menos de 3 líneas con inicio) | Botón `aria-disabled` con `edi.comprobar.falta.lineas`. |
+| Cargando (picos preparándose o cálculo > 300 ms) | Motivo `edi.silencios.falta.preparando` (se habilita solo al estar listos) o botón `edi.comprobar.calculando`. |
+| Error (picos con error, voz ausente) | Motivo con [Reintentar] o `edi.silencios.falta.noDisponible`. Un fallo al guardar la corrección deja los tiempos como estaban (toast de guardado de siempre). |
+| Sin red | No aplica: todo es local. |
+| Éxito | Toast `edi.desfase.toast`; línea «Desfase corregido…». |
+| Separación sin terminar | Motivo `edi.silencios.falta.separacion`. |
+
+### Teclado y accesibilidad
+
+- Sin atajo de una tecla (evita movimientos accidentales de toda la letra). El botón se alcanza con Tab en «Funciones» y desde el riel («Funciones»).
+- Los diálogos atrapan el foco, cierran con Esc y lo devuelven al elemento de origen (el botón de «Funciones» o el del banner).
+- Cada tramo de la lista es un elemento `role="listitem"` con nombre `edi.comprobar.aria.tramo`; [Ir] tiene nombre propio («Ir a 2:10»).
+- Resultados anunciados: `edi.comprobar.toast.coincide`, `edi.desfase.toast` y `edi.desfase.toast.quitada` (`role="status"`).
+- El resalte de 2 s no es la única señal: el toast lo dice con texto.
+
+### Microcopy (0.2.2 · feature 4, editor)
+
+| Clave | Texto |
+|---|---|
+| `edi.funciones.comprobar.titulo` | Comprobar la letra con la voz |
+| `edi.funciones.comprobar.ayuda` | Compara los tiempos de la letra con la voz separada. Si toda la letra va adelantada o atrasada, la mueve. |
+| `edi.funciones.comprobar.boton` | Comprobar la letra con la voz… |
+| `edi.comprobar.calculando` | Comprobando… |
+| `edi.comprobar.falta.lineas` | Para comprobar la letra hacen falta al menos 3 líneas sincronizadas. |
+| `edi.comprobar.toast.coincide` | La letra coincide con la voz. |
+| `edi.comprobar.dudosa` | **No está claro si la letra coincide con la voz.** Parte coincide y parte no; puede deberse a coros o a partes sin letra. No hemos cambiado nada. — [Cerrar] |
+| `edi.comprobar.noCoincide.titulo` | La letra no encaja con la voz |
+| `edi.comprobar.noCoincide` | Puede ser la letra de otra versión de la canción. |
+| `edi.comprobar.noCoincide.pie` | No se puede arreglar moviendo toda la letra. |
+| `edi.comprobar.ir` | Ir — nombre accesible: Ir a {a} |
+| `edi.comprobar.aria.tramo` | De {a} a {b}: {motivo} |
+| `edi.comprobar.otra` | Buscar otra letra |
+| `edi.desfase.titulo` | ¿Corregir el desfase de la letra? |
+| `edi.desfase.explicacion` | Toda la letra va {d} s adelantada respecto a la voz. Moveremos sus {n} líneas {d} s más tarde. No cambian el texto ni la duración de cada línea. · (atrasada) Toda la letra va {d} s atrasada respecto a la voz. Moveremos sus {n} líneas {d} s antes. No cambian el texto ni la duración de cada línea. |
+| `edi.desfase.palabras` | También se mueven los fines fijados y los tiempos por palabra hechos a mano de {k} líneas. · (k = 1) … de 1 línea. |
+| `edi.desfase.boton` | Corregir el desfase |
+| `edi.desfase.toast` | Letra movida {d} s más tarde. — [Deshacer] · Letra movida {d} s antes. — [Deshacer] |
+| `edi.desfase.corregido` | Desfase corregido: toda la letra {d} s más tarde. · Desfase corregido: toda la letra {d} s antes. |
+| `edi.desfase.quitar` | Quitar la corrección |
+| `edi.desfase.toast.quitada` | Corrección quitada: la letra vuelve a sus tiempos anteriores. — [Deshacer] |
+| `edi.banner.desfase` | Esta letra va {d} s adelantada respecto a la voz. — [Corregir el desfase] [Ahora no] · (atrasada) Esta letra va {d} s atrasada respecto a la voz. — … |
+| `edi.banner.noCoincide` | Esta letra no encaja con la voz: puede ser de otra versión de la canción. — [Ver por qué] [Buscar otra letra] |
+
+### Criterios de aceptación (0.2.2 · feature 4, editor)
+
+- F4-E1. La pestaña «Funciones» tiene la sección «Comprobar la letra con la voz» antes de «Ajustar los silencios», con su botón secundario; con menos de 3 líneas con inicio, la separación sin terminar o los picos sin preparar, el botón es `aria-disabled` y muestra su motivo debajo, que se actualiza en vivo.
+- F4-E2. Con una letra que coincide, pulsar el botón muestra `edi.comprobar.toast.coincide` y no cambia `cancion.json`.
+- F4-E3. Con una letra movida −800 ms respecto a la voz (fixture), el diálogo dice «0,8 s adelantada» y el número de líneas; «Corregir el desfase» mueve +800 ms (± 50 ms) todos los inicios, fines fijados y pausas con tiempo, sin cambiar textos ni la duración de ninguna línea, en una sola operación; un Ctrl/Cmd + Z lo devuelve todo y quita la línea «Desfase corregido».
+- F4-E4. Una línea con tiempos por palabra hechos a mano conserva sus palabras tras la corrección, movidas la misma cantidad (el barrido sigue coincidiendo con la voz), y no aparece `edi.toast.palabras`; el diálogo mostró `edi.desfase.palabras`.
+- F4-E5. Tras corregir, la sección muestra `edi.desfase.corregido` con [Quitar la corrección], que deja los tiempos idénticos a los previos (comparación en ms) en un paso del historial; también aparece si la corrección se hizo en la vista Letra o en la preparación automática.
+- F4-E6. Con la letra de otra canción (fixture), el diálogo informativo lista los tramos; [Ir] cierra, deja el cabezal al principio del tramo y lo muestra en la línea de tiempo; [Buscar otra letra] abre la vista Letra. No cambia ningún tiempo.
+- F4-E7. Al abrir un borrador con una letra `desfasada` aparece `edi.banner.desfase` en lugar de `edi.banner.yasync`; [Corregir el desfase] abre el diálogo; [Ahora no] lo oculta hasta salir del editor. En una canción Lista no aparece. Con `no_coincide`, `edi.banner.noCoincide`.
+- F4-E8. El desplazamiento que sacaría una línea del audio no se propone (el veredicto es `no_coincide`); tras cualquier corrección se cumplen los invariantes de tiempos del [ADR 0006](../adr/0006-persistencia-y-modelo-de-datos.md) (test de la función pura).
+- F4-E9. No existe ningún atajo de una tecla para comprobar ni para corregir; `,` y `.` siguen sin hacer nada; todo el flujo se opera con teclado y los resultados se anuncian.
+- F4-E10. En los seis viewports de la subfase 2.1, la sección y los dos diálogos no producen scroll de página; a 300 px de ancho del panel el botón no se parte.
+- F4-E11. Capturas en `docs/ux/revision-0.2.2-feature-4/`, nombre `editor-1280x720-100-{estado}.png`: `funciones-comprobar`, `funciones-comprobar-no-disponible`, `dialogo-desfase`, `dialogo-no-encaja`, `banner-desfase`, `desfase-corregido`.
+
+**Verificación manual** (guía de `docs/Test-manuales/0.2.2/`): en una canción real, mover a mano toda la letra con un LRC editado (1 s y 3 s) y comprobar que la corrección deja el barrido sobre la voz a oído; comprobar una canción con una intro hablada o coros largos y anotar si sale «No está claro»; comprobar que el diálogo de «no encaja» lleva a tramos donde de verdad falta o sobra letra.
+
+## 0.2.2 · Feature 5 — Preparación desatendida: lo que el editor cuenta
+
+Origen: [propuesta 020](../propuestas/020-preparacion-desatendida.md). Cadena y reglas: [04 · 0.2.2 · Feature 5](04-progreso-pipeline.md#022--feature-5--preparación-desatendida). Una canción preparada por la app llega al editor con cosas hechas sin que nadie las viera. El editor dice **qué se hizo** y deja deshacer cada cosa. Lo demás no cambia.
+
+**Coordinación con la feature 11** (revisión guiada, otro diseñador): «Revisar» de la tarjeta «Lista para revisar» abre este editor. Si la feature 11 existe, lo abre en su modo de revisión y el banner de abajo lo sustituye el suyo; el bloque «Preparación automática» de «Funciones» se mantiene.
+
+### Banner al entrar
+
+En un borrador preparado por la app y aún **sin revisar** (0153 §4), el sitio de `edi.banner.yasync` muestra `edi.banner.preparada` (`info`) con [Ver qué hicimos] (abre la pestaña «Funciones» con el foco en el título del bloque) y [×]. Tiene prioridad sobre `edi.banner.yasync`; `edi.banner.desfase` y `edi.banner.noCoincide` (feature 4) tienen prioridad sobre él. La canción cuenta como revisada, y el banner deja de salir, al cerrarlo, al cambiar cualquier tiempo o texto, o al marcarla como lista.
+
+### Bloque «Preparación automática» en «Funciones»
+
+Primera sección de la pestaña, solo si la canción tiene registro de preparación:
+
+```
+│ Preparación automática                                 │  h3
+│ Shinobi Karaoke preparó esta canción el 21 nov 2026:   │  t-pequeno, texto-2
+│ · Letra de LRCLIB, coincidencia exacta.                │
+│     [Ver otras candidatas]                             │
+│ · Desfase corregido: toda la letra 0,8 s más tarde.    │
+│     [Quitar la corrección]                             │
+│ · Fin de 31 líneas ajustado con la voz.                │
+│     [Quitar esos fines]                                │
+```
+
+| Renglón | Cuándo | Acción |
+|---|---|---|
+| Letra | La letra la eligió la app y no se ha sustituido. | [Ver otras candidatas]: vacía el guardado y abre Letra en A (spec 05, feature 5). |
+| Desfase | Hay una corrección recordada. | [Quitar la corrección]: la misma acción de la feature 4 (no se repite en su sección mientras este bloque exista). |
+| Fines | La preparación fijó fines (paso «Ajustar los fines», spec 04). | [Quitar esos fines]: vuelve a **automático** el fin de las líneas que la preparación fijó **y que siguen con ese mismo valor** (las que el usuario tocó después no cambian). Un paso del historial; toast `edi.prep.toast.fines` con [Deshacer]. |
+
+- Un renglón desaparece cuando deja de ser cierto (letra sustituida, corrección quitada, ningún fin de la preparación en pie). Sin renglones, el bloque no se muestra.
+- Los botones son fantasma; ninguno pide confirmación porque todos se deshacen con Ctrl/Cmd + Z.
+- Si la feature 10 (alineación) hizo el paso de fines, el renglón y su acción los define su sección; este bloque solo le reserva el sitio.
+
+### Microcopy (0.2.2 · feature 5, editor)
+
+| Clave | Texto |
+|---|---|
+| `edi.banner.preparada` | Shinobi Karaoke preparó esta canción sola. Escúchala, corrige lo que no coincida y márcala como lista. — [Ver qué hicimos] |
+| `edi.prep.titulo` | Preparación automática |
+| `edi.prep.intro` | Shinobi Karaoke preparó esta canción el {fecha}: |
+| `edi.prep.letra` | Letra de LRCLIB, coincidencia exacta. · (elegida por el usuario entre candidatas) Letra de LRCLIB, elegida por ti. |
+| `edi.prep.letra.boton` | Ver otras candidatas |
+| `edi.prep.desfase` | (= `edi.desfase.corregido`) |
+| `edi.prep.fines` | Fin de {n} líneas ajustado con la voz. · (n = 1) Fin de 1 línea ajustado con la voz. |
+| `edi.prep.fines.boton` | Quitar esos fines |
+| `edi.prep.toast.fines` | {n} líneas vuelven al fin automático. — [Deshacer] · (n = 1) 1 línea vuelve al fin automático. — [Deshacer] |
+
+### Criterios de aceptación (0.2.2 · feature 5, editor)
+
+- F5-E1. Al abrir por primera vez un borrador preparado por la app aparece `edi.banner.preparada`; [Ver qué hicimos] abre «Funciones» con el foco en «Preparación automática»; tras cerrarlo o editar un tiempo, no vuelve a salir al reabrir.
+- F5-E2. El bloque lista solo lo que la preparación hizo y sigue en pie; cada acción es un paso del historial con su toast y [Deshacer].
+- F5-E3. [Quitar esos fines] deja en automático exactamente los fines fijados por la preparación que no se han cambiado después (test con una línea tocada a mano: conserva su fin).
+- F5-E4. Una canción añadida sin preparación automática (interruptor desactivado y letra elegida a mano) no muestra ni el banner ni el bloque.
+- F5-E5. Captura `docs/ux/revision-0.2.2-feature-5/editor-1280x720-100-preparacion-automatica.png`.
+
+## 0.2.2 · Feature 9 — Exportar la letra desde el editor
+
+Origen: [propuesta 025](../propuestas/025-copia-de-seguridad-y-paquete-de-cancion.md). Formato del archivo, nombre, avisos y errores: [02 · 0.2.2 · Feature 9, «Exportar la letra a `.lrc`»](02-biblioteca.md#exportar-la-letra-a-lrc). Aquí solo se añade el punto de entrada.
+
+```
+│ Exportar la letra                                      │  h3
+│ Guarda la letra con sus tiempos en un archivo .lrc,    │  t-pequeno, texto-2
+│ para usarla fuera de Shinobi Karaoke.                  │
+│ [♪ Exportar la letra (.lrc)…]                           │  botón secundario, icono `file-music`
+```
+
+- Sección de la pestaña «Funciones», justo **después de «Exportar video»**.
+- **Disponible** con al menos una línea con inicio (borrador, Lista o Letra lista). Si no: `aria-disabled` con el motivo `lrc.motivo.sinTiempos` debajo (regla de 8.6).
+- **Pulsar**: vacía el guardado pendiente (como «Exportar video…») y abre el diálogo «Guardar» del sistema. Exporta lo guardado. Con el editor preciso abierto, primero aplica su borrador (la ventana sigue abierta). Al terminar, toast `lrc.toast.ok` (o `lrc.toast.omitidas`) y el foco vuelve al botón.
+- Sin atajo de teclado. Inactiva en el modo «Sincronizar al ritmo», como toda la pestaña.
+
+| Clave | Texto |
+|---|---|
+| `edi.funciones.letra.titulo` | Exportar la letra |
+| `edi.funciones.letra.ayuda` | Guarda la letra con sus tiempos en un archivo .lrc, para usarla fuera de Shinobi Karaoke. |
+| `edi.funciones.letra.boton` | Exportar la letra (.lrc)… |
+
+- F9-E1. «Funciones» muestra «Exportar la letra» tras «Exportar video»; con una línea con inicio, el botón abre el diálogo «Guardar» del sistema con el nombre `lrc.nombre` y escribe el mismo archivo que la acción de la Biblioteca (misma función); un cambio de tiempo hecho un instante antes de pulsar está en el archivo.
+- F9-E2. Sin ninguna línea con inicio, el botón está `aria-disabled` con `lrc.motivo.sinTiempos` visible debajo.
+
+## 0.2.2 · Feature 10 — Sincronizar con la voz (etapa 1)
+
+Origen: [plan 0.2.2, feature 10](../versiones/0.2.2/plan-4.md) y [propuesta 019](../propuestas/019-sincronia-automatica-por-alineacion-forzada.md) (prueba técnica y etapa 1). Modelos por idioma: [08 · 0.2.2 · Feature 10](08-ajustes-y-acerca.md#022--feature-10--sincronía-automática-modelos-por-idioma). En la preparación desatendida: [04 · 0.2.2 · Feature 10](04-progreso-pipeline.md#022--feature-10--sincronizar-con-la-voz-en-la-preparación). Revisión de lo que deja dudoso: [Feature 11](#022--feature-11--revisión-guiada-de-líneas-dudosas). Contratos pendientes: [0157](../preguntas/0157-contratos-de-las-features-8-a-11-para-las-specs.md). Decisiones provisionales: [0158](../preguntas/0158-decisiones-provisionales-de-ux-de-las-features-8-a-11.md). Respeta la [subfase 2.1](#subfase-21--layout-adaptable-y-paneles): nada añade scroll de página.
+
+### Condición: la prueba técnica
+
+Esta sección está diseñada **suponiendo que la prueba técnica sale bien**. La prueba (la hace el arquitecto antes de las tareas de interfaz) mide el alineador contra los fines fijados por el usuario en A Pesar de Mí, Arrópame y ¿Y Ahora Qué? (89 líneas), con el banco de `calibrar:silencios`. Criterio de la propuesta: error medio menor que el de «Ajustar los silencios» y ningún fin que corte la voz más de 150 ms.
+
+| Resultado de la prueba | Qué se implementa |
+|---|---|
+| Cumple el criterio en fines **y** en palabras | Todo lo de esta sección. |
+| Cumple en fines, pero las palabras no son fiables | La sección **sin** tiempos por palabra: desaparecen la casilla «Añadir tiempos por palabra», el indicador ✦ y la fila de palabras de la vista previa. Lo demás, igual. |
+| No cumple | **Nada de esta sección.** «Ajustar los silencios» sigue siendo la única ayuda, se reactivan las propuestas 016 y 027 (plan 0.2.2, «Condicionadas») y la feature 11 funciona con sus reglas sin modelo. |
+
+### Qué entra en la etapa 1
+
+- **Entra**: en una letra que **ya tiene inicios** (la de LRCLIB, o la marcada al ritmo), escuchar la voz separada entre el inicio de cada línea y el inicio de la siguiente para proponer **el fin de la línea** (cuando acaba su última palabra) y **los tiempos de sus palabras**. Cada línea se calcula por separado: un fallo en una no arrastra a las demás.
+- **No entra**: cambiar inicios, sincronizar una letra sin tiempos (etapa 2), transcribir una canción sin letra, idiomas sin modelo. El usuario **siempre revisa**: nada de esto marca la canción como lista.
+
+### Conceptos
+
+| Concepto | Definición |
+|---|---|
+| **Confianza** | Lo seguro que está el motor de cada línea. La interfaz usa tres niveles con texto: **Alta**, **Media**, **Baja** (los umbrales salen de la prueba técnica). |
+| **Tiempos por palabra automáticos** | Los que pone esta función. Se guardan distinguidos de los hechos a mano (`origen_palabras: "auto"`, por confirmar en 0157) y **se pintan palabra a palabra**, como los hechos a mano. Solo se ponen en líneas de confianza **Alta**. |
+| **Fin de origen conocido** | Para saber qué fines puede cambiar, la app distingue quién fijó cada fin: el usuario (a mano), la letra importada, «Ajustar los silencios», la preparación automática o esta función (campo por confirmar en 0157). Los fines de canciones anteriores a 0.2.2 no lo dicen: se tratan como **hechos a mano**. |
+| **Idioma de la letra** | Hace falta para elegir el modelo. La app lo detecta del texto y lo guarda en la canción; el usuario puede cambiarlo. Idiomas admitidos: los que fije el ADR (provisionalmente español e inglés). |
+
+### Qué cambia y qué respeta
+
+| Línea | Fin | Palabras |
+|---|---|---|
+| Pausa, o línea sin inicio (y la línea anterior a una sin inicio: no se puede acotar su tramo) | No cambia | No cambia |
+| Con tiempos por palabra **hechos a mano** | No cambia | No cambian |
+| **Dada por buena** en la revisión guiada (feature 11) | No cambia | No cambian |
+| Fin automático, o fijado por «Ajustar los silencios», la preparación automática o una sincronización anterior | **Fin nuevo** con confianza Alta o Media | **Automáticas** con confianza Alta |
+| Fin **fijado a mano**, o que venía con la letra, o de origen desconocido | **Se conserva** (salvo que se marque «Recalcular también los fines fijados») | Automáticas dentro de `[inicio, fin]` con confianza Alta |
+| Confianza **Baja** | No cambia | No cambian; la línea queda **señalada para revisar** (feature 11) |
+| Con tiempos por palabra importados (0.2.1 no los usa) | Como su caso de arriba | Si la línea cambia, se borran sin aviso (regla de 8.1) |
+
+- **Nunca cambia un inicio.** Si la voz empieza más de 1 s después del inicio de la línea, la línea se señala para revisar con ese motivo, pero el inicio no se toca.
+- El fin nuevo cumple siempre `inicio < fin ≤ inicio del siguiente`; las palabras cumplen las reglas de validez de la fase 9.
+- **No activa** la cuenta 3·2·1 ni cambia nada del estilo (a diferencia de «Ajustar los silencios»). Por eso está disponible con un borrador de tema abierto.
+
+### Sección de «Funciones»
+
+Orden de la pestaña acordado con las features 4, 5 y 11: Preparación automática (5) · Revisar la sincronía (11) · **Sincronizar con la voz (10)** · Comprobar la letra con la voz (4) · Ajustar los silencios · Exportar video · Exportar la letra (9) · Modo de reproducción · Estado de la canción.
+
+```
+│ Sincronizar con la voz                                 │  h3
+│ Escucha la voz para ajustar el fin de cada línea y     │  t-pequeno, texto-2
+│ marcar sus palabras. No cambia los inicios.            │
+│ [✦ Sincronizar con la voz…]                             │  botón secundario, icono `wand-sparkles`
+│ Idioma de la letra: Español  [Cambiar]                 │  t-pequeno; [Cambiar] fantasma
+│ ✦ 38 de 52 líneas con tiempos por palabra automáticos. │  solo si hay alguna
+│   [Quitar la sincronía automática]                     │  fantasma
+```
+
+La sección «Ajustar los silencios» **se mantiene** debajo, con una frase más en su ayuda (`edi.funciones.silencios.ayuda2`): es la alternativa sin modelo **(decisión provisional: no se retira en 0.2.2)**.
+
+**También por línea**: «Sincronizar esta línea con la voz» en el menú contextual de la fila (tras «Editor preciso de línea…») y como botón fantasma en el panel Sincronía, bajo «Editor preciso de línea…». Hace lo mismo para la línea seleccionada, sin diálogo de vista previa (ver «Una sola línea»).
+
+### Flujo
+
+```mermaid
+flowchart LR
+    B[Sincronizar con la voz…] --> P{¿Disponible?}
+    P -- "falta algo" --> M[Motivo visible<br/>bajo el botón]
+    P -- "sí" --> I{¿Idioma claro<br/>y modelo instalado?}
+    I -- "no" --> D[Diálogo: idioma<br/>y descarga del modelo]
+    D --> A
+    I -- "sí" --> A[Escuchando la voz…<br/>progreso, cancelable]
+    A --> V[Vista previa del cambio]
+    V -- "Cancelar" --> X([nada cambia])
+    V -- "Aplicar" --> R[Un paso del historial<br/>toast con Deshacer<br/>y Revisar]
+```
+
+### 1. Idioma y modelo (solo si hace falta)
+
+Se muestra antes de analizar si el idioma no está claro, no está admitido o falta su modelo. Si todo está en orden, se salta.
+
+```
+┌ Sincronizar con la voz ──────────────────────────────────────┐
+│ Idioma de la letra                                           │
+│ [ Español                                              ▾ ]   │  Español · Inglés · Otro idioma
+│ Parece español, pero no estamos seguros: compruébalo.        │  `edi.alinear.idioma.duda` (solo si aplica)
+│                                                              │
+│ ┌──────────────────────────────────────────────────────────┐ │
+│ │ ⓘ Hace falta el modelo de español: 1,2 GB.               │ │  `edi.alinear.modelo.falta`
+│ │   Se descarga una vez y sirve para todas tus canciones.  │ │
+│ └──────────────────────────────────────────────────────────┘ │
+│                       [Cancelar] [Descargar y sincronizar]   │
+└──────────────────────────────────────────────────────────────┘
+```
+
+| Caso | Presentación |
+|---|---|
+| Idioma detectado con seguridad y modelo instalado | No se muestra este paso. |
+| Idioma dudoso (letra corta o mezclada) | Selector preseleccionado + `edi.alinear.idioma.duda`. Botón «Sincronizar». |
+| Modelo sin instalar | `edi.alinear.modelo.falta` con el tamaño del manifiesto; botón «Descargar y sincronizar». La descarga muestra su barra en el diálogo (`edi.alinear.modelo.descargando`, [Cancelar]); se puede cerrar el diálogo y sigue en segundo plano (se ve en Ajustes). Al terminar con el diálogo abierto, pasa solo al análisis; con el diálogo cerrado, toast `aj.alinear.toast.instalado` y hay que volver a pulsar el botón. Errores de descarga: textos de la spec 01 en línea, con [Reintentar]. |
+| «Otro idioma» o idioma detectado no admitido | `edi.alinear.idioma.noAdmitido` (`info`) y el botón principal inactivo. Enlace a «Ajustar los silencios» ([Usar «Ajustar los silencios»] cierra y abre ese diálogo). |
+| El usuario cambia el idioma | Se guarda en la canción (fuera del historial de deshacer; es un dato, como el título). |
+
+### 2. Escuchando la voz
+
+```
+┌ Sincronizar con la voz ──────────────────────────────────────┐
+│ Escuchando la voz… línea 18 de 52          quedan unos 20 s  │
+│ ████████████░░░░░░░░░░░░░░░░░░░                              │
+│ Todavía no se ha cambiado nada.                              │
+│                                               [Cancelar]     │
+└──────────────────────────────────────────────────────────────┘
+```
+
+- Diálogo modal: mientras dura no se edita (los tiempos sobre los que se calcula no deben cambiar) **(decisión provisional)**. El audio que estuviera sonando se pausa.
+- Fases: `edi.alinear.fase.cargando` (indeterminada, mientras carga el modelo) → `edi.alinear.fase.escuchando` (determinada, por líneas). Tiempo restante con las reglas de la spec 04 (sin estimación los primeros segundos).
+- **Cancelar** (y Esc): detiene el análisis y cierra; no cambia nada. Sin confirmación.
+- Es un trabajo del motor de audio: si hay una separación en curso, el análisis espera su turno y el diálogo lo dice (`edi.alinear.fase.cola`), con [Cancelar].
+
+### 3. Vista previa del cambio (560 px)
+
+```
+┌ Sincronizar con la voz ──────────────────────────────────────┐
+│ Idioma de la letra: Español  [Cambiar]                       │
+│                                                              │
+│ · Cambiará el fin de 31 de 52 líneas.                        │  `edi.alinear.fines`
+│ · Añadirá tiempos por palabra a 38 líneas.                   │  `edi.alinear.palabras`
+│ · 9 líneas conservan el fin que ya tenían fijado.            │  `edi.alinear.conservadas`
+│ · 4 líneas no cambian: tienen palabras hechas a mano o ya    │  `edi.alinear.protegidas`
+│   las diste por buenas.                                      │
+│ · ⚠ 5 líneas no cambian porque no se reconocen bien.         │  `edi.alinear.bajas` (icono `aviso`)
+│   Quedarán señaladas para revisar.                           │
+│                                                              │
+│ [☑] Añadir tiempos por palabra                               │
+│ [☐] Recalcular también los 9 fines fijados                   │
+│ [▸ Ver las líneas]                                           │
+│ Puedes deshacerlo de una vez con Ctrl+Z.                     │  `edi.silencios.deshacer`
+│                                    [Cancelar] [Aplicar]      │
+└──────────────────────────────────────────────────────────────┘
+```
+
+Lista revelada (hasta 8 filas visibles, scroll propio, orden de la letra):
+```
+│ Línea 4 · «Is this the real life?»   Fin 00:15.80 → 00:14.92 · 5 palabras · Alta   │
+│ Línea 9 · «Caught in a landslide»    Fin 00:41.10 → 00:39.65 · sin palabras · Media │
+│ Línea 12 · «Open your eyes»          No cambia · Baja                                │
+│ Línea 20 · «Mama, just killed a man» Fin fijado: se conserva · 6 palabras · Alta     │
+```
+
+| Elemento | Comportamiento |
+|---|---|
+| Recuentos | Se omiten los que valen 0. Se recalculan **al momento** al cambiar las casillas (no hace falta volver a analizar: el análisis ya tiene todo). |
+| **Añadir tiempos por palabra** | Marcada por defecto. Desmarcada, solo cambian fines. Se recuerda la elección. |
+| **Recalcular también los {k} fines fijados** | Desmarcada por defecto. Solo aparece si hay fines que se conservan. Al marcarla, aparece debajo `edi.alinear.recalcular.aviso` (`aviso`): también cambiarán fines puestos a mano. Nunca afecta a líneas con palabras hechas a mano ni a las dadas por buenas. |
+| **Ver las líneas** | Revelador (`aria-expanded`). Cada fila: número, texto truncado, fin anterior → nuevo (o «No cambia» / «Fin fijado: se conserva»), palabras y nivel de confianza en texto. `role="list"`; nombre de fila `edi.alinear.aria.fila`. |
+| **Cambiar** (idioma) | Vuelve al paso 1; al aceptar, analiza otra vez. |
+| **Poca confianza en general** | Si más de la mitad de las líneas analizadas salen con confianza Baja, arriba aparece el banner `aviso` `edi.alinear.pocaConfianza` con [Cambiar el idioma] y, si existe la feature 4, [Comprobar la letra con la voz]. «Aplicar» sigue disponible para las líneas que sí se reconocen. |
+| **Nada que aplicar** | Si ningún fin ni palabra cambiaría: no se abre la vista previa; el diálogo de progreso se cierra y sale el toast `edi.alinear.nada` (`info`). Si además hay líneas de confianza Baja, quedan señaladas y el toast lo dice (`edi.alinear.nada.bajas`) con [Revisar]. |
+| Botones | Foco inicial en «Aplicar» (primario del diálogo; se deshace en un paso). Esc = Cancelar: no cambia nada y el foco vuelve al botón de origen. |
+| **Si cambia algo con el diálogo abierto** | Al confirmar, si los tiempos de la canción ya no son los del análisis (recarga por `LETRA_DESACTUALIZADA`), no se aplica: se muestra `edi.silencios.obsoleto` y el botón pasa a «Analizar de nuevo». |
+
+### 4. Aplicar
+
+- **Una sola operación** del historial (`edi.alinear.paso`): fines, palabras, su origen y las señales de revisión. Autoguardado normal.
+- Toast `edi.alinear.toast` con [Deshacer] (= Ctrl/Cmd + Z, devuelve todo en un paso) y, si quedaron líneas señaladas y existe la feature 11, [Revisar {n} líneas] (empieza la revisión guiada).
+- En la línea de tiempo, las regiones cambiadas se resaltan 2 s con borde `info` y su fin pasa a fijado (contorno continuo). El foco vuelve al botón «Sincronizar con la voz…». La selección, el cabezal, el zoom y la pista de escucha no cambian.
+- Con el **editor preciso** abierto: antes de analizar se aplica su borrador y se cierra la ventana (como «Ajustar los silencios»).
+- **Quitar la sincronía automática** (botón de la sección): quita los tiempos por palabra automáticos de todas las líneas que los tengan y devuelve a **automático** los fines que puso esta función **y que siguen con ese valor** (los tocados después no cambian). Un paso del historial; toast `edi.alinear.toast.quitada` con [Deshacer]. Sin confirmación.
+
+### Una sola línea
+
+«Sincronizar esta línea con la voz» (menú contextual de la fila y panel Sincronía):
+
+- Analiza solo esa línea (normalmente menos de 2 s; el botón pasa a `edi.alinear.linea.cargando`). Sin diálogo de vista previa: el cambio es pequeño, se ve en la línea de tiempo y se deshace con Ctrl/Cmd + Z.
+- **Sí** cambia un fin fijado a mano (el usuario lo pidió para esa línea) y **sustituye** unos tiempos por palabra automáticos anteriores. Con palabras **hechas a mano**, pide confirmación en línea (`edi.alinear.linea.manuales`: [Cancelar] [Sustituir]).
+- Resultado: toast `edi.alinear.linea.toast` con [Deshacer]; al terminar suena el tramo de la línea (como Mayús + L) si «Escuchar al ajustar» está activado. Con confianza Baja no cambia nada y dice `edi.alinear.linea.baja`.
+- Si hace falta descargar el modelo o elegir idioma, abre el paso 1.
+- Es también el arreglo rápido que ofrece la revisión guiada (feature 11).
+
+### Cómo se ve después
+
+| Dónde | Qué se ve |
+|---|---|
+| Lista de líneas | Las filas con tiempos por palabra **automáticos** llevan al final el icono `wand-sparkles` 14 px en `texto-3` (✦ en los wireframes), con el tooltip `edi.alinear.indicador`. Las hechas a mano conservan su icono `whole-word` (◈). Nombre accesible: `edi.alinear.indicador.aria`. |
+| Panel Sincronía | Bajo el texto de la línea: «✦ Tiempos por palabra automáticos» (`edi.alinear.indicador.panel`) y el aviso `edi.preciso.aviso.descartar` de la fase 9. |
+| Línea de tiempo | Marcas de frontera entre palabras, como con las hechas a mano. Fin fijado (contorno continuo). |
+| Vista previa, «Probar», reproductor, sesión y video | Barrido **palabra a palabra** en las líneas con palabras automáticas; progresivo hasta el fin nuevo en las demás. En Letra lista, sin barrido (sin cambios). |
+| Líneas de confianza Baja | Señaladas con la marca de revisión de la feature 11 (⚑ y su motivo). |
+
+**Editar después**
+- **Regla de descarte (8.2)**: cambiar el inicio o el fin de una línea con palabras automáticas fuera del editor preciso **las quita** (nunca se quedan desfasadas). El toast es `edi.toast.palabrasAuto`, con [Deshacer] y [Volver a sincronizar la línea] **(decisión provisional: se descartan y se ofrece recalcular; no se recalculan solas)**. En el modo «Sincronizar al ritmo» cuentan en el toast único de salida, como las hechas a mano.
+- **Editor preciso** (fase 9): una línea con palabras automáticas se abre con todas sus palabras en un tercer estado, **automática** (borde continuo `borde-control`, texto `texto-2`; nombre accesible «…, automática»). El recuento pasa a `edi.preciso.recuento.auto`. Al **aplicar con algún cambio**, la línea entera pasa a «hecha a mano» (icono ◈): desde ese momento la sincronización automática ya no la toca. Aplicar sin cambios la deja como estaba.
+- **«Ajustar los silencios»** trata las palabras automáticas como las importadas: ajusta esas líneas y les quita las palabras (su diálogo lo cuenta en `edi.silencios.auto`). Solo salta las hechas a mano.
+- **«Corregir el desfase»** (feature 4) mueve las palabras automáticas con su línea, igual que las hechas a mano.
+
+### En el bloque «Preparación automática» (feature 5)
+
+Si la preparación desatendida hizo el paso de fines con esta función, el renglón «Fines» del bloque de la feature 5 es:
+
+```
+│ · Fin de 31 líneas y palabras de 38 ajustados con la   │  `edi.prep.alineacion`
+│   voz (sincronía automática). 5 líneas para revisar.   │
+│     [Quitar la sincronía automática]                   │  la misma acción de la sección
+```
+Si la preparación usó «Ajustar los silencios» porque faltaba el modelo, el renglón es el de la feature 5 (`edi.prep.fines`) con la nota `edi.prep.alineacion.sinModelo` y [Sincronizar con la voz…].
+
+### No disponible
+
+Regla de 8.6: botón `aria-disabled`, enfocable, con el motivo visible debajo y actualizado en vivo.
+
+| Situación | Qué se muestra |
+|---|---|
+| La prueba técnica no cumple | La sección no existe (ver «Condición»). |
+| **El motor de alineación no está disponible en este equipo** (plataforma o memoria que el ADR no admita) | La sección muestra solo el texto `edi.alinear.no.equipo` y el enlace [Ir a «Ajustar los silencios»] (lleva el foco a esa sección). Sin botón. La acción por línea no aparece en el menú contextual ni en el panel. |
+| **Falta la parte del motor de audio** que hace la alineación (instalación anterior a 0.2.2 o dañada) | Motivo `edi.alinear.no.motor` con [Reparar el motor de audio] (flujo de la spec 04; avisa de los trabajos en curso). |
+| Separación sin terminar o sin pista de voz | `edi.silencios.falta.separacion` / `edi.silencios.falta.noDisponible` (claves de AS). |
+| Ninguna línea con inicio | `edi.alinear.no.sinInicios`, con [Sincronizar al ritmo] si es un borrador. |
+| **Idioma no admitido** | El botón **sí** se puede pulsar: abre el paso 1 con `edi.alinear.idioma.noAdmitido`. Bajo «Idioma de la letra» la sección muestra `edi.alinear.idioma.noAdmitido.corto`. |
+| Modelo del idioma sin instalar | El botón se puede pulsar (paso 1 con la descarga). Bajo el idioma: `edi.alinear.modelo.falta.corto`. |
+| Sin conexión al descargar el modelo | Error de descarga en línea en el paso 1, con [Reintentar]. Con el modelo ya instalado, la función no usa la red. |
+| Modo «Sincronizar al ritmo» | Pestaña «Funciones» inactiva (8.6). |
+| Sesión en otra pantalla | El editor está bloqueado (fase 4). |
+| **Poca confianza** | No es «no disponible»: banner de la vista previa, líneas sin cambiar y señaladas para revisar. |
+| Error al analizar (`ERROR_INTERNO`, memoria) | El diálogo de progreso pasa a error: `edi.alinear.error` con [Reintentar] y [Copiar detalles]; con memoria insuficiente, `edi.alinear.error.memoria`. No cambia nada. |
+
+### Estados (feature 10, editor)
+
+| Estado | Presentación |
+|---|---|
+| Vacío (ninguna línea con inicio) | Botón inactivo con `edi.alinear.no.sinInicios`. |
+| Disponible, nunca usada | Sección con botón e idioma. |
+| Eligiendo idioma / descargando el modelo | Paso 1 con su barra. |
+| Cargando el modelo / escuchando / en cola | Paso 2 con la fase. |
+| Vista previa | Paso 3 con recuentos. |
+| Vista previa con poca confianza | Paso 3 con el banner `aviso`. |
+| Nada que aplicar | Toast `edi.alinear.nada`. |
+| Éxito | Toast `edi.alinear.toast`; línea «✦ {a} de {n} líneas…» en la sección; indicadores en la lista. |
+| Error | Paso 2 en error con [Reintentar]. |
+| No disponible | Tabla anterior. |
+| Borrador / Lista / Letra lista | Igual en los tres. En Letra lista las palabras no se ven al reproducir (sin barrido); la vista previa del editor sí las muestra. |
+
+### Teclado y accesibilidad (feature 10)
+
+- **Sin atajo de una tecla** (evita cambios masivos accidentales). El botón se alcanza con Tab en «Funciones» y desde el riel; la acción por línea, desde el menú contextual (tecla Menú o Mayús + F10 en la fila) y el panel.
+- Los tres pasos son estados de un mismo diálogo modal: atrapan el foco, `aria-labelledby` = título, Esc cancela en cualquiera de ellos y devuelve el foco al botón de origen.
+- Progreso: `role="progressbar"` con `aria-valuetext` («línea 18 de 52»). Se anuncian (`aria-live="polite"`) el inicio, el 50 % y el fin del análisis; nunca cada línea.
+- La confianza se dice con texto (Alta, Media, Baja), nunca solo con color. El banner de poca confianza es `role="alert"`.
+- Los indicadores ✦ y ◈ se distinguen por forma y por tooltip y nombre accesible, no por color; contraste ≥ 3:1 sobre `fondo-1` y `fondo-2`.
+- Movimiento reducido: el resalte de 2 s de las regiones no tiene fundido.
+
+### Microcopy (feature 10, editor)
+
+| Clave | Texto |
+|---|---|
+| `edi.funciones.alinear.titulo` | Sincronizar con la voz |
+| `edi.funciones.alinear.ayuda` | Escucha la voz para ajustar el fin de cada línea y marcar sus palabras. No cambia los inicios. |
+| `edi.funciones.alinear.boton` | Sincronizar con la voz… |
+| `edi.funciones.silencios.ayuda2` | No necesita ningún modelo: es más rápido y menos preciso que «Sincronizar con la voz». |
+| `edi.alinear.idioma` | Idioma de la letra: {idioma} — [Cambiar] |
+| `edi.alinear.idioma.opciones` | Español · Inglés · Otro idioma |
+| `edi.alinear.idioma.duda` | Parece {idioma}, pero no estamos seguros: compruébalo. |
+| `edi.alinear.idioma.noAdmitido` | La sincronía automática todavía no funciona en este idioma. Puedes ajustar los fines con «Ajustar los silencios» o a mano. — [Usar «Ajustar los silencios»] |
+| `edi.alinear.idioma.noAdmitido.corto` | Idioma todavía no admitido. |
+| `edi.alinear.modelo.falta` | Hace falta el modelo de {idioma}: {tamaño}. Se descarga una vez y sirve para todas tus canciones. |
+| `edi.alinear.modelo.falta.corto` | Falta el modelo de {idioma} ({tamaño}). Se descargará al sincronizar. |
+| `edi.alinear.modelo.descargando` | Descargando el modelo de {idioma}… {p} % · {x} de {y} |
+| `edi.alinear.boton.descargar` | Descargar y sincronizar · (sin descarga) Sincronizar |
+| `edi.alinear.titulo` | Sincronizar con la voz |
+| `edi.alinear.fase.cargando` | Preparando la escucha… |
+| `edi.alinear.fase.escuchando` | Escuchando la voz… línea {i} de {n} |
+| `edi.alinear.fase.cola` | Esperando a que termine la separación de «{título}»… |
+| `edi.alinear.sinCambios` | Todavía no se ha cambiado nada. |
+| `edi.alinear.fines` | Cambiará el fin de {a} de {n} líneas. · (a = 1) Cambiará el fin de 1 de {n} líneas. |
+| `edi.alinear.palabras` | Añadirá tiempos por palabra a {b} líneas. · (b = 1) … a 1 línea. |
+| `edi.alinear.conservadas` | {k} líneas conservan el fin que ya tenían fijado. · (k = 1) 1 línea conserva el fin que ya tenía fijado. |
+| `edi.alinear.protegidas` | {m} líneas no cambian: tienen palabras hechas a mano o ya las diste por buenas. · (m = 1) 1 línea no cambia: … |
+| `edi.alinear.bajas` | ⚠ {j} líneas no cambian porque no se reconocen bien. Quedarán señaladas para revisar. · (j = 1) ⚠ 1 línea no cambia porque no se reconoce bien. Quedará señalada para revisar. |
+| `edi.alinear.opcion.palabras` | Añadir tiempos por palabra |
+| `edi.alinear.opcion.recalcular` | Recalcular también los {k} fines fijados |
+| `edi.alinear.recalcular.aviso` | ⚠ Entre ellos puede haber fines que pusiste a mano. |
+| `edi.alinear.verLineas` | Ver las líneas |
+| `edi.alinear.fila` | Línea {n} · «{texto}» · Fin {antes} → {después} · {p} palabras · {confianza} · (sin cambio) No cambia · (fin conservado) Fin fijado: se conserva |
+| `edi.alinear.confianza` | Alta · Media · Baja |
+| `edi.alinear.aria.fila` | Línea {n}, {texto}: fin de {antes} a {después}, {p} palabras, confianza {nivel} |
+| `edi.alinear.pocaConfianza` | La voz y la letra no encajan bien en esta canción: {j} de {n} líneas no se reconocen. Puede que el idioma no sea {idioma} o que la letra sea de otra versión. — [Cambiar el idioma] [Comprobar la letra con la voz] |
+| `edi.alinear.aplicar` | Aplicar · (obsoleto) Analizar de nuevo |
+| `edi.alinear.paso` | Sincronizar con la voz (nombre del paso en el historial) |
+| `edi.alinear.toast` | Fin de {a} líneas y palabras de {b} ajustados con la voz. — [Deshacer] [Revisar {j} líneas] · (solo fines) Fin de {a} líneas ajustado con la voz. — [Deshacer] |
+| `edi.alinear.nada` | Los fines ya coinciden con la voz: no hay nada que cambiar. |
+| `edi.alinear.nada.bajas` | No hemos cambiado nada: {j} líneas no se reconocen bien. — [Revisar] |
+| `edi.alinear.resumen` | {a} de {n} líneas con tiempos por palabra automáticos. |
+| `edi.alinear.quitar` | Quitar la sincronía automática |
+| `edi.alinear.toast.quitada` | Sincronía automática quitada de {a} líneas. — [Deshacer] |
+| `edi.alinear.linea` | Sincronizar esta línea con la voz |
+| `edi.alinear.linea.cargando` | Escuchando la línea… |
+| `edi.alinear.linea.manuales` | Esta línea tiene tiempos por palabra hechos a mano. ¿Sustituirlos? — [Cancelar] [Sustituir] |
+| `edi.alinear.linea.toast` | Línea {n} sincronizada con la voz. — [Deshacer] |
+| `edi.alinear.linea.baja` | No reconocemos bien la voz en esta línea. No hemos cambiado nada. |
+| `edi.alinear.indicador` | Tiempos por palabra automáticos: se resalta palabra a palabra. |
+| `edi.alinear.indicador.aria` | (se añade a `edi.aria.linea`) , con tiempos por palabra automáticos |
+| `edi.alinear.indicador.panel` | Tiempos por palabra automáticos |
+| `edi.toast.palabrasAuto` | La línea {n} vuelve al barrido progresivo: sus tiempos por palabra automáticos ya no coincidían. — [Deshacer] [Volver a sincronizar la línea] · (varias) {k} líneas vuelven al barrido progresivo. — [Deshacer] |
+| `edi.preciso.recuento.auto` | {a} a mano · {b} automáticas · {c} sin marcar |
+| `edi.preciso.aria.palabra.auto` | Palabra {k} de {m}, {palabra}, de {inicio} a {fin}, automática |
+| `edi.silencios.auto` | {k} de ellas perderán sus tiempos por palabra automáticos. · (k = 1) 1 de ellas perderá sus tiempos por palabra automáticos. |
+| `edi.prep.alineacion` | Fin de {a} líneas y palabras de {b} ajustados con la voz (sincronía automática).[ {j} líneas para revisar.] |
+| `edi.prep.alineacion.sinModelo` | Se usó «Ajustar los silencios» porque falta el modelo de {idioma}. — [Sincronizar con la voz…] |
+| `edi.alinear.no.equipo` | La sincronía automática no está disponible en este equipo. — [Ir a «Ajustar los silencios»] |
+| `edi.alinear.no.motor` | Falta la parte del motor de audio que hace la sincronía automática. — [Reparar el motor de audio] |
+| `edi.alinear.no.sinInicios` | Primero hacen falta los inicios de las líneas. — [Sincronizar al ritmo] |
+| `edi.alinear.error` | **No se pudo escuchar la voz.** No hemos cambiado nada. Vuelve a intentarlo. — [Reintentar] [Copiar detalles] |
+| `edi.alinear.error.memoria` | **Tu equipo se quedó sin memoria.** Cierra otros programas y vuelve a intentarlo. No hemos cambiado nada. — [Reintentar] |
+
+### Criterios de aceptación de la feature 10 (editor)
+
+**Sección y disponibilidad**
+- F10-E1. «Funciones» muestra «Sincronizar con la voz» entre «Revisar la sincronía» y «Comprobar la letra con la voz» (o antes de «Ajustar los silencios» si aquellas no existen), con el botón, el idioma de la letra y [Cambiar]. «Ajustar los silencios» sigue en la pestaña con `edi.funciones.silencios.ayuda2`.
+- F10-E2. Cada fila de la tabla «No disponible» se cumple con su doble: motor no disponible en el equipo (sin botón, con el enlace a «Ajustar los silencios»), parte del motor ausente (motivo y [Reparar el motor de audio]), separación sin terminar, ninguna línea con inicio, idioma no admitido (el botón abre el paso 1 con su texto y el principal inactivo) y modelo sin instalar (el paso 1 ofrece la descarga con el tamaño del manifiesto). Los motivos se actualizan sin recargar.
+- F10-E3. Con el idioma claro y el modelo instalado, pulsar el botón pasa directamente al análisis; con el modelo sin instalar, «Descargar y sincronizar» descarga con barra y cancelación y, al terminar con el diálogo abierto, analiza sin otra pulsación. La función no hace ninguna petición de red con el modelo ya instalado.
+
+**Análisis y vista previa**
+- F10-E4. El análisis muestra «línea {i} de {n}» con barra determinada; «Cancelar» y Esc lo detienen y `cancion.json` no cambia (comparación byte a byte). Antes de «Aplicar» nunca se escribe nada.
+- F10-E5. Con un doble del motor que devuelve, para una letra de 10 líneas, 6 de confianza Alta, 2 Media y 2 Baja: la vista previa cuenta fines (8), palabras (6) y bajas (2); desmarcar «Añadir tiempos por palabra» quita el renglón de palabras sin volver a analizar; la lista revelada muestra una fila por línea con su fin anterior y nuevo y su confianza en texto.
+- F10-E6. Reglas de respeto (test de la función pura que combina el resultado del motor con la letra): una línea con palabras hechas a mano no cambia en nada; una dada por buena en la revisión no cambia; una con el fin fijado a mano conserva su fin y recibe palabras dentro de él; con «Recalcular también los fines fijados» ese fin cambia; una de confianza Baja no cambia y queda señalada; una pausa y una línea sin inicio no cambian; ningún inicio cambia nunca.
+- F10-E7. Con más de la mitad de las líneas en confianza Baja aparece `edi.alinear.pocaConfianza` con sus acciones y «Aplicar» sigue disponible. Sin ningún cambio posible, no hay vista previa y aparece `edi.alinear.nada`.
+
+**Aplicar y deshacer**
+- F10-E8. «Aplicar» escribe fines, palabras y señales en **un** paso del historial; un Ctrl/Cmd + Z (o [Deshacer] del toast) deja la letra idéntica a la anterior (comparación de `letra.lineas`); rehacer lo devuelve. Los fines nuevos quedan fijados y cumplen `inicio < fin ≤ inicio del siguiente`; las palabras cumplen las reglas de validez de la fase 9.
+- F10-E9. Tras aplicar, las líneas con palabras automáticas muestran ✦ con `edi.alinear.indicador` y se barren palabra a palabra en la vista previa, en «Probar», en el reproductor y en el video (mismo modelo de fotograma); las hechas a mano conservan ◈. La sección muestra `edi.alinear.resumen`.
+- F10-E10. «Quitar la sincronía automática» quita las palabras automáticas y devuelve a automático solo los fines puestos por la función que siguen con ese valor; un fin que el usuario movió después se conserva; es un paso del historial.
+- F10-E11. Mover después el inicio o el fin de una línea con palabras automáticas (cualquier vía de 8.2) las quita y muestra `edi.toast.palabrasAuto`; [Volver a sincronizar la línea] las recalcula con sus límites nuevos; [Deshacer] devuelve límites y palabras.
+- F10-E12. Abrir en el editor preciso una línea con palabras automáticas las muestra como «automática» con `edi.preciso.recuento.auto`; aplicar tras mover una palabra deja la línea como hecha a mano (◈) y una nueva sincronización de toda la canción ya no la cambia; aplicar sin cambios la deja automática.
+- F10-E13. «Sincronizar esta línea con la voz» del menú contextual y del panel cambia solo esa línea, sin vista previa, en un paso del historial, también si su fin estaba fijado a mano; con palabras hechas a mano pide `edi.alinear.linea.manuales`; con confianza Baja no cambia nada y muestra `edi.alinear.linea.baja`.
+- F10-E14. «Ajustar los silencios» sobre una canción con palabras automáticas ajusta esas líneas, les quita las palabras y lo cuenta en su diálogo con `edi.silencios.auto`; «Corregir el desfase» las mueve con su línea.
+
+**Teclado, accesibilidad y capturas**
+- F10-E15. No hay atajo de una tecla; los tres pasos se operan con teclado; Esc cancela sin cambios; el progreso se anuncia al empezar, al 50 % y al terminar; la confianza se lee como texto.
+- F10-E16. En los seis viewports de la subfase 2.1, la sección y el diálogo no producen scroll de página; a 300 px de ancho del panel, el botón y la fila del idioma no se parten.
+- F10-E17. Capturas en `docs/ux/revision-0.2.2-feature-10/`, nombre `editor-1280x720-100-{estado}.png`: `funciones-sincronizar`, `paso-idioma-modelo`, `paso-escuchando`, `vista-previa`, `vista-previa-lineas`, `vista-previa-poca-confianza`, `lista-indicadores`, `preciso-automaticas`, `no-disponible-equipo`, `idioma-no-admitido`.
+
+**Verificación manual** (guía de `docs/Test-manuales/0.2.2/`): sincronizar con la voz Semestre de Otoño y Cursiva la Letra (casi todos los fines automáticos) y cantar cada una entera en «Probar»: anotar cuántas líneas hubo que corregir y si el barrido por palabra acompaña a la voz o distrae; repetir con una canción en inglés y con una de coros y voces dobladas; medir el tiempo del análisis con y sin tarjeta gráfica; comprobar que una canción cuya letra es de otra versión da el aviso de poca confianza en lugar de aplicar fines malos.
+
+## 0.2.2 · Feature 11 — Revisión guiada de líneas dudosas
+
+Origen: [plan 0.2.2, feature 11](../versiones/0.2.2/plan-4.md) y [propuesta 023](../propuestas/023-revision-guiada-de-lineas-dudosas.md). Tarjeta y paso a «Lista»: [02 · 0.2.2 · Feature 11](02-biblioteca.md#022--feature-11--revisión-guiada-en-la-biblioteca). El estado «Lista para revisar» es de la feature 5 ([04](04-progreso-pipeline.md#022--feature-5--preparación-desatendida)). Contratos pendientes: [0157](../preguntas/0157-contratos-de-las-features-8-a-11-para-las-specs.md). Decisiones provisionales: [0158](../preguntas/0158-decisiones-provisionales-de-ux-de-las-features-8-a-11.md).
+
+**Idea**: cuanto más hace la app sola, más importa decir dónde puede haberse equivocado. En lugar de repasar la canción entera, el usuario escucha **solo las líneas que la app señala**, una tras otra, y da cada una por buena o la corrige.
+
+**Funciona sin las features 4 y 10**: con solo la voz separada ya señala fines que no cuadran y líneas de duración rara. Las features 4 y 10 añaden motivos.
+
+**Sustituye**: el banner `edi.banner.preparada` de la feature 5 (ver «Entradas»); la tabla de atajos gana tres filas.
+
+### Conceptos
+
+| Concepto | Definición |
+|---|---|
+| **Línea dudosa** | Una línea (no una pausa) con al menos un **motivo** de la tabla siguiente. Se calcula sola, con una función pura sobre la letra, la forma de onda de la voz y lo que hayan dejado anotado las features 4 y 10. |
+| **Pendiente** | Línea dudosa que el usuario aún no ha dado por buena. Es lo que cuenta el número de «Revisar (5)» y la tarjeta de la Biblioteca. |
+| **Dada por buena** | El usuario la escuchó y pulsó «Está bien». La marca se guarda en la canción. **Se borra sola si después cambian el inicio, el fin o el texto de esa línea** (por el usuario o por una función automática): entonces se vuelve a evaluar. Una línea dada por buena no la cambia la sincronización automática (feature 10). |
+| **Corregida** | Una línea que deja de tener motivos porque el usuario la arregló. Sale de la lista sin tener que darla por buena. |
+| **Recorrido** | El modo en que el editor lleva de una línea pendiente a la siguiente. Dura la visita; lo que se guarda es la marca de cada línea, no el recorrido. |
+
+### Motivos
+
+Orden = prioridad: una línea con varios muestra el primero como principal y los demás debajo. Todos los umbrales son **constantes con nombre** y provisionales: se calibran con las 12 canciones Lista antes de fijarlos (0157), con el objetivo de que una canción bien sincronizada a mano (A Pesar de Mí, Arrópame) no tenga más de **una de cada diez** líneas señaladas.
+
+| Motivo | Se señala cuando (provisional) | Texto (`edi.revision.motivo.*`) | Arreglo rápido | Necesita |
+|---|---|---|---|---|
+| `sinInicio` | La línea no tiene inicio | Aún no tiene inicio. | [Fijar inicio aquí (I)] | — |
+| `sinVoz` | No hay voz en ningún momento entre su inicio y su fin (o la feature 4 la listó entre las que «caen donde no hay voz») | No se oye voz mientras dura esta línea. | — | Voz |
+| `reconocimiento` | La sincronización automática la dejó con confianza Baja | La sincronía automática no la reconoció bien. | [Sincronizar esta línea con la voz] | Feature 10 |
+| `vozTarde` | La voz empieza 1 s o más después del inicio | La voz empieza {d} s después del inicio. | — | Voz |
+| `finCorta` | El fin cae con la voz sonando y la voz sigue 0,4 s o más antes del siguiente inicio | El fin corta la voz: sigue {d} s más. | [Fin al final de la voz] | Voz |
+| `finTarde` | La voz termina 1 s o más antes del fin (con fin fijado o automático) | El fin llega {d} s después de la voz. · (fin automático) El fin es automático y llega {d} s después de la voz. | [Fin al final de la voz] | Voz |
+| `muyCorta` | Dura menos de 0,5 s, o va a más de 25 caracteres por segundo | Dura muy poco para su texto ({d} s). | — | — |
+| `muyLarga` | Dura más de 12 s y va a menos de 2 caracteres por segundo | Dura mucho para su texto ({d} s). | — | — |
+
+- «Necesita voz»: esos motivos solo se calculan con la forma de onda de la voz lista. Sin separación (o mientras se prepara), la sección lo dice con `edi.revision.sinVoz` y solo actúan los demás.
+- `sinInicio` **no se puede dar por buena**: hay que fijar el inicio (o borrar la línea en «Corregir la letra»). Las demás, sí.
+- Las líneas con tiempos por palabra hechos a mano se evalúan igual (el usuario puede haberse equivocado en los límites), pero «Fin al final de la voz» les avisa antes con `edi.preciso.aviso.tirador`.
+- **Canción sin dudas**: es un resultado válido y se dice (`edi.revision.nada`).
+
+### Marcas fuera del recorrido
+
+Visibles siempre, también sin entrar en el modo:
+
+| Dónde | Qué |
+|---|---|
+| Lista de líneas | Las filas pendientes llevan al principio, junto al número, el icono `flag` 14 px en `aviso` (⚑), con el motivo principal en el tooltip (`edi.revision.tooltip`) y en el nombre accesible. Las dadas por buenas no llevan marca. |
+| Línea de tiempo | La región de una línea pendiente lleva una banderita de 8 px en su esquina superior izquierda (`aviso`, ≥ 3:1 sobre la región); el tooltip de la región añade el motivo. |
+| Panel Sincronía (línea seleccionada, fuera del recorrido) | Bajo el texto de la línea: «⚑ {motivo principal}» (`t-pequeno`) con [Está bien] y, si lo hay, el arreglo rápido. |
+| Cabecera de la lista | Botón icono «Línea dudosa siguiente» (`edi.revision.siguienteDudosa`, icono `flag` + chevron), visible si hay pendientes: selecciona la siguiente pendiente tras la selección actual. |
+
+### Entradas
+
+| Desde | Qué pasa |
+|---|---|
+| **«Funciones» › Revisar la sincronía** | Primera sección de la pestaña (tras «Preparación automática» si existe). Botón secundario **[⚑ Revisar ({n})…]**; debajo, el resumen `edi.revision.resumen` («5 líneas por revisar · 3 dadas por buenas»). Con 0 pendientes: `edi.revision.nada` y el botón inactivo; si hay dadas por buenas, [Volver a señalarlas] (fantasma; quita todas las marcas «está bien», un paso del historial). |
+| **Tecla R** | Empieza el recorrido (o lo termina si está activo). Fuera de campos de texto. |
+| **«Revisar» de la tarjeta «Lista para revisar»**, de la vista de progreso (R1), del toast `prog.toast.revisar` y del resultado de la preparación | El editor se abre **con el recorrido ya empezado** en la primera línea pendiente. Con 0 pendientes, se abre con el panel de fin. |
+| **[Revisar {n} líneas]** del toast de «Sincronizar con la voz» (feature 10) | Empieza el recorrido. |
+| **Banner al entrar** (borrador preparado por la app y aún sin revisar, abierto por otra vía: «Continuar», «Editar») | En lugar de `edi.banner.preparada`: `edi.banner.revision` (`info`) con [Empezar la revisión] y [Ver qué hicimos] (el de la feature 5). Con 0 pendientes, `edi.banner.revision.nada` con [Probar a pantalla completa] y [Ver qué hicimos]. Mismas reglas de prioridad y de cierre que el banner de la feature 5. |
+
+No disponible: en el modo «Sincronizar al ritmo» (pestaña inactiva y R sin efecto) y con «Error de audio».
+
+### El recorrido
+
+Al empezar, el panel pasa a la pestaña **Sincronía** y muestra, **encima** de los controles de siempre de la línea, la tarjeta de revisión. Así la línea se corrige con los mismos campos, tiradores y atajos de siempre, sin aprender nada nuevo.
+
+```
+│ [Sincronía ⚑|Estilo|Funciones]                     [»] │
+│ ┌ Revisión · quedan 4 de 5 ──────────────────── [✕] ┐ │  h3 + «Salir de la revisión»
+│ │ ⚑ El fin llega 1,2 s después de la voz.            │ │  motivo principal (t-cuerpo)
+│ │   También: dura mucho para su texto (9,4 s).       │ │  otros motivos (t-pequeno, texto-2)
+│ │ [▶ Escuchar otra vez]      [Fin al final de la voz]│ │  secundarios
+│ │ [‹ Anterior]  [Siguiente ›]      [✓ Está bien (N)] │ │
+│ │ [☑] Escuchar cada línea al llegar                  │ │
+│ └────────────────────────────────────────────────────┘ │
+│ Línea 14 de 52                                         │  panel C de siempre
+│ «Caught in a landslide»                                │
+│ Inicio [00:39.10] …   Fin [00:42.85] …                 │
+│ …                                                      │
+```
+
+| Elemento | Comportamiento |
+|---|---|
+| **Al llegar a una línea** | Se selecciona (la lista y la línea de tiempo la muestran; la línea de tiempo hace «Zoom a la línea» si la región mide menos de 120 px o no cabe), y, con «Escuchar cada línea al llegar» marcada, **suena su tramo** de 0,5 s antes a 0,5 s después y se pausa (el mismo gesto que el doble clic y Mayús + L de 0.2.1), con la pista y la velocidad actuales. La vista previa muestra el barrido. |
+| **Título** | `edi.revision.titulo`: «Revisión · quedan {p} de {t}» ({t} = pendientes al empezar el recorrido más las que aparezcan después). |
+| **Motivo** | Texto del motivo principal con sus cifras; debajo, los demás. Se recalcula en vivo al cambiar los tiempos. |
+| **▶ Escuchar otra vez** | Repite el tramo. Equivale a **Mayús + L**. |
+| **Arreglo rápido** | El de la tabla de motivos, si lo hay. **Fin al final de la voz** lleva el fin de esa línea al último momento con voz antes del primer silencio (la regla de «Ajustar los silencios» para una sola línea; propuesta 016): un paso del historial, y la línea vuelve a sonar. Si no encuentra silencio: `edi.revision.sinSilencio` 2 s junto al botón. **Sincronizar esta línea con la voz**: la acción por línea de la feature 10. **Fijar inicio aquí (I)**: la de siempre. |
+| **✓ Está bien (N)** | Da la línea por buena (un paso del historial, se guarda) y pasa a la siguiente pendiente. Es el botón más destacado de la tarjeta (secundario con `t-cuerpo-fuerte`; el primario rojo sigue siendo el del dock). Inactivo con `sinInicio` (`edi.revision.noSinInicio`). |
+| **Siguiente › / ‹ Anterior** | Van a la pendiente siguiente o anterior en el orden de la letra **sin** marcar nada. También **Ctrl/Cmd + ↓ / ↑** (funcionan igual fuera del recorrido). En los extremos dan la vuelta, con el anuncio `edi.revision.vuelta`. |
+| **Corregir la línea** | Con los controles de siempre (campos, tiradores, I/O, flechas con modificador) o el **editor preciso (P)**, que se abre sobre la línea y convive con la tarjeta. Tras cada cambio el motivo se recalcula: si la línea ya no tiene motivos, la tarjeta muestra `edi.revision.corregida` («✓ Ya no vemos nada raro en esta línea») y el botón principal pasa a **[Siguiente (N)]**. Si aún tiene alguno, se queda pendiente y el usuario decide. |
+| **Elegir otra línea a mano** (lista, línea de tiempo, ↑/↓) | El recorrido no termina. Si la línea elegida está pendiente, la tarjeta la muestra. Si no, la tarjeta se reduce a `edi.revision.fuera` con [Volver a la revisión], que selecciona la siguiente pendiente. |
+| **Cambiar de pestaña** | «Estilo» y «Funciones» funcionan; el recorrido sigue y la pestaña «Sincronía» lleva una ⚑ (con texto para lectores de pantalla). |
+| **Escuchar cada línea al llegar** | Casilla, marcada por defecto; se recuerda con las preferencias del editor. |
+| **Salir** | [✕] de la tarjeta, **R** o **Esc** (después de cerrar popovers, diálogos y el editor preciso, y antes de «volver a la Biblioteca»). La tarjeta desaparece; las marcas guardadas se conservan. El foco vuelve a la fila seleccionada. |
+| **Otras acciones** | «Sincronizar al ritmo» termina el recorrido. «Ajustar los silencios», «Sincronizar con la voz», «Corregir el desfase» y «Corregir la letra» se pueden usar: al volver, las pendientes se recalculan y el recorrido sigue. «Probar a pantalla completa (F)» y exportar no lo interrumpen. |
+| **Deshacer** | Ctrl/Cmd + Z deshace «Está bien» y los arreglos como cualquier paso; la línea vuelve a estar pendiente y el contador lo refleja. |
+
+### Fin del recorrido
+
+Cuando no queda ninguna pendiente, la tarjeta pasa a:
+
+```
+│ ┌ Revisión terminada ────────────────────────── [✕] ┐ │
+│ │ ✓ Has revisado las 5 líneas señaladas.             │ │  `edi.revision.fin`
+│ │ Pruébala entera antes de darla por terminada.      │ │
+│ │ [▶ Probar a pantalla completa (F)]                 │ │  secundario
+│ │ Si todo cuadra, usa «Marcar como lista».           │ │  `edi.revision.fin.marcar` (borrador)
+│ └────────────────────────────────────────────────────┘ │
+```
+
+- **No marca nada sola** ni añade un segundo botón primario: en un **borrador**, el texto remite a los botones del dock y «Marcar como lista» se resalta 2 s con un contorno `info` (sin animación con movimiento reducido). En una canción **Lista o Letra lista**, el texto es `edi.revision.fin.hecho` y se resalta «Hecho».
+- Si quedan líneas `sinInicio` (no se pueden dar por buenas), el fin no llega: la tarjeta lo dice con `edi.revision.faltaInicio`.
+- Sin ninguna línea dudosa desde el principio: `edi.revision.nada.fin` («No vemos nada raro. Puedes probarla a pantalla completa.») con el mismo botón.
+
+### «Marcar como lista» con líneas pendientes
+
+- Las condiciones para marcar no cambian (pistas y todas las líneas con inicio). Las líneas pendientes **no bloquean** **(decisión provisional)**.
+- En un **borrador** con pendientes, la **primera** pulsación de la visita en «Marcar como lista» o «Marcar como letra lista» muestra el popover `edi.revision.pendientes`: [Revisar ahora] (primario del popover, foco; empieza el recorrido) y [Marcar igualmente]. La segunda pulsación marca sin preguntar. Si además faltan inicios, primero sale el popover de siempre (`edi.falta.*`).
+- «Hecho» en una Lista o Letra lista no pregunta.
+- Al marcar como lista, las marcas de revisión se conservan (la revisión sigue disponible desde «Funciones»).
+
+### Relación con el resto del editor
+
+| Con | Comportamiento |
+|---|---|
+| Editor preciso (fase 9) | Convive: P lo abre para la línea del recorrido. «Anterior/Siguiente» de la ventana recorren **todas** las líneas con inicio, no solo las pendientes; N con el foco en la ventana no actúa (hay que volver con F6). Al aplicar, el motivo se recalcula. |
+| «Bloquear enunciado» | Se puede activar durante el recorrido; al pasar de línea termina (regla de la fase 2). |
+| Feature 4 | Las líneas que su comprobación sitúa en tramos sin voz entran con el motivo `sinVoz`. «Corregir el desfase» borra las marcas «está bien» (cambian todos los tiempos) y vuelve a evaluar. |
+| Feature 5 | Abrir el editor con «Revisar» cuenta como que el usuario ya vio la preparación: el banner de la feature 5 no vuelve a salir. |
+| Feature 10 | Aporta `reconocimiento` y el arreglo por línea; no cambia las líneas dadas por buenas. |
+| Sesión en otra pantalla | El editor está bloqueado (fase 4). |
+
+### Atajos de teclado (feature 11)
+
+Se añaden a la tabla de [Atajos de teclado en 0.2.1](#atajos-de-teclado-en-021) y al diálogo de atajos:
+
+| Tecla | Acción |
+|---|---|
+| R | Empezar o terminar la revisión guiada |
+| N | (En la revisión) Está bien y siguiente · siguiente, si la línea ya está corregida |
+| Ctrl/Cmd + ↓ / ↑ | Línea dudosa siguiente / anterior |
+
+Ninguno actúa en campos de texto ni con el foco en el editor preciso. N fuera del recorrido no hace nada. Mayús + L, P, I, O y las flechas con modificador siguen igual.
+
+### Estados (feature 11)
+
+| Estado | Presentación |
+|---|---|
+| Vacío (sin letra o sin líneas) | Sección con `edi.revision.nada` y botón inactivo. |
+| Sin voz separada todavía | `edi.revision.sinVoz` bajo el resumen; solo los motivos que no necesitan voz. Se actualiza al estar lista la forma de onda. |
+| Calculando (forma de onda preparándose) | «Revisar…» sin número y `edi.silencios.falta.preparando`. |
+| Con pendientes | «Revisar ({n})…» y marcas ⚑. |
+| En recorrido | Tarjeta sobre el panel Sincronía. |
+| Línea corregida | `edi.revision.corregida` + [Siguiente (N)]. |
+| Línea fuera de la revisión | `edi.revision.fuera` + [Volver a la revisión]. |
+| Terminada | Tarjeta de fin. |
+| Sin dudas | `edi.revision.nada` / `edi.revision.nada.fin`. |
+| Error al guardar una marca | El guardado de siempre (indicador y reintento del editor); la marca sigue en memoria. |
+| Borrador / Lista / Letra lista | Igual; cambia el texto del fin y qué botón del dock se resalta. |
+
+### Accesibilidad (feature 11)
+
+- La tarjeta es una región con nombre `edi.revision.region`. Al llegar a cada línea se anuncia una vez (`aria-live="polite"`): `edi.revision.anuncio` («Línea 14: «Caught in a landslide». El fin llega 1,2 s después de la voz. Quedan 4.»). El audio empieza 300 ms después, para no pisar el anuncio.
+- Al empezar, el foco va al botón «Está bien» (o al arreglo rápido si es `sinInicio`); al pasar de línea el foco se queda en el botón pulsado. Al terminar, en «Probar a pantalla completa».
+- La marca ⚑ nunca es solo color: icono + tooltip + nombre accesible (`edi.revision.aria.linea`: «…, por revisar: {motivo}»).
+- Todos los botones de la tarjeta miden ≥ 32 px de alto; a 300 px de ancho del panel se apilan en dos filas sin partirse.
+- Contraste: textos en `texto-1/2` sobre `fondo-2` (≥ 4,7:1); la banderita ≥ 3:1.
+- Movimiento reducido: sin animación al cambiar de línea ni al resaltar el botón del dock.
+
+### Microcopy (feature 11, editor)
+
+| Clave | Texto |
+|---|---|
+| `edi.funciones.revision.titulo` | Revisar la sincronía |
+| `edi.funciones.revision.ayuda` | Te lleva solo por las líneas que conviene escuchar: las que pueden tener el fin mal puesto o una duración rara. |
+| `edi.funciones.revision.boton` | Revisar ({n})… · (sin pendientes) Revisar… |
+| `edi.revision.resumen` | {p} líneas por revisar · {b} dadas por buenas · (p = 1) 1 línea por revisar |
+| `edi.revision.nada` | No vemos nada raro en esta canción. |
+| `edi.revision.sinVoz` | Cuando la voz esté separada podremos señalar más líneas. |
+| `edi.revision.reiniciar` | Volver a señalarlas |
+| `edi.revision.region` | Revisión guiada |
+| `edi.revision.titulo` | Revisión · quedan {p} de {t} |
+| `edi.revision.salir` | Salir de la revisión (Esc) |
+| `edi.revision.motivo.sinInicio` | Aún no tiene inicio. |
+| `edi.revision.motivo.sinVoz` | No se oye voz mientras dura esta línea. |
+| `edi.revision.motivo.reconocimiento` | La sincronía automática no la reconoció bien. |
+| `edi.revision.motivo.vozTarde` | La voz empieza {d} s después del inicio. |
+| `edi.revision.motivo.finCorta` | El fin corta la voz: sigue {d} s más. |
+| `edi.revision.motivo.finTarde` | El fin llega {d} s después de la voz. · (fin automático) El fin es automático y llega {d} s después de la voz. |
+| `edi.revision.motivo.muyCorta` | Dura muy poco para su texto ({d} s). |
+| `edi.revision.motivo.muyLarga` | Dura mucho para su texto ({d} s). |
+| `edi.revision.tambien` | También: {motivo en minúscula} |
+| `edi.revision.escuchar` | Escuchar otra vez — nombre accesible: Escuchar la línea otra vez (Mayús + L) |
+| `edi.revision.finVoz` | Fin al final de la voz |
+| `edi.revision.sinSilencio` | No encontramos un silencio después de esta línea. |
+| `edi.revision.bien` | Está bien (N) · (corregida) Siguiente (N) |
+| `edi.revision.noSinInicio` | Fija primero su inicio. |
+| `edi.revision.anterior` / `edi.revision.siguiente` | Anterior (Ctrl + ↑ / ⌘↑) · Siguiente (Ctrl + ↓ / ⌘↓) |
+| `edi.revision.siguienteDudosa` | Línea dudosa siguiente (Ctrl + ↓ / ⌘↓) |
+| `edi.revision.vuelta` | Has llegado al final: sigue por la primera pendiente. |
+| `edi.revision.autoescucha` | Escuchar cada línea al llegar |
+| `edi.revision.corregida` | ✓ Ya no vemos nada raro en esta línea. |
+| `edi.revision.fuera` | Esta línea no está señalada. — [Volver a la revisión] |
+| `edi.revision.fin` | Has revisado las {t} líneas señaladas. Pruébala entera antes de darla por terminada. · (t = 1) Has revisado la línea señalada. … |
+| `edi.revision.fin.marcar` | Si todo cuadra, usa «Marcar como lista». |
+| `edi.revision.fin.hecho` | Si todo cuadra, pulsa «Hecho». |
+| `edi.revision.nada.fin` | No vemos nada raro. Puedes probarla a pantalla completa. |
+| `edi.revision.faltaInicio` | Quedan {k} líneas sin inicio: fíjalo para poder marcar la canción como lista. · (k = 1) Queda 1 línea sin inicio: … |
+| `edi.revision.probar` | Probar a pantalla completa (F) |
+| `edi.revision.pendientes` | Quedan {p} líneas por revisar. — [Revisar ahora] [Marcar igualmente] · (p = 1) Queda 1 línea por revisar. … |
+| `edi.revision.tooltip` | Por revisar: {motivo en minúscula} |
+| `edi.revision.aria.linea` | (se añade a `edi.aria.linea`) , por revisar: {motivo} |
+| `edi.revision.panel` | {motivo} — [Está bien] [{arreglo rápido}] |
+| `edi.revision.anuncio` | Línea {n}: «{texto}». {motivo} Quedan {p}. |
+| `edi.revision.toast.bien` | (no hay toast: «Está bien» pasa de línea; se deshace con Ctrl+Z) |
+| `edi.revision.paso` | Línea {n} dada por buena · Fin de la línea {n} al final de la voz (nombres de paso en el historial) |
+| `edi.banner.revision` | Shinobi Karaoke preparó esta canción y señaló {p} líneas para que las escuches. — [Empezar la revisión] [Ver qué hicimos] · (p = 1) … y señaló 1 línea para que la escuches. … |
+| `edi.banner.revision.nada` | Shinobi Karaoke preparó esta canción y no ve nada raro. Pruébala y márcala como lista. — [Probar a pantalla completa] [Ver qué hicimos] |
+| `edi.atajo.revision` | R — Empezar o terminar la revisión guiada · N — Está bien y siguiente (en la revisión) · Ctrl/Cmd + ↓ / ↑ — Línea dudosa siguiente / anterior |
+
+### Criterios de aceptación de la feature 11 (editor)
+
+**Detección y marcas**
+- F11-E1. La función de detección es pura y tiene tests con una letra y unos picos sintéticos que producen exactamente un caso de cada motivo (`sinInicio`, `sinVoz`, `vozTarde`, `finCorta`, `finTarde` con fin fijado y con fin automático, `muyCorta`, `muyLarga`) y una línea sin ninguno; los umbrales son constantes con nombre. Con las canciones de referencia bien sincronizadas, no señala más del 10 % de sus líneas (comprobación de la tarea de calibración).
+- F11-E2. Sin la forma de onda de la voz, solo se señalan `sinInicio`, `muyCorta`, `muyLarga` y lo anotado por la feature 10; la sección muestra `edi.revision.sinVoz`, y al estar lista la forma de onda el número se actualiza sin recargar.
+- F11-E3. Las filas pendientes muestran ⚑ con su motivo en el tooltip y en el nombre accesible, y su región lleva la banderita; el panel de una línea pendiente muestra el motivo con [Está bien] fuera del recorrido; Ctrl/Cmd + ↓ / ↑ y el botón de la cabecera de la lista saltan entre pendientes.
+
+**Recorrido**
+- F11-E4. «Revisar ({n})…» y R empiezan el recorrido: el panel pasa a «Sincronía» con la tarjeta, se selecciona la primera pendiente y suena su tramo de `inicio − 500 ms` a `fin efectivo + 500 ms`, pausándose al final (misma constante que el doble clic de 0.2.1); con «Escuchar cada línea al llegar» desmarcada no suena y la preferencia se conserva al reiniciar.
+- F11-E5. «Está bien» y N guardan la marca en la canción (persiste al reabrir), bajan el contador y pasan a la siguiente pendiente; Ctrl/Cmd + Z la devuelve a pendiente. Con `sinInicio`, «Está bien» está inactivo con su motivo.
+- F11-E6. Una línea dada por buena deja de estarlo si cambia su inicio, su fin o su texto por cualquier vía (a mano, «Ajustar los silencios», «Sincronizar con la voz», «Corregir el desfase», «Corregir la letra») y se vuelve a evaluar (test de la función que decide las marcas).
+- F11-E7. «Fin al final de la voz» pone el fin donde lo pondría «Ajustar los silencios» para esa sola línea, en un paso del historial, y la línea vuelve a sonar; sin silencio detectable muestra `edi.revision.sinSilencio` y no cambia nada. «Sincronizar esta línea con la voz» aparece solo con el motivo `reconocimiento` y la feature 10 disponible.
+- F11-E8. Corregir la línea con los controles de siempre o con el editor preciso recalcula el motivo en vivo; cuando no queda ninguno, la tarjeta muestra `edi.revision.corregida` y N pasa de línea sin marcar.
+- F11-E9. Elegir a mano una línea no pendiente muestra `edi.revision.fuera` con [Volver a la revisión]; cambiar de pestaña no termina el recorrido y «Sincronía» lleva la ⚑; [✕], R y Esc lo terminan con el foco en la fila seleccionada; Esc no sale del editor mientras el recorrido está activo.
+- F11-E10. Al quedar 0 pendientes, la tarjeta muestra el fin con «Probar a pantalla completa (F)» y, en un borrador, resalta 2 s «Marcar como lista» sin marcar nada; en una Lista resalta «Hecho». La canción no cambia de estado sola en ningún caso.
+
+**Entradas y marcar como lista**
+- F11-E11. «Revisar» de una tarjeta «Lista para revisar», de la vista de progreso y de los toasts abre el editor con el recorrido activo en la primera pendiente; con 0 pendientes, con la tarjeta `edi.revision.nada.fin`. Abierto por otra vía, un borrador preparado y sin revisar muestra `edi.banner.revision` (o `.nada`) en lugar de `edi.banner.preparada`.
+- F11-E12. En un borrador con pendientes, la primera pulsación de «Marcar como lista» (o «…letra lista») muestra `edi.revision.pendientes` con el foco en «Revisar ahora»; «Marcar igualmente» marca; la segunda pulsación de la visita marca sin preguntar; con líneas sin inicio sale antes el popover de lo que falta. «Hecho» no pregunta.
+- F11-E13. El recorrido no está disponible en el modo «Sincronizar al ritmo»; N no hace nada fuera del recorrido ni en campos de texto; los tres atajos aparecen en el diálogo de atajos.
+
+**Accesibilidad y capturas**
+- F11-E14. Todo el recorrido se hace solo con teclado (R, N, Ctrl/Cmd + ↓ / ↑, Mayús + L, P, I, O, Esc); cada línea se anuncia una vez con su texto y su motivo; el foco nunca queda en `body`.
+- F11-E15. En los seis viewports de la subfase 2.1 la tarjeta no produce scroll de página (el panel usa su propio scroll) y a 300 px de ancho del panel sus botones no se parten.
+- F11-E16. Capturas en `docs/ux/revision-0.2.2-feature-11/`, nombre `editor-1280x720-100-{estado}.png` (y `-125`): `funciones-revisar`, `lista-con-marcas`, `recorrido`, `recorrido-corregida`, `recorrido-fuera`, `recorrido-fin`, `popover-pendientes`, `banner-revision`, `sin-dudas`.
+
+**Verificación manual** (guía de `docs/Test-manuales/0.2.2/`): revisar Semestre de Otoño y Cursiva la Letra tras prepararlas solas y anotar cuántas líneas señala, cuántas eran errores de verdad y cuántos errores no señaló (cantándolas enteras después); cronometrar la revisión frente a repasar la canción entera; comprobar con una canción ya terminada a mano que casi no señala nada; hacer un recorrido completo sin ratón.

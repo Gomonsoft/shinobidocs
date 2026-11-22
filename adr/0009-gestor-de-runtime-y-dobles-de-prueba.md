@@ -139,3 +139,12 @@ Exportación de video. Fecha: 2026-11-20. Detalle en el [ADR 0019](0019-exportac
 - Prioridad baja del proceso (`os.setPriority`) y `núcleos − 1` hilos para el codificador.
 - Sin dependencias nuevas: PyAV 19.0.2 ya trae `libsvtav1`, `libvpx` y `libopus` en las 6 ruedas (comprobado). `inspeccionar_av.py` pasa a exigirlos.
 - Pruebas: pytest de `exportar` con fotogramas y audio sintéticos (se ejecuta en la CI de los 3 SO).
+
+## Revisión para 0.2.2
+
+Fecha: 2026-11-21. Detalle en el [ADR 0028](0028-sincronia-automatica-por-alineacion-forzada-prueba-tecnica-y-etapa-1.md) §3.2, el [0025](0025-preparacion-desatendida-y-datos-de-la-cancion-automaticos.md) §5 y el [0026](0026-importacion-por-lotes-y-acciones-por-lotes-en-la-biblioteca.md).
+
+- **Manifiesto**: `modelos_alineacion[]` por idioma (descarga bajo demanda desde Ajustes, como los modelos de §4). Sin cambios en los requisitos salvo que la prueba técnica obligue a añadir `torchaudio`.
+- **Comandos nuevos del worker**: `leer-etiquetas` e `info-lista-youtube` (consultas fuera de las colas), `importar-archivo-cola` (cola `ligera`, paso `fuente`) y `alinear-letra` (cola `pesada`, sin paso persistido).
+- **Reanudar al abrir**: tras la comprobación del runtime de §6, la cola se reanuda desde `trabajos/pendientes.json`; con el runtime dañado no se reanuda nada hasta repararlo.
+- Variables solo sin empaquetar: `SHINOBI_GITHUB_URL`, `SHINOBI_ACTUALIZACIONES_VERSION`, `SHINOBI_ACTUALIZACIONES_CANAL` (ADR 0023).

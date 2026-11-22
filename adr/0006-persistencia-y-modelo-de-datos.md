@@ -333,3 +333,21 @@ Fecha: 2026-11-21. Detalle en el [ADR 0021](0021-sincronia-simplificada-y-editor
 - **`creada`** pasa a lectura tolerante: una fecha no válida se lee como `CREADA_POR_DEFECTO` (`1970-01-01T00:00:00.000Z`, en `shared/cancion.ts`) en lugar de dar la canción por dañada. No se reescribe al abrir; si main escribe la canción por otro motivo, guarda ese valor. El resumen la expone como `creada: string | null` (`null` si es la de por defecto).
 - **`config.biblioteca.agrupar`** admite `"fecha"`. 0.2.0 lo lee como `"ninguno"` (`.catch`).
 - **Pérdida aceptada**: si 0.2.0 o 0.1.0 reescriben una canción, descartan `origen_palabras`; al volver a 0.2.1 esas palabras cuentan como importadas y dejan de pintarse, pero siguen en el archivo.
+
+## Revisión para 0.2.2
+
+Fecha: 2026-11-21. **`cancion.esquema`, `estilo.version`, `temas.esquema` y `config.esquema` siguen en 1**; todo lo nuevo es opcional y 0.2.1 lo descarta sin error (sus esquemas son `z.object`). Excepción comprobada: `apariencia.reemplazos` es estricto en 0.2.1, por eso el reemplazo nuevo va en una clave hermana. Si 0.2.1 reescribe una canción, pierde estos campos (pérdida aceptada).
+
+| Dónde | Campo | ADR |
+|---|---|---|
+| `estilo` | `pantalla { lineas, pasadas, transicion }` (ausente = 5, 1, desplazamiento) y `letra.subrayar_cantado` | 0022 |
+| `apariencia` | `reemplazo_pantalla`; `reemplazos` pasa a lectura tolerante | 0022 |
+| `cancion` | `preparacion { estado, paso, origen, busqueda, eleccion, desfase_ms, fines, dudosas, revisada, error }` | 0025 |
+| `metadatos` | `origen { titulo?, artista?, album? }` | 0025 |
+| `fuente` | `ruta_pendiente` (solo hasta completar la fuente de un lote) | 0026 |
+| `letra` | `intacta`, `desfase_corregido_ms`, `idioma` | 0024, 0028 |
+| `letra.lineas[]` | `origen_fin`, `revisada`, `alineacion { confianza }`; `origen_palabras` admite `"auto"` | 0024, 0028 |
+| `config` | `reproductor.subrayar_cantado`, `actualizaciones`, `preparacion { automatica, pausada }`, `aviso_youtube_listas_aceptado`, `copias.ultima`, `alineacion.modelos_descargados` | 0022, 0023, 0025, 0026, 0027, 0028 |
+| `<base>/trabajos/pendientes.json` (nuevo) | diario de la cola para reanudar al abrir | 0025 §5 |
+
+`cancion.estado` no gana valores: «Lista para revisar» es un estado derivado de un borrador con `preparacion`.

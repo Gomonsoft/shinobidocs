@@ -20,9 +20,17 @@
 > [0017 Ventana secundaria, sesión en vivo y cola](adr/0017-ventana-secundaria-sesion-en-vivo-y-cola-de-reproduccion.md) ·
 > [0018 Estilo ampliado, espera, Letra lista y ajuste de silencios](adr/0018-estilo-ampliado-espera-letra-lista-y-ajuste-de-silencios.md) ·
 > [0019 Exportación de video](adr/0019-exportacion-de-video-render-por-fotograma-y-worker-pyav.md) ·
-> [0020 Publicación en GitHub Releases y versiones](adr/0020-publicacion-en-github-releases-y-politica-de-versiones.md)
+> [0020 Publicación en GitHub Releases y versiones](adr/0020-publicacion-en-github-releases-y-politica-de-versiones.md) ·
+> [0021 Sincronía simplificada y editor preciso](adr/0021-sincronia-simplificada-y-editor-preciso-de-linea.md) ·
+> [0022 Letra en pantalla y subrayado](adr/0022-letra-en-pantalla-varias-lineas-y-subrayado-de-lo-cantado.md) ·
+> [0023 Aviso de versión nueva](adr/0023-aviso-de-version-nueva-con-github-releases.md) ·
+> [0024 Encaje con la voz y líneas dudosas](adr/0024-encaje-de-la-letra-con-la-voz-y-lineas-dudosas.md) ·
+> [0025 Preparación desatendida y datos automáticos](adr/0025-preparacion-desatendida-y-datos-de-la-cancion-automaticos.md) ·
+> [0026 Lotes](adr/0026-importacion-por-lotes-y-acciones-por-lotes-en-la-biblioteca.md) ·
+> [0027 Copia, paquete y LRC](adr/0027-copia-de-seguridad-paquete-de-cancion-y-exportar-lrc.md) ·
+> [0028 Alineación forzada (Propuesto)](adr/0028-sincronia-automatica-por-alineacion-forzada-prueba-tecnica-y-etapa-1.md)
 >
-> Última revisión: 2026-11-20 bis: 0.2.0, fase 6 (ADR 0019): exportación de video con render por índice de fotograma en una ventana offscreen (rol `exportacion`), worker PyAV `exportar` (MKV AV1/Opus por defecto o WebM VP9/Opus) con fotogramas por stdin y contrapresión, `ServicioExportacion` con cola propia, destinos elegidos en main, temporal junto al destino y diario; convive con la sesión en vivo (§2, §5, §6, §7, §8 y restricciones de UX). Desglose en las tareas 0230–0241. Antes, 2026-11-20: 0.2.0, fase 5 (ADR 0018): degradados radial y cónico con movimiento ligado al tiempo de canción, comodines de espera derivados con reemplazo por canción, modalidad «Letra lista» y «Ajustar los silencios» sobre los picos de voz, sin subir esquemas ni canales nuevos (§4 y §7). Antes, 2026-11-11 bis: ADR 0017, revisión 1, conciliado con las specs de la fase 4 y las respuestas 0058–0061. Con la cola agotada, añadir arranca la cuenta; la sesión solo se inicia desde la Biblioteca y no hay editor en solo lectura; Letra queda bloqueada. Desglose en las tareas 0177–0190. Antes, 2026-11-11: 0.2.0, fase 4 (ADR 0017). Se añaden la ventana secundaria de rol fijo, la sesión en vivo y la cola de reproducción en main (`main/sesion/`), los roles de ventana en la IPC, el bloqueo del editor durante la sesión y las preferencias `reproductor.transicion_s` y `reproductor.secundaria` (§2, §5, §7 y §8). Antes, 2026-11-09 quater: ADR 0016, revisión 3, tras `preguntas/0056`. El resultado por canción de las operaciones de temas lleva `titulo` y `artista` para la lista común tras un fallo a mitad (componente `ListaFalloAMitad` de `renderer/src/temas/`, tarea 0169), y el destino `respaldo` de `alHeredar`/`despues` no nombra ningún tema. Antes, 2026-11-09 ter: ADR 0016, revisión 2, tras `preguntas/0055`. Añade `alHeredar`, calculado en main y entregado en el resumen y en `resuelta`, el estado `pendiente` en los resultados y la forma del progreso de `reanudarBorrado`. Antes, 2026-11-09 bis: desglose de la fase 3 de 0.2.0 (tareas 0163–0176) y revisión del ADR 0016 tras `preguntas/0052` (B1) y `0054`. Antes, 2026-11-09: 0.2.0, fase 3 (ADR 0016: catálogo `biblioteca/temas.json`, `ServicioTemas`, apariencia resuelta e identidad de artista y álbum; §2, §4, §5 y §7). Antes, 2026-11-06: desglose de la Fase 7 (ADR 0012 y 0013, tareas 0127–0142, §9 "Empaquetado"). Antes, 2026-11-06: desglose de la Fase 6 (ADR 0011, tareas 0112–0126, §7 "Reproductor"). Antes, 2026-11-05 ter: desglose de la Fase 5 (ADR 0010, tareas 0090–0111, §7 "Editor"). Antes, 2026-11-05 bis: desglose de la Fase 3 (tareas 0059–0076, §6 "Separación"). Antes, 2026-11-05: modelo Calidad por defecto en todos los equipos, Rápido solo con consentimiento y 4 GB de espacio en CPU (`preguntas/0018`; revisiones de ADR 0004, 0006 y 0009; tareas 0055–0058). Antes: 2026-11-04, desglose de la Fase 2 (ADR 0009, tareas 0028–0053) y revisión de cierre de la Fase 1.
+> Última revisión: 2026-11-21: 0.2.2 (ADR 0022–0028), resumida en el §10. Antes, 2026-11-20 bis: 0.2.0, fase 6 (ADR 0019): exportación de video con render por índice de fotograma en una ventana offscreen (rol `exportacion`), worker PyAV `exportar` (MKV AV1/Opus por defecto o WebM VP9/Opus) con fotogramas por stdin y contrapresión, `ServicioExportacion` con cola propia, destinos elegidos en main, temporal junto al destino y diario; convive con la sesión en vivo (§2, §5, §6, §7, §8 y restricciones de UX). Desglose en las tareas 0230–0241. Antes, 2026-11-20: 0.2.0, fase 5 (ADR 0018): degradados radial y cónico con movimiento ligado al tiempo de canción, comodines de espera derivados con reemplazo por canción, modalidad «Letra lista» y «Ajustar los silencios» sobre los picos de voz, sin subir esquemas ni canales nuevos (§4 y §7). Antes, 2026-11-11 bis: ADR 0017, revisión 1, conciliado con las specs de la fase 4 y las respuestas 0058–0061. Con la cola agotada, añadir arranca la cuenta; la sesión solo se inicia desde la Biblioteca y no hay editor en solo lectura; Letra queda bloqueada. Desglose en las tareas 0177–0190. Antes, 2026-11-11: 0.2.0, fase 4 (ADR 0017). Se añaden la ventana secundaria de rol fijo, la sesión en vivo y la cola de reproducción en main (`main/sesion/`), los roles de ventana en la IPC, el bloqueo del editor durante la sesión y las preferencias `reproductor.transicion_s` y `reproductor.secundaria` (§2, §5, §7 y §8). Antes, 2026-11-09 quater: ADR 0016, revisión 3, tras `preguntas/0056`. El resultado por canción de las operaciones de temas lleva `titulo` y `artista` para la lista común tras un fallo a mitad (componente `ListaFalloAMitad` de `renderer/src/temas/`, tarea 0169), y el destino `respaldo` de `alHeredar`/`despues` no nombra ningún tema. Antes, 2026-11-09 ter: ADR 0016, revisión 2, tras `preguntas/0055`. Añade `alHeredar`, calculado en main y entregado en el resumen y en `resuelta`, el estado `pendiente` en los resultados y la forma del progreso de `reanudarBorrado`. Antes, 2026-11-09 bis: desglose de la fase 3 de 0.2.0 (tareas 0163–0176) y revisión del ADR 0016 tras `preguntas/0052` (B1) y `0054`. Antes, 2026-11-09: 0.2.0, fase 3 (ADR 0016: catálogo `biblioteca/temas.json`, `ServicioTemas`, apariencia resuelta e identidad de artista y álbum; §2, §4, §5 y §7). Antes, 2026-11-06: desglose de la Fase 7 (ADR 0012 y 0013, tareas 0127–0142, §9 "Empaquetado"). Antes, 2026-11-06: desglose de la Fase 6 (ADR 0011, tareas 0112–0126, §7 "Reproductor"). Antes, 2026-11-05 ter: desglose de la Fase 5 (ADR 0010, tareas 0090–0111, §7 "Editor"). Antes, 2026-11-05 bis: desglose de la Fase 3 (tareas 0059–0076, §6 "Separación"). Antes, 2026-11-05: modelo Calidad por defecto en todos los equipos, Rápido solo con consentimiento y 4 GB de espacio en CPU (`preguntas/0018`; revisiones de ADR 0004, 0006 y 0009; tareas 0055–0058). Antes: 2026-11-04, desglose de la Fase 2 (ADR 0009, tareas 0028–0053) y revisión de cierre de la Fase 1.
 
 ## 1. Visión general
 Aplicación de **escritorio Electron** (GPL-3.0-or-later) con interfaz web (React + TypeScript) y un **worker Python** que se ejecuta como proceso hijo para el trabajo pesado de audio (YouTube, decodificación, separación). Todo es local; los únicos accesos a red son: instalación del entorno en el primer arranque, descarga de modelos, YouTube (si el usuario lo usa), LRCLIB (búsqueda de letras) y actualización de yt-dlp.
@@ -491,3 +499,34 @@ Implicaciones:
 - **Modelo**: Calidad en todos los equipos. Rápido solo si el usuario lo acepta tras un fallo de Calidad (no se elige en Ajustes, que solo informa del modelo en uso y permite volver a Calidad), avisando de que su licencia no está declarada (`preguntas/0012`, `0018`).
 - GPU opcional: NVIDIA con ≥ 4 GB de VRAM para acelerar Calidad. Apple Silicon usa Calidad **en CPU** (más rápido que MPS en el M1 medido, `preguntas/0010`); pico de RAM ≈ 3,2 GB.
 - La resolución del reproductor se adapta a la pantalla; sin requisitos de GPU para el render de la letra.
+
+## 10. Versión 0.2.2: piezas nuevas
+
+Resumen; el detalle está en cada ADR y el desglose en el [backlog de 0.2.2](versiones/0.2.2/backlog.md). Ningún esquema sube (ADR 0006, revisión 0.2.2).
+
+| Pieza | Dónde | Qué hace | ADR |
+|---|---|---|---|
+| Modelo de puestos | `renderer/src/karaoke/render.ts`, `pantalla.ts`, `contraste.ts` | De 2 a 7 líneas con puesto de origen, de destino y avance como función pura del tiempo; disposición en píxeles aparte; gris y suelo de contraste por estilo | 0022 |
+| Aviso de versión | `main/actualizaciones/`, `shared/version.ts` | Una consulta al día a la API de *Releases*; sin autoactualizar | 0023 |
+| Encaje y dudosas | `shared/encaje.ts`, `shared/dudosas.ts` | Puntuación letra-voz sobre los picos, desfase global en `offset_ms`, motivos de línea dudosa | 0024 |
+| Preparación desatendida | `main/preparacion/` | Máquina de estados por canción: búsqueda en LRCLIB (cola automática ≥ 1,5 s), comprobación, elección, fines; tanda, pausa, paradas y diario `trabajos/pendientes.json` para reanudar al abrir | 0025 |
+| Lotes | worker `leer-etiquetas`, `info-lista-youtube`, `importar-archivo-cola`; `main/fuente/` | Lote de archivos, carpeta, enlaces y listas; canciones creadas con la fuente pendiente | 0026 |
+| Acciones por lotes | `main/biblioteca/`, `main/exportacion/` | Patrón previsualizar/ejecutar; exportación por lotes con `loteId`, concurrencia 1 | 0026 |
+| Copias | `main/copias/` (`yazl`, `yauzl`) | Archivo `.shinobi` (ZIP64 con manifiesto y SHA-256), paquete ligero o completo, restaurar por fusión; exportar `.lrc` | 0027 |
+| Alineación | worker `alinear-letra`, `main/alineacion/`, `shared/alineacion.ts` | Solo si la prueba técnica lo aprueba: fines y palabras `auto` por CTC con wav2vec2 por idioma (Apache-2.0), cola `pesada`, modelos bajo demanda | 0028 |
+
+```mermaid
+flowchart LR
+  F[Fuente completada] --> B[Búsqueda LRCLIB automática]
+  F --> S[Separación] --> P[Picos de voz]
+  B --> C{Encaje con la voz}
+  P --> C
+  C -->|coincide| L[Letra guardada · offset corregido]
+  C -->|dudosa / no coincide| E[«Elige la letra»]
+  L --> A{¿Alineación disponible?}
+  A -->|sí| AL[alinear-letra]
+  A -->|no| SI[Ajustar los silencios prudente]
+  AL --> R[«Lista para revisar» + dudosas]
+  SI --> R
+```
+

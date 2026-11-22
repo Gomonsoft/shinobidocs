@@ -11,6 +11,7 @@
 - 0.2.0, fase 5 (2026-11-20): insignia «Letra lista» y toast al marcarla; portadas con el fondo quieto. Ver [Fase 5 de 0.2.0 — estilo, espera y Letra lista](#fase-5-de-020--estilo-espera-y-letra-lista).
 - 0.2.0, fase 6 (2026-11-20): «Exportar video…» en el ⋯ de las Listas, línea de exportación en la tarjeta y exportaciones en el panel de actividad. Ver [Fase 6 de 0.2.0 — exportación](#fase-6-de-020--exportación) y [10 · Exportar a video](10-exportacion.md).
 - 0.2.1, fase 8 (2026-11-21): «Editar» junto a «Reproducir» en las tarjetas Lista y Letra lista, y agrupar por «Fecha de añadido». Ver [Fase 8 de 0.2.1 — estados y fecha de añadido](#fase-8-de-021--estados-y-fecha-de-añadido).
+- 0.2.2, features 8, 9 y 11 (2026-11-21): acciones por lotes sobre la selección múltiple (preparar, a la cola, exportar video, editar datos, eliminar), paquete de canción, importar, exportar la letra a `.lrc`, y líneas por revisar en la tarjeta «Lista para revisar». Ver [Feature 8](#022--feature-8--acciones-por-lotes-en-la-biblioteca), [Feature 9](#022--feature-9--copia-de-seguridad-paquete-de-canción-y-exportar-la-letra) y [Feature 11](#022--feature-11--revisión-guiada-en-la-biblioteca).
 
 ## Objetivo
 Ver de un vistazo todas las canciones y su estado, **reproducir una canción lista con un clic**, retomar un borrador justo donde se quedó y empezar una canción nueva.
@@ -1005,3 +1006,818 @@ Origen: [plan 0.2.1, fase 8](../versiones/0.2.1/plan-3.md#fase-8--sincronía-y-e
 - B8-5. Dentro de un grupo por fecha las tarjetas van por `creada` descendente; los encabezados no tienen [Tema…]; la búsqueda y el filtro ocultan los grupos sin coincidencias y muestran «{v} de {n}».
 - B8-6. El grupo «Sin agrupar» va al final con `bib.grupo.sinFecha.ayuda`; una `creada` futura cuenta como «Hoy».
 - B8-7. Captura `docs/ux/revision-0.2.1-fase-8/biblioteca-1280x800-100-fecha.png` con al menos cuatro grupos de fecha y una tarjeta Lista y una Letra lista con sus dos botones.
+
+## 0.2.2 · Feature 8 — Acciones por lotes en la Biblioteca
+
+Origen: [plan 0.2.2, feature 8](../versiones/0.2.2/plan-4.md) y propuesta [028](../propuestas/028-acciones-por-lotes-en-la-biblioteca.md), que reactiva la [006](../propuestas/006-exportar-varias-canciones-a-video.md). Exportar varias canciones a video: [10 · 0.2.2 · Feature 8](10-exportacion.md#022--feature-8--exportar-varias-canciones). Depende de la feature 5 («Preparar» y el estado «Lista para revisar», que define otro diseñador en esta misma spec y en la 04) y comparte menú con la feature 9 (paquete y letra, más abajo). Contratos pendientes: [0157](../preguntas/0157-contratos-de-las-features-8-a-11-para-las-specs.md). Decisiones provisionales: [0158](../preguntas/0158-decisiones-provisionales-de-ux-de-las-features-8-a-11.md). Esta sección **amplía** la selección múltiple de la [fase 3](#selección-múltiple-y-aplicar-tema); lo no mencionado sigue igual.
+
+**Sustituye**: el wireframe de la barra del «Modo selección» y la fila «Aplicar tema…» de su tabla (la barra tiene más acciones), el texto de `bib.sel.noEditable`, y el significado de **Supr** mientras dura el modo selección.
+
+### Barra de selección
+
+```
+≥ 1280 px (una fila)
+│ ☑ 5 seleccionadas · 1 fuera de la vista  [⚙ Preparar (2 de 5)] [Aplicar tema…] [Más acciones ▾]   [Seleccionar visibles] [Quitar selección] [Terminar] │
+
+< 1280 px (dos filas)
+│ ☑ 5 seleccionadas · 1 fuera de la vista      [⚙ Preparar (2 de 5)] [Aplicar tema…] [Más acciones ▾] │
+│                                       [Seleccionar visibles] [Quitar selección] [Terminar] │
+
+Menú «Más acciones»
+┌──────────────────────────────────┐
+│ ☰ A la cola (3 de 5)             │
+│ 🎞 Exportar video… (3 de 5)       │
+│ ▣ Exportar paquete…              │  feature 9
+│ ♪ Exportar la letra (.lrc)… (4 de 5) │  feature 9
+│ ✎ Editar datos…                  │
+│ ──────────────────────────────── │
+│ 🗑 Eliminar…                      │  destructivo
+└──────────────────────────────────┘
+```
+
+| Elemento | Comportamiento |
+|---|---|
+| **Preparar** | Botón secundario con icono `wand-sparkles`. Lanza la preparación desatendida (feature 5) en las seleccionadas a las que aplica. Va a la vista porque es la acción que más trabajo quita (**decisión provisional**). |
+| **Aplicar tema…** | Sin cambios (fase 3). |
+| **Más acciones** | Botón secundario con chevron que abre un menú (`role="menu"`; ↑/↓, Inicio/Fin, Intro, Esc devuelve el foco al botón). Orden del wireframe; «Eliminar…» al final, tras un separador, en color `error` con icono. |
+| **Recuento en cada acción** | Si la acción vale para **todas** las seleccionadas, su texto no lleva cifra. Si vale para una parte: «({a} de {n})». Si no vale para ninguna: `aria-disabled` (enfocable) con el motivo `bib.acc.ninguna.*` en tooltip y `aria-describedby`. Sin selección, todas inactivas con `bib.sel.ninguna`. Una acción **no** se desactiva porque alguna canción no aplique. |
+| **Ancho** | A 1024 px con el panel de cola abierto, la primera fila cabe sin partirse: contador, «Preparar», «Aplicar tema…» y «Más acciones». Si aun así no cabe (textos largos con recuento), «Aplicar tema…» pasa al principio del menú. |
+
+### A qué canciones aplica cada acción
+
+La decisión la da main para cada canción en el momento de abrir la confirmación; la tabla es lo que el usuario ve.
+
+| Acción | Aplica a | No aplica a (motivo que se muestra) |
+|---|---|---|
+| Preparar | Borradores a los que les falta algún paso que la preparación puede hacer sola (descargar, separar, buscar la letra, comprobarla, ajustar los fines) | Listas y Letra lista (`bib.acc.motivo.yaLista`) · borradores ya «Lista para revisar» (`…yaPreparada`) · canciones que ya se están preparando o esperan en cola (`…enCurso`) · Dañadas (`…danada`) |
+| A la cola | Listas y Letra lista, también incompletas | Borradores y Dañadas (`…noLista`) |
+| Exportar video… | Listas y Letra lista, también incompletas | Borradores (`…noLista`) · canciones que ya se están exportando (`…exportando`) · Dañadas |
+| Exportar paquete… (feature 9) | Todas las que se pueden seleccionar | — |
+| Exportar la letra (.lrc)… (feature 9) | Canciones con al menos una línea con inicio | Sin letra o sin ninguna línea sincronizada (`…sinTiempos`) |
+| Editar datos… | Todas las que se pueden seleccionar | — |
+| Eliminar… | Todas las que se pueden seleccionar | La canción que suena en la otra pantalla (`bib.cola.activaBloqueada`) |
+
+- Las **Dañadas con `cancion.json` ilegible** siguen sin poder seleccionarse (fase 3): se eliminan o reparan desde su menú ⋯ **(decisión provisional)**. Cambia su tooltip (`bib.sel.noEditable`), que ya no habla solo de temas.
+- **Durante una sesión en otra pantalla**: todas las acciones siguen disponibles (preparar es trabajo en segundo plano, no edición; el editor sigue bloqueado). «Eliminar…» excluye la canción activa.
+
+### Reglas comunes
+
+1. **Confirmación con lista.** Toda acción (salvo «A la cola») abre un diálogo de 560 px con la lista completa de seleccionadas, ordenada como en la Biblioteca sin agrupar, con una nota por canción y scroll propio hasta 280 px. Las que no aplican aparecen al final, atenuadas (`texto-3`), con su motivo; no son un error.
+2. **El botón dice a cuántas afecta** («Preparar 2 canciones»). Con 0 está inactivo con su motivo.
+3. **Lotes cortos** (editar datos, eliminar, exportar la letra): el diálogo pasa a «{verbo}… {i} de {n}», no se cierra con Esc hasta terminar y acaba en el **resultado por canción** de «Aplicar tema…» (✓ hecho, – omitida con su motivo, ✕ error con [Copiar detalles]). Si todo fue bien, el diálogo se cierra solo y sale un toast; el resultado solo se muestra si hubo algo omitido o fallido.
+4. **Trabajos largos**: no esperan con un diálogo abierto. «Preparar» mete las canciones en la **cola de preparación** de la feature 7 ([04 · 0.2.2 · Feature 7](04-progreso-pipeline.md#022--feature-7--cola-de-preparación-de-un-lote)), con su progreso global, su pausa y su resumen final. «Exportar video…» usa la cola de exportación con su propio diálogo de lote (spec 10). «Exportar paquete…» es un solo trabajo (feature 9). Los tres se siguen en las tarjetas y en el panel de actividad.
+5. **Lo hecho queda hecho.** Un fallo en una canción no deshace las anteriores ni detiene las siguientes, salvo las excepciones que cada acción indica.
+6. **Al terminar o al encolar** se sale del modo selección y el foco va a «Seleccionar». Con fallos en un lote corto, se sigue en el modo con las fallidas seleccionadas y el foco en la acción (como en la fase 3).
+7. **`CONFIRMACION_OBSOLETA`**: si la selección cambió entre abrir el diálogo y confirmar (una canción se eliminó, cambió de estado), la lista se actualiza con `tema.obsoleto` y hay que confirmar otra vez.
+
+### Preparar
+
+```
+┌ Preparar 2 canciones ────────────────────────────────────────┐
+│ Shinobi Karaoke hará sola lo que falta en cada una: separar  │  `bib.acc.preparar.explicacion`
+│ las pistas, buscar la letra, comprobarla con la voz y        │
+│ ajustar los fines. Quedarán como «Lista para revisar».       │
+│ ┌──────────────────────────────────────────────────────────┐ │
+│ │ Semestre de Otoño — Artista                              │ │
+│ │   Buscará la letra                                       │ │
+│ │ Cursiva la Letra — Artista                               │ │
+│ │   Separará las pistas y buscará la letra                 │ │
+│ │ Bohemian Rhapsody — Queen                                │ │  atenuadas
+│ │   Ya está lista: no se prepara                           │ │
+│ └──────────────────────────────────────────────────────────┘ │
+│ ⓘ Para buscar la letra se envían el título y el artista de   │  `bib.acc.preparar.privacidad`
+│   cada canción a LRCLIB.                                     │
+│                         [Cancelar] [Preparar 2 canciones]    │
+└──────────────────────────────────────────────────────────────┘
+```
+
+| Aspecto | Comportamiento |
+|---|---|
+| Qué hace | Lo mismo que «Preparar» de una sola canción (feature 5), una tras otra, en las colas de trabajos que ya existen. **No** sustituye una letra ya elegida ni tiempos ya puestos: cada canción continúa desde su primer paso pendiente. |
+| Nota por canción | La calcula main: `bib.acc.preparar.nota.*` según lo que le falte (descargar, separar, letra, fines). |
+| Privacidad | La nota `bib.acc.preparar.privacidad` aparece siempre que alguna canción vaya a buscar letra. Pulsar «Preparar» es una búsqueda iniciada por el usuario: funciona aunque el interruptor «Buscar la letra automáticamente» de la feature 5 esté apagado. |
+| Motor de sincronía (feature 10) | Si alguna canción usará «Ajustar los silencios» porque falta el modelo de su idioma, no se avisa aquí: lo dice el resultado de cada canción (spec 04, feature 10). |
+| Al confirmar | El diálogo se cierra, se sale del modo selección y aparece el toast `bib.acc.preparar.toast` con [Ver actividad] (abre el panel de actividad). Las canciones entran **al final de la cola de preparación**, en el orden de la lista; si ya había una tanda en marcha, se suman a ella (feature 7). Las tarjetas muestran las líneas de paso de la feature 5. |
+| Seguimiento | El de la cola de preparación (spec 04, feature 7): botón «Preparando {i} de {n}», progreso global, [Pausar], [Cancelar lo que falta…], grupos «En cola», «Con error» y «Terminadas». Esta feature no añade otro panel. |
+| Resultado por canción | El de la feature 5: «Lista para revisar», «Elige la letra», «No encontramos la letra», «Letra pendiente» o error. Ninguna pasa sola a «Lista». |
+| Fin | Con **2 o más** canciones: el toast `act.cola.fin` y el diálogo «Resultado de la preparación» de la feature 7. Con **una**: el toast de esa canción (feature 5). Con la feature 11, las filas «Lista para revisar» de ese diálogo añaden `bib.revision.linea` («· 4 líneas por revisar») **(petición a la feature 7)**. |
+| Fallos | Un fallo no detiene la cola; las paradas automáticas (sin espacio, motor por reparar, tres errores iguales seguidos) son las de la feature 7. |
+
+### A la cola
+
+- Sin diálogo. Añade las Listas seleccionadas **al final de la cola, en el orden visual** de la Biblioteca (el de los grupos si hay agrupación), como «Agregar al final» repetido.
+- Toast `bib.acc.cola.toast` con [Deshacer] (quita todas las entradas añadidas por esa acción). Con la cola llena (`COLA_LLENA`): entran las que caben y el toast usa la variante «parcial». En espera sin candidata, el toast añade [▶ Iniciar ahora]; en fin de la cola, empieza la cuenta de la primera (reglas de la fase 4).
+- Sin sesión, prepara la cola (panel P6) y abre el panel.
+
+### Editar datos…
+
+```
+┌ Editar datos de 5 canciones ─────────────────────────────────┐
+│ [☐] Artista   [ (varios)                              ]      │
+│ [☑] Álbum     [ A Night at the Opera                  ]      │
+│ Solo cambian los campos marcados. El título se cambia        │  `bib.acc.datos.ayuda`
+│ canción a canción.                                           │
+│                                                              │
+│ Cambiará el álbum de 4 canciones; 1 ya lo tiene.             │  `bib.acc.datos.impacto`
+│ ⚠ 3 cambiarán de aspecto: usarán el tema de su nuevo álbum.  │  `bib.acc.datos.aspecto`
+│ [▸ Ver las canciones]                                        │
+│                          [Cancelar] [Cambiar 4 canciones]    │
+└──────────────────────────────────────────────────────────────┘
+```
+
+| Elemento | Comportamiento |
+|---|---|
+| Campos | «Artista» y «Álbum», cada uno con su casilla. El campo muestra el valor común si todas lo comparten; si no, el marcador `bib.acc.datos.varios` y queda vacío al enfocarlo. Escribir en un campo marca su casilla; desmarcarla restaura el valor mostrado. |
+| Vaciar | Un campo **marcado y vacío** quita ese dato: bajo el campo aparece `bib.acc.datos.vaciar` («Quedarán sin álbum.»). |
+| Impacto | Lo calcula main y se recalcula con 300 ms de espera tras la última tecla: cuántas cambian, cuántas ya tenían ese valor y cuántas cambian de **tema efectivo** por la herencia (con la lista revelable y el destino de cada una, como `bib.grupo.impacto`). Las personalizadas y las de tema asignado no cambian de aspecto. |
+| Botón | Inactivo sin ninguna casilla marcada (`bib.acc.datos.nada`) o si ninguna canción cambiaría. |
+| Al aplicar | «Cambiando… {i} de {n}». Las tarjetas se mueven a su grupo nuevo al terminar el lote (no una a una), sin perseguir el foco: el foco va a «Seleccionar» y se anuncia `bib.acc.datos.toast`. |
+| Foco inicial | En la primera casilla. Esc = Cancelar. |
+
+### Eliminar…
+
+```
+┌ ¿Eliminar 5 canciones? ──────────────────────────────────────┐
+│ Se moverán a la papelera de tu sistema, con sus pistas y su  │  `bib.acc.eliminar.cuerpo`
+│ letra. Podrás recuperarlas desde allí.                       │
+│ ┌──────────────────────────────────────────────────────────┐ │
+│ │ Bohemian Rhapsody — Queen · Lista                        │ │
+│ │ La flaca — Jarabe de Palo · Borrador                     │ │
+│ │   Se cancelará su separación                             │ │
+│ │ Despacito — Luis Fonsi · Lista · En la cola              │ │
+│ │   También se quitará de la cola                          │ │
+│ │ Lucía — Sin artista · No se elimina:                     │ │  atenuada
+│ │   se está reproduciendo en la otra pantalla              │ │
+│ └──────────────────────────────────────────────────────────┘ │
+│ ⚠ 2 de ellas están listas para cantar.                       │  `bib.acc.eliminar.listas`
+│ [☐] Entiendo que se eliminarán 12 canciones.                 │  solo con 10 o más
+│                        [Cancelar] [Eliminar 4 canciones]     │
+└──────────────────────────────────────────────────────────────┘
+```
+
+| Elemento | Comportamiento |
+|---|---|
+| Entrada | «Eliminar…» de «Más acciones» o **Supr** con el foco en la rejilla, en modo selección y con alguna canción seleccionada. Fuera del modo selección, Supr sigue eliminando la tarjeta enfocada. |
+| Lista | Cada canción con su estado y lo que arrastra: trabajo en curso que se cancela (separación, descarga, preparación, exportación), entradas de la cola que se quitan. |
+| Aviso de listas | `bib.acc.eliminar.listas` si entre las que se eliminan hay Listas o Letra lista (es donde está el trabajo hecho). |
+| Casilla de 10 o más | Con **10 o más** canciones a eliminar, el botón destructivo está inactivo hasta marcar `bib.acc.eliminar.entiendo` **(decisión provisional)**. |
+| Botones | Foco inicial en «Cancelar». «Eliminar {n} canciones» es destructivo. Esc = Cancelar. |
+| Al confirmar | «Eliminando… {i} de {n}». Cada canción: se cancelan sus trabajos, se quita de la cola y su carpeta va a la papelera. |
+| Fin | Todo bien: el diálogo se cierra, toast `bib.acc.eliminar.toast` y foco en «Seleccionar» (si la biblioteca quedó vacía, en «Añadir canción» del estado vacío). Con fallos: resultado por canción con `bib.acc.eliminar.fallo` y [Reintentar las que faltan]. |
+| Deshacer | No hay en la app: se recuperan desde la papelera del sistema (como hoy). |
+
+### Seguimiento y resultado de los trabajos largos
+
+| Acción | Dónde se sigue | Cómo termina |
+|---|---|---|
+| Preparar | Cola de preparación (spec 04, feature 7): un solo panel para lo que llega de «Añadir canción», de un lote importado y de «Preparar». | Toast `act.cola.fin` y diálogo «Resultado de la preparación» (feature 7), con [Reintentar las fallidas] y [Ver en la biblioteca]. |
+| Exportar video… | Diálogo de lote de spec 10 (H) y fila del lote en el panel de actividad. | Un toast `exp.lote.toast` y el resultado I de spec 10. |
+| Exportar paquete… | Diálogo «Creando el paquete» y su fila en el panel de actividad (feature 9). | Toast `paq.toast.ok` o estado «Paquete creado». |
+
+- Cerrar la app con cualquiera de ellos en marcha: diálogo de cierre de spec 04 §3. La preparación se retoma sola al reabrir (feature 5); las exportaciones y los paquetes se cancelan con limpieza, como hoy.
+- Ninguno bloquea la Biblioteca: se puede seguir seleccionando y lanzar otra acción.
+
+### Estados (feature 8)
+
+| Estado | Presentación |
+|---|---|
+| Sin selección | Todas las acciones inactivas con `bib.sel.ninguna`. |
+| Acción que no aplica a ninguna | `aria-disabled` con `bib.acc.ninguna.*`. |
+| Calculando la confirmación (> 300 ms) | Diálogo con la lista en esqueleto y el botón inactivo con `bib.acc.calculando`. |
+| Aplicando (lote corto) | Botón «{verbo}… {i} de {n}», controles inactivos, sin Esc. |
+| En cola / en curso (trabajo largo) | Tarjetas con su línea de paso; cola de preparación o fila del lote en el panel de actividad. |
+| Resultado parcial | Diálogo de resultado con filas ✓ / – / ✕. |
+| Error al abrir la confirmación | Toast `bib.toast.errorgenerico`; la selección no cambia. |
+| Biblioteca vacía | Sin modo selección (como hoy). |
+
+### Teclado y accesibilidad (feature 8)
+
+- La barra de selección es una `toolbar` con nombre `bib.acc.barra`; Tab entra en ella y ←/→ recorren sus botones.
+- «Más acciones»: `aria-haspopup="menu"`, `aria-expanded`. Cada ítem inactivo conserva el foco y describe su motivo.
+- **Supr** en modo selección abre «Eliminar…» de la selección. No hay más atajos de una tecla (evita lotes accidentales).
+- Los diálogos atrapan el foco; la lista es `role="list"` y cada fila se lee como «{título}, {artista}: {nota}». El resultado y el resumen se anuncian una vez (`role="status"`); los fallos, con `role="alert"`.
+- Los recuentos del botón («2 de 5») forman parte de su nombre accesible: «Preparar, 2 de 5 seleccionadas».
+- Nada depende solo del color: cada resultado lleva icono y texto.
+
+### Microcopy (feature 8)
+
+| Clave | Texto |
+|---|---|
+| `bib.sel.noEditable` | Esta canción no se puede abrir. Usa su menú ⋯ para eliminarla o repararla. |
+| `bib.acc.barra` | Acciones para las canciones seleccionadas |
+| `bib.acc.preparar` | Preparar · (parte) Preparar ({a} de {n}) — nombre accesible: Preparar, {a} de {n} seleccionadas |
+| `bib.acc.mas` | Más acciones |
+| `bib.acc.menu` | A la cola · Exportar video… · Exportar paquete… · Exportar la letra (.lrc)… · Editar datos… · Eliminar… · (parte) {acción} ({a} de {n}) |
+| `bib.acc.ninguna.preparar` | Ninguna de las seleccionadas necesita preparación. |
+| `bib.acc.ninguna.cola` | Solo las canciones listas se pueden poner en la cola. |
+| `bib.acc.ninguna.exportar` | Solo las canciones listas se pueden exportar desde aquí. |
+| `bib.acc.ninguna.letra` | Ninguna de las seleccionadas tiene letra sincronizada. |
+| `bib.acc.motivo.yaLista` | Ya está lista: no se prepara |
+| `bib.acc.motivo.yaPreparada` | Ya está lista para revisar |
+| `bib.acc.motivo.enCurso` | Ya se está preparando |
+| `bib.acc.motivo.danada` | Está dañada |
+| `bib.acc.motivo.noLista` | Aún no está lista |
+| `bib.acc.motivo.exportando` | Ya se está exportando |
+| `bib.acc.motivo.sinTiempos` | No tiene letra sincronizada |
+| `bib.acc.motivo.activa` | No se elimina: se está reproduciendo en la otra pantalla |
+| `bib.acc.calculando` | Comprobando las canciones… |
+| `bib.acc.preparar.titulo` | Preparar {n} canciones · Preparar 1 canción |
+| `bib.acc.preparar.explicacion` | Shinobi Karaoke hará sola lo que falta en cada una: separar las pistas, buscar la letra, comprobarla con la voz y ajustar los fines. Quedarán como «Lista para revisar». |
+| `bib.acc.preparar.nota` | Buscará la letra · Separará las pistas y buscará la letra · Descargará el audio, separará las pistas y buscará la letra · Ya tiene letra: comprobará la letra y ajustará los fines · Separará las pistas |
+| `bib.acc.preparar.privacidad` | Para buscar la letra se envían el título y el artista de cada canción a LRCLIB. |
+| `bib.acc.preparar.boton` | Preparar {n} canciones · Preparar 1 canción |
+| `bib.acc.preparar.toast` | {n} canciones en cola para preparar. Puedes seguir usando Shinobi Karaoke. — [Ver actividad] · (n = 1) «{título}» está en cola para preparar. — [Ver actividad] |
+| `bib.acc.cola.toast` | {n} canciones se agregaron al final de la cola. — [Deshacer] · (parcial) Se agregaron {a} de {n} canciones: la cola está llena. — [Deshacer] · (en espera sin candidata) — [▶ Iniciar ahora] [Deshacer] |
+| `bib.acc.datos.titulo` | Editar datos de {n} canciones |
+| `bib.acc.datos.campos` | Artista · Álbum — casillas: Cambiar el artista · Cambiar el álbum |
+| `bib.acc.datos.varios` | (varios) |
+| `bib.acc.datos.ayuda` | Solo cambian los campos marcados. El título se cambia canción a canción. |
+| `bib.acc.datos.vaciar` | Quedarán sin artista. · Quedarán sin álbum. |
+| `bib.acc.datos.impacto` | Cambiará el {artista/álbum} de {a} canciones; {b} ya lo tienen. · (los dos) Cambiará el artista o el álbum de {a} canciones. · (ninguna) Todas tienen ya esos datos. |
+| `bib.acc.datos.aspecto` | ⚠ {k} cambiarán de aspecto: usarán el tema de su nuevo {artista/álbum}. · (k = 1) ⚠ 1 cambiará de aspecto: usará el tema de su nuevo {artista/álbum}. |
+| `bib.acc.datos.nada` | Marca el artista o el álbum para cambiarlo. |
+| `bib.acc.datos.boton` | Cambiar {n} canciones · Cambiar 1 canción · (aplicando) Cambiando… {i} de {n} |
+| `bib.acc.datos.toast` | Datos cambiados en {n} canciones. |
+| `bib.acc.eliminar.titulo` | ¿Eliminar {n} canciones? · ¿Eliminar «{título}»? |
+| `bib.acc.eliminar.cuerpo` | Se moverán a la papelera de tu sistema, con sus pistas y su letra. Podrás recuperarlas desde allí. |
+| `bib.acc.eliminar.nota` | Se cancelará su {separación/descarga/preparación/exportación} · También se quitará de la cola |
+| `bib.acc.eliminar.listas` | ⚠ {k} de ellas están listas para cantar. · (k = 1) ⚠ 1 de ellas está lista para cantar. · (todas) ⚠ Todas están listas para cantar. |
+| `bib.acc.eliminar.entiendo` | Entiendo que se eliminarán {n} canciones. |
+| `bib.acc.eliminar.boton` | Eliminar {n} canciones · Eliminar 1 canción · (aplicando) Eliminando… {i} de {n} |
+| `bib.acc.eliminar.toast` | {n} canciones se movieron a la papelera. |
+| `bib.acc.eliminar.fallo` | No se pudo mover a la papelera. — [Copiar detalles] |
+| `bib.acc.reintentar` | Reintentar las que faltan · Reintentar las fallidas |
+| `bib.acc.resultado.fila` | Hecho · Omitida: {motivo} · {motivo de fallo} |
+
+### Criterios de aceptación de la feature 8 (biblioteca)
+
+- F8-1. En modo selección, la barra muestra «Preparar», «Aplicar tema…» y «Más acciones»; el menú contiene, en este orden, A la cola, Exportar video…, Exportar paquete…, Exportar la letra (.lrc)…, Editar datos… y, tras un separador, Eliminar… A 1024 × 576 con el panel de cola abierto, la primera fila no se parte.
+- F8-2. Con una selección de 2 borradores sin letra, 2 Listas y 1 «Lista para revisar», los textos son «Preparar (2 de 5)», «A la cola (2 de 5)» y «Exportar video… (2 de 5)»; «Editar datos…» y «Eliminar…» no llevan cifra. Con solo Listas seleccionadas, «Preparar» está `aria-disabled` con `bib.acc.ninguna.preparar` y sigue enfocable.
+- F8-3. «Preparar» abre la confirmación con una nota por canción y las que no aplican al final con su motivo; el botón dice a cuántas afecta; al confirmar, cada canción aplicable entra en preparación (comprobado en el gestor de trabajos), se sale del modo selección y aparece `bib.acc.preparar.toast`. La nota de privacidad aparece si alguna va a buscar letra. Una canción con la letra ya elegida la conserva.
+- F8-4. Las canciones de «Preparar» entran al final de la cola de preparación de la feature 7 en el orden de la lista: el botón superior dice «Preparando {i} de {n}», y al terminar una tanda de 2 o más aparece una sola vez `act.cola.fin` con [Ver resultado]; con una sola canción aparece el toast de su resultado (feature 5). No hay un segundo panel ni un segundo resumen propios de esta feature.
+- F8-5. Lanzar «Preparar» con una tanda ya en marcha suma las canciones a esa tanda (el total sube y la barra no retrocede); un fallo en una canción no detiene las demás.
+- F8-6. «A la cola» añade las Listas seleccionadas al final en el orden visual, sin diálogo, y [Deshacer] las quita todas; con la cola a 2 entradas del límite y 5 seleccionadas, entran 2 y el toast usa la variante parcial.
+- F8-7. «Editar datos…» con el álbum marcado y cinco canciones (una ya con ese álbum, tres que heredarán otro tema): muestra «Cambiará el álbum de 4 canciones; 1 ya lo tiene», el aviso de aspecto con 3 y la lista revelable; al aplicar, las tarjetas quedan en su grupo nuevo, el foco en «Seleccionar» y se anuncia el resultado. Un campo marcado y vacío deja las canciones «Sin álbum». Sin casillas marcadas, el botón está inactivo con su motivo. El título de ninguna canción cambia.
+- F8-8. «Eliminar…» y Supr (en modo selección con selección) abren la confirmación con el foco en «Cancelar», la lista con estado y arrastres de cada canción y el aviso de listas; con 10 o más, el botón destructivo solo se activa al marcar la casilla; al confirmar, cada carpeta va a la papelera del sistema, sus trabajos se cancelan antes y sus entradas de la cola se quitan. La canción que suena en la otra pantalla no se elimina y lo dice su fila.
+- F8-9. Con un fallo simulado al mover a la papelera una de cuatro canciones, las otras tres quedan eliminadas, el resultado muestra la fallida con `bib.acc.eliminar.fallo` y «Reintentar las que faltan» solo reintenta esa.
+- F8-10. Si una canción seleccionada cambia de estado entre abrir la confirmación y confirmar (doble), no se aplica nada y la lista se actualiza con el aviso de confirmación obsoleta.
+- F8-11. Las Dañadas con `cancion.json` ilegible no se pueden seleccionar y su tooltip es el texto nuevo de `bib.sel.noEditable`.
+- F8-12. Durante una sesión en otra pantalla, «Preparar», «A la cola», «Exportar video…», «Editar datos…» y «Eliminar…» funcionan; ninguna abre el editor.
+- F8-13. Todo el flujo (entrar en el modo, seleccionar, abrir «Más acciones», confirmar, leer el resultado) es operable solo con teclado; el foco nunca queda en `body`; el resultado se anuncia una vez.
+- F8-14. Capturas en `docs/ux/revision-0.2.2-feature-8/` con nombre `biblioteca-{ancho}x{alto}-{escala}-{estado}.png` a 1280 × 800 al 100 % y 1280 × 720 al 125 %: `barra-acciones`, `menu-mas-acciones`, `dialogo-preparar`, `dialogo-editar-datos`, `dialogo-eliminar`, `dialogo-eliminar-diez`, `resultado-eliminar-parcial`.
+
+**Verificación manual** (guía de `docs/Test-manuales/0.2.2/`): preparar de una vez los 5 borradores reales sin letra y comprobar que el resumen coincide con lo que muestran las tarjetas; eliminar un lote y recuperarlo desde la papelera del sistema en Windows, macOS y Linux; encolar 10 canciones y cantar las dos primeras.
+
+**Lo que esta feature necesita de las features 5 y 7**: (1) que «Preparar» de una canción sea una operación de main que se pueda pedir para varias y que diga, sin ejecutarla, si aplica y qué hará (la nota de la confirmación); (2) que continúe desde el primer paso pendiente sin sustituir letra ni tiempos (ya lo dice 04 · Feature 5, «Lo que la preparación no toca nunca»); (3) que las canciones de «Preparar» cuenten en la tanda y en el resumen de la cola de preparación igual que las de un lote importado; (4) que el diálogo «Resultado de la preparación» admita el dato de líneas por revisar de la feature 11.
+
+## 0.2.2 · Feature 9 — Copia de seguridad, paquete de canción y exportar la letra
+
+Origen: [plan 0.2.2, feature 9](../versiones/0.2.2/plan-4.md) y propuesta [025](../propuestas/025-copia-de-seguridad-y-paquete-de-cancion.md). Copia de seguridad de toda la biblioteca: [08 · 0.2.2 · Feature 9](08-ajustes-y-acerca.md#022--feature-9--copia-de-seguridad). Mapa y flujo: [00 · 0.2.2](00-mapa-de-vistas.md#022--features-8-a-11). Exportar la letra desde el editor: [06 · 0.2.2 · Feature 9](06-editor.md#022--feature-9--exportar-la-letra-desde-el-editor). Contratos pendientes: [0157](../preguntas/0157-contratos-de-las-features-8-a-11-para-las-specs.md). Decisiones provisionales: [0158](../preguntas/0158-decisiones-provisionales-de-ux-de-las-features-8-a-11.md). Esta sección define el **paquete**, cómo se exporta y se importa desde la Biblioteca, y la exportación de la letra a `.lrc`.
+
+**Sustituye**: la regla «Arrastrar un archivo sobre la ventana abre la vista 03» **solo** para archivos de paquete (abren el diálogo de importar); el menú ⋯ de la tarjeta (ítems nuevos); el estado vacío (un enlace más).
+
+### Conceptos
+
+| Concepto | Definición |
+|---|---|
+| **Paquete** | Un único archivo con una o varias canciones y los temas que usan, para guardarlas o llevarlas a otro equipo propio. Extensión `.shinobi` **(provisional; el formato y la extensión los fija el arquitecto)**. |
+| **Paquete completo** | Lleva el audio. Por canción: sus datos (título, artista, álbum, fechas, origen), la letra con todos sus tiempos (líneas, fines, tiempos por palabra y su origen, marcas de revisión), el estilo y la apariencia, el estado (borrador, Lista, Letra lista), la mezcla original, las pistas separadas de voz e instrumental y la miniatura. Unos 70–100 MB por canción. |
+| **Paquete ligero** | Lo mismo **sin audio** (sin mezcla ni pistas): letra, tiempos, estilo, datos y miniatura. Menos de 1 MB por canción. Sirve para guardar el trabajo de sincronía; el audio se vuelve a obtener. |
+| **Temas en el paquete** | El tema que usa cada canción (asignado o heredado de su álbum, su artista o el predeterminado), una sola vez aunque lo usen varias. Una canción con tema personalizado lo lleva dentro de sí misma. Las asignaciones de artista y álbum y el tema predeterminado **solo** viajan en la copia de seguridad (spec 08). |
+| **Copia de seguridad** | Un paquete con **todas** las canciones, el catálogo de temas completo con sus asignaciones y, aparte, los ajustes. Se crea y se restaura desde Ajustes (spec 08) con el mismo diálogo de importar. |
+| **Qué no lleva nunca** | Videos exportados, la cola de reproducción, el motor de audio y sus modelos, las cachés (formas de onda), los registros, los consentimientos (aviso de YouTube, modelo Rápido) y el `.bak` de cada canción. |
+| **Misma canción** | Dos canciones son la misma si tienen el mismo identificador interno (la que salió de este equipo o de una copia suya). Dos canciones con el mismo título y artista pero distinto identificador son canciones distintas. |
+
+**Copia personal, no compartir.** La visión excluye «compartir o publicar». El paquete existe para proteger el trabajo y moverlo entre equipos del mismo usuario. La interfaz nunca usa las palabras «compartir» ni «enviar», no ofrece subirlo a ningún sitio y muestra el aviso `paq.aviso.derechos` en todo diálogo que cree un paquete **(decisión provisional: aviso siempre visible, sin casilla de aceptación)**.
+
+### Puntos de entrada
+
+| Desde | Elemento | Disponible cuando |
+|---|---|---|
+| Tarjeta, menú ⋯ (Lista, Letra lista, Borrador, Dañada solo por pistas) | **«Exportar paquete…»** (`paq.menu.exportar`, icono `package`), después de «Exportar video…» (o de «Editar datos» en un borrador) | Siempre. También durante una sesión en otra pantalla (solo lee). |
+| Tarjeta, menú ⋯ | **«Exportar la letra (.lrc)…»** (`lrc.menu`, icono `file-music`), después de «Exportar paquete…» | La canción tiene al menos una línea con inicio. Si no: `aria-disabled` con `lrc.motivo.sinTiempos`. |
+| Selección múltiple, «Más acciones» (feature 8) | «Exportar paquete…» y «Exportar la letra (.lrc)…» | Reglas de la feature 8. |
+| Estado vacío de la Biblioteca | Enlace **«Restaurar una copia o importar un paquete…»** (`paq.vacio.enlace`, botón fantasma bajo «Añadir canción») | Biblioteca sin canciones. |
+| Ajustes › Copia de seguridad (spec 08) | [Crear copia de seguridad…] · [Restaurar o importar…] | Siempre. |
+| Arrastrar un archivo `.shinobi` sobre la ventana | Abre el diálogo de importar con ese archivo | En la Biblioteca y en Ajustes, sin diálogo abierto. Con varios archivos, se usa el primero y se avisa con `paq.arrastrar.varios`. |
+| Editor › Funciones (spec 06) | «Exportar la letra (.lrc)…» | Como en la tarjeta. |
+
+**Nota de coordinación** (feature 7, vista 03): conviene un enlace «¿Tienes un paquete de Shinobi Karaoke? Importar paquete…» en «Añadir canción» que abra este mismo diálogo; lo decide quien lleva esa spec.
+
+### Exportar paquete
+
+```
+┌ Exportar paquete ────────────────────────────────────────────┐
+│ 3 canciones                                    [▸ Ver cuáles] │
+│                                                              │
+│ Qué incluye                                                  │
+│ ◉ Completo, con el audio                    unos 290 MB      │
+│   Letra, tiempos, estilo, temas y las pistas de cada         │
+│   canción. Al importarlo se puede cantar al momento.         │
+│ ○ Ligero, sin audio                       menos de 1 MB      │
+│   Letra, tiempos, estilo y temas. Al importarlo en otro      │
+│   equipo habrá que volver a añadir el audio de cada canción. │
+│                                                              │
+│ Guardar como                                                 │
+│ [D:\Copias\3 canciones de Shinobi Karaoke 2026-11-21.shinobi] [Cambiar…] │
+│ ┌──────────────────────────────────────────────────────────┐ │
+│ │ ⚠ Es una copia para ti. El audio y la letra de las       │ │  `paq.aviso.derechos`
+│ │   canciones tienen derechos de autor: úsala para guardar │ │
+│ │   tu trabajo o llevarlo a otro equipo tuyo. Pasarla a    │ │
+│ │   otras personas puede infringir esos derechos y queda   │ │
+│ │   bajo tu responsabilidad.                               │ │
+│ └──────────────────────────────────────────────────────────┘ │
+│                              [Cancelar] [Exportar paquete]   │
+└──────────────────────────────────────────────────────────────┘
+```
+
+| Elemento | Comportamiento |
+|---|---|
+| Cabecera | Una canción: «{título}» · {artista}. Varias: «{n} canciones» con la lista revelable (título — artista · estado). |
+| **Qué incluye** | Grupo de radio. Por defecto «Completo» **(decisión provisional)**; se recuerda la última elección. A la derecha de cada opción, su tamaño estimado (`paq.tamano`; lo da main sumando los archivos; mientras se calcula, «calculando…»). |
+| Canción sin audio o a medias | Un borrador sin pistas (o sin mezcla) se exporta con lo que tenga guardado; la lista lo anota con `paq.nota.sinAudio`. Una canción con un trabajo en curso se exporta **como está guardada** en ese momento. |
+| **Guardar como** | Como en «Exportar video» (spec 10): campo de solo lectura + [Cambiar…] (diálogo «Guardar» del sistema, desde main, con el filtro de la extensión). Nombre propuesto: una canción, `{título} — {artista}.shinobi`; varias, `{n} canciones de Shinobi Karaoke {AAAA-MM-DD}.shinobi`. Carpeta: la última usada para paquetes; si no, Documentos. No se puede guardar dentro de la carpeta de datos de la app. |
+| Notas | En línea, como en spec 10: archivo existente (`paq.aviso.existe`: se sustituye solo al terminar bien), espacio insuficiente (`paq.aviso.espacio`), y **siempre** `paq.aviso.derechos` (con la variante «ligero» si se eligió sin audio). |
+| **Exportar paquete** | Primario. Main valida el destino antes de empezar (carpeta sin permiso: error bajo el campo, como V35 de spec 10). Después el diálogo pasa a «Creando el paquete». |
+| Teclado | Foco inicial en la opción elegida de «Qué incluye»; ↑/↓ cambian; Esc = Cancelar. |
+
+**Creando el paquete** (mismo diálogo; es un trabajo largo cancelable que sigue en segundo plano)
+```
+┌ Creando el paquete ──────────────────────────────────────────┐
+│ 3 canciones · completo                                       │
+│ Guardando «La flaca»… 2 de 3              quedan unos 20 s   │
+│ ██████████████░░░░░░░░░░░░░░░                                │
+│ Puedes cerrar este cuadro: el paquete se sigue creando.      │
+│ [Cancelar]                       [Seguir en segundo plano]   │
+└──────────────────────────────────────────────────────────────┘
+```
+- Se escribe en un temporal en la carpeta de destino y solo al terminar pasa a ser el archivo (como los videos). Cancelar o fallar borra el temporal; un archivo previo con ese nombre queda intacto.
+- Aparece en el panel de actividad como un trabajo (`act.paq`), con [Ir] y [✕]. Cuenta en el diálogo de cierre de la app.
+- **Fin**: con el diálogo abierto, estado «Paquete creado» con el nombre, el tamaño real, la carpeta y [Mostrar en la carpeta] (primario, foco) [Cerrar]. Con el diálogo cerrado, toast `paq.toast.ok` con [Mostrar en la carpeta].
+- **Canciones que no se pudieron leer** (una pista borrada a mitad, `cancion.json` ilegible): el paquete se crea con las demás y el final lista las omitidas con su motivo (resultado por canción de la feature 8).
+- **Fallo**: `SIN_ESPACIO`, `DESTINO_NO_DISPONIBLE` o `ERROR_INTERNO` con los textos de spec 10 adaptados (`paq.error.*`), [Reintentar] y [Copiar detalles].
+
+### Importar un paquete (y restaurar una copia)
+
+Mismo diálogo para un paquete de canciones y para una copia de seguridad; la copia añade la parte de temas y ajustes (spec 08).
+
+**1. Elegir y leer.** El diálogo «Abrir» del sistema (filtro `.shinobi`) o el archivo arrastrado. Mientras main lo lee: diálogo con `paq.imp.leyendo` y barra indeterminada, [Cancelar].
+
+**2. Revisar**
+```
+┌ Importar paquete ────────────────────────────────────────────┐
+│ 3 canciones de Shinobi Karaoke 2026-11-21.shinobi            │
+│ Creado el 21 nov 2026 con Shinobi Karaoke 0.2.2 · completo   │
+│ 3 canciones · 2 temas · 290 MB                               │
+│                                                              │
+│ ┌──────────────────────────────────────────────────────────┐ │
+│ │ ✚ Arrópame — Artista                                     │ │
+│ │   Nueva                                                  │ │
+│ │ ⟲ A Pesar de Mí — Artista                                │ │
+│ │   Ya la tienes. La del paquete es más antigua            │ │
+│ │   (20 nov; la tuya, 21 nov).  [Omitir ▾]                 │ │
+│ │ = ¿Y Ahora Qué? — Artista                                │ │
+│ │   Ya la tienes igual: se omite                           │ │
+│ └──────────────────────────────────────────────────────────┘ │
+│ Para las que ya tienes: [Omitir|Sustituir|Conservar las dos] │
+│ Temas: 1 nuevo · 1 ya lo tienes                              │
+│ Hacen falta 96 MB; tienes 120 GB libres.                     │
+│                           [Cancelar] [Importar 1 canción]    │
+└──────────────────────────────────────────────────────────────┘
+```
+
+| Elemento | Comportamiento |
+|---|---|
+| Resumen | Nombre del archivo, fecha y versión con que se creó, si es completo o ligero, número de canciones y temas y tamaño. Una copia de seguridad lo dice en el título («Restaurar copia de seguridad»). |
+| Lista | Una fila por canción con icono + texto: **Nueva** (✚) · **Ya la tienes** (⟲), con cuál es más reciente por su fecha de modificación · **Ya la tienes igual** (=): mismo identificador y misma fecha de modificación; se omite siempre. `role="list"`, scroll propio hasta 280 px. |
+| **Para las que ya tienes** | Control segmentado que fija la respuesta de todas las «Ya la tienes»: **Omitir** (por defecto; no toca la tuya) · **Sustituir** (la del paquete ocupa el lugar de la tuya; **la tuya va a la papelera del sistema**, recuperable) · **Conservar las dos** (la del paquete entra como una canción nueva con el título `paq.imp.tituloCopia`). Cada fila «Ya la tienes» tiene además su propio selector para cambiar solo esa; al usarlo, el control general muestra «Mixto». |
+| Sustituir con un paquete ligero | Solo se sustituyen la letra, los tiempos, el estilo, los datos y el estado; **el audio que ya tienes se conserva**. Es el caso «recuperar mi sincronía». La fila lo dice con `paq.imp.nota.ligeroSustituir`. |
+| Nueva desde un paquete ligero | Entra como **borrador sin audio**, con su letra y sus tiempos. Su tarjeta muestra «Falta descargar el audio» (origen YouTube; «Continuar» la descarga y la separa) o «Falta preparar el audio» (origen archivo; «Continuar» pide el archivo). Una Lista o Letra lista entra como borrador (no se puede cantar sin pistas); al volver a tener pistas, el usuario la marca otra vez. La fila lo avisa con `paq.imp.nota.ligeroNueva`. |
+| Canción parecida | Si una «Nueva» coincide en título, artista y duración (± 2 s) con una de la biblioteca, la fila añade `paq.imp.nota.parecida` (informativo; se importa igual). |
+| Temas | Línea de resumen con lista revelable. Reglas: un tema del paquete **idéntico** a uno tuyo (mismo identificador y mismo aspecto) se reutiliza; uno con el mismo identificador y **distinto aspecto** entra como copia con el nombre `paq.imp.temaCopia` y las canciones importadas usan la copia (tus canciones no cambian); uno nuevo cuyo nombre ya existe entra con ese mismo sufijo. Las canciones importadas de un **paquete de canciones** que heredaban su tema del álbum, del artista o del predeterminado quedan con ese tema **asignado a la canción**, para verse igual que en origen **(decisión provisional)**. Con el catálogo en solo lectura (`TEMAS_SOLO_LECTURA`) no se importan temas: las canciones entran con su aspecto guardado y la nota `paq.imp.temasSoloLectura`. |
+| Espacio | `paq.imp.espacio` con lo que hace falta según lo elegido; si no cabe, `aviso` y el botón inactivo. |
+| Botón | «Importar {n} canciones» con las que entrarán (nuevas + sustituidas + duplicadas). Con 0: inactivo con `paq.imp.nada`. |
+| Foco | Inicial en la lista (primera fila con decisión; si no hay, en el botón). Esc = Cancelar. |
+
+**3. Importando**: «Importando «{título}»… {i} de {n}» con barra; [Cancelar] detiene tras la canción en curso (las ya importadas se quedan). Cada canción se copia a una carpeta de preparación y solo aparece en la Biblioteca cuando está completa (nunca una canción a medias).
+
+**4. Resultado** (resultado por canción de la feature 8)
+```
+│ Se importaron 2 de 3 canciones.                              │
+│ ✓ Arrópame — Importada                                       │
+│ ✓ A Pesar de Mí — Sustituida (la anterior está en la papelera) │
+│ ✕ Sinmigo — El paquete está incompleto: faltan sus pistas.   │
+│ Temas: 1 importado («Neón (importado)»).                     │
+│                                              [Cerrar]        │
+```
+- Al cerrar: la Biblioteca pasa al filtro *Todas* si el actual ocultaría alguna importada, la primera importada recibe el foco y las importadas se resaltan 2 s (borde `info`; sin transición con movimiento reducido). Toast `paq.imp.toast`.
+- Las canciones importadas conservan su **fecha de añadido** y su fecha de modificación de origen.
+
+**Errores de lectura** (paso 1; el diálogo muestra el error con [Elegir otro archivo] y [Cerrar])
+
+| Código (provisional) | Título | Explicación |
+|---|---|---|
+| `PAQUETE_NO_VALIDO` | Este archivo no es un paquete de Shinobi Karaoke. | Elige un archivo `.shinobi` creado con «Exportar paquete» o «Crear copia de seguridad». |
+| `PAQUETE_VERSION_NUEVA` | Este paquete es de una versión más nueva de Shinobi Karaoke. | Actualiza la aplicación para poder importarlo. No se ha cambiado nada. |
+| `PAQUETE_INCOMPLETO` | El paquete está dañado o incompleto. | Puede que la copia se interrumpiera. Las canciones que se puedan leer se muestran en la lista; las demás aparecen como no disponibles. (Si no se puede leer ninguna: «No se puede leer ninguna canción de este paquete.») |
+| `SIN_ESPACIO` | No queda espacio en el disco. | Libera espacio y vuelve a intentarlo. Las canciones ya importadas se conservan. |
+
+### Exportar la letra a `.lrc`
+
+- **Una canción**: «Exportar la letra (.lrc)…» abre directamente el diálogo «Guardar» del sistema con el nombre `{título} — {artista}.lrc` (carpeta: la última usada para letras; si no, Documentos). Al guardar: toast `lrc.toast.ok` con [Mostrar en la carpeta]. Cancelar el diálogo no hace nada. Sin diálogo propio: no hay opciones que elegir.
+- **Varias** (selección): diálogo del sistema «Elegir carpeta»; se escribe un `.lrc` por canción con su nombre propuesto (si el nombre ya existe en la carpeta, se añade « (2)», « (3)»…; nunca se sustituye un archivo). Resultado por canción si alguna se omitió o falló; si no, toast `lrc.toast.varias`.
+- **Qué contiene** (LRC simple, por línea, UTF-8):
+  - Cabecera `[ti:]`, `[ar:]`, `[al:]` (si lo hay), `[length:]` y `[re:Shinobi Karaoke]`.
+  - Una marca `[mm:ss.cc]` por línea con inicio, con el desplazamiento de la letra ya aplicado.
+  - **Fin de línea antes de un silencio**: si entre el fin efectivo de una línea y el inicio de la siguiente hay 2 s o más, se escribe una marca vacía en el fin (`[mm:ss.cc]`), que es como los reproductores de LRC borran la línea. Al volver a importar ese `.lrc` en Shinobi Karaoke, esa marca es una pausa con tiempo y la línea recupera su fin **(decisión provisional)**.
+  - Las pausas con tiempo se escriben como marcas vacías. Las líneas **sin inicio** se omiten.
+  - **Sin tiempos por palabra** (ni hechos a mano ni automáticos): 0.2.2 exporta LRC por línea **(decisión provisional)**.
+- **Avisos**: si se omitieron líneas sin inicio, el toast usa la variante `lrc.toast.omitidas`. La letra es para uso personal: lo recuerda `paq.aviso.derechos` en Ajustes (spec 08); aquí no se añade diálogo.
+- **Errores**: carpeta sin permiso o disco lleno → toast `error` `lrc.toast.error` con [Copiar detalles].
+
+### Estados (feature 9)
+
+| Estado | Presentación |
+|---|---|
+| Vacío (biblioteca sin canciones) | Enlace «Restaurar una copia o importar un paquete…» bajo «Añadir canción». «Exportar paquete» no existe sin canciones. |
+| Calculando el tamaño | «calculando…» junto a cada opción; «Exportar paquete» disponible. |
+| Creando el paquete | Barra con canción actual e {i} de {n}; fila en el panel de actividad. |
+| Paquete creado | Nombre, tamaño, carpeta y [Mostrar en la carpeta]. |
+| Paquete creado con omitidas | Además, la lista de omitidas con su motivo. |
+| Leyendo un paquete | Barra indeterminada + [Cancelar]. |
+| Paquete no válido / más nuevo / dañado | Error con [Elegir otro archivo]. |
+| Revisando | Lista con Nueva / Ya la tienes / Ya la tienes igual. |
+| Nada que importar | Botón inactivo con `paq.imp.nada` (todas iguales u omitidas). |
+| Importando | Barra con {i} de {n}; [Cancelar]. |
+| Resultado | Filas ✓ / – / ✕ y resumen de temas. |
+| Canción importada sin audio | Borrador con «Falta descargar el audio» o «Falta preparar el audio» y su letra ya sincronizada. |
+
+### Teclado y accesibilidad (feature 9)
+
+- Los tres diálogos son modales estándar (atrapan el foco, `aria-labelledby` = título del estado). Durante «Creando el paquete», Esc equivale a «Seguir en segundo plano» (nunca cancela), como en la exportación de video.
+- Las filas de la lista de importación se leen como «{título}, {artista}: {estado}[, {decisión}]». El selector de cada fila es un `select` nativo con nombre `paq.imp.aria.decision`.
+- Estados con icono + texto (✚ Nueva, ⟲ Ya la tienes, = Igual): nunca solo color.
+- Hitos anunciados (`role="status"`): paquete leído, 25/50/75 % al crear, creado, importación terminada. Errores con `role="alert"`.
+- El aviso de derechos es texto en `texto-1` sobre `aviso-tenue` con icono (contraste ≥ 4,5:1) y está en el `aria-describedby` del botón «Exportar paquete».
+- Sin atajos de teclado propios.
+
+### Microcopy (feature 9)
+
+| Clave | Texto |
+|---|---|
+| `paq.menu.exportar` | Exportar paquete… |
+| `paq.vacio.enlace` | Restaurar una copia o importar un paquete… |
+| `paq.arrastrar.varios` | Los paquetes se importan de uno en uno. Se abrirá el primero. |
+| `paq.exp.titulo` | Exportar paquete |
+| `paq.exp.cabecera` | {n} canciones · «{título}» · {artista} — [Ver cuáles] |
+| `paq.exp.incluye` | Qué incluye |
+| `paq.exp.completo` | Completo, con el audio — Letra, tiempos, estilo, temas y las pistas de cada canción. Al importarlo se puede cantar al momento. |
+| `paq.exp.ligero` | Ligero, sin audio — Letra, tiempos, estilo y temas. Al importarlo en otro equipo habrá que volver a añadir el audio de cada canción. |
+| `paq.tamano` | unos {tamaño} · menos de 1 MB · calculando… |
+| `paq.exp.guardar` | Guardar como — [Cambiar…] |
+| `paq.exp.nombre` | {título} — {artista}.shinobi · {n} canciones de Shinobi Karaoke {AAAA-MM-DD}.shinobi |
+| `paq.nota.sinAudio` | Sin pistas todavía: se guarda sin audio |
+| `paq.aviso.derechos` | Es una copia para ti. El audio y la letra de las canciones tienen derechos de autor: úsala para guardar tu trabajo o llevarlo a otro equipo tuyo. Pasarla a otras personas puede infringir esos derechos y queda bajo tu responsabilidad. · (ligero) Es una copia para ti. La letra de las canciones tiene derechos de autor: úsala para guardar tu trabajo o llevarlo a otro equipo tuyo. Pasarla a otras personas puede infringir esos derechos y queda bajo tu responsabilidad. |
+| `paq.aviso.existe` | Ya hay un archivo con este nombre. Se sustituirá solo cuando el paquete nuevo esté terminado; si cancelas o falla, se conserva. |
+| `paq.aviso.espacio` | Puede que no quepa: ocupará unos {tamaño} y quedan {libre} libres en ese disco. |
+| `paq.exp.boton` | Exportar paquete · (archivo existente) Exportar y sustituir |
+| `paq.exp.progreso.titulo` | Creando el paquete |
+| `paq.exp.progreso` | Guardando «{título}»… {i} de {n} · (una) Guardando «{título}»… |
+| `paq.exp.segundoPlano` | Puedes cerrar este cuadro: el paquete se sigue creando. — [Cancelar] [Seguir en segundo plano] |
+| `paq.exp.ok.titulo` | Paquete creado |
+| `paq.exp.ok` | {nombre} · {n} canciones · {tamaño} · En {carpeta} — [Cerrar] [Mostrar en la carpeta] |
+| `paq.exp.omitidas` | {k} canciones no se pudieron guardar: · (k = 1) 1 canción no se pudo guardar: |
+| `paq.toast.ok` | Paquete creado: {n} canciones, {tamaño}. — [Mostrar en la carpeta] |
+| `paq.toast.cancelado` | Paquete cancelado. No se ha guardado nada. |
+| `paq.error.SIN_ESPACIO` | No queda espacio en el disco. Libera espacio o guarda el paquete en otra carpeta. — [Reintentar] |
+| `paq.error.DESTINO_NO_DISPONIBLE` | No se puede guardar en esa carpeta. No tienes permiso para escribir en ella o el disco no está disponible. Elige otra con «Cambiar…». |
+| `paq.error.generico` | Algo salió mal al crear el paquete. Vuelve a intentarlo. — [Copiar detalles] [Reintentar] |
+| `act.paq` | Creando paquete · {i} de {n} · Importando paquete · {i} de {n} |
+| `paq.imp.titulo` | Importar paquete · (copia de seguridad) Restaurar copia de seguridad |
+| `paq.imp.leyendo` | Leyendo el paquete… |
+| `paq.imp.resumen` | Creado el {fecha} con Shinobi Karaoke {versión} · {completo/ligero} · {n} canciones · {t} temas · {tamaño} |
+| `paq.imp.estado.nueva` | Nueva |
+| `paq.imp.estado.existe` | Ya la tienes. La del paquete es más reciente ({fecha}; la tuya, {fecha}). · Ya la tienes. La del paquete es más antigua ({fecha}; la tuya, {fecha}). |
+| `paq.imp.estado.igual` | Ya la tienes igual: se omite |
+| `paq.imp.estado.noDisponible` | No se puede leer en este paquete |
+| `paq.imp.paraExistentes` | Para las que ya tienes: Omitir · Sustituir · Conservar las dos · (varias respuestas) Mixto |
+| `paq.imp.aria.decision` | Qué hacer con «{título}» |
+| `paq.imp.nota.sustituir` | La tuya irá a la papelera de tu sistema. |
+| `paq.imp.nota.ligeroSustituir` | Se sustituyen la letra, los tiempos y el estilo. Tu audio se conserva. |
+| `paq.imp.nota.ligeroNueva` | Sin audio: entrará como borrador y habrá que volver a añadir su audio. |
+| `paq.imp.nota.parecida` | Tienes otra canción con el mismo título y artista. Se importará como una canción aparte. |
+| `paq.imp.tituloCopia` | {título} (importada) |
+| `paq.imp.temas` | Temas: {a} nuevos · {b} ya los tienes[ · {c} entran como copia] — [Ver los temas] |
+| `paq.imp.temaCopia` | {nombre} (importado) |
+| `paq.imp.temasSoloLectura` | Tus temas son de una versión más nueva y no se pueden cambiar: las canciones entrarán con su aspecto guardado. |
+| `paq.imp.espacio` | Hacen falta {tamaño}; tienes {libre} libres. · (no cabe) ⚠ Hacen falta {tamaño} y solo tienes {libre} libres. |
+| `paq.imp.boton` | Importar {n} canciones · Importar 1 canción · (copia) Restaurar {n} canciones |
+| `paq.imp.nada` | No hay nada que importar: ya tienes todas estas canciones. |
+| `paq.imp.progreso` | Importando «{título}»… {i} de {n} |
+| `paq.imp.resultado` | Se importaron {a} de {n} canciones. · (todas) Se importaron {n} canciones. |
+| `paq.imp.fila` | Importada · Sustituida (la anterior está en la papelera) · Importada como «{título} (importada)» · Omitida: ya la tenías · {motivo de fallo} |
+| `paq.imp.fallo.incompleta` | El paquete está incompleto: faltan sus pistas. |
+| `paq.imp.fallo.guardar` | No se pudo guardar. — [Copiar detalles] |
+| `paq.imp.toast` | {n} canciones importadas. · (n = 1) «{título}» importada. |
+| `paq.imp.error` | (títulos y textos de la tabla «Errores de lectura») — [Elegir otro archivo] [Cerrar] |
+| `lrc.menu` | Exportar la letra (.lrc)… |
+| `lrc.motivo.sinTiempos` | Esta canción aún no tiene ninguna línea sincronizada. |
+| `lrc.nombre` | {título} — {artista}.lrc · (sin artista) {título}.lrc |
+| `lrc.toast.ok` | Letra exportada. — [Mostrar en la carpeta] |
+| `lrc.toast.omitidas` | Letra exportada sin {k} líneas que aún no tienen tiempo. — [Mostrar en la carpeta] |
+| `lrc.toast.varias` | {n} letras exportadas a «{carpeta}». — [Mostrar la carpeta] |
+| `lrc.toast.error` | No se pudo guardar la letra en esa carpeta. — [Copiar detalles] |
+
+### Criterios de aceptación de la feature 9 (biblioteca)
+
+- F9-1. El ⋯ de una tarjeta Lista, Letra lista o Borrador muestra «Exportar paquete…» y «Exportar la letra (.lrc)…»; en una canción sin ninguna línea con inicio, el segundo está `aria-disabled` con `lrc.motivo.sinTiempos`.
+- F9-2. «Exportar paquete» muestra las dos opciones con su tamaño estimado (± 10 % del tamaño real en el completo; test con una biblioteca semilla), el destino propuesto con la extensión del paquete y, siempre, `paq.aviso.derechos` (variante ligera al elegir «Ligero»). La palabra «compartir» no aparece en ningún texto de la feature.
+- F9-3. Exportar un paquete completo de 3 canciones crea un único archivo en el destino; durante la creación no existe ningún archivo con el nombre final (solo el temporal); cancelar a mitad no deja nada en la carpeta y conserva un archivo previo con ese nombre; al terminar, «Mostrar en la carpeta» lo abre.
+- F9-4. El trabajo aparece en el panel de actividad con [Ir] y [✕], cuenta en el indicador y en el diálogo de cierre de la app; con el diálogo cerrado, al terminar sale `paq.toast.ok`.
+- F9-5. Importar en una biblioteca vacía un paquete completo de 3 canciones (una Lista, una Letra lista, un borrador) deja las 3 con su estado, letra, tiempos, tiempos por palabra hechos a mano, estilo, tema y fecha de añadido idénticos a los de origen (comparación de `cancion.json` salvo rutas), y la Lista se reproduce al momento.
+- F9-6. Importar un paquete con una canción nueva, una ya existente modificada después en la biblioteca y una idéntica muestra «Nueva», «Ya la tienes. La del paquete es más antigua» e «Ya la tienes igual: se omite»; con «Omitir» (por defecto) el botón dice «Importar 1 canción» y la existente no cambia byte a byte.
+- F9-7. «Sustituir» deja la canción del paquete en la biblioteca y la anterior en la papelera del sistema; «Conservar las dos» añade una canción nueva con el título «{título} (importada)» y otro identificador, sin tocar la existente. El selector de una fila cambia solo esa canción y el control general pasa a «Mixto».
+- F9-8. Un paquete **ligero** importado en un equipo sin la canción crea un borrador sin audio con su letra y sus tiempos, cuya tarjeta dice «Falta descargar el audio» (origen YouTube) o «Falta preparar el audio» (archivo); tras volver a obtener el audio y separar, los tiempos siguen ahí. Importado con «Sustituir» sobre una canción existente con pistas, cambia letra, tiempos y estilo y conserva las pistas (los archivos de audio no cambian byte a byte).
+- F9-9. Temas: un tema idéntico no se duplica; uno con el mismo identificador y otro aspecto entra como «{nombre} (importado)» y las canciones existentes que usaban el original no cambian de aspecto; una canción importada que heredaba su tema del álbum queda con ese tema asignado y se ve igual que en origen.
+- F9-10. Un archivo que no es un paquete, uno de un esquema más nuevo y uno truncado muestran `PAQUETE_NO_VALIDO`, `PAQUETE_VERSION_NUEVA` y `PAQUETE_INCOMPLETO` con sus textos; en ninguno de los tres casos cambia la biblioteca. Con un paquete truncado del que se leen 2 de 3 canciones, esas 2 se pueden importar y la tercera aparece como no disponible.
+- F9-11. Cancelar una importación a mitad conserva las canciones ya importadas completas y no deja ninguna a medias (la carpeta de preparación queda vacía).
+- F9-12. Arrastrar un `.shinobi` sobre la Biblioteca abre el diálogo de importar con ese archivo; arrastrar un audio sigue abriendo la vista 03. El estado vacío muestra el enlace de restaurar o importar.
+- F9-13. «Exportar la letra (.lrc)…» abre el diálogo «Guardar» del sistema con el nombre propuesto y escribe un LRC en UTF-8 con la cabecera, una marca por línea con inicio (con el desplazamiento aplicado), marcas vacías en el fin de las líneas seguidas de 2 s o más de silencio y sin las líneas sin inicio (test de la función pura con una letra de ejemplo: texto exacto esperado). Volver a importar ese archivo en una canción nueva da los mismos inicios (± 10 ms) y los mismos fines en las líneas con marca vacía.
+- F9-14. Exportar la letra de 4 canciones seleccionadas, una sin tiempos, escribe 3 archivos en la carpeta elegida sin sustituir ninguno existente (añade « (2)») y el resultado lista la omitida con su motivo.
+- F9-15. Todos los diálogos de la feature son operables solo con teclado, Esc no cancela un paquete en creación, y los estados de la lista de importación se distinguen sin color.
+- F9-16. Capturas en `docs/ux/revision-0.2.2-feature-9/` con nombre `biblioteca-{ancho}x{alto}-{escala}-{estado}.png` a 1280 × 800 al 100 % y 1280 × 720 al 125 %: `exportar-paquete`, `exportar-paquete-ligero`, `creando-paquete`, `paquete-creado`, `importar-revisar`, `importar-conflictos`, `importar-resultado`, `paquete-version-nueva`, `vacio-con-enlace`, `tarjeta-sin-audio`.
+
+**Verificación manual**: crear una copia completa de la biblioteca real, restaurarla en otro equipo (o en otra carpeta de datos del canal de desarrollo) y cantar una canción; llevar un paquete ligero a un equipo sin esas canciones, volver a descargar una de YouTube y comprobar si la letra sigue cuadrando con el audio nuevo; abrir un `.lrc` exportado en un reproductor externo que muestre letras (por ejemplo VLC con el archivo junto al audio) y comprobar que las líneas se borran en los silencios largos.
+
+## 0.2.2 · Feature 11 — Revisión guiada en la Biblioteca
+
+Origen: [plan 0.2.2, feature 11](../versiones/0.2.2/plan-4.md) y propuesta [023](../propuestas/023-revision-guiada-de-lineas-dudosas.md). El recorrido, los motivos y las marcas viven en el editor: [06 · 0.2.2 · Feature 11](06-editor.md#022--feature-11--revisión-guiada-de-líneas-dudosas). El estado «Lista para revisar», su tarjeta y sus botones «Revisar» y «Probar» los define la **feature 5** (otro diseñador, en esta spec). Aquí solo se dice **qué añade la revisión guiada a esa tarjeta** y cuándo una canción pasa a «Lista».
+
+### Cuándo pasa una canción de «Lista para revisar» a «Lista»
+
+- **Nunca sola.** La app prepara y señala; el paso a «Lista» o «Letra lista» lo da siempre el usuario.
+- **Las líneas dudosas no bloquean.** Las condiciones para marcar como lista son las de siempre (pistas separadas y todas las líneas con inicio). Con líneas dudosas sin revisar, la app **avisa una vez** antes de marcar (`edi.revision.pendientes` en el editor; `bib.revision.dialogo` aquí) y deja seguir **(decisión provisional)**.
+- **Dónde se marca**: en el editor (botones del dock y final de la revisión guiada, spec 06) y, desde la tarjeta, con los ítems nuevos del menú ⋯ (abajo).
+
+### Qué añade a la tarjeta «Lista para revisar»
+
+```
+│ Semestre de Otoño                │
+│ Artista · 3:48                   │
+│ ◐ Neón · del álbum               │
+│ (◔ Lista para revisar)      [⋯]  │  insignia de la feature 5
+│ Letra elegida automáticamente    │  línea de origen de la feature 5 (si aplica)
+│ ⚑ 4 líneas por revisar           │  ← nuevo: `bib.revision.linea` (t-pequeno, icono `flag` 14 px)
+│ [Revisar]  [▶ Probar]            │  feature 5
+```
+La tarjeta completa está en [Feature 5 · Tarjeta «Lista para revisar»](#tarjeta-lista-para-revisar); aquí solo se define la línea ⚑ y los ítems del menú.
+
+| Elemento | Comportamiento |
+|---|---|
+| **Línea de revisión** | Bajo la línea de paso «Lista para revisar»: `bib.revision.linea` con el número de líneas dudosas **pendientes** (las que la app señala y el usuario aún no ha dado por buenas ni ha corregido). Con 0: `bib.revision.sinDudas` con icono `check` en `texto-2`. El número lo da main en el resumen de la canción y se actualiza en vivo. Icono + texto; color `aviso` solo en el icono. |
+| **«Revisar»** (feature 5) | Abre el editor con la **revisión guiada ya empezada** en la primera línea pendiente (spec 06). Con 0 pendientes, abre el editor con el panel de fin de revisión («No vemos nada raro…»), desde donde se marca como lista. |
+| **Menú ⋯** | En un borrador «Lista para revisar» se añaden, tras «Continuar»: **«Marcar como lista»** y **«Marcar como letra lista»** (`bib.revision.menu`). Hacen lo mismo que los botones del dock del editor, sin abrirlo: con líneas pendientes, antes muestran `bib.revision.dialogo`; al marcar, la tarjeta se resalta 2 s y sale `bib.toast.lista` / `bib.toast.letraLista` (con el aviso de primera activación de «Letra lista» si no está silenciado). **(Decisión provisional.)** Durante una sesión en otra pantalla siguen disponibles (no abren el editor). |
+| **[Marcar como lista] del toast tras «Probar»** (`bib.prep.toast.probada`, feature 5) | Misma regla que el ítem del menú: con líneas pendientes muestra antes `bib.revision.dialogo`. |
+| **Tarjetas Lista y Letra lista** | No muestran línea de revisión aunque el editor señale líneas (evita insistir en canciones que el usuario ya dio por terminadas). La revisión sigue disponible en el editor. |
+| **Lectores de pantalla** | `bib.aria.tarjeta` añade la línea de revisión a la línea de paso. |
+
+```
+┌ ¿Marcar como lista sin revisar? ─────────────────────────────┐
+│ «Semestre de Otoño» tiene 4 líneas que conviene escuchar     │
+│ antes de cantarla. Puedes revisarlas ahora (son un par de    │
+│ minutos) o marcarla igualmente y revisarlas después.         │
+│                [Cancelar] [Marcar igualmente] [Revisar ahora] │
+└──────────────────────────────────────────────────────────────┘
+```
+«Revisar ahora» es el primario y tiene el foco inicial; Esc = Cancelar.
+
+### Microcopy (feature 11, biblioteca)
+
+| Clave | Texto |
+|---|---|
+| `bib.revision.linea` | {n} líneas por revisar · (n = 1) 1 línea por revisar |
+| `bib.revision.sinDudas` | Sin líneas dudosas |
+| `bib.revision.menu` | Marcar como lista · Marcar como letra lista |
+| `bib.revision.dialogo` | Título: ¿Marcar como lista sin revisar? · Cuerpo: «{título}» tiene {n} líneas que conviene escuchar antes de cantarla. Puedes revisarlas ahora (son un par de minutos) o marcarla igualmente y revisarlas después. · (n = 1) «{título}» tiene 1 línea que conviene escuchar antes de cantarla. … — [Cancelar] [Marcar igualmente] [Revisar ahora] |
+
+### Criterios de aceptación de la feature 11 (biblioteca)
+
+- F11-B1. Una tarjeta «Lista para revisar» con 4 líneas dudosas pendientes muestra «⚑ 4 líneas por revisar»; al dar por buenas dos en el editor y volver, muestra 2; con 0, «Sin líneas dudosas». Las tarjetas Lista y Letra lista no muestran esa línea.
+- F11-B2. «Revisar» abre el editor con la revisión guiada activa en la primera línea pendiente (y, con 0 pendientes, con el panel de fin de revisión).
+- F11-B3. «Marcar como lista» del ⋯ de una «Lista para revisar» con pendientes muestra `bib.revision.dialogo` con el foco en «Revisar ahora»; «Marcar igualmente» la marca sin abrir el editor y la tarjeta pasa a «✓ Lista» con su toast; sin pendientes, marca sin diálogo. Ninguna canción pasa a «Lista» sin una acción del usuario (test: tras una preparación desatendida completa, `estado` sigue siendo `borrador`).
+- F11-B4. Captura `docs/ux/revision-0.2.2-feature-11/biblioteca-1280x800-100-lista-para-revisar.png` con una tarjeta con líneas por revisar, una sin líneas dudosas y el menú ⋯ abierto.
+
+**Lo que esta feature necesita de la feature 5**: (1) que el botón «Revisar» de la tarjeta navegue al editor pidiendo la revisión guiada; (2) sitio para una segunda línea bajo «Lista para revisar»; (3) que el resumen de la canción lleve el número de líneas dudosas pendientes; (4) que «Lista para revisar» siga siendo un borrador (`estado: borrador`) hasta que el usuario marque.
+
+## 0.2.2 · Feature 5 — «Lista para revisar» y bandeja de pendientes
+
+Origen: [plan 0.2.2, feature 5](../versiones/0.2.2/plan-4.md) y [propuesta 020](../propuestas/020-preparacion-desatendida.md). La cadena de preparación, sus reglas y sus avisos: [04 · 0.2.2 · Feature 5](04-progreso-pipeline.md#022--feature-5--preparación-desatendida). Letra: [05 · 0.2.2 · Feature 5](05-letra.md#022--feature-5--preparación-desatendida-la-vista-letra). Contratos pendientes: [0153](../preguntas/0153-contratos-de-las-features-4-a-7-para-las-specs.md). Decisiones provisionales: [0154](../preguntas/0154-decisiones-provisionales-de-ux-de-las-features-4-a-7.md). Esta sección **amplía** la vista.
+
+**Sustituye**: las filas «Sin letra» y «Todo hecho salvo marcar» de la tabla «Línea de paso de un borrador», la fila «Borrador» de «Estados», la anatomía de la tarjeta de un borrador terminado y el menú ⋯ del borrador (ítems nuevos). En el wireframe de la feature 11 de esta spec, las líneas «(✎ Borrador)» y «Lista para revisar» se leen como la **insignia** «Lista para revisar» definida aquí; su línea «⚑ {n} líneas por revisar» ocupa el sitio de la línea de paso.
+
+### Cómo se relacionan los estados
+
+El estado **guardado** sigue teniendo dos valores (borrador y lista). «Lista para revisar» es un borrador al que ya no le falta nada salvo el visto bueno del usuario; se **deriva**, no se guarda.
+
+| Lo que ve el usuario | Estado guardado | Qué significa | Filtro | Acción principal |
+|---|---|---|---|---|
+| **✎ Borrador** | borrador | Falta algo: lo está haciendo la app (descargar, separar, buscar la letra) o lo tiene que hacer el usuario (elegir o añadir la letra, sincronizar líneas). | Borradores | Continuar · Reintentar · Elegir la letra · Añadir la letra |
+| **◔ Lista para revisar** | borrador | Pistas separadas y letra con **todas** las líneas con inicio. Da igual si lo hizo la app o el usuario. Solo falta escucharla y marcarla. | Borradores (y su casilla de la bandeja) | Revisar · Probar |
+| **✓ Lista** | lista | El usuario la dio por buena; se canta con barrido. | Listas | Reproducir · Editar |
+| **▤ Letra lista** | lista | El usuario la dio por buena; se canta sin barrido. | Listas | Reproducir · Editar |
+| **✕ Dañada** | — | No se puede abrir o le faltan las pistas. | Todas | Menú de recuperación |
+
+- El paso de «Lista para revisar» a «Lista» o «Letra lista» lo da **siempre el usuario** (editor, o menú ⋯ con la feature 11). La app nunca lo da sola **(decisión provisional: no hay ajuste «marcar como Letra lista automáticamente»)**.
+- Una «Lista para revisar» **no** se puede poner en la cola de reproducción, ni reproducir en otra pantalla, ni exportar a video desde la tarjeta: para eso hay que marcarla. Sí se puede **probar** (abajo).
+- Si a una «Lista para revisar» se le borra el tiempo de una línea o se le quita la letra, vuelve a «✎ Borrador» con su línea de paso.
+
+### Tarjeta «Lista para revisar»
+
+```
+┌──────────────────────────┐
+│ PORTADA 16:9             │  sin botón ▶ redondo (no es una Lista)
+├──────────────────────────┤
+│ Semestre de Otoño                │
+│ Artista · 3:48                   │
+│ ◐ Neón · del álbum               │
+│ (◔ Lista para revisar)      [⋯]  │  ← insignia: icono `list-checks` + texto, colores de `info`
+│ Letra elegida automáticamente    │  ← línea de origen (t-pequeno, texto-2); solo si la eligió la app
+│ ⚑ 4 líneas por revisar           │  ← feature 11 (si existe)
+│ [Revisar]  [▶ Probar]            │
+└──────────────────────────┘
+```
+
+| Elemento | Comportamiento |
+|---|---|
+| **Insignia** | `bib.estado.revisar` con icono `list-checks` 14 px, fondo `info-tenue` y texto `info`. `title` con `bib.estado.revisar.ayuda`. Se distingue de «✎ Borrador» (contorno `aviso`) y de «✓ Lista» (`exito`) por icono y texto, no solo por color. |
+| **Línea de origen** | `bib.prep.origen.auto` mientras la letra la haya elegido la app y la canción no se haya revisado (0153 §4). Si además se corrigió el desfase: `bib.prep.origen.autoCorregida`. Cuando la letra la eligió, pegó o importó el usuario, no hay línea de origen. |
+| **Revisar** (secundario, icono `list-checks`) | Abre el Editor de la canción (con la feature 11, en su revisión guiada). Es la acción de la **portada**, de **Intro** y de **Espacio**. Durante una sesión en otra pantalla: candado y diálogo `edi.bloqueo`. |
+| **▶ Probar** (fantasma, icono `play`) | Abre el reproductor local a pantalla completa con la canción tal como está, igual que «▶ Reproducir» de una Lista (pantalla de título, instrumental, voz guía con su ajuste), pero **sin** cambiar su estado. Al salir se vuelve a la Biblioteca con el foco en la tarjeta y aparece el toast `bib.prep.toast.probada` con [Marcar como lista] y [Revisar] (10 s). [Marcar como lista] hace lo mismo que el botón del editor (con el aviso de líneas dudosas de la feature 11 si procede). Durante una sesión en otra pantalla: `aria-disabled` con `bib.prep.probar.sesion` (solo hay un transporte audible). **(Decisión provisional: una «Lista para revisar» se puede probar desde la Biblioteca, pero no encolar.)** |
+| **Ancho** | Los dos botones caben en una fila desde 240 px, como «Reproducir» y «Editar». |
+| **Menú ⋯** | *Revisar*, *Probar*, *(feature 11: Marcar como lista · Marcar como letra lista)*, *Editar datos*, *Aplicar tema…*, *(feature 9: Exportar paquete… · Exportar la letra…)*, *Mostrar en la carpeta*, *Eliminar…*. «Revisar» sustituye a «Continuar». |
+| **Modo selección** | Se puede seleccionar; los botones se ocultan como en las demás tarjetas. |
+| **Lectores de pantalla** | `bib.aria.tarjeta` usa como estado «Lista para revisar» y, como línea de paso, la de origen (y la de la feature 11). |
+| **Al llegar a este estado con la Biblioteca abierta** | La insignia y los botones cambian en vivo, sin mover la tarjeta ni el foco (regla de siempre). |
+
+### Línea de paso de un borrador: filas nuevas
+
+Se añaden a la tabla de la spec base (misma prioridad: trabajo activo, luego problemas, luego lo que falta):
+
+| Situación | Texto | Extra |
+|---|---|---|
+| Buscando la letra (trabajo vivo) | ⟳ Buscando la letra… | barra indeterminada |
+| Comprobando la letra con la voz | ⟳ Comprobando la letra… | barra indeterminada |
+| Ajustando los fines | ⟳ Ajustando los fines… | barra indeterminada |
+| Hay candidatas y ninguna segura | Elige la letra · {n} candidatas | botón **Elegir la letra** (abre Letra, spec 05) |
+| No se encontró ninguna | No encontramos la letra | botón **Añadir la letra** |
+| Instrumental según LRCLIB | Instrumental, según LRCLIB | botón **Añadir la letra** |
+| La búsqueda falló por red o servicio | Letra pendiente: sin conexión | botón **Reintentar** (repite la búsqueda sin salir de la Biblioteca) |
+| Sin letra y sin búsqueda (interruptor desactivado o canción anterior a 0.2.2) | Falta la letra | botón **Continuar** (como hoy) y «Preparar» en el ⋯ |
+| Todo hecho salvo marcar | (no hay línea de paso: la tarjeta pasa a «Lista para revisar») | Revisar · Probar |
+
+- «Elige la letra», «No encontramos la letra» e «Instrumental…» van en `texto-1` con icono `circle-alert` en `aviso` (necesitan al usuario); «Letra pendiente…» con icono `wifi-off` en `texto-2`; «Falta la letra» sigue en `texto-2` sin icono.
+- Si la separación sigue en curso y la letra ya tiene resultado, manda el trabajo activo (regla de siempre); el resultado de la letra se ve al terminar.
+
+### «Preparar» una canción
+
+Ítem nuevo del menú ⋯ de un **borrador**, tras «Continuar»: **«Preparar»** (`bib.prep.menu`, icono `wand-sparkles`). Es la misma operación que lanza la feature 8 para varias canciones.
+
+| Aspecto | Comportamiento |
+|---|---|
+| **Qué hace** | Continúa la cadena de la spec 04 desde el primer paso pendiente: descargar (YouTube con la descarga pendiente), separar, buscar la letra, comprobarla, ajustar los fines. Nunca sustituye una letra existente ni toca tiempos editados. |
+| **Cuándo aparece** | En borradores a los que les falta algún paso que la app puede hacer sola. No aparece en «Lista para revisar», Listas, Letra lista ni Dañadas, ni en una canción que ya se está preparando. |
+| **Privacidad** | Es una búsqueda **iniciada por el usuario**: funciona aunque «Buscar la letra automáticamente» esté desactivado. El ítem lleva la descripción `bib.prep.menu.ayuda` (segunda línea del ítem, `texto-3`) cuando va a buscar letra. |
+| **Al pulsar** | Sin diálogo. Toast `bib.prep.toast.preparando`; la tarjeta muestra su línea de paso. Con una sola canción, el resultado llega con el toast de la spec 04. |
+| **Canciones de antes de 0.2.2** | Los borradores que ya existen no se preparan solos al actualizar: se preparan con este ítem o con «Preparar» de la selección múltiple **(decisión provisional)**. |
+
+**Lo que esta sección ofrece a las features 8 y 11** (respuesta a sus notas de coordinación): (1) «Preparar» es una operación de main que se pide para una o varias canciones y que, sin ejecutarse, dice para cada una si aplica y qué hará (0153 §7); (2) continúa desde el primer paso pendiente sin sustituir letra ni tiempos; (3) el resultado por canción es uno de: lista para revisar, elige la letra, no encontramos la letra (o instrumental), letra pendiente, error o cancelada; (4) al cerrar y reabrir, las preparaciones en cola se retoman solas (spec 04); (5) «Revisar» navega al editor y la feature 11 decide el modo; (6) hay sitio para una línea bajo la insignia; (7) «Lista para revisar» es siempre `estado: borrador`.
+
+### Bandeja de pendientes
+
+Una fila bajo la barra de herramientas, **solo si hay algo pendiente**:
+
+```
+│ [Todas 29|Listas 12|Borradores 17]  Agrupar por […]  [☑ Seleccionar]  [🔍 …]              │
+│ Pendientes de ti:  [◔ 9 listas para revisar]  [! 3 esperan letra]  [✕ 1 con error]        │
+```
+
+| Casilla | Cuenta |
+|---|---|
+| **Listas para revisar** | Borradores en «Lista para revisar». |
+| **Esperan letra** | Borradores sin letra que necesitan al usuario o a la red: «Elige la letra», «No encontramos la letra», «Instrumental…», «Letra pendiente…» y «Falta la letra». |
+| **Con error** | Borradores con un paso en error o interrumpido. |
+
+| Aspecto | Regla |
+|---|---|
+| **Qué son** | Botones de alternancia (`aria-pressed`) con icono, número y texto. Solo se muestran los que tienen 1 o más canciones; si todos están a 0, la fila no existe. Los números se actualizan en vivo. |
+| **Pulsar uno** | Filtra la rejilla a esas canciones: el filtro de estado pasa a «Borradores» y se aplica además la casilla. Se combina con la búsqueda y la agrupación. Solo una casilla activa a la vez. |
+| **Quitarlo** | Pulsar de nuevo la casilla o elegir cualquier opción del filtro de estado. |
+| **Persistencia** | Como el filtro de estado: dura la sesión. |
+| **Con selección múltiple** | La combinación natural: casilla «Esperan letra» → «Seleccionar visibles» → «Preparar» (feature 8). La bandeja sigue visible en el modo selección. |
+| **Sin resultados** | Si la casilla activa se queda en 0 (porque las canciones cambiaron de estado), se desactiva sola y la rejilla vuelve a «Borradores». Con búsqueda sin coincidencias, los mensajes de siempre. |
+| **Ancho** | Una fila a 1024 px; con el panel de cola abierto, las casillas pueden pasar a una segunda línea sin partir su texto. |
+| **Teclado y lectores** | Grupo con nombre `bib.bandeja.titulo`; cada casilla anuncia su número y si está activa. El cambio de resultados se anuncia con `bib.anuncio.resultados` (fase 3). |
+
+### Avisos de reanudación
+
+Encima de la bandeja, como aviso en línea (`info`) que se puede cerrar:
+
+| Situación | Aviso |
+|---|---|
+| Al abrir la app había preparaciones a medias y se han retomado (spec 04) | `bib.prep.retomando` con [Detener] (pausa la cola; el aviso pasa al de abajo). Se cierra solo cuando terminan. |
+| Al abrir la app la cola estaba en pausa | `bib.prep.enPausa` con [Reanudar]. |
+
+### Estados (0.2.2 · feature 5, biblioteca)
+
+| Estado | Presentación |
+|---|---|
+| Vacío | Biblioteca vacía: sin bandeja. |
+| Cargando / procesando | Tarjetas con las líneas ⟳ nuevas. |
+| Necesita al usuario | Línea con `circle-alert` y su botón; cuenta en «Esperan letra». |
+| Sin red | «Letra pendiente: sin conexión» con [Reintentar]; la separación no se ve afectada. |
+| Error | Como en 0.2.1 (insignia y línea de error); cuenta en «Con error». |
+| Éxito | Tarjeta «Lista para revisar». |
+| Sesión en otra pantalla | «Revisar», «Elegir la letra» y «Añadir la letra» muestran `edi.bloqueo`; «Probar» inactivo; «Preparar» y [Reintentar] siguen disponibles (no editan nada que suene). |
+
+### Microcopy (0.2.2 · feature 5, biblioteca)
+
+| Clave | Texto |
+|---|---|
+| `bib.estado.revisar` | Lista para revisar |
+| `bib.estado.revisar.ayuda` | Ya tiene pistas y letra sincronizada. Escúchala y márcala como lista para poder cantarla. |
+| `bib.prep.origen.auto` | Letra elegida automáticamente |
+| `bib.prep.origen.autoCorregida` | Letra elegida automáticamente · desfase corregido |
+| `bib.accion.revisar` | Revisar |
+| `bib.accion.revisar.aria` | Revisar «{título}» |
+| `bib.accion.probar` | Probar |
+| `bib.accion.probar.aria` | Probar «{título}» a pantalla completa |
+| `bib.prep.probar.sesion` | No se puede probar mientras el reproductor está abierto en otra pantalla. |
+| `bib.prep.toast.probada` | ¿Qué tal «{título}»? — [Marcar como lista] [Revisar] |
+| `bib.paso.letra.buscando` | Buscando la letra… |
+| `bib.paso.letra.comprobando` | Comprobando la letra… |
+| `bib.paso.letra.fines` | Ajustando los fines… |
+| `bib.paso.letra.elige` | Elige la letra · {n} candidatas · (n = 1) Elige la letra · 1 candidata |
+| `bib.paso.letra.noEncontrada` | No encontramos la letra |
+| `bib.paso.letra.instrumental` | Instrumental, según LRCLIB |
+| `bib.paso.letra.pendiente` | Letra pendiente: sin conexión · Letra pendiente: el servicio no responde |
+| `bib.accion.elegirLetra` | Elegir la letra |
+| `bib.accion.anadirLetra` | Añadir la letra |
+| `bib.prep.menu` | Preparar |
+| `bib.prep.menu.ayuda` | Busca la letra en LRCLIB con el título y el artista |
+| `bib.prep.toast.preparando` | Preparando «{título}». Te avisaremos al terminar. |
+| `bib.bandeja.titulo` | Pendientes de ti: |
+| `bib.bandeja.revisar` | {n} listas para revisar · (n = 1) 1 lista para revisar |
+| `bib.bandeja.letra` | {n} esperan letra · (n = 1) 1 espera letra |
+| `bib.bandeja.error` | {n} con error |
+| `bib.prep.retomando` | Retomando {n} canciones que quedaron a medias al cerrar. — [Detener] · (n = 1) Retomando 1 canción que quedó a medias al cerrar. — [Detener] |
+| `bib.prep.enPausa` | Hay {n} canciones en pausa, a medio preparar. — [Reanudar] · (n = 1) Hay 1 canción en pausa, a medio preparar. — [Reanudar] |
+| `bib.menu.revisar` | Revisar · Probar |
+
+### Criterios de aceptación (0.2.2 · feature 5, biblioteca)
+
+- F5-B1. Un borrador con la separación completada y todas sus líneas con inicio muestra la insignia «Lista para revisar» (icono y texto, colores `info`), sin línea «Falta…», con «Revisar» y «▶ Probar» en una fila desde 240 px; cuenta en el filtro *Borradores* y no en *Listas*; su `estado` guardado es `borrador`.
+- F5-B2. Portada, Intro, Espacio y «Revisar» abren el editor de esa canción; «Probar» abre el reproductor a pantalla completa sin cambiar el estado y, al salir, el foco vuelve a la tarjeta y aparece `bib.prep.toast.probada`, cuyo [Marcar como lista] la deja «✓ Lista».
+- F5-B3. Una «Lista para revisar» no ofrece «A la cola», «Reproducir en otra pantalla…» ni «Exportar video…»; durante una sesión, «Revisar» muestra `edi.bloqueo` y «Probar» está `aria-disabled` con su motivo.
+- F5-B4. Cada resultado de la preparación muestra su línea de paso y su botón según la tabla: «Elige la letra · {n} candidatas» → Letra en A con las candidatas; «No encontramos la letra» → Letra con su banner; «Letra pendiente…» → [Reintentar] repite la búsqueda sin salir de la Biblioteca.
+- F5-B5. Con la letra elegida por la app, la tarjeta muestra `bib.prep.origen.auto` (o `.autoCorregida`) hasta que la canción se revisa; con la letra elegida por el usuario, no la muestra.
+- F5-B6. «Preparar» del ⋯ de un borrador sin letra lanza la búsqueda aunque el interruptor de Ajustes esté desactivado, muestra `bib.prep.toast.preparando` y la tarjeta pasa por las líneas ⟳; no aparece en «Lista para revisar», Listas ni Dañadas. En un borrador con letra del usuario, no la sustituye.
+- F5-B7. Con 9 listas para revisar, 3 que esperan letra y 1 con error, la bandeja muestra las tres casillas con sus números; pulsar una filtra la rejilla a esas canciones con el filtro en *Borradores*; pulsarla de nuevo o elegir otro filtro la quita; con todo a 0 la fila no existe.
+- F5-B8. Al cambiar de estado una canción con la Biblioteca abierta, su tarjeta y los números de la bandeja se actualizan sin mover el foco ni reordenar.
+- F5-B9. Tras reabrir la app con preparaciones a medias aparece `bib.prep.retomando`; [Detener] pausa la cola y muestra `bib.prep.enPausa`; [Reanudar] la retoma.
+- F5-B10. `bib.aria.tarjeta` dice «Lista para revisar» y la línea de origen; cada casilla de la bandeja anuncia número y estado; todo se opera con teclado.
+- F5-B11. Capturas en `docs/ux/revision-0.2.2-feature-5/`, nombre `biblioteca-1280x800-100-{estado}.png`: `lista-para-revisar` (con una Lista, una Lista para revisar, un «Elige la letra» y un «No encontramos la letra»), `bandeja`, `bandeja-filtrada`, `retomando`, y `biblioteca-1024x640-100-bandeja`.
+
+**Verificación manual** (guía de `docs/Test-manuales/0.2.2/`): con la biblioteca real, usar «Preparar» en los 5 borradores sin letra del lote del 10 de noviembre y anotar a qué estado llega cada uno; comprobar que la diferencia entre «Borrador», «Lista para revisar» y «Lista» se entiende de un vistazo en una TV; probar una canción desde la tarjeta y marcarla como lista desde el toast.
+
+## 0.2.2 · Feature 7 — Lotes en la Biblioteca
+
+Origen: [plan 0.2.2, feature 7](../versiones/0.2.2/plan-4.md) y [propuesta 021](../propuestas/021-importacion-por-lotes.md). El lote se arma en [03 · 0.2.2 · Feature 7](03-anadir-cancion.md#022--feature-7--importación-por-lotes) y avanza en [04 · 0.2.2 · Feature 7](04-progreso-pipeline.md#022--feature-7--cola-de-preparación-de-un-lote). Aquí solo está lo que cambia en la Biblioteca.
+
+**Sustituye**: el criterio 9 (arrastrar sobre la ventana) y las claves `bib.arrastrar.varios` y `bib.vacia.cuerpo`.
+
+| Elemento | Comportamiento |
+|---|---|
+| **Arrastrar sobre la ventana** | Un archivo: como hoy (abre la vista 03 con él). **Varios archivos o una carpeta**: abre la vista 03 en modo lote con todos (ya no se usa solo el primero ni se muestra «Añade las canciones de una en una»). Los archivos de paquete (`.shinobi`, feature 9) no entran en el lote: si se sueltan solos, los atiende la feature 9; mezclados con audio, se ignoran con el aviso `add.lote.paqueteIgnorado` (spec 03). |
+| **Zona de soltar** | Al arrastrar varios elementos, el velo de la ventana dice `bib.arrastrar.soltarVarios`. |
+| **Al confirmar un lote** (spec 03) | Se vuelve a la Biblioteca: filtro en «Todas», agrupación como estuviera, las canciones nuevas ya en su sitio (en «Fecha de añadido», en «Hoy»). La primera tarjeta nueva recibe el foco y se desplaza a la vista. Aviso en línea `bib.import.anadidas` con [Ver actividad] (abre el panel de actividad); se cierra solo al terminar la tanda o con [×]. Se anuncia una vez. |
+| **Tarjetas del lote** | Las líneas de paso de siempre («En cola para descargar», «En cola para separar», ⟳ …) y las de la feature 5. Sin marca propia de «lote». |
+| **Seguimiento** | La bandeja de pendientes (feature 5) es el resumen permanente del lote: listas para revisar, esperan letra, con error. El resumen de la tanda está en el panel de actividad (spec 04). |
+| **Estado vacío** | `bib.vacia.cuerpo` menciona que se pueden añadir varias a la vez. |
+| **Rendimiento** | Añadir 50 canciones de golpe no bloquea la rejilla más de 1 s ni mueve el foco fuera de la primera tarjeta nueva. |
+
+### Microcopy (0.2.2 · feature 7, biblioteca)
+
+| Clave | Texto |
+|---|---|
+| `bib.arrastrar.soltarVarios` | Suelta para añadir {n} canciones · (carpeta) Suelta para añadir las canciones de la carpeta |
+| `bib.import.anadidas` | Se añadieron {n} canciones y se están preparando solas. — [Ver actividad] · (búsqueda automática desactivada) Se añadieron {n} canciones. Se están separando; la letra tendrás que buscarla tú. — [Ver actividad] |
+| `bib.vacia.cuerpo` | Añade tu primera canción desde un archivo de tu ordenador o un enlace de YouTube, o varias a la vez desde una carpeta o una lista. Shinobi Karaoke separará la voz para que puedas cantar encima. |
+
+`bib.arrastrar.varios` deja de usarse.
+
+### Criterios de aceptación (0.2.2 · feature 7, biblioteca)
+
+- F7-B1. Arrastrar 3 archivos de audio (o una carpeta con 3) sobre la ventana abre la vista 03 en modo lote con 3 filas; arrastrar 1 se comporta como en 0.2.1. No aparece «Añade las canciones de una en una.».
+- F7-B2. Tras confirmar un lote de 5, la Biblioteca muestra las 5 tarjetas nuevas con su línea de paso, el foco en la primera, el aviso `bib.import.anadidas` y el botón de actividad con «Preparando {i} de 5».
+- F7-B3. Con 50 canciones añadidas de una vez (dobles), la rejilla responde en menos de 1 s y el foco no se pierde.
+- F7-B4. Captura `docs/ux/revision-0.2.2-feature-7/biblioteca-1280x800-100-lote-anadido.png`.
