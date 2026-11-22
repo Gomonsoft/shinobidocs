@@ -144,3 +144,12 @@ Códigos nuevos: `PAQUETE_NO_VALIDO`, `PAQUETE_VERSION_NUEVA`, `PAQUETE_INCOMPLE
 - PKWARE, [APPNOTE.TXT, especificación ZIP (ZIP64 §4.3.14)](https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT).
 - Formato LRC y extensión A2: [Wikipedia, LRC](https://en.wikipedia.org/wiki/LRC_(file_format)); importador del proyecto (ADR 0005, revisión 2026-11-05).
 - ADR [0006](0006-persistencia-y-modelo-de-datos.md), [0012](0012-empaquetado-con-electron-builder-fuses-uv-y-licencias.md), [0016](0016-catalogo-de-temas-e-identidad-de-artista-y-album.md), [0019](0019-exportacion-de-video-render-por-fotograma-y-worker-pyav.md) §6.
+
+## Revisión 2026-11-22 · Destino de la exportación LRC (pregunta 0166)
+
+La spec no tiene diálogo propio para exportar la letra: abre directamente el del sistema. El patrón `destinoId` (destino propuesto que se muestra antes de confirmar) no aplica, así que §4 y §6 cambian:
+
+- `letras.exportarLrc({ cancionId })` → `{ lineasOmitidas, ubicacionId } | null`: main abre `dialog.showSaveDialog` con el nombre propuesto en la última carpeta usada para letras (en memoria de main durante la sesión; si no, Documentos), rechaza el directorio de datos y escribe. `null` = cancelado.
+- `letras.exportarLrcVarias({ ids })` → `{ escritas, omitidas: [{ id, motivo }], ubicacionId } | null`: main abre «Elegir carpeta» y escribe un archivo por canción, con « (2)», « (3)»… si el nombre existe (nunca sustituye).
+- Nuevo `letras.mostrarEnCarpeta({ ubicacionId })` (rol principal) para el botón del toast. `ubicacionId` es un UUID que main asocia a la ruta escrita mientras la app siga abierta; el renderer nunca ve rutas.
+- Copias: `copias.exportarCanciones` / `exportarBiblioteca` → `{ trabajoId }`; eventos `copias:cambio` `{ trabajoId, estado, codigo? }` y `copias:progreso`.

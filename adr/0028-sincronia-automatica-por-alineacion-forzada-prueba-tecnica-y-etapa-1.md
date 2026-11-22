@@ -151,3 +151,20 @@ Siguen: son el respaldo sin modelo (idioma no soportado, sin descarga, confianza
 - Alineación de letra cantada: D. Stoller, S. Durand y S. Ewert, [«End-to-end Lyrics Alignment for Polyphonic Music Using an Audio-to-Character Recognition Model»](https://arxiv.org/abs/1902.06797) (error medio de 0,35 s en Jamendo); [«Contrastive Learning-based Audio to Lyrics Alignment for Multiple Languages»](https://arxiv.org/abs/2306.07744); [«Transfer Learning of wav2vec 2.0 for Automatic Lyric Transcription»](https://arxiv.org/abs/2207.09747).
 - [stable-ts](https://github.com/jianfch/stable-ts) (MIT, archivado), [Montreal Forced Aligner](https://github.com/MontrealCorpusTools/Montreal-Forced-Aligner) (MIT), exploración [mejoras de experiencia §4](../versiones/0.2.2/exploracion/mejoras-de-experiencia.md#4-tecnologías-y-licencias).
 - Calibración propia sobre la biblioteca del usuario (2026-11-21, solo cifras).
+
+## Revisión 2026-11-22 · Canales de la IPC (pregunta 0166)
+
+Rol principal, grupo propio `alineacion.*` (la descarga es una acción explícita del usuario con tamaño y permiso, como `runtime.aceptarYUsarRapido`):
+
+| Canal | Qué hace |
+|---|---|
+| `alineacion.estado()` | `{ disponible, modelos: [{ idioma, bytes, descargado, licencia }] }` |
+| `alineacion.descargarModelo({ idioma })` / `cancelarDescarga({ idioma })` / `quitarModelo({ idioma })` | §3.2 (progreso por `alineacion:progreso` con `tipo: "modelo"`) |
+| `alineacion.previsualizar({ cancionId, idioma, ids? })` | Recuentos para el diálogo (líneas, fines a mano, modelo descargado) |
+| `alineacion.alinear({ cancionId, idioma, ids? })` → `{ trabajoId }` | Lanza el trabajo (cola `pesada`) |
+| `alineacion.cancelar({ trabajoId })` | Cancela |
+| Evento `alineacion:progreso` | `{ tipo: "modelo" \| "alineacion", referencia, fase, hechas, total }` |
+| Evento **`alineacion:resultado`** | `{ trabajoId, cancionId, resultado: { lineas: [{ id, finMs, confianza, palabras: [{ inicioMs, finMs }] }], omitidas: [{ id, motivo }] } \| null, error \| null }`, en tiempo de audio |
+
+- **Quién aplica**: en el editor, **el renderer** con `aplicarAlineacion` (§3.3) como un solo paso de deshacer, y descarta las líneas que cambiaron mientras se escuchaban (pregunta 0167); main no escribe la letra de una canción abierta en el editor. En la preparación desatendida aplica main.
+- `previsualizar` y `alinear` leen la **letra guardada**: el editor vacía su guardado pendiente antes de llamarlos. El `idioma` vale para esa ejecución; si el usuario lo cambia, el renderer lo guarda en `letra.idioma` con el guardado normal.

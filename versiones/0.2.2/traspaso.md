@@ -9,7 +9,7 @@ Escrito el 2026-11-22 al cerrar la sesión en la que se publicó 0.2.1, se separ
 | 0.2.1 | Publicada (`v0.2.1`, «Latest»). `main` y `develop` de la app contienen 0.2.1 y la separación de la documentación. |
 | Documentación | Repositorio propio, `Gomonsoft/shinobidocs`, montado como submódulo en `docs/`. `main` = lo vigente; `version-0.2.2` = definición de 0.2.2 y 0.2.3. |
 | 0.2.2 | **Definida, sin empezar**: once features, tareas 0284–0339, ADR 0022–0028 ([plan](plan-4.md), [backlog](backlog.md)). |
-| 0.2.3 | Aprobada, por definir: varios cantantes y coros ([plan](../0.2.3/plan-5.md)). 0.2.2 solo la prepara. |
+| 0.2.3 | Varios cantantes y coros, **definida** por el arquitecto (ADR 0029 y 0030, tareas 0340–0361, [plan](../0.2.3/plan-5.md) y [backlog](../0.2.3/backlog.md)); specs del diseñador en curso; voces a la vez condicionadas a una prueba técnica. 0.2.2 solo la prepara. |
 | Rama de trabajo | `version-0.2.2` en la app (sale de `develop`), con `docs/` apuntando a `version-0.2.2` de shinobidocs. Un único PR por versión hacia `develop`. |
 
 ## Preparar el equipo
@@ -42,7 +42,7 @@ Requisitos: Node 24 (`app/.nvmrc`), `uv` 0.13.7 (versión fijada en `.github/wor
    - Feature 11: el wireframe de la tarjeta frente a la insignia de la feature 5.
    - Orden de la pestaña «Funciones» y la nota de «Probar» en `ux/07-reproductor.md`.
    - Varios cantantes: un cantante recién añadido tiene su carril visible aunque no tenga líneas (indicación del usuario, pregunta 0160).
-2. **Preparación para 0.2.3**: los seis ajustes sin efecto visible ya están como criterios en las tareas 0287, 0289, 0290, 0293, 0294 y 0296.
+2. **Preparación para 0.2.3**: los seis ajustes sin efecto visible ya están como criterios en las tareas 0287, 0289, 0290, 0293, 0294 y 0296. Con las zonas de pantalla por parte se piden cinco criterios más en 0287, 0288, 0289, 0290 y 0296 ([backlog de 0.2.3](../0.2.3/backlog.md#preparación-pedida-a-022-sin-efecto-visible)).
 3. **Defecto conocido de 0.2.1** (hallado leyendo el código, sin reproducir en la app): corregir el texto en la vista Letra quita las palabras hechas a mano de las líneas que no cambian (`app/src/shared/letras/editar.ts`). Se arregla en la tarea 0296.
 
 ## Preguntas abiertas para el usuario

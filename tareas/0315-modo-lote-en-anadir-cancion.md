@@ -12,6 +12,7 @@ Tabla editable, acciones de columna, resumen y confirmación.
 
 ## Criterios de aceptación
 - [ ] Criterios de la spec 03 · Feature 7 (teclado y lectores de pantalla incluidos).
+- [ ] Texto nuevo de `URL_NO_SOPORTADA` (`add.error.URL_NO_SOPORTADA` de la spec 03: «Este enlace no se puede usar. Los directos, los canales y las mezclas automáticas…») en `shared/avisos.ts`, `vistas/progreso/textos.ts` y `vistas/biblioteca/textosError.ts`, en el mismo cambio que admite las listas (pregunta 0166 §6; antes diría algo falso).
 
 ## Pruebas de feedback
 - Unitarias: Componentes con dobles.

@@ -530,3 +530,15 @@ flowchart LR
   SI --> R
 ```
 
+
+## 11. Versión 0.2.3: piezas nuevas
+
+Resumen; el detalle está en los ADR [0029](adr/0029-reparto-de-la-letra-entre-cantantes-y-coro.md) y [0030](adr/0030-voz-original-en-las-lineas-de-coro.md) y el desglose en el [backlog de 0.2.3](versiones/0.2.3/backlog.md). Ningún esquema sube; sin dependencias nuevas.
+
+| Pieza | Dónde | Qué hace | ADR |
+|---|---|---|---|
+| Reparto | `shared/reparto.ts`; campos `letra.partes` y `lineas[].parte`; escrito por `letras.guardarTiempos` | Cantantes `c1`–`c4` (ranuras fijas), «Todos» y «Coro» por línea entera; carriles, insignias, recuentos y sugerencia de coro como funciones puras | 0029 |
+| Colores por parte | `estilo.letra.colores_partes` (tema) | Cantante 1 = `color_resaltado`; las demás ranuras con predeterminados comprobados por `evaluarContraste` | 0029 |
+| Zonas de pantalla | `renderer/src/karaoke/zonas.ts`; `estilo.pantalla.zonas` | Una franja por parte; cada zona ejecuta el modelo de puestos de ADR 0022 sobre su subsecuencia | 0029 §4 bis |
+| Voz en los coros | `shared/coros.ts`; `MotorReproductor`; pista derivada en `MotorAudio`; `exportar.py` | Una envolvente en tiempo de audio: ganancia programada en Web Audio, pista «instrumental con coros» en el editor y mezcla con `np.interp` en el video | 0030 |
+| Voces a la vez (condicionada) | `shared/letra.ts` y funciones automáticas | Fin limitado por la siguiente línea de la misma parte, solo si la prueba técnica sirve | 0029 §7 |

@@ -176,3 +176,12 @@ En cualquier otro caso: `elige_letra` con los candidatos ordenados como en la vi
 - MusicBrainz, [Rate Limiting](https://musicbrainz.org/doc/MusicBrainz_API/Rate_Limiting) («1 request per second» de media por IP; `User-Agent` con nombre, versión y contacto obligatorio), consultado el 2026-11-21.
 - PyAV, [`container.metadata`](https://pyav.basswood-io.com/docs/stable/api/container.html) y FFmpeg, [metadatos de contenedores](https://ffmpeg.org/doxygen/trunk/group__metadata__api.html) (claves normalizadas).
 - LRCLIB, [documentación de la API](https://lrclib.net/docs) (`/api/get/{id}`).
+
+## Revisión 2026-11-22 · Formas de la IPC (pregunta 0166)
+
+- `preparacion.preparar({ ids })` → `{ aceptadas: string[], omitidas: [{ id, motivo }] }` (ids de las aceptadas).
+- `preparacion.tanda()` y el evento `preparacion:tanda` → `null` sin tanda, o `{ total, terminadas, pausada, motivoPausa, estimacionMin, descargasParadas, canciones }`:
+  - `pausada: true` con `motivoPausa: null` = pausa del usuario; con un código (`SIN_ESPACIO`, `RUNTIME_NO_DISPONIBLE`, o el de tres fallos seguidos) = parada automática de toda la cola (§5).
+  - `descargasParadas: "YOUTUBE_BLOQUEADO" | "SIN_CONEXION" | null`: parada solo de las descargas (§5).
+  - `estimacionMin`: minutos restantes; `null` mientras se calcula.
+  - `canciones: [{ id, resultado, motivo?, dudosas? }]` en el orden de la cola, con `resultado` `null` (sin resultado aún), `lista_para_revisar`, `elige_letra`, `sin_letra`, `letra_pendiente`, `error` o `cancelada`; de ahí sale el diálogo «Resultado de la preparación» (spec 04).

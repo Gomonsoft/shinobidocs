@@ -8,7 +8,7 @@
 - Versión: 0.2.2 ([backlog](../versiones/0.2.2/backlog.md))
 
 ## Objetivo
-`editarDatosVarias`, `eliminarVarias`, `colaAnadirVarias` y `colaQuitarVarias` con el patrón de «Aplicar tema».
+`editarDatosVarias`, `eliminarVarias`, `cola.agregarVarias` y `cola.quitarVarias` (pregunta 0166 §5) con el patrón de «Aplicar tema».
 
 ## Criterios de aceptación
 - [ ] Previsualizar con `version`, ejecutar con progreso y `CONFIRMACION_OBSOLETA`, resultado por canción.

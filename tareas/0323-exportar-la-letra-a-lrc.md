@@ -11,7 +11,7 @@
 Función pura, canales y entradas en el editor y en el menú ⋯.
 
 ## Criterios de aceptación
-- [ ] `exportarLrc` con las reglas de ADR 0027 §4; `letras.exportarLrc` y `letras.exportarLrcVarias`.
+- [ ] `exportarLrc` con las reglas de ADR 0027 §4; `letras.exportarLrc({ cancionId })` y `letras.exportarLrcVarias({ ids })` abren el diálogo del sistema dentro de la llamada (`null` si se cancela) y `letras.mostrarEnCarpeta({ ubicacionId })` para el toast (ADR 0027, revisión 2026-11-22; pregunta 0166 §4).
 - [ ] Ida y vuelta con el importador.
 
 ## Pruebas de feedback

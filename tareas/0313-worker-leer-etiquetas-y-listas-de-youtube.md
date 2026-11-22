@@ -13,6 +13,7 @@ Comandos del worker para leer un lote sin decodificar y preparar el audio en la 
 ## Criterios de aceptación
 - [ ] `leer-etiquetas` (cabeceras, < 100 ms por archivo).
 - [ ] `info-lista-youtube` en modo plano con `tipo` y `LISTA_NO_DISPONIBLE`; el doble de yt-dlp admite listas.
+- [ ] `LISTA_NO_DISPONIBLE` pasa de `CODIGOS_SOLO_MAIN` a los códigos compartidos con `worker/errores.py` (el test de paridad sigue pasando); `ARCHIVO_NO_ENCONTRADO` se queda solo en main (pregunta 0166 §7).
 - [ ] `importar-archivo-cola`: misma normalización que `importar-archivo`, dentro de la carpeta de la canción.
 
 ## Pruebas de feedback
