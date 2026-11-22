@@ -9,8 +9,10 @@ Test-manuales/
 ├── README.md                 este archivo
 ├── plantilla.md              copia esta plantilla para una guía nueva
 ├── flujo-principal.md        recorrido básico de la app; se repite al cerrar cada fase
-└── 0.2.0/
-    └── fase-N-<nombre>.md    una guía por fase de la versión
+├── 0.2.0/
+│   └── fase-N-<nombre>.md    una guía por fase de la versión
+└── 0.2.2/
+    └── feature-N-<nombre>.md una guía por feature de la versión
 ```
 
 - Una guía por fase en la carpeta de su versión. Si una feature es grande, puede tener guía propia en esa carpeta (`feature-<nombre>.md`).
@@ -33,3 +35,7 @@ Test-manuales/
 | 0.2.0 | [Fase 5 · Calibración de «Ajustar los silencios»](0.2.0/fase-5-calibracion-de-silencios.md) | Lista |
 | 0.2.0 | [Fase 5 · Estilo, espera y Letra lista](0.2.0/fase-5-estilo-espera-y-letra-lista.md) | Lista (18 casos; el 18 recoge los criterios sin prueba automática) |
 | 0.2.0 | [Fase 6 · Exportación a video](0.2.0/fase-6-exportacion.md) | Lista (17 casos; el 17 recoge los criterios sin prueba automática). No ejecutada |
+| 0.2.2 | [Feature 1 · Letra en pantalla con varias líneas](0.2.2/feature-1-letra-en-pantalla.md) | Lista (5 grupos de casos). No ejecutada |
+| 0.2.2 | [Feature 2 · Subrayado y aviso de daltonismo](0.2.2/feature-2-subrayado-y-daltonismo.md) | Lista (3 grupos). No ejecutada |
+| 0.2.2 | [Feature 3 · Aviso de versión nueva](0.2.2/feature-3-aviso-de-version-nueva.md) | Lista (10 casos). No ejecutada |
+| 0.2.2 | [Feature 4 · Comprobar la letra con la voz](0.2.2/feature-4-comprobar-la-letra-con-la-voz.md) | Lista (4 grupos). **El caso 1 (calibración con tu biblioteca) es el criterio de «hecha» y está pendiente de ti.** No ejecutada |

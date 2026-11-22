@@ -1,5 +1,5 @@
 # 0301 — Feature 4 · Verificación, calibración e informe
-- Estado: Pendiente
+- Estado: En curso (calibración con canciones reales pendiente del usuario)
 - Paso del pipeline: 3
 - Depende de: 0297–0300, 0367
 - ADRs: 0024
@@ -12,7 +12,7 @@ Cerrar la feature 4 y repetir la calibración.
 
 ## Criterios de aceptación
 - [ ] Script de solo lectura (fuera del repositorio o en `app/scripts/`, sin letras en el repositorio) que repite la tabla de ADR 0024 con las canciones del usuario y negativos fabricados; constantes ajustadas si hace falta, con nota en el ADR.
-- [ ] Informe `docs/versiones/0.2.2/informe-feature-4.md`.
+- [x] Informe `docs/versiones/0.2.2/informe-feature-4.md`.
 
 ## Pruebas de feedback
 - Unitarias: —
@@ -22,4 +22,4 @@ Cerrar la feature 4 y repetir la calibración.
 - Siempre: `npm run typecheck`, `npm run lint`, `npm run format:check` y `npm run test:cambios` (y `uv run pytest` / `ruff` si toca el worker).
 
 ## Notas de implementación
-(las rellena el programador al terminar)
+QA, 2026-11-22. Informe: [informe-feature-4](../versiones/0.2.2/informe-feature-4.md). **No cumplido**: el script de calibración no existe (pregunta [0206](../preguntas/0206-no-existe-el-script-de-calibracion-de-la-feature-4.md)) y la biblioteca real no está en el equipo del agente; «10/10 propias, 0 ajenas» y la corrección de ±0,8 s con canciones reales quedan pendientes del usuario (guía, caso 1). 13 capturas en `docs/ux/revisiones/0.2.2-feature-4/` (falta `comprobacion-pendiente`, no automatizable). Defecto bajo D1 (pregunta 0207). Pendiente conocido: `enTandaDeVarias` sin conectar (feature 5).
