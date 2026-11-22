@@ -28,3 +28,21 @@ Ideas de mejora **todavía sin definir ni autorizar**. No forman parte del alcan
 | [007](007-codificacion-de-video-por-hardware.md) | Codificar el video con la GPU cuando el equipo la tenga | ADR 0019 (prueba técnica de la fase 6) | Idea |
 | [008](008-formato-de-video-de-maxima-compatibilidad.md) | Formato de video de máxima compatibilidad (MP4 con H.264 y AAC) | ADR 0019 (fase 6) | Idea |
 | [017](017-estructura-de-releases.md) | Estructura de releases inspirada en RPCS3 y DroidDeck | Usuario (2026-11-21) | Aceptada (0.2.0, fase 10) |
+| [018](018-letra-en-pantalla-con-varios-enunciados.md) | Letra en pantalla con varios enunciados, enunciado pasado y transiciones con movimiento | Usuario (2026-11-21), plan 0.2.2 | En discusión |
+| [019](019-sincronia-automatica-por-alineacion-forzada.md) | Sincronía automática por alineación forzada sobre la voz separada | Exploración 0.2.2 (diseñador UX) | Idea |
+| [020](020-preparacion-desatendida.md) | Preparación desatendida: la canción llega sola a «Lista para revisar» | Exploración 0.2.2 (uso real: 5 borradores sin letra) | Idea |
+| [021](021-importacion-por-lotes.md) | Importación por lotes: archivos, carpeta, enlaces o lista de YouTube | Exploración 0.2.2 (uso real: 9 canciones añadidas una a una) | Idea |
+| [022](022-comprobar-la-letra-contra-el-audio.md) | Comprobar la letra contra el audio y corregir el desfase | Exploración 0.2.2 (diseñador UX) | Idea |
+| [023](023-revision-guiada-de-lineas-dudosas.md) | Revisión guiada de líneas dudosas | Exploración 0.2.2 (diseñador UX) | Idea |
+| [024](024-datos-de-la-cancion-automaticos.md) | Datos de la canción automáticos (título, artista y álbum) | Exploración 0.2.2 (diseñador UX) | Idea |
+| [025](025-copia-de-seguridad-y-paquete-de-cancion.md) | Copia de seguridad, paquete de canción y exportar la letra | Exploración 0.2.2 (diseñador UX) | Idea |
+| [026](026-aviso-de-version-nueva.md) | Aviso de versión nueva dentro de la app | Exploración 0.2.2; pregunta 0037 | Idea |
+| [027](027-marcar-inicio-y-fin-al-ritmo.md) | Marcar inicio y fin al ritmo manteniendo la tecla | Exploración 0.2.2 (diseñador UX) | Idea |
+| [028](028-acciones-por-lotes-en-la-biblioteca.md) | Acciones por lotes en la Biblioteca (reactiva la 006) | Exploración 0.2.2 (diseñador UX) | Idea |
+| [029](029-letra-pegada-lista-para-alinear.md) | Letra pegada lista para alinear: limpieza asistida, idioma y estribillos | Exploración 0.2.2 (diseñador UX) | Idea |
+| [030](030-tono-y-tempo.md) | Cambiar el tono y el tempo de una canción | Exploración 0.2.2 (referentes) | Idea |
+| [031](031-listas-guardadas-y-cola-que-no-se-pierde.md) | Listas guardadas y cola que no se pierde (amplía la 005) | Exploración 0.2.2 (diseñador UX) | Idea |
+| [032](032-saltar-intro-y-ensayar-estrofa.md) | Saltar la introducción y los silencios largos, y ensayar una estrofa | Exploración 0.2.2 (diseñador UX) | Idea |
+| [033](033-legibilidad-y-resaltado-accesible.md) | Legibilidad y resaltado que no dependa solo del color | Exploración 0.2.2 (accesibilidad) | Idea |
+| [034](034-cantantes-en-la-cola-y-mando-desde-el-movil.md) | Cantantes en la cola y mando desde el móvil | Exploración 0.2.2 (referentes) | Idea |
+| [035](035-ajustes-almacenamiento-y-estado-del-motor.md) | Ajustes: almacenamiento y estado del motor | Exploración 0.2.2; feedback de alpha.1 §1.6 | Idea |
