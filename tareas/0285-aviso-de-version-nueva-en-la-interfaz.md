@@ -31,3 +31,6 @@ Mostrar el punto del botón ⚙, la línea de Acerca de, «Buscar actualizacione
 **Para la guía manual (0286).** Primer arranque con la mención (sin scroll a 1280x800 ni 1024x576, F3-P1; no medido aquí); aviso con una Release real y «Descargar» abriendo el instalador de cada sistema; sin red sin ningún mensaje; capturas de F3-A19 (no tomadas); lectores de pantalla (anuncio de «Buscar»).
 
 **Deuda.** `INSTALAR.md` aún no tiene la sección «Actualizar a una versión nueva» (el botón la enlaza). No se probó la geometría de B1.
+
+
+**Remate tras qa.** D2: `primerArranque.module.css` gana `@media (max-height: 700px)` (menos `gap` y sin `padding-top` en `.pantalla`): sin cambiar textos ni contenido, `scrollHeight` cabe en 576 (antes 666) y en 800. E2E nuevas en `actualizaciones.spec.ts` (mención visible y sin scroll a 1280x800 y 1024x576; comprobado que falla a 666 sin el CSS). Spec 09 §F3.1: el README está en E0 (no se añade), el párrafo «¿Ya la tienes instalada?» se puso en `lanzamientos/plantillas/estado-e-medio.md`. §F3.3: creado `lanzamientos/notas/0.2.2/0.2.2-alpha.1.md` (borrador, solo la entrada del aviso).

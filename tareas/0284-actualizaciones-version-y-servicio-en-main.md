@@ -34,3 +34,6 @@ Implementar en main la consulta diaria a la API de Releases de GitHub, la compar
 **Decisiones.** Un fallo automático no vuelve a intentarse hasta 24 h después (en memoria); no escribe en la config. Un cuerpo que no es una lista JSON es error; una lista vacía o sin versiones válidas es «al día».
 
 **Deuda / manual.** Consulta real contra las Releases publicadas (guía de la feature 3, tarea 0286).
+
+
+**Remate tras qa.** D1: `evaluar()` no consulta antes de `iniciar()` (los cambios de configuración ya no adelantan los 10 s); test «un cambio de configuración antes de iniciar no consulta». Pregunta 0180: test de que «Buscar» manual no espera las 24 h tras un intento automático fallido (el código ya lo cumplía: `comprobar()` no mira `ultimoIntentoAuto`).
