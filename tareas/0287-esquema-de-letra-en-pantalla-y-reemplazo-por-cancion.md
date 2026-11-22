@@ -17,6 +17,12 @@ Añadir `estilo.pantalla` y `apariencia.reemplazo_pantalla` sin subir esquemas y
 - [ ] `SeleccionApariencia.reemplazo_pantalla` en `biblioteca.guardarApariencia` (ausente conserva, `null` quita); `procedenciaPantalla` en el resumen y en `resuelta`.
 - [ ] Abrir una biblioteca de 0.2.1 no reescribe ningún archivo.
 
+## Preparación para 0.2.3 (varios cantantes y coros)
+
+Sin efecto visible en 0.2.2. Decisión del usuario del 2026-11-22: la función va en 0.2.3 y aquí solo se prepara ([factibilidad §8.3](../versiones/0.2.2/exploracion/varios-cantantes-y-coros-factibilidad.md), pregunta [0165](../preguntas/0165-decisiones-provisionales-del-arquitecto-de-varios-cantantes-y-coros.md)).
+
+- [ ] `estilo.letra.colores_partes` queda reservado en el esquema del estilo: opcional, tolerante al leer y conservado al escribir, sin ningún uso ni control en 0.2.2. Test: un tema o una canción que lo trae lo conserva tras guardar.
+
 ## Pruebas de feedback
 - Unitarias: `pantalla.test.ts` (shared), `estilo.test.ts`, `temas.test.ts` (fusión, congelación, cambios de modo) y una copia congelada del `aparienciaSchema` de 0.2.1 que acepta una canción con `reemplazo_pantalla`.
 - E2E: Ninguna.

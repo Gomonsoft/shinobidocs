@@ -67,3 +67,5 @@ La A en todos los puntos.
 ## Indicación del usuario (2026-11-22)
 
 La mayoría de las canciones siguen siendo de un solo cantante: es el usuario quien añade cuántos cantantes (y, con ellos, cuántas líneas de tiempo) tiene cada canción. Confirma el punto de partida de la exploración (canción sin partes = un cantante, «+ Añadir cantante» hasta 4). Pendiente de ajustar en la spec: un cantante recién añadido debe tener su carril visible aunque todavía no tenga líneas, para poder arrastrarlas a él; hoy la exploración solo muestra carriles de las partes «en uso».
+
+**Respuesta parcial del usuario (2026-11-22):** la función va en la versión 0.2.3 (etapas 1 y 2); 0.2.2 solo se prepara. El resto de decisiones sigue con la opción provisional.

@@ -17,6 +17,13 @@ Añadir los campos de la letra que usan varias features, con sus reglas de escri
 - [ ] `palabrasVisibles` incluye `auto` (no se produce aún ninguna).
 - [ ] `shared/idioma.ts` con `detectarIdioma`; main lo pone al guardar una letra nueva.
 
+## Preparación para 0.2.3 (varios cantantes y coros)
+
+Sin efecto visible en 0.2.2. Decisión del usuario del 2026-11-22: la función va en 0.2.3 y aquí solo se prepara ([factibilidad §8.3](../versiones/0.2.2/exploracion/varios-cantantes-y-coros-factibilidad.md), pregunta [0165](../preguntas/0165-decisiones-provisionales-del-arquitecto-de-varios-cantantes-y-coros.md)).
+
+- [ ] Campos reservados en el esquema de la letra: `lineas[].parte` y `letra.partes`, opcionales, tolerantes al leer y conservados al escribir (también en el paquete de canción), sin ningún uso en 0.2.2. Test: una canción con reparto se abre, se edita y se guarda sin perderlo.
+- [ ] `aplicarTextoEditado` conserva todos los campos de una línea emparejada salvo el texto. Corrige un defecto de 0.2.1 (`app/src/shared/letras/editar.ts`: rehace la línea campo a campo y pierde `origen_palabras`, contra ADR 0021 §4). Test: corregir el texto de otra línea en la vista Letra no quita las palabras hechas a mano de las que no cambian, ni `origen_fin`, `revisada` o `alineacion`.
+
 ## Pruebas de feedback
 - Unitarias: `letra.test.ts` y tests del servicio de letras: cada regla de retirada, copia congelada del `elementoLetraSchema` de 0.2.1, `detectarIdioma` con textos inventados.
 - E2E: Ninguna.

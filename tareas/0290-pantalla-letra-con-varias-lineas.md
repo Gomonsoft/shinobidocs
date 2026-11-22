@@ -17,6 +17,13 @@ Pintar el nuevo modelo en reproductor, secundaria, vista previa y exportación s
 - [ ] La instantánea de sesión y la de exportación llevan el estilo resuelto con `pantalla`; la exportación pasa `movimiento: 'completo'`.
 - [ ] F1-R17, R21, R22 y R23 cubiertos.
 
+## Preparación para 0.2.3 (varios cantantes y coros)
+
+Sin efecto visible en 0.2.2. Decisión del usuario del 2026-11-22: la función va en 0.2.3 y aquí solo se prepara ([factibilidad §8.3](../versiones/0.2.2/exploracion/varios-cantantes-y-coros-factibilidad.md), pregunta [0165](../preguntas/0165-decisiones-provisionales-del-arquitecto-de-varios-cantantes-y-coros.md)).
+
+- [ ] El color del barrido se resuelve por línea: una función `colorDeLinea(linea, estilo)` (en 0.2.2 devuelve siempre `color_resaltado`) y variables CSS en el nodo de cada línea. Los indicadores de espera toman el color de la línea que viene.
+- [ ] El ancho de línea deja de ser un 88 % fijo en el CSS: pasa a la variable `--k-ancho-linea` (88 % por defecto), usada también en la reducción por longitud.
+
 ## Pruebas de feedback
 - Unitarias: `PantallaLetra.test.tsx`: mismos cortes de renglón en todos los puestos (medición simulada), Letra lista sin color de resaltado, palabra a palabra igual que 0.2.1, modo fotograma.
 - E2E: Una prueba en `exportacion.spec.ts`: 3 s a 640 × 480 con 5 líneas; el modelo del anfitrión a mitad de un cambio es igual a `fotogramaEn` (F1-R23).

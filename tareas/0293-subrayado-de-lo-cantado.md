@@ -15,6 +15,12 @@ Dibujar el subrayado en la capa de resaltado y resolver cuándo se ve.
 - [ ] `PantallaLetra` con `subrayado`; `recorteBarrido(…, { margenInferior })`; opacidad `1 − mezclaGris` al salir; barra de espera con pista al 35 %.
 - [ ] F2-R1 a R8 cubiertos.
 
+## Preparación para 0.2.3 (varios cantantes y coros)
+
+Sin efecto visible en 0.2.2. Decisión del usuario del 2026-11-22: la función va en 0.2.3 y aquí solo se prepara ([factibilidad §8.3](../versiones/0.2.2/exploracion/varios-cantantes-y-coros-factibilidad.md), pregunta [0165](../preguntas/0165-decisiones-provisionales-del-arquitecto-de-varios-cantantes-y-coros.md)).
+
+- [ ] Test: el subrayado toma el color del nodo de su línea (sale del ajuste de color por línea de la 0290).
+
 ## Pruebas de feedback
 - Unitarias: `barrido.test.ts`, `PantallaLetra.test.tsx` (anchos medidos, palabra a palabra, cajas iguales con y sin subrayado, Letra lista sin subrayado), resolución en la sesión.
 - E2E: Ninguna.

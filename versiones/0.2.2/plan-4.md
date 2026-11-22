@@ -137,6 +137,19 @@ Origen: [exploración de mejoras de experiencia](exploracion/mejoras-de-experien
 - **Licencias (019):** los modelos de alineación por defecto para español y el multilingüe son de uso no comercial (CC BY-NC 4.0) y no sirven; hay alternativa Apache-2.0 para español. La calidad sobre voz cantada no está medida: por eso empieza con una prueba técnica.
 - **Decisión previa que se reabre (026):** cierra la pregunta 0037 con la opción B (avisar de versión nueva, sin autoactualizar).
 
+## Preparación para 0.2.3 · Varios cantantes y coros
+
+La propuesta [036](../../propuestas/036-varios-cantantes-y-coros.md) va en la versión 0.2.3 (decisión del usuario, 2026-11-22). El alcance de 0.2.2 no cambia: solo se añaden seis ajustes sin efecto visible para no rehacer trabajo después ([factibilidad §8.3](exploracion/varios-cantantes-y-coros-factibilidad.md)).
+
+| Ajuste | Tarea |
+|---|---|
+| Reservar y conservar los datos del reparto (letra y estilo) sin usarlos | 0296, 0287 |
+| `aplicarTextoEditado` conserva los campos de las líneas que no cambian (defecto de 0.2.1) | 0296 |
+| Color del barrido por línea e indicadores con el color de la línea que viene | 0290, 0289 |
+| Ancho de línea como variable | 0290 |
+| Tests de disposición con líneas de 3 y 4 renglones | 0289 |
+| Subrayado con el color de su línea y comprobación de daltonismo de dos colores | 0293, 0294 |
+
 ## Regla de decisión
 
 Indicación del usuario del 2026-11-21: **por defecto se toma la opción recomendada por el agente**; si alguna no le convence, pide el cambio. En este plan eso significa:

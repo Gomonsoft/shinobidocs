@@ -30,3 +30,5 @@ Además, al revisar el código he visto un **defecto de 0.2.1** que no depende d
 La columna «Opción aplicada» de cada fila.
 
 ## Respuesta
+
+**Respuesta parcial del usuario (2026-11-22):** fila 9, aceptada: la función va en la versión 0.2.3 y en 0.2.2 solo se prepara. Eso incluye la fila 2 (0.2.2 conserva los datos del reparto) y los seis ajustes, ya añadidos a las tareas 0287, 0289, 0290, 0293, 0294 y 0296. El resto de filas sigue con la opción provisional.

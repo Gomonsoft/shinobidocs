@@ -14,6 +14,12 @@ Casilla del tema, casilla global en Ajustes y aviso de daltonismo en el panel Es
 - [ ] `confusionDaltonismo` (Machado 2009) y aviso `daltonismo` en `evaluarContraste`.
 - [ ] Controles y textos de las specs 06 y 08 · Feature 2.
 
+## Preparación para 0.2.3 (varios cantantes y coros)
+
+Sin efecto visible en 0.2.2. Decisión del usuario del 2026-11-22: la función va en 0.2.3 y aquí solo se prepara ([factibilidad §8.3](../versiones/0.2.2/exploracion/varios-cantantes-y-coros-factibilidad.md), pregunta [0165](../preguntas/0165-decisiones-provisionales-del-arquitecto-de-varios-cantantes-y-coros.md)).
+
+- [ ] La comprobación de daltonismo es una función de dos colores con nombres neutros, `confusionDaltonismo(a, b)`, reutilizable con otros pares.
+
 ## Pruebas de feedback
 - Unitarias: `contraste.test.ts` con los pares de la spec; componentes del panel y de Ajustes.
 - E2E: Ninguna.
