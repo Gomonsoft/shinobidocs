@@ -8,7 +8,7 @@ Ver el [plan](plan-4.md) y el [flujo de Git](../../workflow.md). **Una feature =
 |---|---|---|---|---|---|
 | 0 | Contratos compartidos | [0339](../../tareas/0339-contratos-compartidos-de-0-2-2.md) | M | — | — |
 | 1 | **3** · Aviso de versión nueva | 0284–0286 | S | 0339 | alpha.1 |
-| 1 | **10 (prueba técnica)** · Alineación forzada | 0328 | M | — (solo `docs/poc/`) | resultado en alpha.1 |
+| 1 | **10 (prueba técnica)** · Alineación forzada | 0328 | M | — (solo `docs/spikes/`) | resultado en alpha.1 |
 | 2 | **1** · Letra en pantalla | 0287–0292 | L | 0339 | alpha.1 |
 | 3 | **2** · Subrayado y aviso de daltonismo | 0293–0295 | S–M | 1 | alpha.1 |
 | 2 | Contratos de la letra (4, 5, 10, 11) | 0296 | M | 0339 | — |
@@ -189,14 +189,14 @@ Varios programadores trabajan a la vez en el mismo árbol: **cada archivo tiene 
 | **C · Letra y editor** | 0296 → F4 → F11 → (F10 UI) | `shared/letra.ts`, `shared/letras/**`, `shared/encaje.ts`, `shared/dudosas.ts`, `shared/idioma.ts`, `shared/silencios.ts` (los parámetros nuevos los añade 0308 con permiso de C o C mismo antes), `main/letras/**`, `main/picos/**`, `vistas/letra/**`, `vistas/editor/**` salvo la sección Estilo y `preciso/` (incluido el reducer `estado.ts`: si 0291 o 0294 necesitan una acción nueva, la piden a C), `app/scripts/calibrar-*.ts`, `e2e/letras.spec.ts`, `e2e/editor*.spec.ts` |
 | **D · Pipeline** | F6 → F5 → F7 | `worker/shinobi_worker/**` (metadatos, `leer-etiquetas`, listas, `importar-archivo-cola`), `main/fuente/**`, `main/preparacion/**` (nuevo), `main/trabajos/**`, `main/avisos/**`, `main/biblioteca/**`, `main/separacion/**` (solo el encadenado de picos), `shared/cancion.ts`, `shared/derivados.ts`, `shared/metadatosNombre.ts`, `shared/identidad.ts`, `vistas/anadir/**`, `vistas/progreso/**`, `vistas/biblioteca/**`, `e2e/importar-*.spec.ts`, `e2e/separacion.spec.ts`, `e2e/biblioteca*.spec.ts` |
 | **E · Salidas** | F9 → F8 | `main/copias/**` (nuevo), `main/exportacion/**`, `renderer/src/vistas/exportacion/**`, diálogos de copia en `vistas/ajustes/` (tras A), `app/package.json` y `THIRD_PARTY_NOTICES.md` (yazl, yauzl); la barra de selección y los diálogos de `vistas/biblioteca/` **cuando D haya terminado F5** (0310) |
-| **F · Alineación** | 0328 → F10 | `docs/poc/0028-alineacion/**`, `worker/shinobi_worker/alinear*.py` (nuevo), `main/alineacion/**` (nuevo), `shared/alineacion.ts` (nuevo), `app/resources/runtime-manifest.json` (solo `modelos_alineacion`); su interfaz del editor (0332) **después** de 0335 |
+| **F · Alineación** | 0328 → F10 | `docs/spikes/0028-alineacion/**`, `worker/shinobi_worker/alinear*.py` (nuevo), `main/alineacion/**` (nuevo), `shared/alineacion.ts` (nuevo), `app/resources/runtime-manifest.json` (solo `modelos_alineacion`); su interfaz del editor (0332) **después** de 0335 |
 
 Reglas de convivencia:
 
 - **Pueden empezar a la vez** tras 0339: A (0284), B (0287), C (0296), D (0302), E (0324 y 0319) y F (0328, que ni siquiera necesita 0339).
 - **Puntos de espera**: 0293 espera a 0290; 0308 espera a 0298 (C) y 0302 (D); 0318 espera a 0308; 0320/0326 esperan a que D termine 0310 en `vistas/biblioteca/`; 0335 espera a 0300; 0332 espera a 0335 y 0308; la casilla de Ajustes de F2 y los diálogos de F9 esperan a 0285.
 - `docs/pruebas.md` y `app/e2e/criticos/` son de `qa`: las tareas que los afecten lo anotan para la sesión principal.
-- Las capturas de revisión van a `docs/ux/revision-0.2.2-feature-N/`.
+- Las capturas de revisión van a `docs/ux/revisiones/0.2.2-feature-N/`.
 
 ## Entregas propuestas (`0.2.2-alpha.N`)
 

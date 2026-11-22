@@ -444,7 +444,7 @@ R4 · Letra pendiente
 - F5-P9. El stepper muestra ⟳ en Letra mientras se busca o se comprueba y el indicador de atención en R2, R3 y R4, con su nombre accesible.
 - F5-P10. Cerrar la app con una separación en curso y dos en cola, y reabrirla, retoma las tres sin intervención y muestra `bib.prep.retomando`; [Detener] las deja en pausa. Un trabajo que quedó a medias en dos arranques seguidos queda «Interrumpido» con [Reintentar] y no se retoma.
 - F5-P11. La app no cambia nunca por sí sola el estado de una canción a Lista o Letra lista (test: tras preparar 3 canciones con dobles, las 3 siguen en borrador).
-- F5-P12. Capturas en `docs/ux/revision-0.2.2-feature-5/`, nombre `progreso-1280x800-100-{estado}.png`: `preparando`, `lista-para-revisar`, `elige-la-letra`, `no-encontrada`, `letra-pendiente`.
+- F5-P12. Capturas en `docs/ux/revisiones/0.2.2-feature-5/`, nombre `progreso-1280x800-100-{estado}.png`: `preparando`, `lista-para-revisar`, `elige-la-letra`, `no-encontrada`, `letra-pendiente`.
 
 **Verificación manual** (guía de `docs/Test-manuales/0.2.2/`): añadir tres canciones reales conocidas y no tocar nada; comprobar que llegan solas a «Lista para revisar» y que la letra elegida es la correcta al cantarlas; añadir una versión en directo o una canción poco conocida y comprobar que queda en «Elige la letra» o «No encontramos la letra» y no con una letra equivocada; desconectar la red al añadir y comprobar «Letra pendiente»; cerrar la app a mitad de una separación y comprobar que se retoma.
 
@@ -619,7 +619,7 @@ La vista de la spec no cambia; el texto de cola dice la posición en la tanda: `
 - F7-P9. El progreso se anuncia a lectores de pantalla como máximo una vez cada 10 s; la pausa, las paradas y el resumen se anuncian siempre. El panel entero se opera con teclado.
 - F7-P10. La vista de progreso de una canción en cola muestra `prog.cola.posicion`; con la cola en pausa, `prog.cola.pausa` con [Reanudar la cola].
 - F7-P11. Cerrar la app con la cola en marcha muestra `cierre.cuerpo.cola`; al reabrir, la tanda se retoma y su resumen final cuenta todas las canciones de la tanda.
-- F7-P12. Capturas en `docs/ux/revision-0.2.2-feature-7/`, nombre `actividad-1280x800-100-{estado}.png`: `cola`, `cola-en-pausa`, `cola-youtube-parada`, `cola-con-errores`, `resultado`, `dialogo-cancelar`.
+- F7-P12. Capturas en `docs/ux/revisiones/0.2.2-feature-7/`, nombre `actividad-1280x800-100-{estado}.png`: `cola`, `cola-en-pausa`, `cola-youtube-parada`, `cola-con-errores`, `resultado`, `dialogo-cancelar`.
 
 **Verificación manual** (guía de `docs/Test-manuales/0.2.2/`): añadir una lista real de 8 a 12 canciones y dejar la app sola; anotar el tiempo total frente al estimado, cuántas llegan a «Lista para revisar» y si YouTube bloquea alguna descarga; pausar y reanudar a mitad; cerrar la app a mitad y comprobar que retoma; hacerlo también con el reproductor abierto en otra pantalla y anotar si hay cortes de sonido.
 
@@ -704,4 +704,4 @@ No hay vista previa, así que aplica la versión **más prudente** de la funció
 - F10-P3. Una letra con fines fijados por LRCLIB los conserva idénticos tras la preparación; ningún inicio cambia; los indicadores de espera de la canción no cambian.
 - F10-P4. Con el modelo sin instalar, el bloque R1 muestra `prog.prep.r1.alin.sinModelo` y su enlace abre Ajustes en «Sincronía automática».
 - F10-P5. La tarjeta y el panel de actividad muestran «Ajustando los fines…» durante el paso; el resumen de la tanda no cuenta ningún error por un respaldo.
-- F10-P6. Captura `docs/ux/revision-0.2.2-feature-10/progreso-1280x800-100-{sincronizando|respaldo-sin-modelo}.png`.
+- F10-P6. Captura `docs/ux/revisiones/0.2.2-feature-10/progreso-1280x800-100-{sincronizando|respaldo-sin-modelo}.png`.

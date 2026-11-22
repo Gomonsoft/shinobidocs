@@ -11,7 +11,7 @@
 Cerrar la feature 1.
 
 ## Criterios de aceptación
-- [ ] Capturas F1-R25 en `docs/ux/revision-0.2.2-feature-1/` y las del editor que pida la spec.
+- [ ] Capturas F1-R25 en `docs/ux/revisiones/0.2.2-feature-1/` y las del editor que pida la spec.
 - [ ] Informe `docs/versiones/0.2.2/informe-feature-1.md` con CI, criterios y lo que pasa a la guía (legibilidad a 5 m, mareo, 4:3, equipo modesto, video a 24 y 60 FPS).
 
 ## Pruebas de feedback

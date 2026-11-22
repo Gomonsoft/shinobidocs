@@ -98,7 +98,7 @@ Cada apartado: fricción de hoy con su evidencia, qué hacen los referentes y qu
 ### 3.1 Descarga, instalación y actualizaciones
 
 **Fricción.**
-- No hay autoactualización ni aviso de versión nueva: las [notas de 0.2.1-alpha.1](../../0.2.1/notas/0.2.1-alpha.1.md) lo dicen en «Sin probar». La [pregunta 0037](../../../preguntas/0037-autoactualizacion-de-la-app.md) sigue abierta con tres opciones.
+- No hay autoactualización ni aviso de versión nueva: las [notas de 0.2.1-alpha.1](../../../../lanzamientos/notas/0.2.1/0.2.1-alpha.1.md) lo dicen en «Sin probar». La [pregunta 0037](../../../preguntas/0037-autoactualizacion-de-la-app.md) sigue abierta con tres opciones.
 - El 21 de noviembre coincidieron tres versiones: 0.2.0-alpha.1 en prueba, alpha.2 lista para publicar y las notas de 0.2.1-alpha.1 en borrador. Quien prueba tiene que enterarse por fuera y reinstalar a mano cada una.
 - Chrome marca la descarga como peligrosa por falta de firma (feedback §1.3). Sigue su camino propio (D1) y no se repite aquí.
 

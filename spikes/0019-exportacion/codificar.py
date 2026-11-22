@@ -4,7 +4,7 @@
 No es código de producción. Se ejecuta con el entorno del worker:
 
     cd worker
-    uv run python ../docs/poc/0019-exportacion/codificar.py --perfil av1 --ancho 1920 --alto 1080 \
+    uv run python ../docs/spikes/0019-exportacion/codificar.py --perfil av1 --ancho 1920 --alto 1080 \
         --fps 30 --segundos 10 --salida /tmp/x.mkv              # fotogramas sintéticos
     ... --stdin                                                 # fotogramas BGRA por stdin
 

@@ -15,7 +15,7 @@ npm run lint && npm run typecheck && npm test
 npm run build && npx playwright test
 cd ../worker && uv sync && uv run pytest
 ```
-Capturas reales de la interfaz: `docs/ux/revision-fase-1/` (ver su README).
+Capturas reales de la interfaz: `docs/ux/revisiones/fase-1/` (ver su README).
 
 ## Resultado
 | Bloque | Estado |
@@ -54,7 +54,7 @@ Capturas reales de la interfaz: `docs/ux/revision-fase-1/` (ver su README).
 - **Sin probar en Windows/Linux**: cancelación con `taskkill`, modo producción del lanzador del worker, E2E en Linux (paso de AppArmor en CI). La primera ejecución real de la CI será la prueba.
 - **`npm run dev` sin verificar de forma interactiva** por los agentes (sí la app compilada vía Playwright).
 - **Papelera**: la ejecución de E2E de la tarea 0020 (antes de la 0023) pudo dejar carpetas de prueba `shinobi-e2e-*` en tu Papelera.
-- **Disco**: `spikes/` ocupa varios GB (entorno Python, PyTorch y modelos del spike 0005). Está ignorado por git; se puede borrar con `rm -rf spikes/separacion/<carpetas ignoradas>` según indique la tarea 0005.
+- **Disco**: `docs/spikes/` ocupa varios GB (entorno Python, PyTorch y modelos del spike 0005). Está ignorado por git; se puede borrar con `rm -rf docs/spikes/separacion/<carpetas ignoradas>` según indique la tarea 0005.
 - `npm audit` reporta avisos moderados en dependencias de desarrollo.
 
 ## Pendiente al cierre (03:00)
@@ -63,5 +63,5 @@ Capturas reales de la interfaz: `docs/ux/revision-fase-1/` (ver su README).
 - **Spike 0005 — resumen**: Rápido en CPU ≈ 0,7–0,8 min/min de audio; Calidad en CPU ≈ 1,1–1,3; MPS/CoreML *más lentos* en M1 → se fuerza CPU. Disco macOS ≈ 1,3 GB (Rápido) / 2,2 GB (Calidad). ffmpeg se evita con parche (`use_soundfile`).
 - **Tu decisión pendiente**: `docs/preguntas/0012-licencia-no-declarada-del-modelo-rapido.md` (A aceptar riesgo / B solo Calidad / C provisional + pedir aclaración a UVR, recomendada). Después revisar `THIRD_PARTY_NOTICES.md`.
 - **Tarea pendiente**: 0025 (empaquetado e instaladores). Mediciones en NVIDIA/Windows/Linux sin hacer.
-- **Limpieza manual opcional**: `rm -rf spikes/separacion/.venv spikes/separacion/salida` (~4,2 GB, ignorado por git) y `rm -rf ~/.cache/uv` (33 MB que uv creó fuera del repo; el borrado fue denegado a los agentes y no se tocó).
+- **Limpieza manual opcional**: `rm -rf docs/spikes/separacion/.venv docs/spikes/separacion/salida` (~4,2 GB, ignorado por git) y `rm -rf ~/.cache/uv` (33 MB que uv creó fuera del repo; el borrado fue denegado a los agentes y no se tocó).
 - **Sesión cortada por límite de uso** al llegar a las 03:00.

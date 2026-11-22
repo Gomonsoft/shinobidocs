@@ -288,7 +288,7 @@ Orden de secciones: Separación de voz · **Temas** · Acerca de.
 - A9. Una escritura interrumpida al eliminar (o cerrar la app a mitad) deja el tema en la lista con `aj.temas.pendiente`, sin reanudarse solo al arrancar; [Terminar de eliminar] lo completa y [Cancelar el borrado] lo deja disponible con las canciones ya convertidas como «Tema personalizado» sin cambio visible.
 - A10. Abierta desde el editor (⚙, Ctrl/Cmd + , o «Administrar temas…»), «‹ Volver al editor» y Esc regresan al editor de esa canción con su pestaña Estilo; abierta desde la Biblioteca, vuelven a la Biblioteca (criterio 8 revisado).
 - A11. Toda la sección es operable con teclado (lista con ↑/↓, menú con tecla Menú o Mayús + F10) y el foco nunca queda en `body` tras eliminar.
-- A12. Capturas en `docs/ux/revision-fase-3/` (ver [README](revision-fase-3/README.md)), nombre `ajustes-{ancho}x{alto}-{escala}-{estado}.png` a 1280 × 800 al 100 %: `temas`, `temas-sin-predeterminado`, `temas-vacio`, `temas-apartado`, `temas-solo-lectura`, `temas-borrado-pendiente`, `dialogo-predeterminado`, `dialogo-quitar-predeterminado`, `dialogo-eliminar-predeterminado`, `temas-faltan`.
+- A12. Capturas en `docs/ux/revisiones/fase-3/` (ver [README](revisiones/fase-3/README.md)), nombre `ajustes-{ancho}x{alto}-{escala}-{estado}.png` a 1280 × 800 al 100 %: `temas`, `temas-sin-predeterminado`, `temas-vacio`, `temas-apartado`, `temas-solo-lectura`, `temas-borrado-pendiente`, `dialogo-predeterminado`, `dialogo-quitar-predeterminado`, `dialogo-eliminar-predeterminado`, `temas-faltan`.
 - A13. (B1) Con «Noche ninja» como predeterminado y 3 canciones que lo siguen (una de YouTube), elegir «Ninguno…» muestra `aj.temas.dialogo.ninguno` con 3 canciones y foco en «Cancelar»; al confirmar, ninguna cambia de aspecto ni de portada, su procedencia pasa a «Tema predeterminado anterior» (editor) y «predeterminado anterior» (tarjeta), y una canción nueva recibe un tema al azar. Editar después «Noche ninja» cambia esas 3 canciones.
 - A14. (A1 y C1) Con «Noche ninja» como predeterminado, elegir «Neón» cambia las canciones que lo seguían; las que tienen un tema al azar, «Tema predeterminado anterior» o el estilo incluido fijado no cambian y no se cuentan en el diálogo. Desde «Ninguno…», elegir un tema muestra la variante «sin anterior» si hay canciones con estilo incluido sin base, y se aplica sin diálogo si no hay ninguna.
 - A15. Con un fallo simulado en la segunda de cuatro canciones al quitar el predeterminado, el diálogo muestra `aj.temas.ninguno.parcial` con «Faltan 3 canciones» y el título de la segunda; la lista tiene 3 filas (la segunda con ✕ y [Copiar detalles]; la tercera y la cuarta con «Pendiente» en `texto-3` y sin [Copiar detalles]), la nota `tema.parcial.notaPendientes` y el foco en [Reintentar]; el selector sigue en «Noche ninja», ninguna canción cambia de aspecto y la primera ya muestra «Tema predeterminado anterior»; [Reintentar] confirma solo las 3 que faltan y termina con el selector en «Ninguno…». Con más de 5 canciones se ve `aj.temas.ninguno.progreso` avanzando.
@@ -339,7 +339,7 @@ No hay otros ajustes del reproductor en Ajustes: la pantalla y la pantalla compl
 - AR1. Ajustes muestra la sección «Reproductor» entre «Temas» y «Acerca de» con el selector «Cuenta entre canciones» en 4 s por defecto; la etiqueta y la ayuda están asociadas al selector (`aria-describedby`).
 - AR2. Elegir 10 s persiste al salir, al volver y al reiniciar; la siguiente cuenta de la secundaria dura 10 s. Cambiarlo durante una cuenta no altera la que está en marcha.
 - AR3. Con un fallo de escritura simulado, el selector vuelve al valor anterior y aparece `aj.rep.toast.error`.
-- AR4. Captura `docs/ux/revision-fase-4/ajustes-1280x800-100-reproductor.png`.
+- AR4. Captura `docs/ux/revisiones/fase-4/ajustes-1280x800-100-reproductor.png`.
 
 ## Fase 10 de 0.2.0 — número de compilación
 
@@ -462,7 +462,7 @@ Versión: 0.2.0-alpha.3-1260 (desarrollo, commit 9e07c55)
 - AC5. «Copiar información para soporte» empieza por la misma línea que copia [Copiar versión]; el resto del bloque no cambia (criterio 9).
 - AC6. Cada [Copiar detalles] de las specs 01, 02, 03, 04, 06, 07, 08 y 10 termina con `Versión: {identificador}` como última línea, una sola vez. El error de exportación ya no termina con «Versión: 0.2.0-alpha.1» sin número ni commit. Un test unitario de la función compartida cubre los cuatro casos de `aj.compilacion.id`.
 - AC7. El número y el hash de AC1 corresponden al commit construido: `git rev-list --count <hash>` da N y `git rev-parse --short=7` da el hash (comprobación de la tarea, según la respuesta a 0142).
-- AC8. Captura `docs/ux/revision-fase-10/ajustes-1280x800-100-acerca-{previa|desarrollo|local}.png`.
+- AC8. Captura `docs/ux/revisiones/fase-10/ajustes-1280x800-100-acerca-{previa|desarrollo|local}.png`.
 
 ## 0.2.2 · Feature 2 — Subrayar siempre lo ya cantado
 
@@ -501,7 +501,7 @@ Esta sección **amplía** la sección «Reproductor» (fase 4) con una casilla, 
 - F2-A1. La sección «Reproductor» muestra la casilla «Subrayar siempre lo ya cantado», desmarcada sin configuración previa, con su ayuda asociada (`aria-describedby`).
 - F2-A2. Marcarla persiste al salir, al volver y al reiniciar; la siguiente canción que empieza (reproductor local y secundaria) lleva subrayado aunque su tema no lo tenga; `cancion.json` y `temas.json` no cambian.
 - F2-A3. Con un fallo de escritura simulado, la casilla vuelve al valor anterior y aparece `aj.rep.toast.error`.
-- F2-A4. Captura `docs/ux/revision-0.2.2-feature-2/ajustes-1280x800-100-reproductor-subrayado.png`.
+- F2-A4. Captura `docs/ux/revisiones/0.2.2-feature-2/ajustes-1280x800-100-reproductor-subrayado.png`.
 
 ## 0.2.2 · Feature 3 — Aviso de versión nueva
 
@@ -751,7 +751,7 @@ Si la feature 9 (copia de seguridad) no estuviera en la misma versión, la frase
 - F3-A16. Con una versión nueva preliminar, `aj.act.descargando` incluye la frase de la copia de seguridad; con una estable, no.
 - F3-A17. Tras instalar la versión nueva y arrancar, el estado es «al día» sin esperar a otra consulta, y no hay punto ni aviso.
 - F3-A18. Todo el bloque es operable con teclado en el orden indicado, y los botones que abren el navegador lo dicen en su nombre accesible.
-- F3-A19. Capturas en `docs/ux/revision-0.2.2-feature-3/` con nombre `ajustes-1280x800-100-{estado}.png`: `actualizaciones-al-dia`, `actualizaciones-nueva-preliminar`, `actualizaciones-nueva-estable`, `actualizaciones-descargando`, `actualizaciones-error`, `actualizaciones-desactivado`, `actualizaciones-desarrollo`, `aviso-principio`, y `biblioteca-1280x800-100-punto-ajustes.png`.
+- F3-A19. Capturas en `docs/ux/revisiones/0.2.2-feature-3/` con nombre `ajustes-1280x800-100-{estado}.png`: `actualizaciones-al-dia`, `actualizaciones-nueva-preliminar`, `actualizaciones-nueva-estable`, `actualizaciones-descargando`, `actualizaciones-error`, `actualizaciones-desactivado`, `actualizaciones-desarrollo`, `aviso-principio`, y `biblioteca-1280x800-100-punto-ajustes.png`.
 
 **Verificación manual** (guía de 0.2.2, con dos versiones publicadas de verdad): instalar la anterior, arrancar con red y comprobar que aparece el punto y que «Descargar» baja el instalador correcto en Windows, Mac y Linux; instalar encima y comprobar que las canciones siguen y el estado pasa a «al día»; arrancar sin red y comprobar que no hay ningún mensaje; comprobar con un monitor de red que solo sale una petición a GitHub.
 
@@ -876,7 +876,7 @@ Orden de secciones (con lo que añadan las demás features de 0.2.2, que deciden
 - F9-A4. Restaurar una copia completa en una instalación vacía deja la biblioteca igual que la de origen: mismas canciones y estados, mismos temas, mismas asignaciones de artista y álbum, mismo predeterminado y (con la casilla, marcada por defecto en este caso) mismos ajustes; no restaura consentimientos: el aviso de YouTube se vuelve a pedir.
 - F9-A5. Restaurar sobre una biblioteca con canciones: ninguna canción ni tema que no esté en la copia se elimina; las existentes quedan en «Omitir» por defecto; una asignación de álbum que aquí ya existe no se sustituye y se lista en «Ver cuáles»; la casilla de ajustes está desmarcada.
 - F9-A6. Cancelar la creación a mitad no deja archivo en el destino y no cambia «Última copia».
-- F9-A7. Capturas en `docs/ux/revision-0.2.2-feature-9/` con nombre `ajustes-1280x800-100-{estado}.png`: `copia-nunca`, `copia-ultima-recordatorio`, `copia-dialogo`, `copia-creando`, `restaurar-revisar`.
+- F9-A7. Capturas en `docs/ux/revisiones/0.2.2-feature-9/` con nombre `ajustes-1280x800-100-{estado}.png`: `copia-nunca`, `copia-ultima-recordatorio`, `copia-dialogo`, `copia-creando`, `restaurar-revisar`.
 
 ## 0.2.2 · Feature 10 — Sincronía automática: modelos por idioma
 
@@ -960,7 +960,7 @@ Origen: [plan 0.2.2, feature 10](../versiones/0.2.2/plan-4.md) y propuesta [019]
 - F10-A3. «Quitar» pide confirmación con el foco en «Cancelar», libera el espacio y no modifica ninguna canción; con una sincronización en curso en ese idioma está `aria-disabled` con su motivo.
 - F10-A4. Con la casilla desmarcada, la preparación desatendida no ejecuta «Sincronizar con la voz» aunque el modelo esté instalado; marcada y sin el modelo del idioma, usa «Ajustar los silencios» y no inicia ninguna descarga (comprobado en el gestor de trabajos).
 - F10-A5. Con el motor de alineación no disponible (doble), la sección muestra solo `aj.alinear.noDisponible`, sin filas ni casilla.
-- F10-A6. Captura `docs/ux/revision-0.2.2-feature-10/ajustes-1280x800-100-{sincronia-automatica|descargando|no-disponible}.png`.
+- F10-A6. Captura `docs/ux/revisiones/0.2.2-feature-10/ajustes-1280x800-100-{sincronia-automatica|descargando|no-disponible}.png`.
 
 ## 0.2.2 · Feature 5 — Letras y preparación automática
 
@@ -1050,4 +1050,4 @@ Orden de secciones: Separación de voz · Sincronía automática (feature 10) ·
 - F5-J5. Marcar la casilla con borradores «Falta la letra» muestra `aj.prep.pendientes` con el recuento; [Verlos en la Biblioteca] abre la Biblioteca con la casilla «Esperan letra» activa. No se lanza ninguna búsqueda para esos borradores.
 - F5-J6. «Copiar información para soporte» incluye `aj.soporte.busqueda`.
 - F5-J7. Con un fallo de escritura simulado, la casilla vuelve a su valor y aparece `aj.rep.toast.error`.
-- F5-J8. Captura `docs/ux/revision-0.2.2-feature-5/ajustes-1280x800-100-{letras|letras-desactivada|letras-pendientes}.png`.
+- F5-J8. Captura `docs/ux/revisiones/0.2.2-feature-5/ajustes-1280x800-100-{letras|letras-desactivada|letras-pendientes}.png`.

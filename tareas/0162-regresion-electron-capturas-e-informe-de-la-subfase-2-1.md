@@ -40,7 +40,7 @@ En esta máquina no hay `worker/.venv`, así que la onda queda en «Forma de ond
 
 ## Capturas
 
-- En `docs/ux/revision-fase-2.1/`, en PNG, con el nombre `editor-{ancho}x{alto}-{escala}-{estado}.png` (tamaño físico).
+- En `docs/ux/revisiones/fase-2.1/`, en PNG, con el nombre `editor-{ancho}x{alto}-{escala}-{estado}.png` (tamaño físico).
 - Se usa `page.screenshot()` del área de contenido: con DPR 1,25 sale al tamaño físico, sin el marco del SO.
 - Conjunto mínimo del criterio 25:
   - Seis viewports × `defecto` y `estilo`.
@@ -65,7 +65,7 @@ En esta máquina no hay `worker/.venv`, así que la onda queda en «Forma de ond
 - `app/e2e/editor-layout.spec.ts` (matriz parametrizada y caso de capturas).
 - `app/e2e/fixtures/editor.ts`.
 - `.github/workflows/ci.yml` (solo el tamaño de pantalla de xvfb).
-- `docs/ux/revision-fase-2.1/*.png` y `README.md`.
+- `docs/ux/revisiones/fase-2.1/*.png` y `README.md`.
 - `docs/versiones/0.2.0/informe-fase-2.1.md`.
 - `docs/versiones/0.2.0/backlog.md` (estados de la subfase).
 
@@ -84,7 +84,7 @@ Desde `app/`: lo anterior más `SHINOBI_CAPTURAS_2_1=1 npx playwright test e2e/e
 
 - Hecho: matriz de seis viewports con `exigirViewport` (comprueba `devicePixelRatio`, `innerWidth` e `innerHeight`; si no se concede, anotación `viewport omitido` y se omite), casos extra, caso de tooltip del divisor, caso de otras vistas a 1024 × 576, caso de histéresis, caso opt-in de capturas (`SHINOBI_CAPTURAS_2_1=1`, 28 PNG), `ci.yml` con `xvfb-run -s "-screen 0 3840x2160x24"` y el informe `docs/versiones/0.2.0/informe-fase-2.1.md`.
 - Corrección de la deuda de 0160 (histéresis): `MedidasEditor.barraVertical` (medida en `useDistribucion`) suma el ancho de la barra de `main` al decidir la disposición B. Prueba en `distribucion.test.ts` y E2E.
-- Archivos clave: `app/e2e/editor-layout.spec.ts`, `app/src/renderer/src/vistas/editor/distribucion.ts`, `useDistribucion.ts`, `distribucion.test.ts`, `.github/workflows/ci.yml`, `docs/ux/revision-fase-2.1/`, `docs/versiones/0.2.0/informe-fase-2.1.md`, `backlog.md` y `plan-2.md`.
+- Archivos clave: `app/e2e/editor-layout.spec.ts`, `app/src/renderer/src/vistas/editor/distribucion.ts`, `useDistribucion.ts`, `distribucion.test.ts`, `.github/workflows/ci.yml`, `docs/ux/revisiones/fase-2.1/`, `docs/versiones/0.2.0/informe-fase-2.1.md`, `backlog.md` y `plan-2.md`.
 - Resultado: lint, typecheck, format:check y build correctos; Vitest 2003 correctas, 13 omitidas y 8 fallos `EPERM` conocidos; Playwright completo 130 correctos, 10 omitidos, 0 fallos.
 - Cómo probarlo, desde `app/`: `npm run build`, `npx playwright test --workers=1` y, para las capturas, `SHINOBI_CAPTURAS_2_1=1 npx playwright test e2e/editor-layout.spec.ts --workers=1 -g "capturas de revisión"`.
 - Deuda: los seis viewports se verificaron solo en un equipo (3440 × 1440); falta la confirmación en CI. Decisiones a confirmar por UX en el informe. Pregunta 0051 sigue abierta.

@@ -11,7 +11,7 @@
 Publicar una entrega preliminar con las features cerradas hasta ese momento (cortes en el backlog).
 
 ## Criterios de aceptación
-- [ ] Versión con `version:subir`, notas en `docs/versiones/0.2.2/notas/0.2.2-alpha.N.md` (incluida la pérdida al abrir con 0.2.1 y el cambio a 5 líneas), ensayo del workflow y etiqueta.
+- [ ] Versión con `version:subir`, notas en `lanzamientos/notas/0.2.2/0.2.2-alpha.N.md` (incluida la pérdida al abrir con 0.2.1 y el cambio a 5 líneas), ensayo del workflow y etiqueta.
 - [ ] Con la feature 3 dentro, comprobar que la entrega anterior avisa de esta.
 
 ## Pruebas de feedback

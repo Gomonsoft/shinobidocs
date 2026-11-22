@@ -11,7 +11,7 @@ El [ADR 0020](../adr/0020-publicacion-en-github-releases-y-politica-de-versiones
 2. **Notas (§3).** Falta un aviso de que es una versión preliminar. Lo añade el workflow solo cuando la versión lleva sufijo, desde `.github/publicacion/aviso-previa.md`.
 3. **Marcadores.** La cabecera de §3 lleva ⟦R0045⟧ y el workflow rechaza notas con marcadores. Hace falta el texto final de la línea "¿Qué archivo descargo?" mientras 0045 siga con su opción provisional A.
 
-Además, cada *Release* lleva una sección propia de novedades, escrita a mano en `docs/versiones/<X.Y.Z>/notas/<versión>.md` (o, si no existe, la lista que genera GitHub). La tarea 0195 añade en ella "Sin probar en esta versión".
+Además, cada *Release* lleva una sección propia de novedades, escrita a mano en `lanzamientos/notas/<X.Y.Z>/<versión>.md` (o, si no existe, la lista que genera GitHub). La tarea 0195 añade en ella "Sin probar en esta versión".
 
 ## Pregunta
 1. ¿Qué muestra el README mientras solo haya alfas? Opciones que veo:

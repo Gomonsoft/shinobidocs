@@ -247,7 +247,7 @@ Medios: la suite Playwright (sección 3, en concreto `fase5.spec.ts`, 5 pruebas 
 | **17.1–17.4** aspectos pendientes | a/b | no ejecutado | |
 | **18.2** abrir y mirar no escribe `cancion.json` (IE1) | a | ✅ | abrir en el editor A Pesar de Mí y su diálogo «Ajustar los silencios»: el archivo de la copia sigue **byte a byte idéntico** al original (`cmp`), con la fecha 10:40:53; la canción no tiene `espera` (formato antiguo) |
 | **18.1, 18.3–18.9** | a/b | no ejecutado | |
-| **18.10** capturas a 1920×1080 | a | no ejecutado | la prueba escribe en `docs/ux/revision-0.2.0-fase-5/` (archivos del repo): no se hizo. La pantalla de este equipo (3440×1392 útiles) sí permitiría 1080 px de alto |
+| **18.10** capturas a 1920×1080 | a | no ejecutado | la prueba escribe en `docs/ux/revisiones/0.2.0-fase-5/` (archivos del repo): no se hizo. La pantalla de este equipo (3440×1392 útiles) sí permitiría 1080 px de alto |
 
 ## 6. Guía fase 4 · Ventana secundaria y cola (`fase-4-ventana-secundaria-y-cola.md`)
 

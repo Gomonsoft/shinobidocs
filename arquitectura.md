@@ -274,7 +274,7 @@ shinobi-karaoke/
 │   │   ├── exportar.py           # (0.2.0 fase 6) fotogramas BGRA por stdin + mezcla → MKV AV1/Opus o WebM VP9/Opus
 │   │   └── capacidades_exportacion.py # (0.2.0 fase 6) sondeo de codificadores y resoluciones
 │   └── tests/
-├── spikes/                       # pruebas de concepto desechables (no se empaquetan ni se importan desde app/ o worker/)
+├── docs/spikes/                       # pruebas de concepto desechables (no se empaquetan ni se importan desde app/ o worker/)
 └── .github/workflows/            # ci.yml (lint + tests en los 3 SO), runtime-real.yml (manual) y empaquetado.yml (manual y por etiqueta `v*`, ADR 0020)
 ```
 
@@ -389,7 +389,7 @@ Detalle en los ADR [0012](adr/0012-empaquetado-con-electron-builder-fuses-uv-y-l
 | `uv` o `uv.exe` | `resources/bin/` | `resolverUv` |
 | `LICENSE`, `THIRD_PARTY_NOTICES.md` | `resources/` | `leerTextoLegal` |
 | Fuentes y `OFL.txt` | `resources/fonts/` (las que usa el renderer van también en el asar) | Obligación de la licencia OFL |
-| No se incluyen | — | Python, PyTorch, modelos, `spikes/`, tests, `.datos-dev` |
+| No se incluyen | — | Python, PyTorch, modelos, `docs/spikes/`, tests, `.datos-dev` |
 
 - **Instaladores**: `Shinobi-Karaoke-Windows-x64.exe`, `Shinobi-Karaoke-Mac-chip-Apple.dmg`, `Shinobi-Karaoke-Linux-x64.AppImage` y `shinobi-karaoke-linux-x64.deb` (`preguntas/0040`).
 - **Build**: `npm run build` → `npm run uv:descargar` → `npm run empaquetar` → `npm run paquete:verificar`.

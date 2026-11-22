@@ -27,7 +27,7 @@ Discusión previa: [R1](../versiones/0.2.0/discusion/r1-arquitecto.md#7--exporta
 
 ## Prueba técnica (2026-11-20)
 
-Prueba de concepto en [`docs/poc/0019-exportacion/`](../poc/0019-exportacion/) (no es código de producción):
+Prueba de concepto en [`docs/spikes/0019-exportacion/`](../spikes/0019-exportacion/) (no es código de producción):
 
 - `codificar.py`: codifica fotogramas BGRA (sintéticos o leídos de stdin) y una mezcla de audio con PyAV, y verifica el archivo leyéndolo.
 - `matriz.py`: recorre resoluciones × FPS × codificador.
@@ -417,7 +417,7 @@ Consultadas el 2026-11-20.
 - FFmpeg, licencia: https://ffmpeg.org/legal.html ; ruedas de PyAV: https://github.com/PyAV-Org/pyav-ffmpeg
 - MDN, contenedores y códecs de video en la web (WebM, AV1, VP9): https://developer.mozilla.org/docs/Web/Media/Formats/Containers , https://developer.mozilla.org/docs/Web/Media/Formats/Video_codecs ; caniuse AV1: https://caniuse.com/av1 ; Bitmovin, soporte de AV1: https://bitmovin.com/av1-playback-support/
 - Microsoft Store, Extensión de video AV1: https://apps.microsoft.com/detail/9MVZQVXJBQ9V
-- Datos propios: [`docs/poc/0019-exportacion/`](../poc/0019-exportacion/) y `worker/scripts/inspeccionar_av.py`.
+- Datos propios: [`docs/spikes/0019-exportacion/`](../spikes/0019-exportacion/) y `worker/scripts/inspeccionar_av.py`.
 
 ## Revisión para 0.2.0 — alpha.2 (correcciones de alpha.1)
 

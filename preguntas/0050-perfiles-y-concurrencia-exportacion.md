@@ -28,7 +28,7 @@ Elegir formato libre con OBS como referencia. Ofrecer 4:3 hasta 2880×2160 y 16:
 
 ## Estudio técnico (arquitecto, 2026-11-20)
 
-Detalle, mediciones y fuentes en el [ADR 0019](../adr/0019-exportacion-de-video-render-por-fotograma-y-worker-pyav.md) («Prueba técnica») y en [`docs/poc/0019-exportacion/`](../poc/0019-exportacion/).
+Detalle, mediciones y fuentes en el [ADR 0019](../adr/0019-exportacion-de-video-render-por-fotograma-y-worker-pyav.md) («Prueba técnica») y en [`docs/spikes/0019-exportacion/`](../spikes/0019-exportacion/).
 
 - **Códecs y licencias.** Las 6 ruedas de PyAV 19.0.2 que ya instala el primer arranque (macOS arm64, Windows y Linux, CPU y CUDA) traen SVT-AV1, libvpx (VP9) y libopus, sin componentes no libres (`worker/scripts/inspeccionar_av.py`). Todos son compatibles con GPL-3.0-or-later. **No hace falta ninguna dependencia nueva.**
 - **Contenedor y códecs** (respuesta a «formato libre como OBS»): **MKV con AV1 y Opus** por defecto (el contenedor por defecto y el códec más nuevo de OBS) y **WebM con VP9 y Opus** como alternativa más compatible con navegadores y equipos antiguos. Ninguno se abre en QuickTime. Si se prefiere uno solo: [0120](0120-formatos-y-resoluciones-de-la-exportacion.md).

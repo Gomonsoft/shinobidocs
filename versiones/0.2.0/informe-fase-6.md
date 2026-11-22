@@ -82,7 +82,7 @@ Las medidas existentes son de **un solo intento**, hechas por los programadores 
 
 ### Capturas
 
-20 PNG en [`docs/ux/revision-fase-6/`](../../ux/revision-fase-6/README.md), 10 estados × 2 (1280 × 800 al 100 % y 1280 × 720 al 125 %), con exportaciones reales de 5 s a 1080p30, regeneradas tras corregir los tres defectos del diálogo. **Faltan 4 estados de V29** (`en-cola`, `fallo`, `perfil-no-soportado`, `sin-perfiles`): necesitan un doble o un equipo que no existen en la app empaquetable (están cubiertos por Vitest); `bloqueo-sesion` no existe porque V23 se retiró. La captura `tarjeta-exportando` solo muestra el tooltip del ⋯, **no el menú abierto** que pide X7. La revisión del diseñador sigue por hacer. Comando: `SHINOBI_CAPTURAS_6=1 npx playwright test e2e/exportacion-capturas.spec.ts --workers=1` desde `app/`.
+20 PNG en [`docs/ux/revisiones/fase-6/`](../../ux/revisiones/fase-6/README.md), 10 estados × 2 (1280 × 800 al 100 % y 1280 × 720 al 125 %), con exportaciones reales de 5 s a 1080p30, regeneradas tras corregir los tres defectos del diálogo. **Faltan 4 estados de V29** (`en-cola`, `fallo`, `perfil-no-soportado`, `sin-perfiles`): necesitan un doble o un equipo que no existen en la app empaquetable (están cubiertos por Vitest); `bloqueo-sesion` no existe porque V23 se retiró. La captura `tarjeta-exportando` solo muestra el tooltip del ⋯, **no el menú abierto** que pide X7. La revisión del diseñador sigue por hacer. Comando: `SHINOBI_CAPTURAS_6=1 npx playwright test e2e/exportacion-capturas.spec.ts --workers=1` desde `app/`.
 
 ## Resultado por criterio
 

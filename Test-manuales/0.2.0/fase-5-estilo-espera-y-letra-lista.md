@@ -344,7 +344,7 @@ Criterios de la spec: G7, G9, IE1, IE2, IE6, IE7, LL1, AS1, LB4, LB6 y R14. El [
 | 18.7 | Con la cuenta y la barra marcadas, busca con la barra de tiempo (clic) **dentro** de un hueco largo y pausa (R8) | Al saltar aparecen **al instante** la barra con el ancho de ese momento y el número que toca; en pausa se **congelan**; al buscar fuera del hueco desaparecen | ☐ |
 | 18.8 | Con una Letra lista, aplica a la canción otro tema con «Aplicar tema…» y mira la insignia; después «Volver a borrador» (LB4) | La insignia sigue siendo «Letra lista» tras aplicar el tema (la modalidad no cambia); tras volver a borrador, es «✎ Borrador» | ☐ |
 | 18.9 | Si no hiciste el 3.7, mira en la Biblioteca la portada de una canción con degradado en movimiento, en dos momentos distintos y con una sesión abierta (LB6) | La portada se ve **quieta, en la fase 0**, siempre igual | ☐ |
-| 18.10 | Con un monitor de **al menos 1080 px de alto**, en `app/`: `npm run build && SHINOBI_CAPTURAS_5=1 npx playwright test e2e/fase5-capturas.spec.ts --workers=1` y mira `reproductor-1920x1080-*.png` en `docs/ux/revision-0.2.0-fase-5/` (R14) | Las seis capturas miden **1920 × 1080** (hoy salen recortadas en alto) | ☐ |
+| 18.10 | Con un monitor de **al menos 1080 px de alto**, en `app/`: `npm run build && SHINOBI_CAPTURAS_5=1 npx playwright test e2e/fase5-capturas.spec.ts --workers=1` y mira `reproductor-1920x1080-*.png` en `docs/ux/revisiones/0.2.0-fase-5/` (R14) | Las seis capturas miden **1920 × 1080** (hoy salen recortadas en alto) | ☐ |
 
 ## Ejecuciones
 

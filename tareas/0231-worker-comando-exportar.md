@@ -8,7 +8,7 @@
 
 ## Objetivo
 
-Comando `python -m shinobi_worker exportar --args '<json>'` que lee fotogramas BGRA por stdin, mezcla el audio y escribe un MKV (AV1 + Opus) o WebM (VP9 + Opus) en la ruta temporal, con progreso JSON Lines. Base: `docs/poc/0019-exportacion/codificar.py` (solo como referencia; no se importa).
+Comando `python -m shinobi_worker exportar --args '<json>'` que lee fotogramas BGRA por stdin, mezcla el audio y escribe un MKV (AV1 + Opus) o WebM (VP9 + Opus) en la ruta temporal, con progreso JSON Lines. Base: `docs/spikes/0019-exportacion/codificar.py` (solo como referencia; no se importa).
 
 ## Contrato
 
@@ -36,7 +36,7 @@ Comando `python -m shinobi_worker exportar --args '<json>'` que lee fotogramas B
 
 ## Notas de implementación
 
-Comando `exportar` implementado en `worker/shinobi_worker/exportar.py` (registrado en `comandos.py`) siguiendo el contrato y `docs/poc/0019-exportacion/codificar.py`. La función `exportar(args, entrada=None)` admite un flujo inyectado para las pruebas; sin él lee `sys.stdin.buffer.raw`. Si `line_size` del plano BGRA no coincide con `ancho × 4`, lee a un búfer y copia por filas (sin NumPy). El audio se trunca o rellena con silencio a `duracion_ms` y se intercala en bloques de 100 ms. La verificación final cuenta paquetes de video y compara la duración con ± 1 fotograma; si falla da `VERIFICACION_FALLIDA` (código ya existente).
+Comando `exportar` implementado en `worker/shinobi_worker/exportar.py` (registrado en `comandos.py`) siguiendo el contrato y `docs/spikes/0019-exportacion/codificar.py`. La función `exportar(args, entrada=None)` admite un flujo inyectado para las pruebas; sin él lee `sys.stdin.buffer.raw`. Si `line_size` del plano BGRA no coincide con `ancho × 4`, lee a un búfer y copia por filas (sin NumPy). El audio se trunca o rellena con silencio a `duracion_ms` y se intercala en bloques de 100 ms. La verificación final cuenta paquetes de video y compara la duración con ± 1 fotograma; si falla da `VERIFICACION_FALLIDA` (código ya existente).
 
 Cambios de soporte (fuera de `exportar.py`):
 - `ErrorWorker` y `protocolo.error` admiten `detalle` opcional (`{ fotograma }`); `__main__` lo reenvía. El esquema TS `mensajeErrorSchema` aún no declara `detalle` (zod lo descarta sin fallar): lo recoge 0230/0233.

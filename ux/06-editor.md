@@ -821,7 +821,7 @@ Minimizar **nunca oculta**: cada panel queda como una barra compacta con sus con
 - **Minimizada por falta de espacio** (paso 4 de «Qué cede primero»): la fila es la misma, el botón «Expandir línea de tiempo» queda `aria-disabled="true"` con el tooltip `edi.layout.timeline.sinEspacio`, y no se guarda como preferencia. Al haber espacio otra vez, vuelve sola al estado preferido. Si el foco estaba dentro de la línea de tiempo, pasa al botón «Expandir línea de tiempo» y se anuncia `edi.layout.anuncio.sinEspacio`.
 
 **Cómo se minimiza y se expande**
-- Botón icono en la cabecera de cada panel: lista `[«]` (`panel-left-close` / `panel-left-open`), panel `[»]` (`panel-right-close` / `panel-right-open`), línea de tiempo `[⌄]` / `[⌃]` (`chevron-down` / `chevron-up`). Son 32 × 32 px, con tooltip y `aria-expanded` + `aria-controls`.
+- Botón icono en la cabecera de cada panel: lista `[«]` (`panel-left-close` / `panel-left-open`), panel `[»]` (`panel-right-close` / `panel-right-open`), línea de tiempo `[⌄]` / `[⌃]` (`chevron-down` / `chevron-up`). Los tres van en la **esquina superior derecha** de su panel, también el de la línea de tiempo (expandida y minimizada). Son 32 × 32 px, con tooltip y `aria-expanded` + `aria-controls`.
 - **Intro** en el divisor correspondiente alterna el estado. Con el panel minimizado, su divisor sigue enfocable: Intro, una flecha que agrande o un arrastre lo expanden (arrastrando, el tamaño parte del mínimo y sigue al puntero).
 - Doble clic en el divisor: expande con el tamaño por defecto.
 - No hay atajo de una tecla para minimizar (evita choques con los atajos de sincronía).
@@ -933,7 +933,7 @@ Matriz de verificación: los seis viewports de «Unidades y tamaños de prueba»
 24. El seguimiento de la línea que suena en la lista, la selección desde la línea de tiempo, los tiradores, el zoom, el bucle y los atajos de la tabla del editor funcionan igual con cualquier combinación de tamaños y modos; la vista de la línea de tiempo no sigue sola al cabezal.
 
 **Capturas de revisión**
-25. Se guardan en `docs/ux/revision-fase-2.1/` en PNG con el nombre `editor-{ancho}x{alto}-{escala}-{estado}.png` (tamaño físico, p. ej. `editor-1280x720-125-defecto.png`). Como mínimo, para los seis viewports: `defecto` (Sincronía) y `estilo`; y a 1280 × 720 al 100 % y al 125 %: `lista-min`, `panel-min`, `timeline-min`, `todo-min`, `sync` (modo sincronizar) y `foco-divisor`. Además, `panel-300` con la fila del desplazamiento y `bajo-minimo` (disposición B). Cada captura muestra la ventana completa, sin recortes.
+25. Se guardan en `docs/ux/revisiones/fase-2.1/` en PNG con el nombre `editor-{ancho}x{alto}-{escala}-{estado}.png` (tamaño físico, p. ej. `editor-1280x720-125-defecto.png`). Como mínimo, para los seis viewports: `defecto` (Sincronía) y `estilo`; y a 1280 × 720 al 100 % y al 125 %: `lista-min`, `panel-min`, `timeline-min`, `todo-min`, `sync` (modo sincronizar) y `foco-divisor`. Además, `panel-300` con la fila del desplazamiento y `bajo-minimo` (disposición B). Cada captura muestra la ventana completa, sin recortes.
 
 ## Fase 3 de 0.2.0 · Temas y biblioteca
 
@@ -1336,7 +1336,7 @@ Todos con el componente «Diálogo modal» de sistema-visual §6: atrapan el foc
 - T28. Las muestras de tema del selector y del resumen reproducen fondo, fuente y color de letra del tema (comparación visual en la captura).
 
 **Capturas de revisión**
-- T29. Se guardan en `docs/ux/revision-fase-3/` (ver su [README](revision-fase-3/README.md)) con el nombre `editor-{ancho}x{alto}-{escala}-{estado}.png` a 1280 × 720 al 100 % y al 125 %: `tema-definidos`, `tema-asignado`, `tema-personalizado`, `tema-editando`, `tema-no-disponible`, `tema-catalogo-vacio`, `dialogo-guardar-impacto` (con la lista revelada), `dialogo-guardar-obsoleto`, `dialogo-nuevo-nombre`, `dialogo-eliminar` y `dialogo-salir-borrador`.
+- T29. Se guardan en `docs/ux/revisiones/fase-3/` (ver su [README](revisiones/fase-3/README.md)) con el nombre `editor-{ancho}x{alto}-{escala}-{estado}.png` a 1280 × 720 al 100 % y al 125 %: `tema-definidos`, `tema-asignado`, `tema-personalizado`, `tema-editando`, `tema-no-disponible`, `tema-catalogo-vacio`, `dialogo-guardar-impacto` (con la lista revelada), `dialogo-guardar-obsoleto`, `dialogo-nuevo-nombre`, `dialogo-eliminar` y `dialogo-salir-borrador`.
 - T30. Sin regresiones de la subfase 2.1: los criterios 1–7, 13 y 20 de la subfase se mantienen con la pestaña Estilo en cada estado D1–D4.
 
 ## Fase 4 de 0.2.0 — ventana secundaria y cola
@@ -1408,7 +1408,7 @@ Por eso al abrir la secundaria nunca hay un editor montado: el orden del [ADR 00
 - E5. Con el editor abierto, un cambio sin guardar y un borrador de tema, pulsar el indicador de sesión o ‹ Biblioteca muestra primero `tema.dialogo.salir`, después vacía el guardado (el archivo contiene el cambio) y solo entonces se puede abrir el reproductor; con un fallo de guardado simulado aparece `edi.dialogo.salir`.
 - E6. Durante la sesión, la escucha de Voz / Instrumental de la vista de progreso está `aria-disabled` con `edi.bloqueo.escucha` y no suena nada en la principal.
 - E7. Los elementos bloqueados conservan el foco con teclado, llevan el icono de candado y su nombre accesible incluye `edi.bloqueo.aria`.
-- E8. Captura `docs/ux/revision-fase-4/editor-1280x800-100-dialogo-bloqueo.png`.
+- E8. Captura `docs/ux/revisiones/fase-4/editor-1280x800-100-dialogo-bloqueo.png`.
 
 ## Fase 5 de 0.2.0 — estilo, espera y Letra lista
 
@@ -1811,7 +1811,7 @@ Lista revelada (hasta 8 filas visibles, scroll propio, orden de la letra; datos 
 - AS9. (Verificación manual) Con las 6 canciones de referencia sincronizadas a mano por el usuario (solo en su equipo), comparar los fines propuestos con los suyos y anotar en la guía manual cuántos difieren en más de 200 ms; el umbral se afina con esos datos (ver [propuesta 003](../propuestas/003-calibrar-el-ajuste-de-silencios-por-cancion.md)).
 
 **Capturas de revisión**
-- F5-1. En `docs/ux/revision-0.2.0-fase-5/` (la carpeta `revision-fase-5/` es de la fase 5 del MVP), nombre `editor-{ancho}x{alto}-{escala}-{estado}.png` a 1280 × 720 al 100 % y al 125 %: `fondo-radial`, `fondo-conico-movimiento`, `fondo-reducido`, `espera-d2`, `espera-d1-propios`, `espera-ejemplo`, `dock-letra-lista`, `dialogo-letra-lista`, `silencios-no-disponible`, `dialogo-silencios` (con la lista revelada) y `silencios-aplicado`.
+- F5-1. En `docs/ux/revisiones/0.2.0-fase-5/` (la carpeta `revision-fase-5/` es de la fase 5 del MVP), nombre `editor-{ancho}x{alto}-{escala}-{estado}.png` a 1280 × 720 al 100 % y al 125 %: `fondo-radial`, `fondo-conico-movimiento`, `fondo-reducido`, `espera-d2`, `espera-d1-propios`, `espera-ejemplo`, `dock-letra-lista`, `dialogo-letra-lista`, `silencios-no-disponible`, `dialogo-silencios` (con la lista revelada) y `silencios-aplicado`.
 
 **Verificación manual** (para la guía de `docs/Test-manuales/0.2.0/` de la fase 5): G4, G12, AS9; además, la sensación de las velocidades del movimiento en una TV a 5 m, la legibilidad de la cuenta y la barra sobre degradados en movimiento, y que el aviso de Letra lista se entiende a la primera.
 
@@ -1924,14 +1924,14 @@ Qué ve el usuario:
 ```text
 Líneas   [ verso anterior ]  [ ⇢ Is this the real life? ⇠ ]  [ verso siguiente ]
                            ↑ −0,5 s                       ↑ +0,5 s
-                           empieza aquí                    se pausa aquí
+                           empieza aquí                    Mayús + L se pausa aquí; el doble clic sigue
 ```
 
 | Aspecto | Comportamiento |
 |---|---|
 | Gesto | Doble clic sobre el **cuerpo** de una región (no sobre un tirador: el doble clic en un tirador no reproduce, para no confundirse con un arrastre). El primer clic selecciona la línea como hoy. Tooltip de la región: `edi.timeline.region.tooltip`. |
 | Tramo | Desde `máx(0, inicio mostrado − 500 ms)` hasta `mín(duración, fin efectivo mostrado + 500 ms)`. Los 500 ms son una constante con nombre compartida por la antelación y el margen final (`MARGEN_ESCUCHA_LINEA_MS = 500` en `app/src/shared/escucha.ts`, junto a `MARGEN_ESCUCHA_PALABRA_MS = 250` de «▶ Palabra»; [0145](../preguntas/0145-contratos-de-las-fases-8-y-9-para-las-specs.md) §6). Suena con la pista de escucha y la velocidad actuales. |
-| Final del tramo | Se **pausa** al llegar al final del tramo y el cabezal se queda ahí **(decisión provisional, [0147](../preguntas/0147-decisiones-provisionales-de-ux-de-0-2-1.md) §1)**. Así se escucha solo esa línea y un nuevo doble clic la repite. |
+| Final del tramo | **Doble clic:** no se pausa; la canción sigue sonando después de la línea (corrección del usuario al probar 0.2.1, 2026-11-22; sustituye la decisión provisional de [0147](../preguntas/0147-decisiones-provisionales-de-ux-de-0-2-1.md) §1). **Mayús + L** y «Escuchar la línea» (panel y menú de la fila): se **pausa** al llegar al final del tramo y el cabezal se queda ahí, para escuchar solo esa línea. |
 | Con la reproducción en curso | Se interrumpe sin pausa intermedia y salta al tramo. |
 | Con «Bloquear enunciado» en la **misma** línea | El bucle sigue activo: el cabezal salta a `máx(0, inicio audible − 500 ms)`, la primera vuelta incluye esos 500 ms y las siguientes empiezan en el inicio, como siempre. No se pausa al final (manda el bucle). |
 | Con «Bloquear enunciado» en **otra** línea | El doble clic cambia la selección, así que el bucle termina (regla de la fase 2), pero **no** se restaura la posición previa: suena el tramo de la línea nueva. |
@@ -2121,7 +2121,7 @@ Ya no existen: **S** (Sincronizar al ritmo), **,** y **.** (desplazamiento). La 
 
 **S, doble clic y desplazamiento**
 - E8-6. S no hace nada con el foco en la lista, en la línea de tiempo, en el panel ni en el transporte; el botón «Sincronizar al ritmo» entra en el modo; el botón y el banner no mencionan S y el diálogo de atajos no tiene esa fila.
-- E8-7. Doble clic en el cuerpo de una región reproduce desde `máx(0, inicio mostrado − 500 ms)` (± 20 ms, test con reloj simulado) y se pausa en `fin efectivo + 500 ms`; con la reproducción en curso salta sin pausa; con el inicio a 0,3 s empieza en 0. El valor viene de una constante con nombre (comprobado en el código).
+- E8-7. Doble clic en el cuerpo de una región reproduce desde `máx(0, inicio mostrado − 500 ms)` (± 20 ms, test con reloj simulado) y la canción sigue sin pausa; Mayús + L sí se pausa en `fin efectivo + 500 ms`; con la reproducción en curso salta sin pausa; con el inicio a 0,3 s empieza en 0. El valor viene de una constante con nombre (comprobado en el código).
 - E8-8. Con «Bloquear enunciado» en la misma línea, el doble clic reinicia el bucle desde 0,5 s antes y el bucle sigue; en otra línea, el bucle termina y suena el tramo de la nueva sin volver a la posición anterior. El doble clic sobre un tirador no reproduce.
 - E8-9. Mayús + L hace lo mismo que el doble clic sobre la línea seleccionada; sobre una línea sin inicio no hace nada y muestra `edi.escucharLinea.sinInicio`. L y el doble clic en la lista conservan su comportamiento (2 s antes, sin pausa al final).
 - E8-10. No hay sección de desplazamiento en el panel (el texto «Desplazamiento de toda la letra» no aparece en ningún sitio del editor) y `,` / `.` no hacen nada en el editor ni en «Probar a pantalla completa». Con una canción de prueba con `offset_ms: 1500`, la lista, los ticks, las regiones, la vista previa y el reproductor muestran los tiempos desplazados 1,5 s y marcar en `t` guarda `t − 1500` (los mismos tests de antes, sin la interfaz).
@@ -2137,7 +2137,7 @@ Ya no existen: **S** (Sincronizar al ritmo), **,** y **.** (desplazamiento). La 
 - E8-18. Las funciones mayores (exportar, ajustar los silencios, cambiar de modalidad y volver a borrador) se alcanzan sin abrir ⋯, con ratón y con teclado.
 
 **Capturas de revisión**
-- E8-19. En `docs/ux/revision-0.2.1-fase-8/`, nombre `editor-{ancho}x{alto}-{escala}-{estado}.png` a 1280 × 720 al 100 % y al 125 %: `final-ruin-sin-palabras`, `panel-sin-desplazamiento`, `dock-borrador`, `dock-lista`, `dock-letra-lista`, `funciones-borrador`, `funciones-lista`, `funciones-no-disponible`, `riel-funciones`, `menu-cabecera`.
+- E8-19. En `docs/ux/revisiones/0.2.1-fase-8/`, nombre `editor-{ancho}x{alto}-{escala}-{estado}.png` a 1280 × 720 al 100 % y al 125 %: `final-ruin-sin-palabras`, `panel-sin-desplazamiento`, `dock-borrador`, `dock-lista`, `dock-letra-lista`, `funciones-borrador`, `funciones-lista`, `funciones-no-disponible`, `riel-funciones`, `menu-cabecera`.
 
 ## Fase 9 de 0.2.1 — Editor preciso de línea
 
@@ -2207,7 +2207,7 @@ Para que no haya dos formas de editar lo mismo a la vez, la **línea abierta que
 | Aspecto | Valor |
 |---|---|
 | Superficie | `fondo-1`, borde 1 px `borde-control`, radio `r-l`, sombra de menús y diálogos (sistema-visual §4). Barra de título de 40 px en `fondo-2`. |
-| Tamaño inicial | 760 × 440 px CSS (en `rem`). **Mínimo** 560 × 360. **Máximo**: el área del editor (bajo la barra de la app) menos 16 px por cada lado. |
+| Tamaño inicial | 960 × 640 px CSS (en `rem`; corrección del usuario, 2026-11-22: a 760 × 440 abría demasiado compacta), recortado al máximo si no cabe: a 1280 × 720 ocupa el alto disponible y todos los controles se ven sin desplazamiento interior. **Mínimo** 560 × 360. **Máximo**: el área del editor (bajo la barra de la app) menos 16 px por cada lado. |
 | Posición inicial | Arriba, alineada con el borde superior de la zona superior del editor + 12 px; a la izquierda, junto al borde derecho de la lista de líneas + 12 px (para no tapar la lista); si no cabe, se desplaza a la izquierda hasta caber, y si aun así no cabe se centra. Nunca tapa la cabecera del editor. |
 | Mover | Arrastrando la barra de título (asa `⠿` y título; cursor `move`). Con teclado: el asa es un botón «Mover la ventana» (`edi.preciso.mover`); con el foco en ella, las flechas la mueven 16 px (Mayús: 64 px) e Inicio la devuelve a la posición inicial. Siempre queda entera dentro del área del editor (se detiene en los bordes). |
 | Cambiar el tamaño | Asa de 16 × 16 en la esquina inferior derecha (objetivo 24 × 24, cursor `nwse-resize`). Con teclado: botón «Cambiar el tamaño de la ventana» (`edi.preciso.tamano`); flechas ±16 px (Mayús: 64), Inicio = tamaño inicial. Entre mínimo y máximo. |
@@ -2423,7 +2423,7 @@ Con el foco en la ventana no actúan: L, Mayús + L, P, Supr, F, Ctrl/Cmd + E, I
 
 **Abrir y ventana**
 - P1. P, el botón de la fila de título de la lista, el del panel Sincronía, el del riel y «Editor preciso de línea…» del menú contextual de una fila abren la ventana para la línea seleccionada; con una línea sin inicio o en el modo sincronizar son `aria-disabled` con su motivo y P no abre nada.
-- P2. La ventana abre a 760 × 440 px junto a la lista sin tapar la cabecera, con el foco en la primera palabra sin marcar; se mueve arrastrando la barra de título y con las flechas sobre «Mover la ventana», cambia de tamaño entre 560 × 360 y el área del editor, nunca sale del área del editor y recuerda posición, tamaño y margen tras reiniciar; «Restablecer distribución de paneles» la devuelve a los valores iniciales.
+- P2. La ventana abre a 960 × 640 px (o al espacio disponible si es menor; a 1280 × 720 sin desplazamiento interior) junto a la lista sin tapar la cabecera, con el foco en la primera palabra sin marcar; se mueve arrastrando la barra de título y con las flechas sobre «Mover la ventana», cambia de tamaño entre 560 × 360 y el área del editor, nunca sale del área del editor y recuerda posición, tamaño y margen tras reiniciar; «Restablecer distribución de paneles» la devuelve a los valores iniciales.
 - P3. Es no modal: con la ventana abierta, la vista previa, el transporte, la lista y las pestañas responden al ratón; F6 lleva el foco al editor y de vuelta; Tab no sale de la ventana. Al cerrar, el foco vuelve al elemento que la abrió.
 - P4. En los seis viewports de la subfase 2.1, la ventana a su tamaño inicial (o recortada) no produce scroll de página y sus filas de controles no se parten a 560 px de ancho.
 
@@ -2454,7 +2454,7 @@ Con el foco en la ventana no actúan: L, Mayús + L, P, Supr, F, Ctrl/Cmd + E, I
 
 **Teclado y capturas**
 - P22. Todo el flujo (abrir, mover, cambiar el tamaño, elegir palabra, ajustar, marcar, escuchar, editar el texto, aplicar, cancelar, cambiar de línea) es operable solo con teclado; el diálogo de atajos incluye la sección `edi.preciso.atajos.titulo`; los atajos de una tecla no actúan en el campo de texto.
-- P23. Capturas en `docs/ux/revision-0.2.1-fase-9/` con nombre `editor-{ancho}x{alto}-{escala}-{estado}.png` a 1280 × 720 al 100 % y al 125 %: `preciso-abierto`, `preciso-marcando`, `preciso-palabra-seleccionada`, `preciso-texto-repartido`, `preciso-descartar`, `preciso-sin-onda`, `lista-indicador`, `toast-palabras-descartadas`, y `preciso-1024x576-125` en el tamaño mínimo de ventana.
+- P23. Capturas en `docs/ux/revisiones/0.2.1-fase-9/` con nombre `editor-{ancho}x{alto}-{escala}-{estado}.png` a 1280 × 720 al 100 % y al 125 %: `preciso-abierto`, `preciso-marcando`, `preciso-palabra-seleccionada`, `preciso-texto-repartido`, `preciso-descartar`, `preciso-sin-onda`, `lista-indicador`, `toast-palabras-descartadas`, y `preciso-1024x576-125` en el tamaño mínimo de ventana.
 
 **Verificación manual** (guía de `docs/Test-manuales/0.2.1/`): marcar a mano una línea rápida y una lenta de una canción real a 0,5× y a 1× y comprobar que el barrido coincide con la voz en el reproductor; que el bucle a 0,5× y 0,75× conserva el tono y se entiende la voz (y que la primera vuelta grave, si se nota, no molesta); que mover y redimensionar la ventana es cómodo con un portátil de 1366 × 768; que Esc aplicando no sorprende.
 
@@ -2625,7 +2625,7 @@ La píldora del ejemplo reutiliza `edi.espera.ejemplo.etiqueta` («Ejemplo»).
 - F1-E13. A 300, 360 y 480 px de ancho del panel, la sección no produce scroll de página ni corta texto; los seis segmentos de «Líneas a la vez» caben en una fila con ≥ 40 px de ancho cada uno.
 - F1-E14. Los tres controles se manejan solo con teclado como grupos de radio, con nombre accesible y el motivo de las opciones no disponibles en su descripción.
 - F1-E15. «Probar a pantalla completa» y la vista previa usan la misma configuración efectiva (bloque propio si lo hay), también con cambios sin guardar.
-- F1-E16. Capturas en `docs/ux/revision-0.2.2-feature-1/` con nombre `editor-{ancho}x{alto}-{escala}-{estado}.png` a 1280 × 720 al 100 % y al 125 %: `pantalla-d2`, `pantalla-d1`, `pantalla-d1-propia`, `pantalla-no-disponible`, `pantalla-ejemplo`, `pantalla-reducido`, `previa-pausa-siete`, y `pantalla-300px` con el panel al mínimo.
+- F1-E16. Capturas en `docs/ux/revisiones/0.2.2-feature-1/` con nombre `editor-{ancho}x{alto}-{escala}-{estado}.png` a 1280 × 720 al 100 % y al 125 %: `pantalla-d2`, `pantalla-d1`, `pantalla-d1-propia`, `pantalla-no-disponible`, `pantalla-ejemplo`, `pantalla-reducido`, `previa-pausa-siete`, y `pantalla-300px` con el panel al mínimo.
 
 **Verificación manual** (guía de 0.2.2): que se entienda a la primera qué hace cada control y la diferencia entre «Desplazamiento» y «Fundido» con el ejemplo; que con 7 líneas la vista previa siga sirviendo para componer.
 
@@ -2734,7 +2734,7 @@ Esta sección **amplía** la sección «Letra» del panel Estilo y el aviso de c
 - F2-E8. «Sugerir un color de resaltado» con letra `#E53935` propone un color que no se confunde con daltonismo y, al aplicarlo, `edi.contraste.daltonismo` desaparece.
 - F2-E9. En una Letra lista, el aviso de daltonismo sale como ⓘ con `edi.contraste.soloEditor`, y la casilla lleva esa misma nota; en D3 sale como ⚠.
 - F2-E10. En D1 con colores que se confunden, el aviso se muestra con `tema.contraste.ayuda` y sin acciones rápidas.
-- F2-E11. Capturas en `docs/ux/revision-0.2.2-feature-2/` con nombre `editor-{ancho}x{alto}-{escala}-{estado}.png` a 1280 × 720 al 100 %: `subrayado-casilla`, `subrayado-previa`, `aviso-daltonismo`, `subrayado-nota-ajustes`, `subrayado-letra-lista`.
+- F2-E11. Capturas en `docs/ux/revisiones/0.2.2-feature-2/` con nombre `editor-{ancho}x{alto}-{escala}-{estado}.png` a 1280 × 720 al 100 %: `subrayado-casilla`, `subrayado-previa`, `aviso-daltonismo`, `subrayado-nota-ajustes`, `subrayado-letra-lista`.
 
 **Verificación manual** (guía de 0.2.2): que el texto del aviso se entienda sin saber qué es el ΔE; que el aviso no salga con los temas habituales del usuario (si sale en más de uno, revisar el umbral con el arquitecto).
 
@@ -2884,7 +2884,7 @@ Al abrir el editor de un **borrador** con ≥ 3 líneas con inicio y los picos l
 - F4-E8. El desplazamiento que sacaría una línea del audio no se propone (el veredicto es `no_coincide`); tras cualquier corrección se cumplen los invariantes de tiempos del [ADR 0006](../adr/0006-persistencia-y-modelo-de-datos.md) (test de la función pura).
 - F4-E9. No existe ningún atajo de una tecla para comprobar ni para corregir; `,` y `.` siguen sin hacer nada; todo el flujo se opera con teclado y los resultados se anuncian.
 - F4-E10. En los seis viewports de la subfase 2.1, la sección y los dos diálogos no producen scroll de página; a 300 px de ancho del panel el botón no se parte.
-- F4-E11. Capturas en `docs/ux/revision-0.2.2-feature-4/`, nombre `editor-1280x720-100-{estado}.png`: `funciones-comprobar`, `funciones-comprobar-no-disponible`, `dialogo-desfase`, `dialogo-no-encaja`, `banner-desfase`, `desfase-corregido`.
+- F4-E11. Capturas en `docs/ux/revisiones/0.2.2-feature-4/`, nombre `editor-1280x720-100-{estado}.png`: `funciones-comprobar`, `funciones-comprobar-no-disponible`, `dialogo-desfase`, `dialogo-no-encaja`, `banner-desfase`, `desfase-corregido`.
 
 **Verificación manual** (guía de `docs/Test-manuales/0.2.2/`): en una canción real, mover a mano toda la letra con un LRC editado (1 s y 3 s) y comprobar que la corrección deja el barrido sobre la voz a oído; comprobar una canción con una intro hablada o coros largos y anotar si sale «No está claro»; comprobar que el diálogo de «no encaja» lleva a tramos donde de verdad falta o sobra letra.
 
@@ -2943,7 +2943,7 @@ Primera sección de la pestaña, solo si la canción tiene registro de preparaci
 - F5-E2. El bloque lista solo lo que la preparación hizo y sigue en pie; cada acción es un paso del historial con su toast y [Deshacer].
 - F5-E3. [Quitar esos fines] deja en automático exactamente los fines fijados por la preparación que no se han cambiado después (test con una línea tocada a mano: conserva su fin).
 - F5-E4. Una canción añadida sin preparación automática (interruptor desactivado y letra elegida a mano) no muestra ni el banner ni el bloque.
-- F5-E5. Captura `docs/ux/revision-0.2.2-feature-5/editor-1280x720-100-preparacion-automatica.png`.
+- F5-E5. Captura `docs/ux/revisiones/0.2.2-feature-5/editor-1280x720-100-preparacion-automatica.png`.
 
 ## 0.2.2 · Feature 9 — Exportar la letra desde el editor
 
@@ -3308,7 +3308,7 @@ Regla de 8.6: botón `aria-disabled`, enfocable, con el motivo visible debajo y 
 **Teclado, accesibilidad y capturas**
 - F10-E15. No hay atajo de una tecla; los tres pasos se operan con teclado; Esc cancela sin cambios; el progreso se anuncia al empezar, al 50 % y al terminar; la confianza se lee como texto.
 - F10-E16. En los seis viewports de la subfase 2.1, la sección y el diálogo no producen scroll de página; a 300 px de ancho del panel, el botón y la fila del idioma no se parten.
-- F10-E17. Capturas en `docs/ux/revision-0.2.2-feature-10/`, nombre `editor-1280x720-100-{estado}.png`: `funciones-sincronizar`, `paso-idioma-modelo`, `paso-escuchando`, `vista-previa`, `vista-previa-lineas`, `vista-previa-poca-confianza`, `lista-indicadores`, `preciso-automaticas`, `no-disponible-equipo`, `idioma-no-admitido`.
+- F10-E17. Capturas en `docs/ux/revisiones/0.2.2-feature-10/`, nombre `editor-1280x720-100-{estado}.png`: `funciones-sincronizar`, `paso-idioma-modelo`, `paso-escuchando`, `vista-previa`, `vista-previa-lineas`, `vista-previa-poca-confianza`, `lista-indicadores`, `preciso-automaticas`, `no-disponible-equipo`, `idioma-no-admitido`.
 
 **Verificación manual** (guía de `docs/Test-manuales/0.2.2/`): sincronizar con la voz Semestre de Otoño y Cursiva la Letra (casi todos los fines automáticos) y cantar cada una entera en «Probar»: anotar cuántas líneas hubo que corregir y si el barrido por palabra acompaña a la voz o distrae; repetir con una canción en inglés y con una de coros y voces dobladas; medir el tiempo del análisis con y sin tarjeta gráfica; comprobar que una canción cuya letra es de otra versión da el aviso de poca confianza en lugar de aplicar fines malos.
 
@@ -3558,6 +3558,6 @@ Ninguno actúa en campos de texto ni con el foco en el editor preciso. N fuera d
 **Accesibilidad y capturas**
 - F11-E14. Todo el recorrido se hace solo con teclado (R, N, Ctrl/Cmd + ↓ / ↑, Mayús + L, P, I, O, Esc); cada línea se anuncia una vez con su texto y su motivo; el foco nunca queda en `body`.
 - F11-E15. En los seis viewports de la subfase 2.1 la tarjeta no produce scroll de página (el panel usa su propio scroll) y a 300 px de ancho del panel sus botones no se parten.
-- F11-E16. Capturas en `docs/ux/revision-0.2.2-feature-11/`, nombre `editor-1280x720-100-{estado}.png` (y `-125`): `funciones-revisar`, `lista-con-marcas`, `recorrido`, `recorrido-corregida`, `recorrido-fuera`, `recorrido-fin`, `popover-pendientes`, `banner-revision`, `sin-dudas`.
+- F11-E16. Capturas en `docs/ux/revisiones/0.2.2-feature-11/`, nombre `editor-1280x720-100-{estado}.png` (y `-125`): `funciones-revisar`, `lista-con-marcas`, `recorrido`, `recorrido-corregida`, `recorrido-fuera`, `recorrido-fin`, `popover-pendientes`, `banner-revision`, `sin-dudas`.
 
 **Verificación manual** (guía de `docs/Test-manuales/0.2.2/`): revisar Semestre de Otoño y Cursiva la Letra tras prepararlas solas y anotar cuántas líneas señala, cuántas eran errores de verdad y cuántos errores no señaló (cantándolas enteras después); cronometrar la revisión frente a repasar la canción entera; comprobar con una canción ya terminada a mano que casi no señala nada; hacer un recorrido completo sin ratón.

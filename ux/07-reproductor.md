@@ -579,7 +579,7 @@ Tras «Cerrar y conservar cola» (o una caída), la principal guarda la última 
 - P13. Desconectar la pantalla de la secundaria la recoloca en ventana en la pantalla primaria sin cortar el audio ni cambiar la cola; cerrar la secundaria a la fuerza (proceso del renderer terminado) termina la sesión conservando la cola y libera el bloqueo de reposo y el de edición.
 - P14. La pantalla del equipo no se apaga en ningún estado de la sesión (incluidos S2 y S3) y vuelve a apagarse según el sistema al terminar la sesión.
 - P15. La secundaria no muestra `rep.incompleta` ni toasts; la principal sí recibe sus toasts durante la sesión.
-- P16. Capturas en `docs/ux/revision-fase-4/` con nombre `reproductor-{ancho}x{alto}-{estado}.png` a 1920 × 1080 y 1280 × 720: `cuenta`, `cuenta-reducido`, `espera`, `espera-vacia`, `fin-cola`, `fallo`, `reanudada`.
+- P16. Capturas en `docs/ux/revisiones/fase-4/` con nombre `reproductor-{ancho}x{alto}-{estado}.png` a 1920 × 1080 y 1280 × 720: `cuenta`, `cuenta-reducido`, `espera`, `espera-vacia`, `fin-cola`, `fallo`, `reanudada`.
 
 ## Fase 5 de 0.2.0 — estilo, espera y Letra lista
 
@@ -658,7 +658,7 @@ Esta sección **amplía** la spec y vale igual para el reproductor local, la pru
 - R11. Al empezar un hueco de 8 s con indicadores (cambio de `clave` del fotograma al empezar la espera; los cambios por dígito no se anuncian) se anuncia una vez `rep.espera.aria` («La letra sigue en 8 segundos.»); no hay anuncios por segundo, en la primera entrada ni al pausar.
 - R12. En una canción Letra lista, durante una línea (también con tiempos de palabra) ningún píxel de la letra tiene el color de lo ya cantado (captura a mitad de línea) y los indicadores usan el color de la letra; en la misma canción, la vista previa del editor sí muestra el barrido.
 - R13. Una Letra lista se reproduce desde la Biblioteca, entra en la cola y se reproduce sin barrido en la secundaria; la modalidad se fija al empezar la reproducción. Con el reproductor abierto en otra pantalla no se puede cambiar (la edición está bloqueada: `EDICION_BLOQUEADA`); con el reproductor local, un cambio hecho después solo afecta a la siguiente reproducción.
-- R14. Capturas en `docs/ux/revision-0.2.0-fase-5/` con nombre `reproductor-{ancho}x{alto}-{estado}.png` a 1920 × 1080 y 1280 × 720: `hueco-tres-indicadores`, `hueco-cuenta`, `hueco-barra`, `letra-lista`, `fondo-radial`, `fondo-conico`.
+- R14. Capturas en `docs/ux/revisiones/0.2.0-fase-5/` con nombre `reproductor-{ancho}x{alto}-{estado}.png` a 1920 × 1080 y 1280 × 720: `hueco-tres-indicadores`, `hueco-cuenta`, `hueco-barra`, `letra-lista`, `fondo-radial`, `fondo-conico`.
 
 **Verificación manual** (guía de la fase 5): legibilidad de la cuenta y la barra a 5 m en una TV de 55" y en un proyector, con fondos degradados claros y oscuros; sensación de las velocidades del movimiento y que no maree; el movimiento fluido en la secundaria de un equipo modesto con dos pantallas; que la Letra lista se lea bien sin barrido en una canción rápida.
 
@@ -705,7 +705,7 @@ Origen: [plan 0.2.1, fases 8 y 9](../versiones/0.2.1/plan-3.md#fase-8--sincroní
 - R8-4. La pista usa `letra.color` y el relleno `color_resaltado`; en Letra lista, la pista es `letra.color` al 35 % y el relleno `letra.color`, y ningún píxel tiene `color_resaltado` (captura a mitad de un hueco).
 - R8-5. Con movimiento reducido emulado, el relleno sigue avanzando de forma continua. Sustituye a R10 en lo que se refiere a la barra.
 - R8-6. En el mismo tiempo de canción, la vista previa del editor, el reproductor y un fotograma exportado dan el mismo modelo de barra (pista, relleno y posición relativos; test compartido).
-- R8-7. Capturas en `docs/ux/revision-0.2.1-fase-8/` con nombre `reproductor-{ancho}x{alto}-{estado}.png` a 1920 × 1080 y 1280 × 720: `barra-carga-inicio`, `barra-carga-mitad`, `barra-carga-letra-lista`, `palabras-importadas-progresivo`.
+- R8-7. Capturas en `docs/ux/revisiones/0.2.1-fase-8/` con nombre `reproductor-{ancho}x{alto}-{estado}.png` a 1920 × 1080 y 1280 × 720: `barra-carga-inicio`, `barra-carga-mitad`, `barra-carga-letra-lista`, `palabras-importadas-progresivo`.
 
 **Verificación manual** (guía de 0.2.1): la barra de carga se entiende a 5 m en una TV de 55" con fondos claros y oscuros y con un tema de colores parecidos; en Letra lista se distingue el relleno de la pista.
 
@@ -953,7 +953,7 @@ Sin textos nuevos en el reproductor. Los del panel Estilo están en [06 · Featu
 - F1-R22. El barrido palabra a palabra de una línea con tiempos hechos a mano avanza igual que en 0.2.1 mientras la línea entra (mismo ancho pintado relativo para el mismo tiempo).
 - F1-R23. La vista previa del editor, el reproductor, la ventana secundaria y un fotograma exportado dan el mismo modelo en el mismo instante, también a mitad de un cambio de línea (test compartido).
 - F1-R24. Con el fondo `#F2E8D5` y letra `#111111`, y con el tema «Shinobi», cada puesto atenuado tiene contraste ≥ 3:1 contra el peor punto del fondo (test del suelo de contraste).
-- F1-R25. Capturas en `docs/ux/revision-0.2.2-feature-1/` con nombre `reproductor-{ancho}x{alto}-{estado}.png` a 1920 × 1080 y 1280 × 720: `cinco-lineas`, `siete-lineas-dos-cantadas`, `dos-lineas`, `cambio-desplazamiento-mitad`, `cambio-fundido-mitad`, `pausa-larga-indicadores`, `dos-renglones`, `letra-lista`, y `cuatro-tercios-siete-lineas` a 1440 × 1080.
+- F1-R25. Capturas en `docs/ux/revisiones/0.2.2-feature-1/` con nombre `reproductor-{ancho}x{alto}-{estado}.png` a 1920 × 1080 y 1280 × 720: `cinco-lineas`, `siete-lineas-dos-cantadas`, `dos-lineas`, `cambio-desplazamiento-mitad`, `cambio-fundido-mitad`, `pausa-larga-indicadores`, `dos-renglones`, `letra-lista`, y `cuatro-tercios-siete-lineas` a 1440 × 1080.
 
 **Verificación manual** (guía de 0.2.2): legibilidad a 5 m en una TV de 55" con 5 y con 7 líneas; que ninguna de las dos animaciones maree en la canción rápida de referencia (101 líneas en 3:29); 4:3 en proyector con 5 y con 7; fluidez en la ventana secundaria de un equipo modesto con el fondo en movimiento; que el relevo y los dos tiempos se entiendan en los primeros versos de una canción lenta.
 
@@ -1015,6 +1015,6 @@ En karaoke, la parte cantada de la línea activa se distingue de la que falta **
 - F2-R6. En una canción Letra lista con el subrayado activo (por el tema o por Ajustes), el reproductor no dibuja ningún subrayado ni ningún píxel del color de lo ya cantado.
 - F2-R7. Con el subrayado activo, la pista de la barra de espera es el color de la letra al 35 % y el relleno el color de lo ya cantado; apagado, la pista es el color de la letra al 100 % (como en 0.2.1).
 - F2-R8. Con «Subrayar siempre lo ya cantado» activado en Ajustes, una canción cuyo tema no lo tiene se reproduce con subrayado en el reproductor local y en la ventana secundaria; al desactivarlo, la siguiente reproducción sale sin él.
-- F2-R9. Capturas en `docs/ux/revision-0.2.2-feature-2/` con nombre `reproductor-{ancho}x{alto}-{estado}.png` a 1920 × 1080: `subrayado-mitad`, `subrayado-dos-renglones`, `subrayado-barra-espera`, y una con letra `#E53935` y resaltado `#43A047` (`subrayado-rojo-verde`).
+- F2-R9. Capturas en `docs/ux/revisiones/0.2.2-feature-2/` con nombre `reproductor-{ancho}x{alto}-{estado}.png` a 1920 × 1080: `subrayado-mitad`, `subrayado-dos-renglones`, `subrayado-barra-espera`, y una con letra `#E53935` y resaltado `#43A047` (`subrayado-rojo-verde`).
 
 **Verificación manual** (guía de 0.2.2): con un simulador de daltonismo (o un filtro de escala de grises del sistema) y el par rojo/verde anterior, el avance se sigue sin el color; el subrayado se ve a 5 m en una TV de 55" y no molesta la lectura de la línea siguiente.

@@ -73,7 +73,7 @@ Los casos están en `app/e2e/editor-layout.spec.ts` salvo indicación.
 | 20 · Panel a 300, 360 y 480 px | Caso de panel angosto | Correcto |
 | 21, 22, 23 · Persistencia, recorte sin sobrescribir y preferencias corruptas | Casos de 0161 | Correcto |
 | 24 · Sin regresiones del editor | `editor.spec.ts` completo (seguimiento, tiradores, zoom, bucle y atajos) | Correcto |
-| 25 · Capturas | Caso opt-in, 28 capturas en `docs/ux/revision-fase-2.1/` | Correcto |
+| 25 · Capturas | Caso opt-in, 28 capturas en `docs/ux/revisiones/fase-2.1/` | Correcto |
 | 0154 · Ancho estable con DPR 1, 1,25 y 1,5 | `editor.spec.ts` (con picos) | Correcto |
 
 ### Estado de la forma de onda
@@ -86,7 +86,7 @@ Biblioteca, Ajustes, Añadir canción y Letra no tienen scroll horizontal a 1024
 
 ### Capturas
 
-28 PNG en [`docs/ux/revision-fase-2.1/`](../../ux/revision-fase-2.1/README.md), con el nombre pedido por la spec, tamaño físico y picos. Se abrieron varias para revisarlas: defecto a 1280 × 720 y 1720 × 1440, sync, foco, todo minimizado, timeline minimizada, panel a 300 y bajo mínimo. Observaciones, que no son defectos de layout, en el README de la carpeta.
+28 PNG en [`docs/ux/revisiones/fase-2.1/`](../../ux/revisiones/fase-2.1/README.md), con el nombre pedido por la spec, tamaño físico y picos. Se abrieron varias para revisarlas: defecto a 1280 × 720 y 1720 × 1440, sync, foco, todo minimizado, timeline minimizada, panel a 300 y bajo mínimo. Observaciones, que no son defectos de layout, en el README de la carpeta.
 
 Comando: `SHINOBI_CAPTURAS_2_1=1 npx playwright test e2e/editor-layout.spec.ts --workers=1 -g "capturas de revisión"` desde `app/`.
 

@@ -390,7 +390,7 @@ El diálogo «Editar datos» ([02](02-biblioteca.md)) y el formulario del resume
 - F6-N8. Con «Buscar la letra automáticamente» activado, el formulario muestra `add.dato.lrclib` con el enlace a Ajustes; desactivado, no lo muestra. Volver de Ajustes conserva lo escrito.
 - F6-N9. «Editar datos» de la Biblioteca ofrece el mismo autocompletado, la sugerencia de unificar y el intercambio.
 - F6-N10. Sin conexión, todo lo anterior salvo F6-N7 funciona igual.
-- F6-N11. Capturas en `docs/ux/revision-0.2.2-feature-6/`, nombre `anadir-1280x800-100-{estado}.png`: `datos-con-procedencia`, `dato-dudoso`, `autocompletado`, `unificar`, `editar-datos-lrclib`.
+- F6-N11. Capturas en `docs/ux/revisiones/0.2.2-feature-6/`, nombre `anadir-1280x800-100-{estado}.png`: `datos-con-procedencia`, `dato-dudoso`, `autocompletado`, `unificar`, `editar-datos-lrclib`.
 
 **Verificación manual** (guía de `docs/Test-manuales/0.2.2/`): añadir 10 videos reales variados (oficiales, con letra, de canal «Topic», con «ft.») y 10 archivos propios, y anotar en cuántos hay que corregir algún campo; comprobar que el álbum de las canciones del artista más repetido de la biblioteca sale escrito como el que ya existe y que la canción hereda el tema del álbum sin tocar nada.
 
@@ -648,6 +648,6 @@ Con archivos locales, el origen dice «De la carpeta «Querido Album» · 13 arc
 - F7-N13. La tabla se opera entera con teclado (Tab, ↑/↓ entre filas, Espacio, Ctrl/Cmd + Intro, Esc); cada campo tiene nombre accesible con su columna y su fila; el progreso de L1 y los cambios del resumen se anuncian; a 1024 × 640 no hay scroll horizontal y el resumen y los botones siguen visibles.
 - F7-N14. Si la lectura deja una sola fila añadible, se abre el formulario D de una canción con sus datos.
 - F7-N15. El enlace «Importar paquete…» abre el diálogo de importación de la feature 9 (si esa feature no está, el enlace no se muestra).
-- F7-N16. Capturas en `docs/ux/revision-0.2.2-feature-7/`, nombre `anadir-1280x800-100-{estado}.png`: `origen-archivos`, `origen-enlaces`, `leyendo`, `tabla-lista`, `tabla-carpeta`, `tabla-duplicados`, `tabla-limite`, `tabla-sin-espacio`, `oferta-lista`, `descartar`, y `anadir-1024x640-100-tabla`.
+- F7-N16. Capturas en `docs/ux/revisiones/0.2.2-feature-7/`, nombre `anadir-1280x800-100-{estado}.png`: `origen-archivos`, `origen-enlaces`, `leyendo`, `tabla-lista`, `tabla-carpeta`, `tabla-duplicados`, `tabla-limite`, `tabla-sin-espacio`, `oferta-lista`, `descartar`, y `anadir-1024x640-100-tabla`.
 
 **Verificación manual** (guía de `docs/Test-manuales/0.2.2/`): añadir un álbum real desde su lista de YouTube y otro desde una carpeta de archivos propios; contar cuántas celdas hay que corregir antes de pulsar «Añadir»; comparar el tamaño y el tiempo estimados con los reales; volver cuando termine y comprobar cuántas canciones están «Lista para revisar» sin haber tocado nada (el flujo completo de las features 4 a 7).

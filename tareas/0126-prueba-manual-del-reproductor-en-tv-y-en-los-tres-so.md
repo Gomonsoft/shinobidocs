@@ -5,7 +5,7 @@
 - Depende de: 0115, 0119–0122 (y 0111 como referencia de método)
 - ADRs: 0011, 0010
 - Spec UX: docs/ux/07-reproductor.md (criterios 1, 4, 5, 9, 26, 33; §"Legibilidad a distancia")
-- Archivos: solo esta tarea (resultados en "Notas") y capturas en `docs/ux/revision-fase-6/`.
+- Archivos: solo esta tarea (resultados en "Notas") y capturas en `docs/ux/revisiones/fase-6/`.
 - Paralelizable con: 0123. **La hace una persona.**
 
 ## Objetivo

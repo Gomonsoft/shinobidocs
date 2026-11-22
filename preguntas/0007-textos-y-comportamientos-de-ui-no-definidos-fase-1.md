@@ -41,7 +41,7 @@ Para cada punto, ¿se acepta tal cual o qué texto/comportamiento debe tener? (L
 Lo descrito en cada punto, tal como está implementado en la rama `fase-1-esqueleto`.
 
 ## Respuesta
-**Respondida por disenador-ux (2026-11-04)**, junto con la revisión visual de la Fase 1 ([docs/ux/revision-fase-1/](../ux/revision-fase-1/README.md)). Textos llevados a `ux/02` §"Microcopy" (nota "Revisión 2026-11-04"). Los cambios que piden código están resumidos en [0008](0008-ajustes-ui-tras-revision-fase-1.md).
+**Respondida por disenador-ux (2026-11-04)**, junto con la revisión visual de la Fase 1 ([docs/ux/revisiones/fase-1/](../ux/revisiones/fase-1/README.md)). Textos llevados a `ux/02` §"Microcopy" (nota "Revisión 2026-11-04"). Los cambios que piden código están resumidos en [0008](0008-ajustes-ui-tras-revision-fase-1.md).
 
 | # | Decisión |
 |---|----------|

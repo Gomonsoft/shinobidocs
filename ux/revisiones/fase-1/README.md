@@ -1,8 +1,8 @@
 # Revisión visual y de UX — Fase 1 (tareas 0015–0020)
 
 - Autor: disenador-ux · Fecha: 2026-11-04 · Rama: `fase-1-esqueleto`
-- Specs de referencia: [02-biblioteca.md](../02-biblioteca.md), [00-mapa-de-vistas.md](../00-mapa-de-vistas.md), [sistema-visual.md](../sistema-visual.md)
-- Pregunta derivada para el arquitecto: [docs/preguntas/0008](../../preguntas/0008-ajustes-ui-tras-revision-fase-1.md); además se responde [0007](../../preguntas/0007-textos-y-comportamientos-de-ui-no-definidos-fase-1.md) (textos del programador)
+- Specs de referencia: [02-biblioteca.md](../../02-biblioteca.md), [00-mapa-de-vistas.md](../../00-mapa-de-vistas.md), [sistema-visual.md](../../sistema-visual.md)
+- Pregunta derivada para el arquitecto: [docs/preguntas/0008](../../../preguntas/0008-ajustes-ui-tras-revision-fase-1.md); además se responde [0007](../../../preguntas/0007-textos-y-comportamientos-de-ui-no-definidos-fase-1.md) (textos del programador)
 
 ## Cómo se obtuvieron
 Desde `app/`: `npm run semilla` (10 canciones de ejemplo en `.datos-dev`; ya existían) y `npm run build`. Un script Playwright temporal (fuera del repo, en el scratchpad de la sesión) lanzó `out/` con `_electron` igual que `app/e2e/*.spec.ts`, ajustó el tamaño con `BrowserWindow.setContentSize` y cerró la app con `app.close()`. La biblioteca vacía usa un directorio temporal con solo `config.json` (`instalacion.estado = "completa"`). Los diálogos se cerraron con **Cancelar**: la semilla no se modificó.

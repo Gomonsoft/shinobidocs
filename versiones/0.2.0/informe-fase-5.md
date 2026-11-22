@@ -79,7 +79,7 @@ No hay medidas de rendimiento automáticas del render con fondo en movimiento.
 
 ### Capturas
 
-35 PNG en [`docs/ux/revision-0.2.0-fase-5/`](../../ux/revision-0.2.0-fase-5/README.md), tomadas el 2026-11-20 en un Mac con una sola pantalla Retina: editor 11 estados × 2 (1280 × 720 al 100 % y al 125 %), reproductor 6 estados × 2 (1920 × 1080 y 1280 × 720) y Biblioteca 1. **Limitación:** las de 1920 × 1080 del reproductor salen recortadas en alto (macOS limita `setContentSize` a la pantalla real); para R14 exacto hace falta un monitor de al menos 1080 px de alto. La revisión del diseñador sigue por hacer. Comando: `SHINOBI_CAPTURAS_5=1 npx playwright test e2e/fase5-capturas.spec.ts --workers=1` desde `app/`.
+35 PNG en [`docs/ux/revisiones/0.2.0-fase-5/`](../../ux/revisiones/0.2.0-fase-5/README.md), tomadas el 2026-11-20 en un Mac con una sola pantalla Retina: editor 11 estados × 2 (1280 × 720 al 100 % y al 125 %), reproductor 6 estados × 2 (1920 × 1080 y 1280 × 720) y Biblioteca 1. **Limitación:** las de 1920 × 1080 del reproductor salen recortadas en alto (macOS limita `setContentSize` a la pantalla real); para R14 exacto hace falta un monitor de al menos 1080 px de alto. La revisión del diseñador sigue por hacer. Comando: `SHINOBI_CAPTURAS_5=1 npx playwright test e2e/fase5-capturas.spec.ts --workers=1` desde `app/`.
 
 ## Resultado por criterio
 
@@ -145,7 +145,7 @@ Leyenda: «V» = Vitest (archivo bajo `app/src/`; `renderer/src/` se abrevia com
 
 | Criterio | Verificación | Resultado |
 |---|---|---|
-| F5-1 · 11 estados a 1280 × 720 al 100 % y al 125 % | 22 PNG en `docs/ux/revision-0.2.0-fase-5/` (`fondo-radial`, `fondo-conico-movimiento`, `fondo-reducido`, `espera-d2`, `espera-d1-propios`, `espera-ejemplo`, `dock-letra-lista`, `dialogo-letra-lista`, `silencios-no-disponible`, `dialogo-silencios`, `silencios-aplicado`) | Correcto (revisión del diseñador pendiente) |
+| F5-1 · 11 estados a 1280 × 720 al 100 % y al 125 % | 22 PNG en `docs/ux/revisiones/0.2.0-fase-5/` (`fondo-radial`, `fondo-conico-movimiento`, `fondo-reducido`, `espera-d2`, `espera-d1-propios`, `espera-ejemplo`, `dock-letra-lista`, `dialogo-letra-lista`, `silencios-no-disponible`, `dialogo-silencios`, `silencios-aplicado`) | Correcto (revisión del diseñador pendiente) |
 
 ### Reproductor (R)
 

@@ -20,7 +20,7 @@ No hay web propia. Todos los textos son Markdown de GitHub. **Markdown no ejecut
 | Superficie | Archivo | Contenido |
 |------------|---------|-----------|
 | Sección "Descargar" | `README.md`, justo antes de "Requisitos del equipo" | §1 |
-| Botones de descarga | `docs/imagenes/descarga/*.svg` | §1.4 |
+| Botones de descarga | `lanzamientos/descarga/*.svg` | §1.4 |
 | Mención del canal de desarrollo | `README.md`, sección "Desarrollo" | §1.5 |
 | Guía "Instalar Shinobi Karaoke" | `INSTALAR.md`, en la raíz | §2 |
 | Notas de cada *Release* | GitHub, repositorio principal | §3 |
@@ -79,13 +79,13 @@ Los Mac con procesador Intel no son compatibles por ahora. Tampoco los equipos c
 
 ### Windows
 
-[![Descargar para Windows](docs/imagenes/descarga/descargar-windows.svg)](https://github.com/Gomonsoft/shinobi-karaoke/releases/download/v{VERSION}/Shinobi-Karaoke-Windows-x64.exe)
+[![Descargar para Windows](lanzamientos/descarga/descargar-windows.svg)](https://github.com/Gomonsoft/shinobi-karaoke/releases/download/v{VERSION}/Shinobi-Karaoke-Windows-x64.exe)
 
 Para Windows 10 u 11 de 64 bits.
 
 ### Mac
 
-[![Descargar para Mac con chip Apple](docs/imagenes/descarga/descargar-mac.svg)](https://github.com/Gomonsoft/shinobi-karaoke/releases/download/v{VERSION}/Shinobi-Karaoke-Mac-chip-Apple.dmg)
+[![Descargar para Mac con chip Apple](lanzamientos/descarga/descargar-mac.svg)](https://github.com/Gomonsoft/shinobi-karaoke/releases/download/v{VERSION}/Shinobi-Karaoke-Mac-chip-Apple.dmg)
 
 Para Mac con chip Apple (M1 o posterior) y macOS 14 Sonoma o posterior. Los Mac con procesador Intel no son compatibles por ahora.
 
@@ -95,9 +95,9 @@ Para Mac con chip Apple (M1 o posterior) y macOS 14 Sonoma o posterior. Los Mac 
 
 Para Linux de 64 bits (x64). Elige uno de los dos:
 
-[![Descargar .deb para Ubuntu, Debian y Linux Mint](docs/imagenes/descarga/descargar-deb.svg)](https://github.com/Gomonsoft/shinobi-karaoke/releases/download/v{VERSION}/shinobi-karaoke-linux-x64.deb)
+[![Descargar .deb para Ubuntu, Debian y Linux Mint](lanzamientos/descarga/descargar-deb.svg)](https://github.com/Gomonsoft/shinobi-karaoke/releases/download/v{VERSION}/shinobi-karaoke-linux-x64.deb)
 
-[![Descargar AppImage para otras distribuciones de Linux](docs/imagenes/descarga/descargar-appimage.svg)](https://github.com/Gomonsoft/shinobi-karaoke/releases/download/v{VERSION}/Shinobi-Karaoke-Linux-x64.AppImage)
+[![Descargar AppImage para otras distribuciones de Linux](lanzamientos/descarga/descargar-appimage.svg)](https://github.com/Gomonsoft/shinobi-karaoke/releases/download/v{VERSION}/Shinobi-Karaoke-Linux-x64.AppImage)
 
 El `.deb` se instala como cualquier otro programa y te pedirá tu contraseña. El AppImage no se instala: es un solo archivo que se abre directamente. ⟦R0045⟧
 
@@ -131,13 +131,13 @@ Los Mac con procesador Intel no son compatibles por ahora. Tampoco los equipos c
 
 ### Windows
 
-[![Descargar para Windows](docs/imagenes/descarga/descargar-windows.svg)]({ENLACE_WINDOWS})
+[![Descargar para Windows](lanzamientos/descarga/descargar-windows.svg)]({ENLACE_WINDOWS})
 
 Para Windows 10 u 11 de 64 bits.
 
 ### Mac
 
-[![Descargar para Mac con chip Apple](docs/imagenes/descarga/descargar-mac.svg)]({ENLACE_MAC})
+[![Descargar para Mac con chip Apple](lanzamientos/descarga/descargar-mac.svg)]({ENLACE_MAC})
 
 Para Mac con chip Apple (M1 o posterior) y macOS 14 Sonoma o posterior. Los Mac con procesador Intel no son compatibles por ahora.
 
@@ -147,9 +147,9 @@ Para Mac con chip Apple (M1 o posterior) y macOS 14 Sonoma o posterior. Los Mac 
 
 Para Linux de 64 bits (x64). Probado en Ubuntu 24.04. ⟦P16⟧ Elige uno de los dos:
 
-[![Descargar .deb para Ubuntu, Debian y Linux Mint](docs/imagenes/descarga/descargar-deb.svg)]({ENLACE_DEB})
+[![Descargar .deb para Ubuntu, Debian y Linux Mint](lanzamientos/descarga/descargar-deb.svg)]({ENLACE_DEB})
 
-[![Descargar AppImage para otras distribuciones de Linux](docs/imagenes/descarga/descargar-appimage.svg)]({ENLACE_APPIMAGE})
+[![Descargar AppImage para otras distribuciones de Linux](lanzamientos/descarga/descargar-appimage.svg)]({ENLACE_APPIMAGE})
 
 El `.deb` se instala como cualquier otro programa y te pedirá tu contraseña. El AppImage no se instala: es un solo archivo que se abre directamente; úsalo en otras distribuciones o si no puedes instalar programas. ⟦R0045⟧
 
@@ -174,10 +174,10 @@ Como la insignia de descarga directa de DroidDeck, pero **sin servicio externo**
 
 | Archivo | Texto principal | Segunda línea | Texto alternativo (exacto) |
 |---|---|---|---|
-| `docs/imagenes/descarga/descargar-windows.svg` | Descargar para Windows | Windows 10 u 11 · 64 bits | Descargar para Windows |
-| `docs/imagenes/descarga/descargar-mac.svg` | Descargar para Mac | Con chip Apple · macOS 14 o posterior | Descargar para Mac con chip Apple |
-| `docs/imagenes/descarga/descargar-deb.svg` | Descargar .deb | Ubuntu, Debian, Linux Mint | Descargar .deb para Ubuntu, Debian y Linux Mint |
-| `docs/imagenes/descarga/descargar-appimage.svg` | Descargar AppImage | Otras distribuciones de Linux | Descargar AppImage para otras distribuciones de Linux |
+| `lanzamientos/descarga/descargar-windows.svg` | Descargar para Windows | Windows 10 u 11 · 64 bits | Descargar para Windows |
+| `lanzamientos/descarga/descargar-mac.svg` | Descargar para Mac | Con chip Apple · macOS 14 o posterior | Descargar para Mac con chip Apple |
+| `lanzamientos/descarga/descargar-deb.svg` | Descargar .deb | Ubuntu, Debian, Linux Mint | Descargar .deb para Ubuntu, Debian y Linux Mint |
+| `lanzamientos/descarga/descargar-appimage.svg` | Descargar AppImage | Otras distribuciones de Linux | Descargar AppImage para otras distribuciones de Linux |
 
 Diseño (igual en los cuatro, sistema visual):
 - Lienzo `viewBox="0 0 360 64"`, `width="360" height="64"`. Rectángulo redondeado con radio 8, relleno `acento` `#C8303B`, sin borde. Contraste con el fondo claro de GitHub (`#FFFFFF`) 5,3:1 y con el oscuro (`#0D1117`) ≈ 3,5:1: el botón se distingue en los dos temas (≥ 3:1).
@@ -384,7 +384,7 @@ Para encontrarla, antes de desinstalar, abre la app y entra en **Ajustes → Abr
 |---|---|---|---|
 | 1. Para quien instala | Aviso de versión preliminar | `.github/publicacion/aviso-previa.md` | Solo si la versión lleva sufijo |
 | | Cabecera | `.github/publicacion/cabecera.md` | Siempre |
-| | Notas escritas a mano | `docs/versiones/<X.Y.Z>/notas/<versión>.md` (plantilla abajo) | Si existen (si no, el ensayo lo avisa en su resumen, ADR 0020 §4) |
+| | Notas escritas a mano | `lanzamientos/notas/<X.Y.Z>/<versión>.md` (plantilla abajo) | Si existen (si no, el ensayo lo avisa en su resumen, ADR 0020 §4) |
 | 2. Para quien sigue el proyecto | «Qué cambió» | Generado por GitHub, con los encabezados en español | **Siempre** |
 | | Todos los cambios | Enlace de comparación con la *Release* publicada anterior | Siempre (en la primera, frase fija) |
 | | Compilación | Número de compilación, commit y ejecución de CI que construyó y probó los instaladores | Siempre |
@@ -418,7 +418,7 @@ Si quieres comprobar la descarga, las sumas de verificación están en `SHA256SU
 
 Fase 10: «tu sistema te avisará» pasa a «tu navegador y tu sistema pueden avisarte» (aviso de Chrome, P18). Es el único cambio de la cabecera.
 
-### Notas escritas a mano (plantilla de `docs/versiones/<X.Y.Z>/notas/<versión>.md`)
+### Notas escritas a mano (plantilla de `lanzamientos/notas/<X.Y.Z>/<versión>.md`)
 
 Las escribe la sesión principal y las revisa el usuario antes de etiquetar. Estructura fija, para que todas las *Releases* se lean igual:
 
@@ -568,7 +568,7 @@ Aquí se publica automáticamente una compilación de la rama `develop` cada noc
 | `.deb` | `shinobi-karaoke-linux-x64.deb`; paquete `shinobi-karaoke` | Definitivo (0040) |
 | `{ENLACE_WINDOWS}`, `{ENLACE_MAC}`, `{ENLACE_DEB}`, `{ENLACE_APPIMAGE}` | `https://github.com/Gomonsoft/shinobi-karaoke/releases/latest/download/` + el nombre del archivo, sin versión (0040) | ⟦R0035⟧ Solo en E1. `latest` excluye las *pre-releases* (ADR 0020 §2): en E½ darían 404 y no se usan |
 | Enlaces de E½ (fase 10) | `https://github.com/Gomonsoft/shinobi-karaoke/releases/download/v{VERSION}/` + el nombre del archivo; novedades: `…/releases/tag/v{VERSION}` | `{VERSION}` = última *pre-release* pública. Se actualizan los 5 a la vez en cada alfa; quién y cómo: 0142 (provisional `version:subir` / `version:comprobar`) |
-| Botones | `docs/imagenes/descarga/descargar-{windows,mac,deb,appimage}.svg` | §1.4. Los mismos en E½ y E1 |
+| Botones | `lanzamientos/descarga/descargar-{windows,mac,deb,appimage}.svg` | §1.4. Los mismos en E½ y E1 |
 | Notas, parte 2 (§3) | `{LISTA_GENERADA}`, `{ETIQUETA}`, `{ETIQUETA_ANTERIOR}`, `{NUMERO}`, `{HASH}` (7 caracteres), `{SHA_COMPLETO}`, `{RUN_URL}` (`https://github.com/Gomonsoft/shinobi-karaoke/actions/runs/<id>`) | Los rellena el workflow. Origen de N y del hash: 0142 |
 | Repositorio de compilaciones | `https://github.com/Gomonsoft/shinobi-karaoke-builds` (`/releases`, `/releases/latest`) | Por crear (plan, fase 10). Debe ser **público**: comprobar los enlaces sin sesión antes de citarlo en el README (§1.5) |
 | Archivos del canal de desarrollo (§3b) | `Shinobi-Karaoke-desarrollo-{NUMERO}-Windows-x64.exe` y los otros tres de la tabla de §3b, más `SHA256SUMS.txt` | Provisional 0142 |

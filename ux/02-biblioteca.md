@@ -5,7 +5,7 @@
 - Restricciones: [arquitectura.md "Restricciones e implicaciones para UX" §2–§3](../arquitectura.md)
 - Sistema visual: [sistema-visual.md](sistema-visual.md)
 - Preguntas: [0005](../preguntas/0005-viabilidad-detalles-ux-fase-0.md) §8 y [0006](../preguntas/0006-ajustes-specs-ux-tras-0005.md) §4 (lista incompleta; respondidas); [0007](../preguntas/0007-textos-y-comportamientos-de-ui-no-definidos-fase-1.md) (textos de la Fase 1; respondida) y [0008](../preguntas/0008-ajustes-ui-tras-revision-fase-1.md) (cambios tras la revisión visual); [0020](../preguntas/0020-huecos-ux-de-la-separacion-fase-3.md) (estados de separación de la Fase 3; respondida)
-- Revisión visual de la Fase 1: [revision-fase-1/](revision-fase-1/README.md) (2026-11-04)
+- Revisión visual de la Fase 1: [revision-fase-1/](revisiones/fase-1/README.md) (2026-11-04)
 - 0.2.0, fase 3 (2026-11-09): agrupación por artista y álbum, búsqueda en álbum, selección múltiple con «Aplicar tema…», tema de artista y álbum y línea de tema en la tarjeta. Ver [Fase 3 · Temas y biblioteca](#fase-3-de-020--temas-y-biblioteca).
 - 0.2.0, fase 4 (2026-11-11): abrir el reproductor en otra pantalla, panel «Cola de reproducción», controles de la sesión, cierre con cola y recuperación. Ver [Fase 4 de 0.2.0 — ventana secundaria y cola](#fase-4-de-020--ventana-secundaria-y-cola).
 - 0.2.0, fase 5 (2026-11-20): insignia «Letra lista» y toast al marcarla; portadas con el fondo quieto. Ver [Fase 5 de 0.2.0 — estilo, espera y Letra lista](#fase-5-de-020--estilo-espera-y-letra-lista).
@@ -481,7 +481,7 @@ Anatomía con la línea nueva:
 - B13. En vistas agrupadas, ←/→ y ↑/↓ cruzan grupos, Ctrl/Cmd + Inicio/Fin llevan a la primera y última tarjeta, y las de grupos plegados se saltan; plegar y desplegar se anuncian por `aria-expanded`.
 - B14. La portada de una canción de YouTube muestra la miniatura solo con `apariencia.neutra` (procedencia predeterminado, al azar, predeterminado anterior o estilo incluido, o personalizada de 0.1.0 con estilo igual al predeterminado), y deja de mostrarla al asignar un tema a la canción, a su álbum o a su artista. Quitar el predeterminado en Ajustes no cambia la portada de ninguna canción; la línea de tema de las que lo seguían pasa a «… · predeterminado anterior».
 - B15. Volver del reproductor conserva agrupación, grupos plegados, filtro, búsqueda, modo selección y desplazamiento, con el foco en la tarjeta.
-- B16. Capturas en `docs/ux/revision-fase-3/` (ver [README](revision-fase-3/README.md)), nombre `biblioteca-{ancho}x{alto}-{escala}-{estado}.png`, a 1280 × 800 al 100 % y 1280 × 720 al 125 %: `artista`, `album` (con homónimos), `sin-metadatos`, `busqueda-album`, `seleccion` (con «fuera de la vista»), `dialogo-aplicar-tema`, `resultado-lote` (con fallos), `dialogo-tema-grupo`, `foco-tras-mover`.
+- B16. Capturas en `docs/ux/revisiones/fase-3/` (ver [README](revisiones/fase-3/README.md)), nombre `biblioteca-{ancho}x{alto}-{escala}-{estado}.png`, a 1280 × 800 al 100 % y 1280 × 720 al 125 %: `artista`, `album` (con homónimos), `sin-metadatos`, `busqueda-album`, `seleccion` (con «fuera de la vista»), `dialogo-aplicar-tema`, `resultado-lote` (con fallos), `dialogo-tema-grupo`, `foco-tras-mover`.
 
 ## Fase 4 de 0.2.0 — ventana secundaria y cola
 
@@ -824,7 +824,7 @@ Se usan banners en el panel y no toasts: el panel es el puesto del operador, los
 - S15b. «Reproducir en otra pantalla…» del ⋯ de una Lista abre el diálogo con la variante «con canción» de `ses.empieza`; al abrir, esa canción suena primero y las pendientes siguen detrás. En Linux con Wayland el diálogo muestra `ses.wayland` sin lista de pantallas.
 - S16. Todo el panel es operable solo con teclado y ninguna acción de sesión tiene atajo de una tecla en la principal; el foco nunca queda en `body`.
 - S17. A 1024 × 576 (1280 × 720 al 125 %) con el panel abierto, la rejilla muestra 2 columnas, el panel tiene scroll propio y no hay scroll horizontal.
-- S18. Capturas en `docs/ux/revision-fase-4/` con nombre `biblioteca-{ancho}x{alto}-{escala}-{estado}.png` a 1280 × 800 al 100 % y 1280 × 720 al 125 %: `dialogo-pantalla`, `dialogo-una-pantalla`, `sesion`, `cuenta`, `fallo`, `espera`, `fin-cola`, `cola-conservada`, `dialogo-cierre`, `monitor-desconectado`, `caida`, `tarjetas-sesion`.
+- S18. Capturas en `docs/ux/revisiones/fase-4/` con nombre `biblioteca-{ancho}x{alto}-{escala}-{estado}.png` a 1280 × 800 al 100 % y 1280 × 720 al 125 %: `dialogo-pantalla`, `dialogo-una-pantalla`, `sesion`, `cuenta`, `fallo`, `espera`, `fin-cola`, `cola-conservada`, `dialogo-cierre`, `monitor-desconectado`, `caida`, `tarjetas-sesion`.
 
 ## Fase 5 de 0.2.0 — estilo, espera y Letra lista
 
@@ -874,7 +874,7 @@ Igual que tras «Marcar como lista» (spec 06 §«Volver a la Biblioteca»: filt
 - LB4. La modalidad persiste al reiniciar la app; «Volver a borrador» y «Aplicar tema…» no la cambian por sí solos (tras volver a borrador, la insignia es «✎ Borrador»).
 - LB5. Una Letra lista con líneas sin inicio muestra `bib.lista.incompleta` y sigue en *Listas*.
 - LB6. Las portadas de canciones con fondo en movimiento se ven quietas (fase 0).
-- LB7. Captura `docs/ux/revision-0.2.0-fase-5/biblioteca-1280x800-100-letra-lista.png` con una Lista, una Letra lista, una Letra lista incompleta y un borrador.
+- LB7. Captura `docs/ux/revisiones/0.2.0-fase-5/biblioteca-1280x800-100-letra-lista.png` con una Lista, una Letra lista, una Letra lista incompleta y un borrador.
 
 ## Fase 6 de 0.2.0 — exportación
 
@@ -921,7 +921,7 @@ Las claves `exp.*`, `bib.exp.*` y `act.exp` están en [spec 10 · Microcopy](10-
 - X4. El panel de actividad lista la exportación con [Ir] y [✕] y la cuenta en el indicador.
 - X5. Eliminar una canción que se exporta muestra `exp.eliminar.extra` y, al confirmar, no queda temporal en el disco.
 - X6. Durante una sesión, «Exportar video…» está disponible sin candado y el diálogo muestra `exp.nota.sesion`; con una exportación en curso, el diálogo de pantallas no cambia y, al abrir la sesión, la exportación sigue.
-- X7. Captura `docs/ux/revision-fase-6/exportacion-1280x800-100-tarjeta-exportando.png` (tarjeta con la línea y el ⋯ abierto).
+- X7. Captura `docs/ux/revisiones/fase-6/exportacion-1280x800-100-tarjeta-exportando.png` (tarjeta con la línea y el ⋯ abierto).
 
 ## Fase 8 de 0.2.1 — estados y fecha de añadido
 
@@ -1005,7 +1005,7 @@ Origen: [plan 0.2.1, fase 8](../versiones/0.2.1/plan-3.md#fase-8--sincronía-y-e
 - B8-4. Con el reloj simulado el miércoles 2026-11-18 a las 10:00 y canciones creadas el 18-11, el 17-11, el 16-11 (lunes), el 03-11, el 20-10, el 15-12-2025 y una sin `creada` válida, los grupos son exactamente Hoy (1), Ayer (1), Esta semana (1), Este mes (1), Octubre de 2026 (1), Diciembre de 2025 (1) y Sin agrupar (1), en ese orden (test unitario de la función de agrupación). Con el reloj el lunes 2026-11-02 (la semana empieza ese día), una canción del 01-11 va a «Ayer» y una del 31-10 a «Octubre de 2026»; no aparece «Esta semana».
 - B8-5. Dentro de un grupo por fecha las tarjetas van por `creada` descendente; los encabezados no tienen [Tema…]; la búsqueda y el filtro ocultan los grupos sin coincidencias y muestran «{v} de {n}».
 - B8-6. El grupo «Sin agrupar» va al final con `bib.grupo.sinFecha.ayuda`; una `creada` futura cuenta como «Hoy».
-- B8-7. Captura `docs/ux/revision-0.2.1-fase-8/biblioteca-1280x800-100-fecha.png` con al menos cuatro grupos de fecha y una tarjeta Lista y una Letra lista con sus dos botones.
+- B8-7. Captura `docs/ux/revisiones/0.2.1-fase-8/biblioteca-1280x800-100-fecha.png` con al menos cuatro grupos de fecha y una tarjeta Lista y una Letra lista con sus dos botones.
 
 ## 0.2.2 · Feature 8 — Acciones por lotes en la Biblioteca
 
@@ -1264,7 +1264,7 @@ La decisión la da main para cada canción en el momento de abrir la confirmaci�
 - F8-11. Las Dañadas con `cancion.json` ilegible no se pueden seleccionar y su tooltip es el texto nuevo de `bib.sel.noEditable`.
 - F8-12. Durante una sesión en otra pantalla, «Preparar», «A la cola», «Exportar video…», «Editar datos…» y «Eliminar…» funcionan; ninguna abre el editor.
 - F8-13. Todo el flujo (entrar en el modo, seleccionar, abrir «Más acciones», confirmar, leer el resultado) es operable solo con teclado; el foco nunca queda en `body`; el resultado se anuncia una vez.
-- F8-14. Capturas en `docs/ux/revision-0.2.2-feature-8/` con nombre `biblioteca-{ancho}x{alto}-{escala}-{estado}.png` a 1280 × 800 al 100 % y 1280 × 720 al 125 %: `barra-acciones`, `menu-mas-acciones`, `dialogo-preparar`, `dialogo-editar-datos`, `dialogo-eliminar`, `dialogo-eliminar-diez`, `resultado-eliminar-parcial`.
+- F8-14. Capturas en `docs/ux/revisiones/0.2.2-feature-8/` con nombre `biblioteca-{ancho}x{alto}-{escala}-{estado}.png` a 1280 × 800 al 100 % y 1280 × 720 al 125 %: `barra-acciones`, `menu-mas-acciones`, `dialogo-preparar`, `dialogo-editar-datos`, `dialogo-eliminar`, `dialogo-eliminar-diez`, `resultado-eliminar-parcial`.
 
 **Verificación manual** (guía de `docs/Test-manuales/0.2.2/`): preparar de una vez los 5 borradores reales sin letra y comprobar que el resumen coincide con lo que muestran las tarjetas; eliminar un lote y recuperarlo desde la papelera del sistema en Windows, macOS y Linux; encolar 10 canciones y cantar las dos primeras.
 
@@ -1545,7 +1545,7 @@ Mismo diálogo para un paquete de canciones y para una copia de seguridad; la co
 - F9-13. «Exportar la letra (.lrc)…» abre el diálogo «Guardar» del sistema con el nombre propuesto y escribe un LRC en UTF-8 con la cabecera, una marca por línea con inicio (con el desplazamiento aplicado), marcas vacías en el fin de las líneas seguidas de 2 s o más de silencio y sin las líneas sin inicio (test de la función pura con una letra de ejemplo: texto exacto esperado). Volver a importar ese archivo en una canción nueva da los mismos inicios (± 10 ms) y los mismos fines en las líneas con marca vacía.
 - F9-14. Exportar la letra de 4 canciones seleccionadas, una sin tiempos, escribe 3 archivos en la carpeta elegida sin sustituir ninguno existente (añade « (2)») y el resultado lista la omitida con su motivo.
 - F9-15. Todos los diálogos de la feature son operables solo con teclado, Esc no cancela un paquete en creación, y los estados de la lista de importación se distinguen sin color.
-- F9-16. Capturas en `docs/ux/revision-0.2.2-feature-9/` con nombre `biblioteca-{ancho}x{alto}-{escala}-{estado}.png` a 1280 × 800 al 100 % y 1280 × 720 al 125 %: `exportar-paquete`, `exportar-paquete-ligero`, `creando-paquete`, `paquete-creado`, `importar-revisar`, `importar-conflictos`, `importar-resultado`, `paquete-version-nueva`, `vacio-con-enlace`, `tarjeta-sin-audio`.
+- F9-16. Capturas en `docs/ux/revisiones/0.2.2-feature-9/` con nombre `biblioteca-{ancho}x{alto}-{escala}-{estado}.png` a 1280 × 800 al 100 % y 1280 × 720 al 125 %: `exportar-paquete`, `exportar-paquete-ligero`, `creando-paquete`, `paquete-creado`, `importar-revisar`, `importar-conflictos`, `importar-resultado`, `paquete-version-nueva`, `vacio-con-enlace`, `tarjeta-sin-audio`.
 
 **Verificación manual**: crear una copia completa de la biblioteca real, restaurarla en otro equipo (o en otra carpeta de datos del canal de desarrollo) y cantar una canción; llevar un paquete ligero a un equipo sin esas canciones, volver a descargar una de YouTube y comprobar si la letra sigue cuadrando con el audio nuevo; abrir un `.lrc` exportado en un reproductor externo que muestre letras (por ejemplo VLC con el archivo junto al audio) y comprobar que las líneas se borran en los silencios largos.
 
@@ -1605,7 +1605,7 @@ La tarjeta completa está en [Feature 5 · Tarjeta «Lista para revisar»](#tarj
 - F11-B1. Una tarjeta «Lista para revisar» con 4 líneas dudosas pendientes muestra «⚑ 4 líneas por revisar»; al dar por buenas dos en el editor y volver, muestra 2; con 0, «Sin líneas dudosas». Las tarjetas Lista y Letra lista no muestran esa línea.
 - F11-B2. «Revisar» abre el editor con la revisión guiada activa en la primera línea pendiente (y, con 0 pendientes, con el panel de fin de revisión).
 - F11-B3. «Marcar como lista» del ⋯ de una «Lista para revisar» con pendientes muestra `bib.revision.dialogo` con el foco en «Revisar ahora»; «Marcar igualmente» la marca sin abrir el editor y la tarjeta pasa a «✓ Lista» con su toast; sin pendientes, marca sin diálogo. Ninguna canción pasa a «Lista» sin una acción del usuario (test: tras una preparación desatendida completa, `estado` sigue siendo `borrador`).
-- F11-B4. Captura `docs/ux/revision-0.2.2-feature-11/biblioteca-1280x800-100-lista-para-revisar.png` con una tarjeta con líneas por revisar, una sin líneas dudosas y el menú ⋯ abierto.
+- F11-B4. Captura `docs/ux/revisiones/0.2.2-feature-11/biblioteca-1280x800-100-lista-para-revisar.png` con una tarjeta con líneas por revisar, una sin líneas dudosas y el menú ⋯ abierto.
 
 **Lo que esta feature necesita de la feature 5**: (1) que el botón «Revisar» de la tarjeta navegue al editor pidiendo la revisión guiada; (2) sitio para una segunda línea bajo «Lista para revisar»; (3) que el resumen de la canción lleve el número de líneas dudosas pendientes; (4) que «Lista para revisar» siga siendo un borrador (`estado: borrador`) hasta que el usuario marque.
 
@@ -1785,7 +1785,7 @@ Encima de la bandeja, como aviso en línea (`info`) que se puede cerrar:
 - F5-B8. Al cambiar de estado una canción con la Biblioteca abierta, su tarjeta y los números de la bandeja se actualizan sin mover el foco ni reordenar.
 - F5-B9. Tras reabrir la app con preparaciones a medias aparece `bib.prep.retomando`; [Detener] pausa la cola y muestra `bib.prep.enPausa`; [Reanudar] la retoma.
 - F5-B10. `bib.aria.tarjeta` dice «Lista para revisar» y la línea de origen; cada casilla de la bandeja anuncia número y estado; todo se opera con teclado.
-- F5-B11. Capturas en `docs/ux/revision-0.2.2-feature-5/`, nombre `biblioteca-1280x800-100-{estado}.png`: `lista-para-revisar` (con una Lista, una Lista para revisar, un «Elige la letra» y un «No encontramos la letra»), `bandeja`, `bandeja-filtrada`, `retomando`, y `biblioteca-1024x640-100-bandeja`.
+- F5-B11. Capturas en `docs/ux/revisiones/0.2.2-feature-5/`, nombre `biblioteca-1280x800-100-{estado}.png`: `lista-para-revisar` (con una Lista, una Lista para revisar, un «Elige la letra» y un «No encontramos la letra»), `bandeja`, `bandeja-filtrada`, `retomando`, y `biblioteca-1024x640-100-bandeja`.
 
 **Verificación manual** (guía de `docs/Test-manuales/0.2.2/`): con la biblioteca real, usar «Preparar» en los 5 borradores sin letra del lote del 10 de noviembre y anotar a qué estado llega cada uno; comprobar que la diferencia entre «Borrador», «Lista para revisar» y «Lista» se entiende de un vistazo en una TV; probar una canción desde la tarjeta y marcarla como lista desde el toast.
 
@@ -1820,4 +1820,4 @@ Origen: [plan 0.2.2, feature 7](../versiones/0.2.2/plan-4.md) y [propuesta 021](
 - F7-B1. Arrastrar 3 archivos de audio (o una carpeta con 3) sobre la ventana abre la vista 03 en modo lote con 3 filas; arrastrar 1 se comporta como en 0.2.1. No aparece «Añade las canciones de una en una.».
 - F7-B2. Tras confirmar un lote de 5, la Biblioteca muestra las 5 tarjetas nuevas con su línea de paso, el foco en la primera, el aviso `bib.import.anadidas` y el botón de actividad con «Preparando {i} de 5».
 - F7-B3. Con 50 canciones añadidas de una vez (dobles), la rejilla responde en menos de 1 s y el foco no se pierde.
-- F7-B4. Captura `docs/ux/revision-0.2.2-feature-7/biblioteca-1280x800-100-lote-anadido.png`.
+- F7-B4. Captura `docs/ux/revisiones/0.2.2-feature-7/biblioteca-1280x800-100-lote-anadido.png`.

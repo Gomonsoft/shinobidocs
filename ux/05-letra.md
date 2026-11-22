@@ -416,7 +416,7 @@ La comprobación da un **veredicto** por letra:
 - F4-L9. Pegar o importar un LRC muestra en C su veredicto; una letra sin tiempos no muestra línea de comprobación.
 - F4-L10. El nombre accesible de cada opción incluye su comprobación; `let.comp.llegada` se anuncia una vez sin mover el foco; corregir y quitar se anuncian con `let.comp.anuncio.*`. Todo es operable con teclado.
 - F4-L11. Un fallo de escritura al corregir o quitar deja los tiempos como estaban y muestra `let.comp.error.guardar`.
-- F4-L12. Capturas en `docs/ux/revision-0.2.2-feature-4/`, nombre `letra-1280x800-100-{estado}.png`: `candidatos-comprobados`, `candidato-desfasado`, `candidato-no-coincide`, `comprobacion-pendiente`, `aviso-llegada`, `actual-corregida`, `actual-propuesta`, `actual-no-coincide`.
+- F4-L12. Capturas en `docs/ux/revisiones/0.2.2-feature-4/`, nombre `letra-1280x800-100-{estado}.png`: `candidatos-comprobados`, `candidato-desfasado`, `candidato-no-coincide`, `comprobacion-pendiente`, `aviso-llegada`, `actual-corregida`, `actual-propuesta`, `actual-no-coincide`.
 
 **Verificación manual** (guía de `docs/Test-manuales/0.2.2/`): con tres canciones reales ya Listas, abrir Letra › «Buscar otra letra» y comprobar que la letra correcta sale como «Coincide»; con un LRC de esas mismas canciones movido a mano 1 s (editando las marcas), importarlo y comprobar que sale «atrasada 1,0 s» y que al corregir coincide al cantarla; con la letra de una versión en directo, comprobar que sale «No coincide» o «No está claro», nunca una corrección; anotar cualquier canción con coros largos que salga como «No está claro» para calibrar.
 
@@ -491,4 +491,4 @@ Origen: [plan 0.2.2, feature 5](../versiones/0.2.2/plan-4.md) y [propuesta 020](
 - F5-L5. Entrar en Letra mientras la preparación busca muestra «Buscando la letra…» y no lanza una segunda petición (doble de LRCLIB: una sola búsqueda).
 - F5-L6. Una canción con letra (del usuario o elegida sola) no recibe otra letra por «Preparar» ni por la preparación automática: solo cambia su línea de comprobación.
 - F5-L7. Con «Buscar la letra automáticamente» desactivado, la vista se comporta como en 0.2.1 (criterio 1 original).
-- F5-L8. Capturas en `docs/ux/revision-0.2.2-feature-5/`: `letra-1280x800-100-elegida-sola`, `letra-1280x800-100-elige-la-letra`.
+- F5-L8. Capturas en `docs/ux/revisiones/0.2.2-feature-5/`: `letra-1280x800-100-elegida-sola`, `letra-1280x800-100-elige-la-letra`.

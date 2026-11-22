@@ -5,7 +5,7 @@
 - Depende de: 0095 (pista de clics en la semilla), 0107
 - ADRs: 0010 (§1), 0005 (≤ 20 ms con cable o altavoces)
 - Spec UX: docs/ux/06-editor.md (criterio 12: "prueba manual con una pista de clics"; criterio 19, Bluetooth)
-- Archivos: solo las notas de esta tarea (tabla de resultados). Si hace falta un script de análisis, en `docs/poc/0111-precision/`. **No toca código de producción.**
+- Archivos: solo las notas de esta tarea (tabla de resultados). Si hace falta un script de análisis, en `docs/spikes/0111-precision/`. **No toca código de producción.**
 - Paralelizable con: 0110. **La hace una persona** (o un agente con acceso a un equipo con salida de audio y teclado reales); no bloquea el cierre del código de la fase, pero sí la publicación.
 
 ## Contexto

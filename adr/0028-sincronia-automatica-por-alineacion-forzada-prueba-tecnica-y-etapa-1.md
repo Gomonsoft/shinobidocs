@@ -42,7 +42,7 @@ El trabajo manual del editor está en el **fin de cada línea** y en los **tiemp
 
 #### 2.1 Dónde y cómo
 
-- Scripts en `docs/poc/0028-alineacion/` (no es código de producción), con su propio entorno `uv` (Python 3.12, `torch`, `transformers` y `torchaudio` solo para la prueba, `soundfile`, `numpy`). Se ejecuta **en el equipo del usuario**, en solo lectura sobre `%LOCALAPPDATA%\ShinobiKaraoke\biblioteca` (ruta por argumento). **No se copian letras ni audio al repositorio**; en el informe solo van cifras e índices o títulos de canción.
+- Scripts en `docs/spikes/0028-alineacion/` (no es código de producción), con su propio entorno `uv` (Python 3.12, `torch`, `transformers` y `torchaudio` solo para la prueba, `soundfile`, `numpy`). Se ejecuta **en el equipo del usuario**, en solo lectura sobre `%LOCALAPPDATA%\ShinobiKaraoke\biblioteca` (ruta por argumento). **No se copian letras ni audio al repositorio**; en el informe solo van cifras e índices o títulos de canción.
 - Pasos por canción:
   1. `voz.flac` a 16 kHz mono.
   2. Emisiones del modelo una vez para toda la pista (trozos de 30 s con 1 s de solape si hace falta).

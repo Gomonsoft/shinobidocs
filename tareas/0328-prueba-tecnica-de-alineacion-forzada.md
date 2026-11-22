@@ -11,7 +11,7 @@
 Medir el candidato A del ADR 0028 contra los fines hechos a mano del usuario y decidir con el criterio cerrado de §2.4.
 
 ## Criterios de aceptación
-- [ ] Scripts en `docs/poc/0028-alineacion/` con entorno `uv` propio; ejecución en el equipo del usuario en solo lectura; **ninguna letra ni audio en el repositorio**.
+- [ ] Scripts en `docs/spikes/0028-alineacion/` con entorno `uv` propio; ejecución en el equipo del usuario en solo lectura; **ninguna letra ni audio en el repositorio**.
 - [ ] Conjuntos V1 y V2 (y V3 si el usuario la prepara) y línea base de «Ajustar los silencios» calculada por el mismo script.
 - [ ] Medidas de §2.3 (error del fin, cortes, confianza, palabras, coste con GPU y CPU, una línea con y sin modelo cargado, determinismo).
 - [ ] Comprobación de que un codificador propio y un Viterbi propio dan las mismas emisiones y tramos que `transformers` y `forced_align`.

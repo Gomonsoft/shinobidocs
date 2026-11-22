@@ -4,7 +4,7 @@
 - Paso del pipeline: — (raíz) y 5
 - Depende de: 0019, 0020 (y 0026 para el separador del menú)
 - ADRs: 0006
-- Spec UX: docs/ux/02-biblioteca.md (§"Microcopy" y "Línea de paso", revisión 2026-11-04), docs/ux/sistema-visual.md §6, docs/preguntas/0007 (respuesta) y docs/preguntas/0008 (I1–I4, M1, M3), capturas `docs/ux/revision-fase-1/`
+- Spec UX: docs/ux/02-biblioteca.md (§"Microcopy" y "Línea de paso", revisión 2026-11-04), docs/ux/sistema-visual.md §6, docs/preguntas/0007 (respuesta) y docs/preguntas/0008 (I1–I4, M1, M3), capturas `docs/ux/revisiones/fase-1/`
 
 ## Objetivo
 

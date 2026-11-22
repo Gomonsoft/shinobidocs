@@ -1,7 +1,7 @@
 # Revisión visual — Subfase 2.1 (tarea 0162)
 
-- Specs de referencia: [06-editor.md, subfase 2.1](../06-editor.md#subfase-21--layout-adaptable-y-paneles) (criterio 25) y [sistema-visual.md](../sistema-visual.md)
-- Informe: [informe-fase-2.1.md](../../versiones/0.2.0/informe-fase-2.1.md)
+- Specs de referencia: [06-editor.md, subfase 2.1](../../06-editor.md#subfase-21--layout-adaptable-y-paneles) (criterio 25) y [sistema-visual.md](../../sistema-visual.md)
+- Informe: [informe-fase-2.1.md](../../../versiones/0.2.0/informe-fase-2.1.md)
 - Canción: «Editor: lista incompleta» de la semilla (8 líneas, separación completada). La forma de onda se tomó con picos (`worker/.venv` presente).
 
 ## Cómo se obtuvieron

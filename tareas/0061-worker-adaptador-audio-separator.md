@@ -16,7 +16,7 @@ Implementar `SeparadorReal`, la versión real de la interfaz `Separador`, con to
 
 - [x] `worker/shinobi_worker/separacion_real.py` (solo se importa desde la fábrica de 0060):
   - **Sin ffmpeg** (`preguntas/0009`): anula `Separator.check_ffmpeg_installed` en **un único punto comentado** y crea `Separator(use_soundfile=True, output_format="FLAC", model_file_dir=<modelo.dir>, output_dir=<salida_dir>)`. Ningún otro módulo toca internos de audio-separator.
-  - **Dispositivo** (`preguntas/0010`): con `dispositivo == 'cpu'` fuerza la CPU en todos los SO. PyTorch no ve MPS ni CUDA y ONNX Runtime usa solo `CPUExecutionProvider`. Mecanismo equivalente al `--cpu` de `spikes/separacion/separar.py`. Con `'cuda'`, la selección automática de audio-separator.
+  - **Dispositivo** (`preguntas/0010`): con `dispositivo == 'cpu'` fuerza la CPU en todos los SO. PyTorch no ve MPS ni CUDA y ONNX Runtime usa solo `CPUExecutionProvider`. Mecanismo equivalente al `--cpu` de `docs/spikes/separacion/separar.py`. Con `'cuda'`, la selección automática de audio-separator.
   - **Bloques**: `normal` = valores por defecto de audio-separator; `pequenos` = mitad de `segment_size` y `batch_size = 1` (en `mdxc_params` para Calidad y en `mdx_params` para Rápido). Anotar los valores en las notas.
   - **Renombrado de stems**: `(vocals)`/`(Vocals)` → `voz.flac`; `(other)`/`(Instrumental)` → `instrumental.flac`. Si falta alguno → `ERROR_INTERNO` con la lista de archivos generados en el `log`.
   - **Progreso**: envuelve `tqdm.std.tqdm.update` mientras dura la separación (y lo restaura al terminar).

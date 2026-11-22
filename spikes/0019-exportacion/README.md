@@ -13,11 +13,11 @@ Prueba de concepto desechable (no es código de producción, no se empaqueta ni 
 ```sh
 # Codificación sola (desde worker/, con su venv)
 cd worker
-uv run python ../docs/poc/0019-exportacion/codificar.py --perfil av1 --ancho 1920 --alto 1080 --fps 30 --segundos 10 --salida /tmp/x.mkv
-uv run python ../docs/poc/0019-exportacion/matriz.py --segundos 20 --fps 30 60 --salida /tmp/matriz.jsonl
+uv run python ../docs/spikes/0019-exportacion/codificar.py --perfil av1 --ancho 1920 --alto 1080 --fps 30 --segundos 10 --salida /tmp/x.mkv
+uv run python ../docs/spikes/0019-exportacion/matriz.py --segundos 20 --fps 30 60 --salida /tmp/matriz.jsonl
 
 # De extremo a extremo (desde la raíz del repo; usa worker/.venv/bin/python o SHINOBI_POC_PYTHON)
-app/node_modules/.bin/electron docs/poc/0019-exportacion/electron/main.js \
+app/node_modules/.bin/electron docs/spikes/0019-exportacion/electron/main.js \
   --ancho 1920 --alto 1080 --fps 30 --segundos 10 --perfil av1 --en-vuelo 2 --salida /tmp/x.mkv
 # --modo paint     captura con el evento `paint` tras invalidate()
 # --sin-codificar  mide solo render + captura
