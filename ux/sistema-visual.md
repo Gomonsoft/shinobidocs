@@ -451,3 +451,66 @@ Comportamiento en [Ajustes · Feature 3](08-ajustes-y-acerca.md#022--feature-3--
 | Casilla «Avisarme cuando haya una versión nueva» | Casilla de 20 px con etiqueta `t-cuerpo` y, debajo, el texto de privacidad en `t-pequeno` `texto-2` (no `texto-3`: es información que importa). |
 
 Contraste (feature 3): textos en `texto-1/2/3` sobre `fondo-1` (≥ 6,1:1); iconos de estado con sus colores de §2.3, siempre acompañados de texto.
+
+## 0.2.3 · Varios cantantes y coros
+
+Comportamiento en [Editor · 0.2.3](06-editor.md#023--feature-1--cantantes-por-línea), [Reproductor · 0.2.3](07-reproductor.md#023--feature-1--cantantes-por-línea-en-pantalla) y [Exportación · 0.2.3](10-exportacion.md#023--feature-1--cantantes-en-el-video). **Amplía** §8 (colores predeterminados por parte), §9 (comprobaciones por parte) y §10 / 0.2.2 · Feature 1 (zonas e insignia). Una canción sin reparto no usa nada de esto.
+
+**Colores predeterminados por ranura** (si el tema no trae `colores_partes`)
+
+| Ranura | Color | Nota |
+|---|---|---|
+| Cantante 1 | `color_resaltado` del tema | Por eso una canción sin reparto no cambia. |
+| Cantante 2 | `#4ADEDE` (cian) | Sobre el tema «Shinobi»: ≥ 9:1 en todo el degradado. |
+| Cantante 3 | `#FF5C8A` (rosa) | ≈ 3,9:1 sobre `#5A1E6E` (la zona más clara del degradado). |
+| Cantante 4 | `#7CFF6B` (lima) | Con deuteranopía puede confundirse con el oro (`#FFD400`): da el ⓘ informativo. |
+| Todos | `#B388FF` (lavanda) | ≈ 4,2:1 sobre `#5A1E6E`. |
+| Coro | `#FF9F1C` (naranja) | ≈ 5,5:1 sobre `#5A1E6E`. Con daltonismo se acerca al oro: lo distinguen los paréntesis y su zona. |
+
+Valores calculados a mano con la fórmula WCAG (orientativos); el test de C1-E19 los comprueba con la función de contraste. Si alguno diese ⚠ sobre el tema «Shinobi», se cambia la ranura antes de publicar.
+
+**Comprobaciones nuevas de §9** (solo con las partes en uso; en D3, también las ranuras desplegadas)
+
+| Comprobación | Cálculo | Umbral | Nivel |
+|---|---|---|---|
+| Color de parte vs fondo | Como «Resaltado vs fondo» | < 3:1 | ⚠ «El color de {parte} apenas se ve sobre el fondo.» |
+| Color de parte vs letra | ΔE (CIE76) y simulación de protanopía y deuteranopía, como en 0.2.2 · Feature 2 | < 25 | ⚠ sin subrayado en el estilo · ⓘ con subrayado |
+| Dos partes en uso entre sí | ΔE normal y simulado; cuenta el menor | < 25 | ⓘ informativo (no enciende el punto de la pestaña): la inicial, la zona y los paréntesis ya las distinguen |
+
+**Disposición por zonas** (canciones con reparto)
+
+| Elemento | Valor |
+|---|---|
+| Área | Del 12 % al 86 % del alto. Separación entre zonas: 0,3 × `S`. Sin bordes ni fondos: las zonas no se dibujan. |
+| Tamaño en la zona del coro | Como las de cantante (`S_zona`); si una línea de coro de dos renglones no cabe en su zona, se reduce hasta caber, con un mínimo del 50 % de `S`, y si aún no cabe se corta en un renglón con «…» (caso extremo: 4 cantantes, coro y línea de coro muy larga). |
+| Zonas | Coro arriba (la mitad del alto de una de cantante), si hay coros; después una por cantante (alto igual), en orden de ranura. Con «Todas en un bloque» (`estilo.pantalla.zonas = "una"`), una sola zona: el bloque de 0.2.2. |
+| Contenido | Zona de cantante: línea en curso o próxima a `S_zona` (≤ `S`, ≥ 0,75 × `S`) y la siguiente de esa parte al 70 % si cabe entera (2 líneas). Zona de Coro: 1 línea. Centradas en la zona como bloque. |
+| Opacidad | Zona que suena: 100 %. Las demás: 55 % (con el suelo de contraste de 0.2.2 · Feature 1). La siguiente de cada zona, además, con su 70 % de tamaño. |
+| Cambio de opacidad | En `D` del tema, lineal; instantáneo con movimiento reducido. |
+
+**Insignia de cantante** (pantalla)
+
+| Elemento | Valor |
+|---|---|
+| Forma | Píldora de alto 0,6 em de la línea, ancho mínimo = alto, radio completo, relleno horizontal 0,2 em; **sin relleno de color**: borde de `máx(2 px, 0,06 em)` en el color de la parte. |
+| Texto | Inicial(es) en la fuente de la canción, a 0,4 em, en `letra.color`, con la sombra de §10. Todos con 3 o 4 cantantes: icono `users` de 0,4 em en `letra.color`. |
+| Posición | Centrada en vertical con el primer renglón, a 0,3 em a la izquierda de su caja. Fuera del flujo: no desplaza el texto. |
+| Ancho de línea | 80 % (variable `--k-ancho-linea`, que vale 88 % sin varios cantantes). |
+| Estados | Opacidad, tamaño y paso a gris de su línea. |
+
+**Interfaz del editor**
+
+| Componente | Tratamiento visual |
+|---|---|
+| **Chip de parte** (lista, panel, menú) | Píldora de 20 px de alto, ancho mínimo 24 px, radio completo, sin relleno, borde 2 px en el color de la parte, texto `t-pequeno` 600 en `texto-1` (o icono `users` 14 px). Área de clic 24 × 24. El borde es refuerzo: la inicial es la señal (sobre `fondo-1` un color de parte oscuro puede no llegar a 3:1, y no importa). Coro: «( )». |
+| **Texto del coro en la lista** | `texto-2` con los paréntesis dibujados. |
+| **Selección múltiple** | Fila seleccionada no principal: fondo `fondo-2` y barra izquierda de 3 px `acento-texto`; la principal, el tratamiento de selección de siempre. |
+| **Etiqueta de carril** | Columna de 72 px en `fondo-1`, borde derecho 1 px `borde`: chip + nombre `t-pequeno` `texto-2` cortado con «…». |
+| **Carril** | Alto 32 px (mínimo 24); separador de 1 px `borde` entre carriles; la onda de la voz en `texto-3` de fondo detrás de todos los carriles. Carril de destino durante un arrastre: borde 2 px `acento-texto`. Carril prohibido (solo en la sección condicionada): borde 2 px `error`. |
+| **Carril vacío** | Texto `t-pequeno` `texto-3` centrado en la parte visible. |
+| **Franja de destino** («+ Nuevo cantante», «Todos») | 24 px, borde discontinuo 1 px `borde-control`, texto `t-pequeno` `texto-2`. |
+| **Región con «Juntar carriles»** | Franja superior de 3 px en el color de la parte e inicial `t-pequeno` al principio de la región. |
+| **Selector de color de parte** | El selector de color de siempre, precedido del chip. |
+| **Deslizador «Voz en los coros»** | Deslizador de §6, ancho del panel menos el valor (56 px, `t-tiempo`) y el botón. |
+
+Contraste (0.2.3): textos de interfaz en `texto-1/2/3` sobre `fondo-1/2` (≥ 4,7:1). En pantalla, el color de cada parte tiene su comprobación de ≥ 3:1 y la insignia usa el color de la letra (la misma comprobación que la letra). **Nunca se distingue una parte solo por el color**: inicial o icono, zona y, en el coro, paréntesis.

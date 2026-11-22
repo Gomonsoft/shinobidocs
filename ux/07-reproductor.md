@@ -1020,3 +1020,156 @@ En karaoke, la parte cantada de la línea activa se distingue de la que falta **
 - F2-R9. Capturas en `docs/ux/revisiones/0.2.2-feature-2/` con nombre `reproductor-{ancho}x{alto}-{estado}.png` a 1920 × 1080: `subrayado-mitad`, `subrayado-dos-renglones`, `subrayado-barra-espera`, y una con letra `#E53935` y resaltado `#43A047` (`subrayado-rojo-verde`).
 
 **Verificación manual** (guía de 0.2.2): con un simulador de daltonismo (o un filtro de escala de grises del sistema) y el par rojo/verde anterior, el avance se sigue sin el color; el subrayado se ve a 5 m en una TV de 55" y no molesta la lectura de la línea siguiente.
+
+## 0.2.3 · Feature 1 — Cantantes por línea en pantalla
+
+Origen: [plan 5, feature 1](../versiones/0.2.3/plan-5.md) y [exploración §6](../versiones/0.2.2/exploracion/varios-cantantes-y-coros.md#6-reproductor-y-exportación-cómo-se-pinta). Conceptos (parte, cantante, Todos, Coro, inicial): [06 · 0.2.3 · Feature 1](06-editor.md#023--feature-1--cantantes-por-línea). Valores: [sistema visual · 0.2.3](sistema-visual.md#023--varios-cantantes-y-coros). Decisiones provisionales: [0160](../preguntas/0160-decisiones-provisionales-de-ux-de-varios-cantantes-y-coros.md) n.º 7–11 y [0170](../preguntas/0170-decisiones-provisionales-de-ux-de-0-2-3.md).
+
+Vale para el reproductor local, «Probar» desde el editor y desde la Biblioteca, la ventana secundaria y la cola, la vista previa del editor y el video (mismo render). **Una canción sin reparto se ve exactamente igual que en 0.2.2** (bloque de líneas de la feature 1). Una canción **con reparto** (2 o más cantantes, o coros) usa la **disposición por zonas**: base común de dueto, trío, «Todos» y coro, indicación del usuario del 2026-11-22 ([0170](../preguntas/0170-decisiones-provisionales-de-ux-de-0-2-3.md) §B).
+
+### Disposición por zonas
+
+Cada parte tiene **su espacio en pantalla**: una **zona**, una franja horizontal fija para toda la canción. Así se ve quién canta por **posición** (además de por insignia y color), como en las referencias del usuario (un cantante arriba, otro abajo; el coro en su zona). La disposición vale igual si las líneas van una tras otra como si dos zonas cantan a la vez ([sección condicionada](#voces-a-la-vez-condicionada-a-la-factibilidad-que-dictamine-el-arquitecto)).
+
+| Regla | Valor |
+|---|---|
+| **Qué zonas hay** | Una por cantante de la canción (con o sin líneas aún por cantar) y una de **Coro** si la canción tiene líneas de coro. **Todos** no tiene zona propia en pantalla: su línea se dibuja **a la vez en la zona de cada cantante**, en el color de Todos y con la misma insignia (como la referencia del dúo en que cada voz lleva la misma frase) **(provisional, 0170 n.º 4)**. Máximo 5 zonas (4 cantantes + Coro). |
+| **Orden** | De arriba abajo: **Coro arriba del todo** (como en la referencia de coros del usuario: el coro por encima de la voz principal) y después Cantante 1, 2, 3, 4 **(provisional, 0170 n.º 4)**. Fijo en toda la canción: una zona nunca cambia de sitio. |
+| **Área y altura** | Las zonas se reparten la franja del **12 % al 86 %** del alto, separadas 0,3 × `S`. Las de cantante tienen el mismo alto; la de Coro, **la mitad** de una de cantante. Con 4 cantantes y coro, cada zona de cantante mide ≈ 14 % del alto: cabe una línea de dos renglones al 75 % de `S` (sin la siguiente). |
+| **Qué muestra cada zona** | Zona de cantante: la **línea en curso** de esa parte (la que suena; si no suena ninguna, la **próxima** de esa parte) y, debajo, si cabe entera, la **siguiente** de esa parte al 70 % (2 líneas). Zona de Coro: solo la línea en curso o próxima (1 línea). Ninguna línea ya cantada: al acabar, la línea sale de su zona (el «Cambio de línea» del tema: desplazamiento hacia arriba dentro de la zona, fundido o sin animación). |
+| **Quién canta ahora** | La zona que suena: línea al 100 % de opacidad con su barrido. Las demás: su próxima línea al **55 %** de opacidad (con el suelo de contraste de 0.2.2) y sin barrido. La diferencia se lee por opacidad, barrido e insignia, no solo por color. |
+| **Tamaño** | `S` de siempre si cabe; si la línea en curso (hasta 2 renglones) no cabe en el alto de su zona, la zona usa `S_zona = alto de la zona / (2 × 1,2 + 0,7 × 1,2 si hay siguiente)`, con un mínimo del **75 % de `S`**; por debajo, la zona deja de mostrar la siguiente. Se calcula **una vez por canción y tamaño de ventana**, igual para todas las zonas de cantante (no por línea). |
+| **«Letra en pantalla» del tema** | En canciones con reparto, «Líneas a la vez» y «Líneas ya cantadas» no se aplican (cada zona muestra su línea y la siguiente); «Cambio de línea» sí, dentro de cada zona. El editor lo dice bajo esos controles (`edi.pantalla.zonas`). |
+| **«Varias voces: todas en un bloque»** | El tema puede elegir no usar zonas (`estilo.pantalla.zonas = "una"`, [ADR 0029](../adr/0029-reparto-de-la-letra-entre-cantantes-y-coro.md) §4 bis; control en [06](06-editor.md#023--feature-1--cantantes-por-línea), «Letra en pantalla»): entonces la canción con reparto se ve en el bloque único de 0.2.2 (con `N`, `P` y ancla), con los colores, las insignias y los paréntesis de esta sección. Por defecto, zonas. |
+| **Indicadores de espera** | Se dibujan **en la zona de la línea que viene**, con las mismas posiciones relativas a esa línea (barra encima, cuenta en su sitio, puntos sobre ella) y en el color de su parte. |
+| **Pantalla de título, silencio previo, final** | Sin cambios. |
+
+**Dueto con coro** (Ana canta; Luis y el coro esperan)
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│  zona Coro (mitad de alto)                                               │
+│                     (de puntillas)                                       │  ← próxima del coro, 55 %, sin insignia
+│  ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─   │  (las zonas no tienen borde: la línea solo indica el reparto)
+│  zona Cantante 1                                                         │
+│         ╭A╮ ████████████████░░░░░░░░░░░░░░░░░░                           │  ← suena: 100 %, barrido en el color de Ana
+│             Guardo en la manga un verso doblado                          │
+│                 ╭A╮ paso a paso, sin hacer ruido                         │  ← siguiente de Ana, 70 %
+│  ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─   │
+│  zona Cantante 2                                                         │
+│                 ╭L╮ que nadie sabe de dónde llegó                        │  ← próxima de Luis, 55 %
+│                 ╭L╮ y la ciudad se queda sin voz                         │  ← siguiente de Luis, 70 % × 55 %
+└──────────────────────────────────────────────────────────────────────────┘
+```
+
+**Línea de Todos** (cantan los dos): la misma frase en la zona de Ana y en la de Luis, las dos con el barrido en el color de Todos y la insignia «A·L» (con 3 o 4 cantantes, el icono `users`).
+
+**Un solo cantante con coros**: dos zonas, la del Cantante 1 (sin insignias) y la del Coro, abajo.
+
+### Reglas de color
+
+| Elemento | Sin reparto | Con coros (1 cantante) | Con varios cantantes |
+|---|---|---|---|
+| Texto sin cantar | Color de la letra | Color de la letra | Color de la letra: **no se tiñe** con el color del cantante **(decisión provisional 7 de 0160, revisada con las referencias del usuario en 0170 §A)** |
+| Barrido (lo ya cantado) | Color de lo ya cantado | En líneas de coro, el color del Coro | **Color de la parte** de la línea (Cantante 1 = color de lo ya cantado) |
+| Subrayado (0.2.2 · F2) | Color de lo ya cantado | El de la línea | El de la línea (el mismo que su barrido) |
+| Línea que acaba | Gris de la letra (0.2.2 · F1) | Sale de su zona pasando a gris (no se queda como «ya cantada») | Igual; la insignia también pasa a gris |
+| **Letra lista** (sin barrido) | Color de la letra | Líneas de coro enteras en el color del Coro | **Texto entero en el color de su parte** (decisión 9 de 0160); la que suena, al 100 %, y las demás zonas al 55 % |
+| Puntos ●●● y relleno de la barra de espera | Color de lo ya cantado (Letra lista: de la letra) | Color de la parte de la **línea que viene** | Color de la parte de la **línea que viene**: anuncian quién entra (decisión 10 de 0160). La pista de la barra y la cuenta 3·2·1 no cambian. |
+
+### Señales que no dependen del color
+
+1. **Insignia de cantante** (solo con varios cantantes). Píldora a la izquierda del **primer renglón** de cada línea, con la **inicial** del cantante (o «A·L» / icono `users` para Todos) en el color de la letra y borde en el color de la parte. Las líneas de Coro **no** llevan insignia: las identifican los paréntesis. La insignia viaja con su línea (tamaño, opacidad y gris) y **no mueve el texto**: el texto sigue centrado y la insignia cuelga a su izquierda. Para que quepa, con varios cantantes el ancho máximo de línea baja del 88 % al **80 %** en toda la canción (también en la zona del coro, para que las formas sean estables). Medidas: sistema visual.
+2. **Paréntesis** en las líneas de coro, dibujados por la app (el texto guardado no cambia); si el texto ya empieza por «(» y acaba en «)», no se añaden otros. Forman parte del texto a efectos de renglones y barrido: se barren con la primera y la última palabra.
+3. **Zona** (posición fija por parte) y **opacidad** (la zona que suena, al 100 %; las demás, al 55 %).
+
+### Casos
+
+| Caso | Comportamiento |
+|---|---|
+| **Paso de un cantante a otro** | La línea que acaba sale de su zona (con el cambio de línea del tema) y la siguiente de esa parte sube a su sitio; a la vez, la zona que entra pasa de 55 % a 100 % en el inicio de su línea (en `D`, sin movimiento). Nada cambia de zona. |
+| **Dos líneas seguidas de la misma parte** | Relevo o dos tiempos de 0.2.2, dentro de la zona. |
+| **Zona sin más líneas** | Queda vacía hasta el final (no se recolocan las demás). |
+| **Línea de dos renglones** | Insignia junto al primer renglón; el segundo, sin insignia. Si con la siguiente no cabe en la zona, la siguiente no se dibuja (nunca una línea cortada). |
+| **Barrido palabra a palabra** | Igual, en el color de la parte. |
+| **Pausa y búsqueda** | Derivado del tiempo, como siempre: buscar pinta lo mismo que llegar reproduciendo. |
+| **Movimiento reducido** | Cambios instantáneos dentro de cada zona y cambio de opacidad sin transición. |
+| **Ventana secundaria y cola** | El reparto y los colores viajan en la instantánea de cada entrada. La tarjeta «A continuación» no cambia. |
+| **Contraste** | Cada color de parte tiene el aviso del editor (≥ 3:1 con el fondo); en el reproductor no hay avisos. La insignia, con texto en el color de la letra, se lee como la letra. |
+
+### Accesibilidad (0.2.3 · feature 1, reproductor)
+
+- Quién canta se sabe **sin color**: por la zona (posición fija), la insignia (iniciales o icono) y, en el coro, los paréntesis; quién canta **ahora**, por la opacidad y el barrido. Con un filtro de escala de grises se sigue sabiendo.
+- La letra sigue siendo `aria-hidden`; sin anuncios nuevos.
+- Legibilidad a 5 m: con 1 o 2 cantantes (y coro) la línea que suena conserva `S`; con 3 o 4, puede bajar hasta el 75 % de `S` (relación ≈ 1/185 a 5 m en una TV de 55": se lee bien a 3–4 m). Se anota en la verificación manual.
+
+### Microcopy (0.2.3 · feature 1, reproductor)
+
+Sin textos nuevos (las insignias son iniciales del nombre de cada cantante).
+
+### Criterios de aceptación (0.2.3 · feature 1, reproductor)
+
+- C1-R1. Una canción sin reparto da el mismo modelo de fotograma que en 0.2.2 en 50 instantes (test de regresión del modelo), con el ancho de línea al 88 %.
+- C1-R2. Un dueto con coro tiene tres zonas (Coro, Cantante 1 y Cantante 2, de arriba abajo) dentro del 12 %–86 % del alto, con la del coro a la mitad del alto de las otras y una sola línea; ninguna zona cambia de posición en toda la canción (test geométrico en 50 instantes a 1920 × 1080 y 1280 × 720). Un solo cantante con coros tiene dos zonas; un trío sin coro, tres.
+- C1-R3. Mientras canta Luis, su zona muestra su línea al 100 % con el barrido en el color de su ranura, la insignia «L» y, si está activo, el subrayado de su color; la zona de Ana muestra su próxima línea al 55 % sin barrido; el texto sin cantar de las dos es el color de la letra.
+- C1-R4. Una línea de Todos se dibuja a la vez en la zona de cada cantante, con el barrido en el color de Todos e insignia «A·L» (con 3 cantantes, el icono `users`); dos cantantes «Ana» y «Alba» llevan «An» y «Al».
+- C1-R5. Una línea de coro se dibuja en la zona del coro, entre paréntesis y sin insignia; «(de puntillas)» guardado con paréntesis no se dibuja con dos.
+- C1-R6. Con varios cantantes, ninguna línea pasa del 80 % del ancho; con 4 cantantes y coro, la línea que suena mide al menos el 75 % de `S` y ninguna línea se dibuja cortada ni fuera de su zona.
+- C1-R7. La insignia mide lo indicado en el sistema visual y está a la izquierda del primer renglón sin solaparlo.
+- C1-R8. En Letra lista, el texto de cada línea va entero en el color de su parte, sin barrido ni subrayado.
+- C1-R9. En un hueco antes de una línea de Luis, los indicadores de espera se dibujan en la zona de Luis, en su color; la cuenta 3·2·1 no cambia de forma.
+- C1-R10. «Líneas a la vez» y «Líneas ya cantadas» del tema no cambian nada en una canción con reparto en zonas; «Cambio de línea» sí (dentro de cada zona). Con «Todas en un bloque» en el tema, la canción se ve con el modelo de bloque de 0.2.2 (mismo fotograma que una sin reparto salvo colores, insignias y paréntesis).
+- C1-R11. La vista previa del editor, el reproductor, la ventana secundaria y un fotograma exportado dan el mismo modelo (zonas, colores, insignias, paréntesis) en el mismo instante (test compartido, amplía F1-R23).
+- C1-R12. Capturas en `docs/ux/revisiones/0.2.3-feature-1/`, nombre `reproductor-{ancho}x{alto}-{estado}.png` a 1920 × 1080 y 1280 × 720: `duo-canta-1`, `duo-canta-2`, `duo-todos`, `duo-coro`, `solo-coros`, `cuarteto-coro`, `letra-lista-duo`, `espera-zona`, `escala-de-grises` (filtro de grises sobre `duo-canta-2`), y `cuatro-tercios-duo` a 1440 × 1080.
+
+**Verificación manual** (guía de 0.2.3): un dúo real cantado por dos personas en una TV a 5 m: ¿cada uno sabe a tiempo cuándo entra mirando solo su zona?; las insignias se leen a esa distancia; un cuarteto a 3–4 m; la paleta predeterminada con un simulador de deuteranopía.
+
+### Voces a la vez (condicionada a la factibilidad que dictamine el arquitecto)
+
+> **Condicionada**: solo si el arquitecto dictamina que entra en 0.2.3 (ver [06 · sección condicionada](06-editor.md#voces-a-la-vez-condicionada-a-la-factibilidad-que-dictamine-el-arquitecto)). Si no, no se implementa nada de esto.
+
+La disposición por zonas no cambia: lo único nuevo es que **varias zonas pueden sonar a la vez**.
+
+| Aspecto | Comportamiento |
+|---|---|
+| **Varias zonas activas** | Cada zona cuya línea suena está al 100 % y barre con **sus** tiempos; las que no, al 55 %. |
+| **Coro que acompaña** | El coro barre en su zona mientras la voz principal barre en la suya (el caso de la referencia de coros del usuario). |
+| **Todos con solape** | No aplica: Todos ya ocupa las zonas de todos los cantantes; una línea de un cantante no puede solaparse con una de Todos (lo impide el editor). |
+| **Indicadores de espera** | Solo cuando **ninguna** zona suena; en la zona de la próxima línea. |
+| **Rendimiento** | Hasta 5 barridos a la vez; lo mide la prueba técnica del arquitecto (factibilidad §4.3). |
+
+- C1S-R1. En un tramo en que se solapan una línea de Ana y una de coro, las dos zonas están al 100 % y cada barrido avanza con sus propios tiempos (test del modelo en 10 instantes del solape).
+- C1S-R2. Fuera de los solapes, el modelo es idéntico al de la disposición sin solapes (mismos tests C1-R2 a C1-R9).
+- C1S-R3. En la exportación a 60 FPS de un solape de 4 zonas no se pierden fotogramas en el equipo de referencia del arquitecto (medida de la prueba técnica).
+
+## 0.2.3 · Feature 2 — Voz en los coros
+
+Origen: [plan 5, feature 2](../versiones/0.2.3/plan-5.md) y [factibilidad §2](../versiones/0.2.2/exploracion/varios-cantantes-y-coros-factibilidad.md#2-audio). Nivel y concepto: [06 · 0.2.3 · Feature 2](06-editor.md#023--feature-2--voz-en-los-coros). Amplía [«Voz guía»](#voz-guía); lo demás del audio no cambia.
+
+| Aspecto | Comportamiento |
+|---|---|
+| **Nivel de la voz en cada instante** | `máx(voz guía efectiva, nivel de coros en ese instante)`. La voz guía efectiva es `voz_guia` o 0 si está silenciada; el nivel de coros es `voz_en_coros` dentro de un tramo de coro (con sus rampas de 150 ms) y 0 fuera. Ejemplos: voz guía silenciada (el estado de fábrica) → solo suenan los coros, al 50 %; voz guía al 30 % → 30 % fuera de los coros y 50 % en ellos; voz guía al 100 % → no se nota nada. |
+| **V (silenciar la voz guía)** | **No** silencia los coros: son parte de la canción (decisión 19 de 0160). En canciones con coros y nivel > 0, el indicador breve dice `rep.ind.vozsilenciada.coros` en lugar de `rep.ind.vozsilenciada`. |
+| **Mayús + ↑/↓ y el deslizador de la voz guía** | Cambian solo la voz guía; el nivel de coros es de la canción y no se toca desde el reproductor. |
+| **Volumen general y M** | Afectan a todo, como hoy. |
+| **Buscar, pausar, reanudar** | El nivel deriva del tiempo: al buscar a mitad de un coro, la voz ya está en su nivel, sin rampa audible desde 0. Mismo instante de arranque que las fuentes (sin desfase). |
+| **Silencio previo** | Sin caso especial (el tramo está en tiempo de canción). |
+| **Sin voz separada o voz ilegible** | No hay voz en los coros; el resto, como `rep.voz.nodisponible`. |
+| **Ventana secundaria y cola** | Igual, con el nivel de cada canción de su instantánea. |
+| **Sin coros, o nivel 0 %** | Como en 0.2.2. |
+
+### Microcopy (0.2.3 · feature 2, reproductor)
+
+| Clave | Texto |
+|---|---|
+| `rep.ind.vozsilenciada.coros` | Voz silenciada · coros al {n} % |
+
+### Criterios de aceptación (0.2.3 · feature 2, reproductor)
+
+- C2-R1. Con la voz guía silenciada y nivel de coros 50 %, la ganancia programada de la voz (doble de `AudioContext`) es 0,5 ± 1 dB en el centro de cada línea de coro y 0 a más de 450 ms de cualquier tramo; las rampas de entrada y salida duran 150 ms y son lineales.
+- C2-R2. Dos líneas de coro separadas por 800 ms forman un solo tramo (la ganancia no baja entre ellas); separadas por 1,2 s, dos.
+- C2-R3. Con la voz guía al 30 %, la ganancia es 0,3 fuera de los coros y 0,5 dentro; al 80 %, 0,8 en todas partes.
+- C2-R4. Buscar al centro de un coro deja la ganancia en 0,5 en el primer bloque de audio (sin rampa desde 0); pausar y reanudar no cambian el nivel; los tramos se calculan con la misma función que el editor y la exportación (test compartido de `tramosCoro`).
+- C2-R5. V en una canción con coros muestra `rep.ind.vozsilenciada.coros` y los coros siguen sonando; en una sin coros, `rep.ind.vozsilenciada` como siempre.
+- C2-R6. En la ventana secundaria, dos canciones seguidas con niveles 20 % y 70 % suenan cada una con el suyo.
+
+**Verificación manual** (guía de 0.2.3): con 3 canciones con coros, sin voz guía y con voz guía al 30 %: ¿se oyen chasquidos al entrar o salir de un coro?; ¿se cuela la voz principal donde canta a la vez (límite esperado)?; ¿el 50 % por defecto se oye bien en las tres?

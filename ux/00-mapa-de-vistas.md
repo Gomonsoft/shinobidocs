@@ -310,6 +310,16 @@ flowchart LR
 - **Atajos nuevos** (solo Editor): **R** (empezar o terminar la revisión guiada), **N** (en la revisión: está bien y siguiente) y **Ctrl/Cmd + ↓ / ↑** (línea dudosa siguiente o anterior). En la Biblioteca, **Supr** en modo selección abre «Eliminar…» de la selección. Ninguna acción por lotes ni «Sincronizar con la voz» tienen atajo de una tecla.
 - **Errores nuevos** (códigos provisionales, 0157): `PAQUETE_NO_VALIDO` («Este archivo no es un paquete de Shinobi Karaoke.»), `PAQUETE_VERSION_NUEVA` («Este paquete es de una versión más nueva de Shinobi Karaoke.»), `PAQUETE_INCOMPLETO` («El paquete está dañado o incompleto.»), y para la sincronía automática `ALINEACION_NO_DISPONIBLE` («La sincronía automática no está disponible en este equipo.»), `IDIOMA_NO_ADMITIDO` («La sincronía automática todavía no funciona en este idioma.») y `MODELO_NO_DISPONIBLE` reutilizado para el modelo del idioma. Textos completos en las specs 02 y 06.
 
+### 0.2.3 · Varios cantantes y coros
+
+Plan: [plan 5](../versiones/0.2.3/plan-5.md). Decisiones provisionales: [0170](../preguntas/0170-decisiones-provisionales-de-ux-de-0-2-3.md). No hay vistas nuevas. Una canción de un solo cantante no cambia.
+
+- **Editor** ([06 · Feature 1](06-editor.md#023--feature-1--cantantes-por-línea)): sección «Cantantes y coros» en Funciones; menú «¿Quién canta?» (tecla **C**, menú contextual, chip y fila «Canta»); selección múltiple en la lista; **un carril por parte** en la línea de tiempo (cada cantante desde que se añade, Coro y Todos) con arrastre entre carriles y «Juntar carriles»; «Colores de los cantantes» en Estilo › Letra. **Voz en los coros** ([06 · Feature 2](06-editor.md#023--feature-2--voz-en-los-coros)): deslizador y «Escuchar un coro».
+- **Reproductor y video** ([07 · Feature 1](07-reproductor.md#023--feature-1--cantantes-por-línea-en-pantalla), [10 · 0.2.3](10-exportacion.md#023--feature-1--cantantes-en-el-video)): **disposición por zonas** (cada parte en su franja), barrido en el color de cada parte, insignia con la inicial, coro entre paréntesis; voz original en los coros, también con la voz guía silenciada; casilla «Incluir la voz en los coros» en «Solo instrumental».
+- **Letra** ([05 · 0.2.3](05-letra.md#023--feature-1--cantantes-al-corregir-o-cambiar-la-letra)) y **`.lrc`** ([02 · 0.2.3](02-biblioteca.md#023--feature-1--coros-en-la-letra-exportada)): no se pierde el reparto al corregir; coros entre paréntesis al exportar.
+- **Condicionado** al dictamen del arquitecto: voces a la vez (varias zonas sonando a la vez), en secciones aparte de 06 y 07.
+- **Atajos nuevos** (solo Editor): C, Alt + 1…4, Alt + ↑/↓, Ctrl/Cmd + clic y Mayús + clic/↑/↓ para seleccionar varias líneas.
+
 ## 2. Estructura de la ventana
 
 ```

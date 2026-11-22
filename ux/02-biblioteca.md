@@ -1823,3 +1823,13 @@ Origen: [plan 0.2.2, feature 7](../versiones/0.2.2/plan-4.md) y [propuesta 021](
 - F7-B2. Tras confirmar un lote de 5, la Biblioteca muestra las 5 tarjetas nuevas con su línea de paso, el foco en la primera, el aviso `bib.import.anadidas` y el botón de actividad con «Preparando {i} de 5».
 - F7-B3. Con 50 canciones añadidas de una vez (dobles), la rejilla responde en menos de 1 s y el foco no se pierde.
 - F7-B4. Captura `docs/ux/revisiones/0.2.2-feature-7/biblioteca-1280x800-100-lote-anadido.png`.
+
+## 0.2.3 · Feature 1 — Coros en la letra exportada
+
+Origen: [plan 5](../versiones/0.2.3/plan-5.md) y [0165](../preguntas/0165-decisiones-provisionales-del-arquitecto-de-varios-cantantes-y-coros.md) n.º 8. Amplía [«Exportar la letra a `.lrc`»](#exportar-la-letra-a-lrc) (desde la tarjeta, la selección y Editor › Funciones). La tarjeta de la Biblioteca **no cambia** en 0.2.3 (no muestra cantantes).
+
+- El `.lrc` **no lleva cantantes** (no hay un estándar). Las líneas de **Coro** se escriben **entre paréntesis** si su texto no los tiene ya, para que al volver a importarlas la sugerencia «Marcarlas como coro» las reconozca. Las demás líneas, igual que en 0.2.2.
+- El paquete de canción y la copia de seguridad llevan el reparto con la canción (sin interfaz nueva).
+
+- C1-B1. Exportar a `.lrc` una canción con dos líneas de coro, una guardada como «de puntillas» y otra como «(uh, uh)», escribe «(de puntillas)» y «(uh, uh)» (sin paréntesis dobles); ninguna línea lleva nombre de cantante.
+- C1-B2. Exportar e importar un paquete de una canción con reparto conserva cantantes, nombres, partes y nivel de coros.

@@ -830,3 +830,64 @@ Mismo diálogo de 720 px y mismas reglas que A; cambian la cabecera, el destino 
 - F8-V10. Captura en `docs/ux/revisiones/0.2.2-feature-8/` con nombre `exportacion-{ancho}x{alto}-{escala}-{estado}.png` a 1280 × 800 al 100 % y 1280 × 720 al 125 %: `lote-formulario`, `lote-ver-cuales`, `lote-exportando`, `lote-cancelar`, `lote-resultado-parcial`, `lote-detenido`.
 
 **Verificación manual**: exportar las 12 canciones Lista reales a una carpeta en un USB a 720p y a 1080p y anotar el tiempo y el tamaño totales frente a la estimación; desconectar el USB a mitad de lote y comprobar el aviso de lote detenido; reproducir tres de los videos en un reproductor externo.
+
+## 0.2.3 · Feature 1 — Cantantes en el video
+
+Origen: [plan 5, feature 1](../versiones/0.2.3/plan-5.md). Qué se ve: [07 · 0.2.3 · Feature 1](07-reproductor.md#023--feature-1--cantantes-por-línea-en-pantalla).
+
+| Aspecto | Comportamiento |
+|---|---|
+| **Imagen** | El mismo render: disposición por zonas en canciones con reparto, colores por parte, insignias, paréntesis del coro, ancho del 80 % con varios cantantes, Letra lista en el color de cada parte e indicadores en el color de quien entra. **Sin controles nuevos** en el diálogo. |
+| **Instantánea** | Incluye el reparto (`letra.partes`, `lineas[].parte`) y los colores de las partes del estilo efectivo. |
+| **Muestra del formulario** | Pinta el fotograma fijo con los colores e insignias de la canción. |
+| **Exportar varias** | Cada canción usa su propio reparto. |
+
+- C1-V1. Para 20 fotogramas muestreados de un dúo con coro, el modelo del anfitrión de exportación es idéntico al del reproductor en el mismo tiempo (zonas, colores por línea, insignias y paréntesis; amplía F1-V2). Si entra la sección condicionada de voces a la vez, también en los solapes.
+- C1-V2. El diálogo no tiene controles nuevos de imagen; una canción sin reparto se exporta igual que en 0.2.2.
+
+## 0.2.3 · Feature 2 — Voz de los coros en el video
+
+Origen: [plan 5, feature 2](../versiones/0.2.3/plan-5.md) y [factibilidad §2.2](../versiones/0.2.2/exploracion/varios-cantantes-y-coros-factibilidad.md#22-propuesta-una-sola-función-pura-del-tiempo-tres-consumidores-provisional-0165-3). Nivel: [06 · 0.2.3 · Feature 2](06-editor.md#023--feature-2--voz-en-los-coros).
+
+**Sustituye** en «Qué contiene el video» la regla del audio solo para «Solo instrumental» con coros; «Instrumental y voz» no cambia (voz al 100 %).
+
+**Formulario A** (solo con «Solo instrumental» y una canción con coros y nivel > 0):
+```
+│ Audio                                    │
+│ [Solo instrumental|Instrumental y voz]   │
+│ ☑ Incluir la voz en los coros (50 %)     │  casilla, debajo del control
+│   La voz original suena en las líneas de │  t-pequeno, texto-2
+│   coro, como en el reproductor.          │
+```
+
+| Elemento | Comportamiento |
+|---|---|
+| **Casilla «Incluir la voz en los coros»** | Visible solo con «Solo instrumental» en una canción con coros, nivel > 0 y voz separada. **Marcada por defecto** (decisión 20 de 0160). Se recuerda con las demás opciones del diálogo **(decisión provisional, 0170 n.º 9)**. Marcada: el video lleva la voz solo en los tramos de coro, al nivel de la canción y con las mismas rampas que el reproductor. Con «Instrumental y voz», la casilla no se muestra (la voz ya va entera). |
+| **Nivel 0 % o sin voz separada** | No hay casilla; el video sale sin voz. Con nivel 0 %, una nota `exp.coros.cero` bajo el control de audio. |
+| **Línea de opciones** (B, C, D, H) | «Solo instrumental + coros al {n} %» en lugar de «Solo instrumental» cuando la casilla está marcada (`exp.audio.coros`). |
+| **Estimación y mezcla** | Sin cambios de tiempo apreciables. Si la suma saturaría, se baja entera lo justo, como siempre. |
+
+**Lote (G)**: la casilla aparece con «Solo instrumental» si **alguna** canción del lote tiene coros con nivel > 0, con el texto `exp.lote.coros`; cada canción usa **su** nivel. En «Ver cuáles», esas filas llevan `exp.lote.nota.coros`.
+
+### Microcopy (0.2.3 · feature 2, exportación)
+
+| Clave | Texto |
+|---|---|
+| `exp.coros` | Incluir la voz en los coros ({n} %) |
+| `exp.coros.ayuda` | La voz original suena en las líneas de coro, como en el reproductor. |
+| `exp.coros.cero` | Esta canción tiene la voz de los coros al 0 %: el video saldrá sin voz. |
+| `exp.audio.coros` | Solo instrumental + coros al {n} % |
+| `exp.lote.coros` | Incluir la voz en los coros (en las {k} canciones que los tienen, cada una a su volumen) |
+| `exp.lote.nota.coros` | Con la voz de los coros al {n} % |
+
+### Criterios de aceptación (0.2.3 · feature 2, exportación)
+
+- C2-V1. Con «Solo instrumental», una canción con coros al 50 % muestra la casilla marcada; con «Instrumental y voz», o en una canción sin coros, no hay casilla.
+- C2-V2. Con la casilla marcada, el audio del video (pistas sintéticas: instrumental en silencio y voz con un tono) contiene el tono al 50 % ± 1 dB en el centro de cada línea de coro y silencio a más de 450 ms de los tramos; los puntos de la envolvente que recibe el worker son los de `tramosCoro` (test compartido con C2-R4).
+- C2-V3. Desmarcada, el audio es el instrumental solo, idéntico al de 0.2.2.
+- C2-V4. La elección se recuerda en la siguiente exportación; con nivel 0 % se ve `exp.coros.cero` y no hay casilla.
+- C2-V5. En un lote con 2 canciones con coros (20 % y 70 %) y 3 sin ellos, la casilla dice `exp.lote.coros` con k = 2 y cada video lleva la voz de sus coros a su nivel.
+- C2-V6. Las líneas de opciones de B, C, D y H dicen `exp.audio.coros` cuando aplica.
+- C2-V7. Capturas en `docs/ux/revisiones/0.2.3-feature-2/`, nombre `exportacion-1280x800-100-{estado}.png`: `coros-casilla`, `coros-cero`, `lote-coros`.
+
+**Verificación manual** (guía de 0.2.3): exportar una canción con coros con la casilla marcada y desmarcada y escucharla en un reproductor externo; sin chasquidos al entrar y salir de los coros.

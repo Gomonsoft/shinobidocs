@@ -2740,7 +2740,7 @@ Esta sección **amplía** la sección «Letra» del panel Estilo y el aviso de c
 
 ## 0.2.2 · Feature 4 — Comprobar la letra con la voz y corregir el desfase
 
-Origen: [plan 0.2.2, feature 4](../versiones/0.2.2/plan-4.md) y [propuesta 022](../propuestas/022-comprobar-la-letra-contra-el-audio.md). Concepto, veredictos y textos compartidos: [05 · 0.2.2 · Feature 4](05-letra.md#022--feature-4--comprobar-la-letra-contra-el-audio-y-corregir-el-desfase). Contratos pendientes: [0153](../preguntas/0153-contratos-de-las-features-4-a-7-para-las-specs.md). Decisiones provisionales: [0154](../preguntas/0154-decisiones-provisionales-de-ux-de-las-features-4-a-7.md). Esta sección **amplía** el editor; respeta la [subfase 2.1](#subfase-21--layout-adaptable-y-paneles) (nada añade scroll de página).
+Origen: [plan 0.2.2, feature 4](../versiones/0.2.2/plan-4.md) y [propuesta 022](../propuestas/022-comprobar-la-letra-contra-el-audio.md). Concepto, veredictos y textos compartidos: [05 · 0.2.2 · Feature 4](05-letra.md#022--feature-4--comprobar-la-letra-contra-el-audio-y-corregir-el-desfase). Contratos: [0153](../preguntas/0153-contratos-de-las-features-4-a-7-para-las-specs.md) (respondida) y [ADR 0024](../adr/0024-encaje-de-la-letra-con-la-voz-y-lineas-dudosas.md). Decisiones provisionales: [0154](../preguntas/0154-decisiones-provisionales-de-ux-de-las-features-4-a-7.md). Esta sección **amplía** el editor; respeta la [subfase 2.1](#subfase-21--layout-adaptable-y-paneles) (nada añade scroll de página).
 
 **Qué recupera**: el caso que cubría el «Desplazamiento de toda la letra» retirado en 0.2.1 ([8.5](#85--sin-desplazamiento-de-toda-la-letra)), sin controles manuales: la app mide el desfase y propone un único movimiento. No vuelven las teclas `,` y `.` ni ningún campo de desplazamiento.
 
@@ -2767,7 +2767,7 @@ Origen: [plan 0.2.2, feature 4](../versiones/0.2.2/plan-4.md) y [propuesta 022](
 | **Resultado `desfasada`** | Diálogo «¿Corregir el desfase?» (abajo). |
 | **Resultado `no_coincide`** | Diálogo informativo «La letra no encaja con la voz» (abajo). |
 | **Resultado `dudosa`** | Diálogo informativo `edi.comprobar.dudosa` con [Cerrar]. No propone nada. |
-| **Línea «Desfase corregido»** | Visible mientras la canción recuerde una corrección (hecha aquí, en Letra o por la preparación automática). [Quitar la corrección] devuelve todos los tiempos a como estaban antes de corregir, en **un paso** del historial, con el toast `edi.desfase.toast.quitada` y [Deshacer]. |
+| **Línea «Desfase corregido»** | Visible mientras exista `letra.desfase_corregido_ms` (corrección hecha aquí, en Letra o por la preparación automática). [Quitar la corrección] resta `desfase_corregido_ms` de `offset_ms` y borra el campo (ADR 0024 §1): la letra vuelve a sonar donde sonaba antes de corregir, en **un paso** del historial, con el toast `edi.desfase.toast.quitada` y [Deshacer]. |
 
 ### Diálogo «¿Corregir el desfase?» (480 px)
 
@@ -2786,7 +2786,7 @@ Origen: [plan 0.2.2, feature 4](../versiones/0.2.2/plan-4.md) y [propuesta 022](
 
 | Aspecto | Regla |
 |---|---|
-| **Qué mueve** | Todos los inicios, los fines fijados y las pausas con tiempo, la misma cantidad. Los fines automáticos se recalculan solos. Los **tiempos por palabra hechos a mano se mueven con su línea** y no se descartan: es la única excepción a la regla de [8.2](#82--regla-editar-el-inicio-o-el-fin-descarta-los-tiempos-por-palabra), porque un movimiento igual para todo no rompe su relación con la línea **(decisión provisional; contrato en 0153 §3)**. Las palabras importadas se borran como en cualquier edición. |
+| **Qué mueve** | **Toda la letra a la vez**, cambiando un solo dato ([ADR 0024](../adr/0024-encaje-de-la-letra-con-la-voz-y-lineas-dudosas.md) §1): `letra.offset_ms ← offset_ms + d` (redondeado a 10 ms, dentro de ±30 s) y `letra.desfase_corregido_ms = d`. **Ningún `inicio_ms`, `fin_ms` ni tiempo por palabra cambia** en la letra. Como el editor muestra `inicio_ms + offset_ms` y marca en `t − offset_ms` ([Datos que usa](#datos-que-usa-resumen-para-implementar), [8.5](#85--sin-desplazamiento-de-toda-la-letra)), la lista, las regiones, los ticks, la vista previa y el reproductor enseñan la letra movida `d`: inicios, fines fijados, fines automáticos, pausas con tiempo y **tiempos por palabra (hechos a mano o automáticos), que se conservan** porque ningún tiempo de línea se edita; la regla de [8.2](#82--regla-editar-el-inicio-o-el-fin-descarta-los-tiempos-por-palabra) no se aplica ni necesita excepción. |
 | **Botones** | Foco inicial en «Corregir el desfase» (primario; se deshace en un paso). Esc = Cancelar: no cambia nada y el foco vuelve al botón de origen. |
 | **Aplicar** | **Una sola operación** del historial. Autoguardado normal. Toast `edi.desfase.toast` con [Deshacer] (= Ctrl/Cmd + Z). Las regiones de la línea de tiempo se resaltan 2 s con borde `info` (sin fundido con movimiento reducido). La selección, el zoom y la pista de escucha no cambian; el cabezal se queda donde estaba; un bucle activo adopta los límites nuevos de su línea. |
 | **Después** | La sección muestra «Desfase corregido…» con [Quitar la corrección]. Deshacer con Ctrl/Cmd + Z quita también esa línea; rehacer la devuelve. |
@@ -2876,9 +2876,9 @@ Al abrir el editor de un **borrador** con ≥ 5 líneas con inicio y los picos l
 
 - F4-E1. La pestaña «Funciones» tiene la sección «Comprobar la letra con la voz» justo antes de «Ajustar los silencios» y en el orden común de la pestaña (Preparación automática · Revisar la sincronía · Sincronizar con la voz · Comprobar la letra con la voz · Ajustar los silencios · Exportar video · Exportar la letra · Modo de reproducción · Estado de la canción, omitiendo las que no existan), con su botón secundario; con menos de 5 líneas con inicio, la separación sin terminar o los picos sin preparar, el botón es `aria-disabled` y muestra su motivo debajo, que se actualiza en vivo.
 - F4-E2. Con una letra que coincide, pulsar el botón muestra `edi.comprobar.toast.coincide` y no cambia `cancion.json`.
-- F4-E3. Con una letra movida −800 ms respecto a la voz (fixture), el diálogo dice «0,8 s adelantada» y el número de líneas; «Corregir el desfase» mueve +800 ms (± 50 ms) todos los inicios, fines fijados y pausas con tiempo, sin cambiar textos ni la duración de ninguna línea, en una sola operación; un Ctrl/Cmd + Z lo devuelve todo y quita la línea «Desfase corregido».
-- F4-E4. Una línea con tiempos por palabra hechos a mano conserva sus palabras tras la corrección, movidas la misma cantidad (el barrido sigue coincidiendo con la voz), y no aparece `edi.toast.palabras`; el diálogo mostró `edi.desfase.palabras`.
-- F4-E5. Tras corregir, la sección muestra `edi.desfase.corregido` con [Quitar la corrección], que deja los tiempos idénticos a los previos (comparación en ms) en un paso del historial; también aparece si la corrección se hizo en la vista Letra o en la preparación automática.
+- F4-E3. Con una letra movida −800 ms respecto a la voz y `offset_ms: 0` (fixture), el diálogo dice «0,8 s adelantada» y el número de líneas; «Corregir el desfase», en una sola operación del historial, deja en `cancion.json` `letra.offset_ms` = 800 ± 50 ms (múltiplo de 10) y `letra.desfase_corregido_ms` igual a ese valor, con **todos** los `inicio_ms`, `fin_ms`, textos y palabras idénticos a los previos (comparación exacta en ms). La lista, las regiones y la vista previa muestran cada línea 0,8 s más tarde. Un Ctrl/Cmd + Z deja `offset_ms` en 0, sin `desfase_corregido_ms`, y quita la línea «Desfase corregido»; con un `offset_ms` previo distinto de 0, la corrección se **suma** a él.
+- F4-E4. Una línea con tiempos por palabra hechos a mano conserva sus `palabras` idénticas en el archivo tras la corrección (comparación exacta) y se muestran movidas `d` con la letra (tiempo mostrado = tiempo guardado + `offset_ms`); no aparece `edi.toast.palabras`; el diálogo mostró `edi.desfase.palabras`.
+- F4-E5. Tras corregir, la sección muestra `edi.desfase.corregido` con [Quitar la corrección], que en un paso del historial resta `desfase_corregido_ms` de `offset_ms` (vuelve al valor previo exacto), borra `desfase_corregido_ms` y no cambia ningún tiempo de línea; la línea «Desfase corregido» también aparece si `desfase_corregido_ms` lo escribió la vista Letra o la preparación automática.
 - F4-E6. Con la letra de otra canción (fixture), el diálogo informativo lista los tramos; [Ir] cierra, deja el cabezal al principio del tramo y lo muestra en la línea de tiempo; [Buscar otra letra] abre la vista Letra. No cambia ningún tiempo.
 - F4-E7. Al abrir un borrador con una letra `desfasada` aparece `edi.banner.desfase` en lugar de `edi.banner.yasync`; [Corregir el desfase] abre el diálogo; [Ahora no] lo oculta hasta salir del editor. En una canción Lista no aparece. Con `no_coincide`, `edi.banner.noCoincide`.
 - F4-E8. El desplazamiento que sacaría una línea del audio no se propone (el veredicto es `no_coincide`); tras cualquier corrección se cumplen los invariantes de tiempos del [ADR 0006](../adr/0006-persistencia-y-modelo-de-datos.md) (test de la función pura).
@@ -2976,13 +2976,16 @@ Origen: [plan 0.2.2, feature 10](../versiones/0.2.2/plan-4.md) y [propuesta 019]
 
 ### Condición: la prueba técnica
 
-Esta sección está diseñada **suponiendo que la prueba técnica sale bien**. La prueba (la hace el arquitecto antes de las tareas de interfaz) mide el alineador contra los fines fijados por el usuario en A Pesar de Mí, Arrópame y ¿Y Ahora Qué? (89 líneas), con el banco de `calibrar:silencios`. Criterio de la propuesta: error medio menor que el de «Ajustar los silencios» y ningún fin que corte la voz más de 150 ms.
+Esta sección está diseñada **suponiendo que la prueba técnica sale bien**. La prueba (tarea propia, antes de las tareas de interfaz) mide el alineador sobre el conjunto **V1**: los fines hechos a mano por el usuario en Arrópame, ¿Y Ahora Qué? y A Pesar de Mí (~67 líneas que no coinciden con lo que propone «Ajustar los silencios»), con «Ajustar los silencios» como línea base ([ADR 0028](../adr/0028-sincronia-automatica-por-alineacion-forzada-prueba-tecnica-y-etapa-1.md) §2.2).
+
+**Criterio cerrado** ([ADR 0028](../adr/0028-sincronia-automatica-por-alineacion-forzada-prueba-tecnica-y-etapa-1.md) §2.4). La prueba **sirve** si sobre V1 se cumplen **todos**: (1) cobertura ≥ 90 % de las líneas; (2) mediana de `|e|` ≤ 150 ms, media ≤ 250 ms y p90 ≤ 450 ms, y ninguna canción con media > 400 ms; (3) cortes (fin más de 150 ms antes que la voz) en ≤ 5 % de las líneas; (4) media de `|e|` ≤ 0,6 × la de «Ajustar los silencios» donde esta propone algo; (5) coste ≤ 20 s por canción con GPU, ≤ 1,5 × la duración con CPU y ≤ 4 GB de RAM; (6) emisiones de la implementación propia iguales a las de `transformers`. **Sirve con confianza** si (2) y (3) solo se cumplen en las líneas con confianza ≥ un umbral y esas son al menos el 60 %. Las **palabras** solo se aplican si la mediana del error de inicio de palabra (V2, y V3 si existe) es ≤ 120 ms y al menos el 80 % están a ≤ 200 ms.
 
 | Resultado de la prueba | Qué se implementa |
 |---|---|
-| Cumple el criterio en fines **y** en palabras | Todo lo de esta sección. |
-| Cumple en fines, pero las palabras no son fiables | La sección **sin** tiempos por palabra: desaparecen la casilla «Añadir tiempos por palabra», el indicador ✦ y la fila de palabras de la vista previa. Lo demás, igual. |
-| No cumple | **Nada de esta sección.** «Ajustar los silencios» sigue siendo la única ayuda, se reactivan las propuestas 016 y 027 (plan 0.2.2, «Condicionadas») y la feature 11 funciona con sus reglas sin modelo. |
+| **Sirve**, fines y palabras (salida «todo») | Todo lo de esta sección. |
+| **Sirve con confianza** | Todo lo de esta sección, pero la función **solo aplica** las líneas con confianza ≥ el umbral fijado por la prueba; las demás no cambian y quedan señaladas para revisar con el motivo de confianza baja (`ALINEACION_BAJA`, feature 11). La vista previa las cuenta en «sin cambios». Si además las palabras no cumplen, se combina con la fila siguiente. |
+| Sirve en fines, pero las palabras no cumplen (salida «solo fines») | La sección **sin** tiempos por palabra: desaparecen la casilla «Añadir tiempos por palabra», el indicador ✦ y la fila de palabras de la vista previa. Lo demás, igual. |
+| **No sirve** (salida «nada», plan B, ADR 0028 §4) | **Nada de esta sección.** «Ajustar los silencios» sigue siendo la única ayuda; se reactiva **solo la propuesta [027](../propuestas/027-marcar-inicio-y-fin-al-ritmo.md)** (marcar inicio y fin al ritmo, como feature 10-B con spec propia). La [016](../propuestas/016-ajustar-el-fin-de-una-linea-con-la-voz.md) no se reactiva: ya la cubre la acción «Fin al final de la voz» de la [feature 11](#022--feature-11--revisión-guiada-de-líneas-dudosas). La feature 11 funciona con sus reglas sin modelo. |
 
 ### Qué entra en la etapa 1
 
@@ -2994,7 +2997,7 @@ Esta sección está diseñada **suponiendo que la prueba técnica sale bien**. L
 | Concepto | Definición |
 |---|---|
 | **Confianza** | Lo seguro que está el motor de cada línea. La interfaz usa tres niveles con texto: **Alta**, **Media**, **Baja** (los umbrales salen de la prueba técnica). |
-| **Tiempos por palabra automáticos** | Los que pone esta función. Se guardan distinguidos de los hechos a mano (`origen_palabras: "auto"`, por confirmar en 0157) y **se pintan palabra a palabra**, como los hechos a mano. Solo se ponen en líneas de confianza **Alta**. |
+| **Tiempos por palabra automáticos** | Los que pone esta función. Se guardan distinguidos de los hechos a mano (`origen_palabras: "auto"`, [ADR 0028](../adr/0028-sincronia-automatica-por-alineacion-forzada-prueba-tecnica-y-etapa-1.md) §3.3) y **se pintan palabra a palabra**, como los hechos a mano. Solo se ponen en líneas de confianza **Alta**. |
 | **Fin de origen conocido** | Para saber qué fines puede cambiar, la app distingue quién fijó cada fin con el campo `origen_fin` de la línea ([ADR 0024](../adr/0024-encaje-de-la-letra-con-la-voz-y-lineas-dudosas.md) §4, respuesta a 0157 §16b). Valores: `letra` (venía con la letra importada: LRCLIB o `.lrc`), `silencios` («Ajustar los silencios» o «Fin al final de la voz»), `preparacion` (la preparación automática) y `alineacion` (esta función). **No hay valor `manual`**: un fin fijado **sin** `origen_fin` es un fin **a mano**; cualquier edición del fin por el usuario quita el campo. Los fines de canciones anteriores a 0.2.2 no lo tienen: cuentan como **hechos a mano**. |
 | **Idioma de la letra** | Hace falta para elegir el modelo. La app lo detecta del texto y lo guarda en la canción; el usuario puede cambiarlo. Idiomas admitidos: los que fije el ADR (provisionalmente español e inglés). |
 
@@ -3318,6 +3321,7 @@ Regla de 8.6: botón `aria-disabled`, enfocable, con el motivo visible debajo y 
 - F10-E15. No hay atajo de una tecla; los tres pasos se operan con teclado; Esc cancela sin cambios; el progreso se anuncia al empezar, al 50 % y al terminar; la confianza se lee como texto.
 - F10-E16. En los seis viewports de la subfase 2.1, la sección y el diálogo no producen scroll de página; a 300 px de ancho del panel, el botón y la fila del idioma no se parten.
 - F10-E17. Capturas en `docs/ux/revisiones/0.2.2-feature-10/`, nombre `editor-1280x720-100-{estado}.png`: `funciones-sincronizar`, `paso-idioma-modelo`, `paso-escuchando`, `vista-previa`, `vista-previa-lineas`, `vista-previa-poca-confianza`, `lista-indicadores`, `preciso-automaticas`, `no-disponible-equipo`, `idioma-no-admitido`.
+- F10-E18. Lo que se implementa corresponde a la salida de la prueba técnica escrita en el ADR 0028 («Resultado de la prueba técnica»), según el criterio cerrado de su §2.4 y la tabla de «Condición»: con «todo», la sección completa; con **«Sirve con confianza»**, un doble del motor con líneas por encima y por debajo del umbral fijado deja sin cambios (fin, palabras y `origen_fin` idénticos) las de debajo, que salen en «Revisar la sincronía» con el motivo de confianza baja; con «solo fines», no existen la casilla de palabras, el indicador ✦ ni la fila de palabras de la vista previa, y ninguna línea recibe `origen_palabras: "auto"`; con «nada», la sección no existe y la única feature que se reactiva es la 027.
 
 **Verificación manual** (guía de `docs/Test-manuales/0.2.2/`): sincronizar con la voz Semestre de Otoño y Cursiva la Letra (casi todos los fines automáticos) y cantar cada una entera en «Probar»: anotar cuántas líneas hubo que corregir y si el barrido por palabra acompaña a la voz o distrae; repetir con una canción en inglés y con una de coros y voces dobladas; medir el tiempo del análisis con y sin tarjeta gráfica; comprobar que una canción cuya letra es de otra versión da el aviso de poca confianza en lugar de aplicar fines malos.
 
@@ -3570,3 +3574,482 @@ Ninguno actúa en campos de texto ni con el foco en el editor preciso. N fuera d
 - F11-E16. Capturas en `docs/ux/revisiones/0.2.2-feature-11/`, nombre `editor-1280x720-100-{estado}.png` (y `-125`): `funciones-revisar`, `lista-con-marcas`, `recorrido`, `recorrido-corregida`, `recorrido-fuera`, `recorrido-fin`, `popover-pendientes`, `banner-revision`, `sin-dudas`.
 
 **Verificación manual** (guía de `docs/Test-manuales/0.2.2/`): revisar Semestre de Otoño y Cursiva la Letra tras prepararlas solas y anotar cuántas líneas señala, cuántas eran errores de verdad y cuántos errores no señaló (cantándolas enteras después); cronometrar la revisión frente a repasar la canción entera; comprobar con una canción ya terminada a mano que casi no señala nada; hacer un recorrido completo sin ratón.
+
+## 0.2.3 · Feature 1 — Cantantes por línea
+
+Origen: [plan 5 (0.2.3), feature 1](../versiones/0.2.3/plan-5.md), [propuesta 036](../propuestas/036-varios-cantantes-y-coros.md), [exploración](../versiones/0.2.2/exploracion/varios-cantantes-y-coros.md) §2–§4 y §7 y [factibilidad](../versiones/0.2.2/exploracion/varios-cantantes-y-coros-factibilidad.md) §1 y §5. Lo que ve el público: [07 · 0.2.3 · Feature 1](07-reproductor.md#023--feature-1--cantantes-por-línea-en-pantalla). Video: [10 · 0.2.3](10-exportacion.md#023--feature-1--cantantes-en-el-video). Valores visuales: [sistema visual · 0.2.3](sistema-visual.md#023--varios-cantantes-y-coros). Decisiones provisionales: [0160](../preguntas/0160-decisiones-provisionales-de-ux-de-varios-cantantes-y-coros.md) (exploración) y [0170](../preguntas/0170-decisiones-provisionales-de-ux-de-0-2-3.md) (las nuevas de esta spec). Contratos: [ADR 0029](../adr/0029-reparto-de-la-letra-entre-cantantes-y-coro.md) (reparto, colores, zonas, voces a la vez condicionadas), [ADR 0030](../adr/0030-voz-original-en-las-lineas-de-coro.md) (voz en los coros), [0175](../preguntas/0175-dudas-del-arquitecto-para-las-specs-de-0-2-3.md) (respondida aquí), [0165](../preguntas/0165-decisiones-provisionales-del-arquitecto-de-varios-cantantes-y-coros.md) y [0171](../preguntas/0171-contratos-de-0-2-3-para-las-specs.md). Respeta la [subfase 2.1](#subfase-21--layout-adaptable-y-paneles): nada añade scroll de página.
+
+Criterios con prefijo **`C1-`** (cantantes) y **`C2-`** (coros), para no confundirlos con los `F1-`/`F2-` de 0.2.2.
+
+**Regla de oro**: **una canción de un solo cantante no cambia.** Sin cantantes añadidos ni coros no hay carriles, chips, insignias, zonas en pantalla, sección de colores en el resumen del estilo ni ancho de línea distinto. Abrirla no escribe nada.
+
+**Base común** (indicación del usuario, 2026-11-22, [0170](../preguntas/0170-decisiones-provisionales-de-ux-de-0-2-3.md) §B): dueto, trío, cuarteto, «Todos» y coro comparten el mismo modelo: **cada parte tiene su carril** en la línea de tiempo, **su color** y **su zona en pantalla** ([07 · Disposición por zonas](07-reproductor.md#disposición-por-zonas)). Esta base vale igual si las líneas van una tras otra (lo que entra seguro en 0.2.3) como si dos partes se solapan en el tiempo, que se diseña aparte en [«Voces a la vez»](#voces-a-la-vez-condicionada-a-la-factibilidad-que-dictamine-el-arquitecto), **condicionada a la factibilidad que dictamine el arquitecto**.
+
+**Fuera de esta versión** (no se diseña aquí): cambio de cantante dentro de una línea; separar la voz principal de los coros; modo «Reparto» en columnas; detectar quién canta. Las voces a la vez quedan en la sección condicionada citada arriba.
+
+### Conceptos
+
+| Término | Definición |
+|---|---|
+| **Parte** | Quién canta una línea: **Cantante 1–4**, **Todos** o **Coro**. Una línea sin parte es del Cantante 1. Las pausas (♪) no tienen parte. Se asigna la **línea entera**. |
+| **Cantante** | Hasta 4 por canción, en las ranuras `c1`…`c4`. El **Cantante 1 existe siempre** y no se puede quitar. Nombre de la canción, de hasta 40 caracteres; vacío = «Cantante N» (N = su ranura). Al añadir, se usa la primera ranura libre. |
+| **Todos** | Cantan la línea todos los cantantes de la canción. Pensado sobre todo para **3 o más cantantes**; en un dueto **se puede elegir** pero no se destaca: va al final del menú, tras un separador, y su carril solo aparece cuando tiene líneas (indicación del usuario; detalle **provisional, 0170 n.º 2**). Con un solo cantante no existe. |
+| **Coro** | Voces de acompañamiento (ecos, respuestas). Se ofrece en **cualquier** canción, también con un solo cantante. En pantalla va entre paréntesis, en su color y en su zona. |
+| **Canción con reparto** | 2 o más cantantes, **o** alguna línea de Coro. Solo entonces hay carriles, chips, fila «Canta», insignias y zonas en pantalla. |
+| **Canción con varios cantantes** | 2 o más cantantes (además de lo anterior: insignias de cantante en pantalla). |
+| **Canción con coros** | Alguna línea con la parte Coro. Con un solo cantante tiene dos carriles (Cantante 1 y Coro) y dos zonas en pantalla, sin insignias **(provisional, 0170 n.º 1)**. |
+| **Inicial** | Lo que identifica a un cantante en chips, carriles e insignias: la primera letra del nombre en mayúscula. Si dos cantantes comparten inicial, sus dos primeras letras («An», «Al»); si aún coinciden, o el nombre es el predeterminado, el **número de la ranura** («1», «2»). **Todos**: las dos iniciales unidas («A·L») con 2 cantantes; con 3 o 4, el icono `users` **(decisión provisional, 0170 n.º 3)**. **Coro**: «( )». |
+| **Color de la parte** | Del **tema** (herencia de siempre). El Cantante 1 usa el **color de lo ya cantado**; las demás ranuras, los colores de «Colores de los cantantes» (abajo). |
+| **Parte en uso** | Cada cantante de la canción, más Todos y Coro si tienen alguna línea. |
+
+**Datos** ([ADR 0029](../adr/0029-reparto-de-la-letra-entre-cantantes-y-coro.md) §2–§3): canción con reparto ⇔ existe `letra.partes` (se quita sola al volver a un cantante sin nombre ni coros); `letra.partes = { cantantes: [{ id, nombre }], voz_en_coros }`, `lineas[].parte` (`c1`…`c4`, `todos`, `coro`; ausente = `c1`) y `estilo.letra.colores_partes`. El editor los escribe con `letras.guardarTiempos`, como cualquier cambio de la letra: autoguardado normal y **un paso de deshacer por gesto**, aunque afecte a varias líneas. Asignar una parte **no** cambia textos ni tiempos, no descarta palabras, no retira `revisada` (feature 11), `origen_fin` ni `intacta`, y no cambia el estado de la canción.
+
+### Qué cambia en cada zona
+
+| Zona | Canción de un solo cantante | Canción con coros (1 cantante) | Canción con varios cantantes |
+|---|---|---|---|
+| Lista | Igual; gana la selección múltiple y el ítem «¿Quién canta?… (C)» del menú contextual | Chip en todas las líneas («1» y «( )»); texto del coro entre paréntesis | Chip de parte en todas las líneas |
+| Panel Sincronía | Igual | Fila «Canta» | Fila «Canta» |
+| Línea de tiempo | Igual | Dos carriles: Cantante 1 y Coro | Un carril por cantante, Coro y Todos (ver reglas) |
+| Funciones | Sección «Cantantes y coros» (cerrada: un botón) | Ídem, con «Voz en los coros» (feature 2) | Sección completa |
+| Estilo | Igual (en D3, una línea plegada) | Selector del color del Coro | «Colores de los cantantes» |
+| Vista previa | Igual | Zonas (cantante y coro), paréntesis y color del Coro | Zonas, insignias, colores y ancho del 80 % |
+
+### Lista de líneas
+
+**Canción con varios cantantes** (Ana, Luis y coro; la fila 2 es la seleccionada principal y la 3 está también seleccionada)
+```
+│ Líneas 48/52 sincronizadas           [⚑›][«] │
+│ ┌──────────────────────────────────────────┐ │
+│ │ 00:12.40 (A)   Guardo en la manga un     │ │  chip A (Cantante 1, «Ana»)
+│ │                verso doblado             │ │
+│ │▶00:15.80 (L)   Que nadie sabe de dónde   │ │  chip L; ▶ = seleccionada principal
+│ │                llegó                     │ │
+│ │▌00:18.10 (A·L) Paso a paso, sin hacer    │ │  ▌ = también seleccionada; Todos
+│ │                ruido                     │ │
+│ │ 00:20.30 ( )   (de puntillas)            │ │  Coro: chip «( )», texto en texto-2
+│ │ ♪ pausa                                  │ │
+│ └──────────────────────────────────────────┘ │
+│ Corregir la letra                            │
+```
+
+| Elemento | Comportamiento |
+|---|---|
+| **Chip de parte** | Píldora de 20 px de alto (área de clic 24 × 24) entre el tiempo y el texto, con la **inicial** en `t-pequeno` `texto-1` y borde de 2 px en el color de la parte (sistema visual · 0.2.3). El borde es un refuerzo: la inicial es la señal. Tooltip y nombre accesible `edi.partes.chip`. **Clic**: selecciona la fila (si no lo estaba) y abre «¿Quién canta?». Solo en canciones con reparto (en todas sus líneas). |
+| **Texto del coro** | Entre paréntesis dibujados (el texto guardado no cambia; si ya empieza por «(» y acaba en «)», no se duplican) y en `texto-2`: se distingue también sin color. |
+| **Selección múltiple** (todas las canciones) | Clic = una. **Ctrl/Cmd + clic** añade o quita una fila. **Mayús + clic** y **Mayús + ↑/↓** extienden el rango (saltando pausas). La fila con el foco es la **principal**: la que siguen la línea de tiempo, el panel, el editor preciso y los atajos de tiempos. **Esc** con varias seleccionadas deja solo la principal (no sale del editor). |
+| **Qué hace la selección múltiple** | Solo **asignar parte** (menú, C, Alt + 1…4, Alt + ↑/↓, arrastre). I, O, Supr, Alt/Ctrl + ←/→, P, L y Mayús + L actúan **solo sobre la principal**; con varias seleccionadas, sus tooltips añaden `edi.partes.soloPrincipal`. |
+| **Ancho** | El chip ocupa 28–40 px (24 en la lista minimizada, bajo el número de línea). A 256 px de ancho de lista el texto conserva ≥ 160 px. |
+| **Menú contextual de la fila** | Ítem nuevo «¿Quién canta?… (C)» tras «Editor preciso de línea… (P)», en todas las canciones. |
+
+### Menú «¿Quién canta?»
+
+Componente «Menú contextual» del sistema visual, anclado a la fila principal (o a la región, al chip o al botón «Canta» que lo abrió).
+```
+┌ ¿Quién canta? ───────────────────────────┐
+│ (A)   Cantante 1 · Ana            1   ✓  │
+│ (L)   Cantante 2 · Luis           2      │
+│ (M)   Cantante 3 · Marta          3      │
+│ (👥)  Todos                       T      │  con 3 o más: junto a los cantantes
+│ ( )   Coro                        C      │
+│ ──────────────────────────────────────── │
+│ + Añadir cantante                 A      │  oculto con 4 cantantes
+│ Nombres de los cantantes…                │  solo con 2 o más
+└──────────────────────────────────────────┘
+```
+- **Dueto** (2 cantantes): Cantante 1, Cantante 2, Coro, separador, «Todos (los dos)» con T, separador, «+ Añadir cantante» y «Nombres…». Todos se puede elegir, pero no está entre las primeras opciones.
+- **Un solo cantante**: «Cantante 1 ✓», «Coro», separador y «+ Añadir cantante».
+
+| Entrada o acción | Comportamiento |
+|---|---|
+| **C** (fuera de campos de texto; foco en la lista, una región o el panel) | Abre el menú sobre la selección. Dentro: **1–4** eligen cantante, **T** Todos, **C** Coro (C dos veces = asignar el coro), **A** añadir cantante; ↑/↓ e Intro; Esc cierra sin cambios y devuelve el foco. |
+| **✓** | Marca la parte común de las líneas seleccionadas; con partes distintas, ninguna marca. |
+| **Elegir una parte** | Asigna a todas las seleccionadas en **un paso** (`edi.partes.paso`), cierra el menú, devuelve el foco a la fila principal y anuncia `edi.partes.anuncio`. |
+| **+ Añadir cantante** | Crea el cantante en la primera ranura libre **y asigna la selección** a él, en un solo paso de deshacer (así se empieza un dúo sin pasar por ningún ajuste). Su carril aparece al momento. Anuncio `edi.partes.anuncio.nuevo`. |
+| **Nombres de los cantantes…** | Abre «Funciones» con el foco en el nombre del primer cantante de la selección. |
+| **Alt + 1…4** (atajo directo) | Asigna la selección al Cantante N **si existe**; si no, no hace nada y anuncia `edi.partes.noExiste`. Se lee la tecla física (`Digit1`…`Digit4`), sin Ctrl ni Cmd (AltGr no cuenta), fuera de campos de texto y nunca con el foco en el editor preciso ([0161](../preguntas/0161-viabilidad-tecnica-de-varios-cantantes-y-coros.md) §6). |
+| **Alt + ↑ / ↓** (lista y línea de tiempo) | Lleva la selección a la parte anterior o siguiente en el **orden de los carriles visibles** (abajo); con Alt + ↓ desde el último carril de un dueto se llega también a Todos. Un paso por pulsación; las pulsaciones seguidas en menos de 1 s cuentan como uno. No crea cantantes. |
+
+### Panel Sincronía
+
+```
+│ Línea 12 de 52                                  │
+│ «Que nadie sabe de dónde llegó»                 │
+│ Canta  [(L) Luis ▾]                             │  fila nueva
+│ Inicio [ 00:15.80 ] …                           │
+```
+Con varias líneas seleccionadas:
+```
+│ 3 líneas seleccionadas                          │  `edi.partes.seleccion`
+│ Canta  [Varias ▾]                               │  o el chip, si coinciden
+│ Los tiempos se editan de una en una: los        │  `edi.partes.seleccion.ayuda`
+│ controles de abajo son de la línea 12.          │
+│ (controles de la línea principal)               │
+```
+- La fila «Canta» aparece en canciones con reparto. Es un botón de menú (`aria-haspopup="menu"`) que abre «¿Quién canta?».
+- El riel del panel minimizado añade el chip bajo «Fin» (abre el menú).
+
+### Línea de tiempo con carriles
+
+Solo en **canciones con reparto**. Cada parte tiene **su propia línea de tiempo** (carril), con su color y su espacio (base común, indicación del usuario). Orden fijo de arriba abajo, el mismo que las zonas de la pantalla: Cantante 1…4 (los que existen), Todos, Coro. Hay un carril por:
+- **cada cantante de la canción, tenga o no líneas**: aparece en cuanto se añade y solo desaparece al quitarlo ([0160](../preguntas/0160-decisiones-provisionales-de-ux-de-varios-cantantes-y-coros.md), 2026-11-22);
+- **Coro, siempre** que la canción tenga reparto (aunque aún no tenga líneas: así se le pueden arrastrar);
+- **Todos, siempre con 3 o más cantantes**; en un **dueto**, solo mientras tiene alguna línea (durante un arrastre aparece como franja de destino) **(provisional, 0170 n.º 2)**.
+
+Esto **sustituye** la regla de la exploración («Todos y Coro solo mientras tienen líneas»).
+
+```
+Línea de tiempo [−][+][Zoom a la línea][Ver canción completa][Centrar en el cabezal]  [⇊ Juntar carriles] [⌄]
+Regla          │ 00:12          00:14          00:16          00:18          00:20
+(A) Ana        │ [Guardo en la man…]                                                 ┐
+(L) Luis       │                 [Que nadie sabe d…]                                 │ la onda de la voz
+(M) Marta      │  Arrastra aquí las líneas de Marta                                  │ va de fondo, detrás
+(A·L) Todos    │                                    [Paso a paso, si…]               │ de todos los carriles
+( ) Coro       │                                                      [(de pun…)]    ┘
+Vista general  ├────────────[ intervalo visible ]──────────────────────────────────┤
+```
+
+| Aspecto | Comportamiento |
+|---|---|
+| **Etiqueta del carril** | Columna fija de 72 px a la izquierda: chip + nombre en `t-pequeno` (cortado con «…»; tooltip con el nombre completo). No es un control: el nombre se cambia en Funciones. |
+| **Onda de la voz** | Una sola onda (hay una sola pista de voz), **de fondo detrás de todos los carriles**, a todo el alto de la pista, como hoy detrás de la pista única **(decisión provisional, 0170 n.º 5**, sugerencia de la factibilidad §5**)**. Los picos no cambian. |
+| **Alto** | Carril de **32 px** (región de 28 px), mínimo **24 px** (región de 20 px; el objetivo de clic es el carril entero y los tiradores mantienen 24 × 24 escalonados). La pista mide `máx(alto preferido, carriles × alto de carril)`: con 2 carriles caben en los 76 px de siempre; con 3, 96 px; con 6, 192 px. Es un **alto efectivo**: la preferencia guardada (subfase 2.1) no se reescribe. |
+| **Qué cede primero** (amplía el paso 2 de [la subfase 2.1](#qué-cede-primero-cuando-falta-espacio)) | 2a. Los carriles bajan de 32 a 24 px. 2b. Si aún no cabe, se **juntan solos** en una pista (estado temporal, como «minimizada por falta de espacio»: no se guarda; el botón «Juntar carriles» queda `aria-pressed="true"` y `aria-disabled` con el tooltip `edi.partes.juntosSinEspacio`). Después siguen los pasos 3 a 5 de siempre. Con los valores por defecto: a 1280 × 720 caben 6 carriles de 32 px dejando ≥ 180 px a la zona superior; a 1024 × 576 caben 3 carriles a 24 px y con más se juntan solos. |
+| **Carril vacío** | El de un cantante o del Coro sin líneas (recién añadido o al que se le quitaron todas): mismo alto y etiqueta; dentro, el texto `edi.partes.carrilVacio` en `t-pequeno` `texto-3`, centrado en la parte visible (no es un control). Admite soltar regiones y es destino de Alt + ↑/↓. Al vaciarse no desaparece: solo «Quitar» lo retira. |
+| **Juntar carriles** | Botón alternable (`aria-pressed`) en la fila de controles, icono `fold-vertical`. Todas las regiones en una pista, con una **franja superior de 3 px en el color de la parte** y la **inicial** al principio de la región (sistema visual). Se recuerda para todas las canciones (dato del editor en `config`, 0171). Con los carriles juntos, la asignación se hace con el menú, C o Alt. |
+| **Arrastre entre carriles** | Arrastrar el **cuerpo** de una región en vertical (umbral de 8 px) la lleva a otro carril: la región sigue al puntero solo en vertical, el carril de destino se resalta con borde `acento-texto` y al soltar se asigna (un paso). El componente horizontal **se ignora**: el cuerpo nunca mueve tiempos (eso sigue siendo de los tiradores). Por debajo del umbral, el clic y el doble clic hacen lo de siempre. Esc, o soltar fuera de un carril, cancelan sin crear paso. Con varias seleccionadas, arrastrar una lleva todas. |
+| **Soltar en «+ Nuevo cantante»** | Con menos de 4 cantantes, durante el arrastre aparece bajo el último carril de cantante una franja discontinua de 24 px con `edi.partes.nuevoCarril`; soltar ahí crea el cantante y asigna, en un paso. |
+| **Destino Todos en un dueto** | Durante el arrastre aparece, si no existe, la franja discontinua «Todos» en su sitio; soltar ahí asigna y el carril se queda mientras tenga líneas. |
+| **Teclado** | El arrastre **nunca** es la única vía: con el foco en una región, C abre el menú, Alt + 1…4 y Alt + ↑/↓ asignan. Alt + ←/→ siguen siendo del inicio. |
+| **Canción con coros y un solo cantante** | Dos carriles: Cantante 1 y Coro. |
+| **Doble clic, tiradores, Bloquear enunciado, editor preciso** | Igual que hoy, en el carril de la región. Los tiradores siguen limitados por la línea anterior y la siguiente **de toda la letra**: dos regiones de carriles distintos no se solapan. Si entran las voces a la vez, esta regla cambia (ver [sección condicionada](#voces-a-la-vez-condicionada-a-la-factibilidad-que-dictamine-el-arquitecto)). |
+
+### Funciones › «Cantantes y coros»
+
+Sección nueva, **después de «Ajustar los silencios»**. Orden de la pestaña desde 0.2.3: Preparación automática · Revisar la sincronía · Sincronizar con la voz · Comprobar la letra con la voz · Ajustar los silencios · **Cantantes y coros** · Exportar video · Exportar la letra · Modo de reproducción · Estado de la canción.
+
+**Un solo cantante**
+```
+│ Cantantes y coros                                         │  h3
+│ Reparte la letra entre varias voces. Cada una se ve en    │  t-pequeno, texto-2
+│ su color y con su inicial al cantar.                      │
+│ [👥 Repartir entre varios cantantes]                      │  botón secundario, icono `users`
+│ ⓘ 13 líneas van entre paréntesis: suelen ser coros.       │  solo si las hay sin marcar
+│   [Marcarlas como coro]                                   │  fantasma
+│ (Voz en los coros: solo si hay coros, feature 2)          │
+```
+
+**Varios cantantes**
+```
+│ Cantantes y coros                                         │
+│ Reparte la letra entre varias voces. Cada una se ve en    │
+│ su color y con su inicial al cantar.                      │
+│ (A)   [ Ana                    ]  [22 líneas]             │  campo de nombre · recuento (botón)
+│ (L)   [ Luis                   ]  [18 líneas]  [✕]        │  [✕] = quitar este cantante
+│ (3)   [ Cantante 3             ]  [Sin líneas] [✕]        │  nombre vacío: marcador «Cantante 3»
+│ (👥)  Todos                       [6 líneas]              │  con 3 o más; en un dueto, si tiene líneas
+│ ( )   Coro                        [4 líneas]              │  siempre (o «Sin líneas»)
+│ [+ Añadir cantante]                                       │  con menos de 4
+│ ⓘ 2 líneas van entre paréntesis: suelen ser coros.        │
+│   [Marcarlas como coro]                                   │
+│ ───────────────────────────────────────────────────────── │
+│ Voz en los coros   (feature 2)                            │
+```
+
+| Elemento | Comportamiento |
+|---|---|
+| **Repartir entre varios cantantes** | Crea el Cantante 2 **sin líneas** (su carril aparece vacío), muestra la vista «Varios cantantes» y pone el foco en su nombre. Un paso de deshacer. |
+| **Nombre** | Campo de texto de una línea, máximo 40 caracteres (el contador aparece a partir de 30), marcador `Cantante N`. Se guarda al salir del campo o con Intro (Esc devuelve el valor anterior); una edición = un paso. Se recortan los espacios de los extremos; vacío = nombre predeterminado. Los nombres repetidos se permiten (la inicial se resuelve con la regla de «Conceptos»). |
+| **Recuento** | Botón «{n} líneas» (o «Sin líneas», inactivo): selecciona esas líneas en la lista, lleva la primera a la vista y pone el foco en la lista. |
+| **[✕] Quitar** (no existe para el Cantante 1) | Sus líneas pasan al **Cantante 1**, su carril desaparece; un paso de deshacer, sin confirmación; toast `edi.partes.quitado` con [Deshacer]. Si quedan menos de 2 cantantes, las líneas de **Todos** pasan también al Cantante 1 y la canción vuelve a verse como de un solo cantante (con sus coros, si los tiene). |
+| **+ Añadir cantante** | Crea el siguiente (primera ranura libre) sin líneas, con el foco en su nombre. Con 4, se sustituye por `edi.partes.maximo` (`t-pequeno` `texto-3`). |
+| **Marcarlas como coro** | Aparece si hay líneas cuyo texto, sin espacios en los extremos, empieza por «(» y acaba en «)» y que no son ya de coro. Las asigna al Coro en un paso, anuncia `edi.partes.anuncio` y la sugerencia desaparece. Es **solo una sugerencia**: la preparación automática nunca marca coros sola (decisión 13 de 0160). |
+| **Modo «Sincronizar al ritmo»** | Pestaña inactiva, como toda «Funciones». |
+
+### Panel Estilo › «Colores de los cantantes»
+
+Subsección dentro de «Letra», tras «Color de lo ya cantado» y la casilla del subrayado. Los colores son del **tema**: la canción decide cuántas partes hay y quién canta; el tema, en qué color se ve cada una.
+
+**D2 y D3** (estilo editable), canción con varios cantantes:
+```
+│ Colores de los cantantes                          │  h4
+│ (A)   Ana     = Color de lo ya cantado ↑          │  enlace que lleva al selector de arriba
+│ (L)   Luis    [■ #4ADEDE]                         │  selector de color de siempre
+│ (3)   Cantante 3 [■ #FF5C8A]                      │
+│ (A·L) Todos   [■ #B388FF]                         │
+│ ( )   Coro    [■ #FF9F1C]                         │
+│ ▸ Más colores (Cantante 4)                        │  ranuras que esta canción no usa
+```
+
+| Caso | Qué se ve |
+|---|---|
+| Canción de un solo cantante sin coros | **Nada** en D1, D2 y D4. En **D3** (editando un tema que pueden usar otras canciones), una línea plegada `edi.estiloPartes.plegado` con [Mostrar], que despliega todas las ranuras. |
+| Canción con coros (1 cantante) | Solo la fila del Coro. |
+| Varios cantantes | Una fila por parte en uso; las demás ranuras bajo «Más colores» (plegado). |
+| **D1 y D4** (tema vinculado) | Resumen de solo lectura: los chips con un cuadrado de su color y el valor, y la procedencia del tema. Para cambiarlos, «Personalizar» o «Editar tema» (como el subrayado: sin «Cambiar solo en esta canción»). |
+
+- Cada cambio de color es un paso de deshacer **de estilo** y se ve en la vista previa en < 100 ms.
+- Un tema sin colores de cantantes usa los predeterminados de [sistema visual · 0.2.3](sistema-visual.md#023--varios-cantantes-y-coros); abrir la canción no escribe nada.
+- Los colores viajan con «Guardar como tema nuevo…», duplicar, «Aplicar tema…» y las copias al eliminar un tema, como el resto del estilo.
+
+### Aviso de contraste con cantantes y coros
+
+Amplía el de [0.2.2 · Feature 2](#022--feature-2--resaltado-que-no-depende-solo-del-color). Solo con las **partes en uso** de la canción (en D3, también las ranuras desplegadas). Cálculo y umbrales: [sistema visual · 0.2.3](sistema-visual.md#023--varios-cantantes-y-coros).
+
+| Condición | Se muestra | Acciones rápidas (D2, D3) |
+|---|---|---|
+| Color de una parte < 3:1 con el fondo | ⚠ `edi.contraste.parte` | «Sugerir un color» (`edi.contraste.sugerirParte`): de los sugeridos, el de mayor contraste con el fondo que no se parezca a otra parte en uso. |
+| Color de una parte con ΔE < 25 respecto a la letra, o que se confunde con ella con daltonismo | ⚠ `edi.contraste.parteLetra` (sin subrayado en el estilo) · ⓘ (con subrayado) | «Sugerir un color» y «Subrayar lo ya cantado». |
+| Dos partes en uso parecidas (ΔE < 25, o se confunden con daltonismo) | ⓘ `edi.contraste.partesParecidas` (no enciende el punto de la pestaña) | Ninguna: la inicial y los paréntesis ya las distinguen. |
+| Letra lista | Como en 0.2.2: los avisos del color de las partes valen igual (en Letra lista el texto entero va en el color de su parte, [07](07-reproductor.md#023--feature-1--cantantes-por-línea-en-pantalla)). | — |
+
+El color del Cantante 1 es el de lo ya cantado: sus avisos son los de siempre y no se repiten.
+
+### Convivencia con lo que ya existe
+
+| Con | Comportamiento |
+|---|---|
+| **Editor preciso de línea** | Sin cambios. La barra de título añade el chip de la línea (solo lectura). C, Alt + 1…4 y Alt + ↑/↓ no actúan con el foco en la ventana. |
+| **Bloquear enunciado, doble clic, Mayús + L** | Sobre la línea principal, en su carril. |
+| **Modo «Sincronizar al ritmo»** | Sin cambios (la secuencia sigue siendo una). La lista muestra los chips; la selección múltiple, el menú y el arrastre están inactivos durante el modo. |
+| **Ajustar los silencios, Comprobar la letra, Sincronizar con la voz, Corregir el desfase** | Sin cambios: miran la pista de voz entera y la letra en orden. Conservan la parte de cada línea. |
+| **Revisión guiada** (0.2.2 · F11) | Asignar parte no cuenta como cambio: las líneas dadas por buenas siguen así. La tarjeta de la revisión muestra el chip. |
+| **Corregir la letra** (vista Letra) | Ver [05 · 0.2.3](05-letra.md#023--feature-1--cantantes-al-corregir-o-cambiar-la-letra): las líneas que no cambian conservan su parte; las nuevas o cambiadas heredan la de la anterior. |
+| **Deshacer** | Cada asignación, alta, baja o renombre de cantante y «Marcarlas como coro» es un paso; un cambio de color, un paso de estilo. |
+| **Probar a pantalla completa (F)** | Usa el reparto en memoria, también sin guardar. |
+| **«Letra en pantalla»** (0.2.2 · F1) | En una canción con reparto (y siempre en D3), la sección gana un control al principio: **«Varias voces»** — grupo de radios «Cada una en su zona» (por defecto) / «Todas en un bloque» (`estilo.pantalla.zonas`: `por_parte` / `una`, [ADR 0029](../adr/0029-reparto-de-la-letra-entre-cantantes-y-coro.md) §4 bis), con sus ayudas. Es parte del bloque del tema (se hereda y admite «Cambiar solo en esta canción» como el resto del bloque); cada cambio es un paso de deshacer. Con «Cada una en su zona», bajo «Líneas a la vez» y «Líneas ya cantadas» aparece la nota `edi.pantalla.zonas` (`info`) y esos controles siguen editables (valen para «Todas en un bloque» y para otras canciones). En D1/D4 el resumen corto añade « · en zonas» o « · en un bloque». La vista previa muestra lo elegido ([07 · Disposición por zonas](07-reproductor.md#disposición-por-zonas)). En una canción sin reparto el control no aparece (salvo en D3). |
+| **Exportar la letra (.lrc)** | Sin cantantes; las líneas de coro, entre paréntesis ([02 · 0.2.3](02-biblioteca.md#023--feature-1--coros-en-la-letra-exportada)). |
+| **Sesión en otra pantalla** | El bloqueo de edición de la fase 4 incluye asignar partes, nombres y colores. |
+
+### Atajos de teclado (0.2.3)
+
+Se añaden a la tabla de [0.2.1](#atajos-de-teclado-en-021), a los de la feature 11 y al diálogo de atajos:
+
+| Tecla | Acción |
+|---|---|
+| C | Abrir «¿Quién canta?» sobre la selección |
+| Alt + 1…4 | Asignar la selección al Cantante 1…4 (si existe) |
+| Alt + ↑ / ↓ | Pasar la selección a la parte anterior / siguiente |
+| Ctrl/Cmd + clic · Mayús + clic · Mayús + ↑ / ↓ | Añadir a la selección · seleccionar un rango |
+| Esc (con varias seleccionadas) | Dejar solo la línea principal |
+
+Ninguno actúa en campos de texto, con el foco en el editor preciso, en el modo «Sincronizar al ritmo» ni durante el bloqueo de la sesión.
+
+### Estados (0.2.3 · feature 1, editor)
+
+| Estado | Presentación |
+|---|---|
+| Sin reparto (un cantante, sin coros) | El editor de siempre; Funciones con «Repartir entre varios cantantes». |
+| Solo coros | Chips «1» y «( )», paréntesis, carriles Cantante 1 y Coro; Funciones con «Marcarlas como coro» (si quedan) y «Voz en los coros». |
+| Varios cantantes | Chips, carriles, fila «Canta», sección completa. |
+| Cantante sin líneas | Carril vacío con `edi.partes.carrilVacio`; recuento «Sin líneas». |
+| Carriles juntados por falta de espacio | Pista única con franjas; botón `aria-disabled` con `edi.partes.juntosSinEspacio`. |
+| Varias líneas seleccionadas | Panel con `edi.partes.seleccion`; tooltips de tiempos con `edi.partes.soloPrincipal`. |
+| Cargando / error | No hay estados propios: asignar es local e instantáneo. Un fallo al guardar es el error de guardado de siempre (la asignación queda en memoria y se reintenta). |
+| Datos raros al abrir (parte desconocida, cantante inexistente, nombre de más de 40) | Se leen con tolerancia (línea → Cantante 1; nombre → predeterminado), sin aviso y sin escribir nada hasta el siguiente cambio. |
+
+### Accesibilidad (0.2.3 · feature 1, editor)
+
+- **El color nunca va solo**: chip, etiqueta de carril, franja de «Juntar carriles» y fila «Canta» llevan siempre la inicial o «( )»; el coro lleva además paréntesis y `texto-2`. Los nombres accesibles dicen la parte completa («Canta: Luis», «Canta: Coro»).
+- La lista pasa a `aria-multiselectable="true"`; cada fila seleccionada tiene `aria-selected="true"` y la principal, además, `aria-current="true"`.
+- El arrastre tiene equivalente de teclado (C, Alt + 1…4, Alt + ↑/↓) y de menú.
+- Anuncios (`aria-live="polite"`), uno por gesto: `edi.partes.anuncio`, `edi.partes.anuncio.nuevo`, `edi.partes.quitado`, juntar o separar carriles (`edi.partes.anuncio.juntar`).
+- Objetivos: chip 24 × 24; carril ≥ 24 px de alto; franjas de destino del arrastre ≥ 24 px.
+- Daltonismo: los avisos de [Aviso de contraste con cantantes y coros](#aviso-de-contraste-con-cantantes-y-coros) comprueban protanopía y deuteranopía entre partes y frente a la letra; con colores que se confunden, la inicial sigue distinguiéndolas.
+
+### Microcopy (0.2.3 · feature 1, editor)
+
+| Clave | Texto |
+|---|---|
+| `edi.partes.titulo` | Cantantes y coros |
+| `edi.partes.ayuda` | Reparte la letra entre varias voces. Cada una se ve en su color y con su inicial al cantar. |
+| `edi.partes.repartir` | Repartir entre varios cantantes |
+| `edi.partes.menu` | ¿Quién canta? · (menú contextual) ¿Quién canta?… (C) |
+| `edi.partes.cantante` | Cantante {n} · (con nombre) Cantante {n} · {nombre} |
+| `edi.partes.cantante.predeterminado` | Cantante {n} |
+| `edi.partes.todos` | Todos |
+| `edi.partes.coro` | Coro |
+| `edi.partes.anadir` | Añadir cantante |
+| `edi.partes.nombres` | Nombres de los cantantes… |
+| `edi.partes.nombre.aria` | Nombre del cantante {n} |
+| `edi.partes.recuento` | {n} líneas · 1 línea · Sin líneas |
+| `edi.partes.quitar.aria` | Quitar a {nombre}: sus líneas pasan a {nombre del cantante 1} |
+| `edi.partes.quitado` | {nombre} quitado: sus líneas pasan a {nombre del cantante 1}. — [Deshacer] |
+| `edi.partes.maximo` | Hasta 4 cantantes por canción. |
+| `edi.partes.chip` | Canta: {parte} |
+| `edi.partes.canta` | Canta |
+| `edi.partes.varias` | Varias |
+| `edi.partes.seleccion` | {n} líneas seleccionadas |
+| `edi.partes.seleccion.ayuda` | Los tiempos se editan de una en una: los controles de abajo son de la línea {k}. |
+| `edi.partes.soloPrincipal` | Solo en la línea {k} |
+| `edi.partes.paso` | Quién canta |
+| `edi.partes.anuncio` | {n} líneas para {parte}. · (una) Línea para {parte}. |
+| `edi.partes.anuncio.nuevo` | {nombre} añadido. · (con líneas) {nombre} añadido: {n} líneas para {nombre}. |
+| `edi.partes.noExiste` | Esta canción no tiene cantante {n}. |
+| `edi.partes.sugerenciaCoro` | {n} líneas van entre paréntesis: suelen ser coros. · (una) 1 línea va entre paréntesis: suele ser un coro. |
+| `edi.partes.marcarCoro` | Marcarlas como coro · (una) Marcarla como coro |
+| `edi.partes.carrilVacio` | Arrastra aquí las líneas de {nombre} |
+| `edi.partes.nuevoCarril` | Suelta aquí para un cantante nuevo |
+| `edi.partes.juntar` | Juntar carriles · (activo) Separar carriles |
+| `edi.partes.juntosSinEspacio` | No caben los carriles: agranda la ventana o la línea de tiempo para verlos. |
+| `edi.partes.anuncio.juntar` | Carriles juntos en una pista. · Un carril por cantante. |
+| `edi.estiloPartes.titulo` | Colores de los cantantes |
+| `edi.estiloPartes.c1` | = Color de lo ya cantado |
+| `edi.estiloPartes.mas` | Más colores ({lista}) |
+| `edi.estiloPartes.plegado` | Colores para dúos y coros (esta canción no los usa) — [Mostrar] |
+| `edi.contraste.parte` | El color de {parte} apenas se ve sobre el fondo. |
+| `edi.contraste.parteLetra` | El color de {parte} se distingue poco del de la letra. · (daltonismo) Con daltonismo, el color de {parte} puede no distinguirse de la letra. |
+| `edi.contraste.partesParecidas` | {parte} y {parte} se parecen: se distinguirán por la inicial. |
+| `edi.contraste.sugerirParte` | Sugerir un color |
+| `edi.pantalla.voces` | Varias voces |
+| `edi.pantalla.voces.zonas` | Cada una en su zona — Cada cantante y el coro tienen su franja en la pantalla. |
+| `edi.pantalla.voces.bloque` | Todas en un bloque — Las líneas se suceden en un solo bloque; cada voz con su color y su inicial. |
+| `edi.pantalla.resumen.voces` | · en zonas · · en un bloque |
+| `edi.pantalla.zonas` | Esta canción tiene varias voces: cada una se ve en su zona, con su línea y la siguiente. «Líneas a la vez» y «Líneas ya cantadas» no se aplican; «Cambio de línea» sí. |
+| `edi.atajo.partes` | C — ¿Quién canta? · Alt + 1…4 — Asignar al cantante 1…4 · Alt + ↑ / ↓ — Parte anterior / siguiente · Ctrl/Cmd + clic, Mayús + clic — Seleccionar varias líneas |
+
+### Criterios de aceptación (0.2.3 · feature 1, editor)
+
+**Sin reparto**
+- C1-E1. Una canción de 0.2.2 sin reparto se abre igual que antes en lista, panel, línea de tiempo, Estilo y vista previa (capturas comparadas a 1280 × 720) y abrirla no escribe `cancion.json` ni `temas.json` (comparación del archivo). La única novedad visible es la sección «Cantantes y coros» de Funciones y el ítem «¿Quién canta?… (C)» del menú contextual.
+
+**Asignar**
+- C1-E2. Con la tecla C, el ítem del menú contextual, el chip, la fila «Canta», Alt + 1…4, Alt + ↑/↓ y el arrastre entre carriles se asigna una línea a cada parte; cada vía crea **un** paso de deshacer y anuncia `edi.partes.anuncio`; tras deshacer, `lineas[].parte` vuelve a su valor exacto.
+- C1-E3. Con tres líneas seleccionadas (Ctrl/Cmd + clic y Mayús + ↑/↓), C › 2 las asigna en un paso; I y O solo cambian la principal; Esc deja solo la principal sin salir del editor.
+- C1-E4. Asignar una parte no cambia ningún `texto`, `inicio_ms`, `fin_ms`, `palabras`, `origen_fin`, `revisada` ni `intacta` de ninguna línea (comparación del resto de campos antes y después) y no cambia el estado de la canción.
+- C1-E5. En una canción de un solo cantante, «+ Añadir cantante» del menú crea el Cantante 2 y le asigna la selección en un solo paso; su carril aparece al momento con esas líneas.
+- C1-E6. Alt + 3 con dos cantantes no cambia nada y anuncia `edi.partes.noExiste`; Alt + 1…4 funcionan con distribución de teclado española y estadounidense, en macOS con Opción, y no actúan con AltGr ni con el foco en un campo de texto o en el editor preciso.
+- C1-E7. «Todos» no aparece con un solo cantante; en un dueto aparece al final del menú, tras un separador, y con 3 o más, junto a los cantantes; «Coro» aparece siempre.
+
+**Cantantes**
+- C1-E8. «Repartir entre varios cantantes» y «+ Añadir cantante» crean un cantante **sin líneas** cuyo carril aparece al momento, vacío, con `edi.partes.carrilVacio`; arrastrar una región a ese carril (o Alt + ↓ hasta él) se la asigna en un paso. Si se le quitan todas sus líneas, el carril sigue. El carril del Coro existe siempre que la canción tenga reparto; el de Todos, siempre con 3 o más cantantes y, en un dueto, solo mientras tiene líneas.
+- C1-E9. [✕] de un cantante pasa sus líneas al Cantante 1 y retira su carril en un paso, con toast y [Deshacer]; al quedar uno solo, las líneas de Todos pasan al Cantante 1 y desaparecen carriles, chips de cantante e insignias. El Cantante 1 no tiene [✕]. Con 4 cantantes no hay «+ Añadir cantante» y se lee `edi.partes.maximo`; al quitar el 2 y añadir otro, ocupa la ranura 2.
+- C1-E10. El nombre admite 40 caracteres (no deja escribir más); vacío muestra y guarda el predeterminado; Esc devuelve el anterior; cada edición es un paso. Con «Ana» y «Alba», las iniciales son «An» y «Al»; con «Cantante 1» y «Cantante 2», «1» y «2»; Todos con 2 cantantes es «A·L» y con 3, el icono `users`.
+- C1-E11. El recuento selecciona las líneas de esa parte en la lista y lleva la primera a la vista.
+- C1-E12. Con 13 líneas enteras entre paréntesis sin marcar aparece `edi.partes.sugerenciaCoro`; «Marcarlas como coro» las asigna al Coro en un paso y la sugerencia desaparece; una línea con un paréntesis solo al final no cuenta. La preparación automática no asigna ninguna parte (test del servicio de preparación).
+
+**Línea de tiempo**
+- C1-E13. Con reparto hay un carril por cantante (en orden 1…4), Todos según la regla de arriba y Coro, con su etiqueta de 72 px y la onda de fondo detrás de todos; con un solo cantante y coros, dos carriles (Cantante 1 y Coro). Una canción sin reparto tiene la pista única de siempre.
+- C1-E14. Arrastrar el cuerpo de una región 8 px o más en vertical la asigna al carril de destino sin cambiar ningún tiempo aunque el gesto tenga componente horizontal; menos de 8 px se comporta como un clic; Esc durante el arrastre cancela sin paso. Soltar en «+ Nuevo cantante» crea el cantante y asigna en un paso.
+- C1-E15. A 1280 × 720 al 100 % y al 125 %, con 3 y con 6 carriles, no hay scroll de página y la zona superior mide ≥ 136 px; a 1024 × 576 con 4 o más carriles, los carriles se juntan solos con el botón `aria-disabled`, y al agrandar la ventana vuelven sin que la preferencia de «Juntar carriles» ni el alto guardado de la línea de tiempo hayan cambiado.
+- C1-E16. «Juntar carriles» muestra una pista con la franja de color y la inicial en cada región, se recuerda al abrir otra canción y al reiniciar la app.
+
+**Estilo y contraste**
+- C1-E17. En D2, «Colores de los cantantes» muestra una fila por parte en uso con el Cantante 1 como enlace a «Color de lo ya cantado» y el resto bajo «Más colores»; cada cambio se ve en la vista previa en < 100 ms y es un paso de estilo. En D1 se ve el resumen sin selectores. En una canción sin reparto no aparece (en D3, plegado).
+- C1-E18. Un tema sin `colores_partes` muestra los colores predeterminados del sistema visual y no se reescribe al abrir; un color guardado en un tema («Guardar como tema nuevo…») se aplica a otra canción con ese tema.
+- C1-E19. Con un color de parte < 3:1 sobre el fondo aparece `edi.contraste.parte` con «Sugerir un color», que propone uno ≥ 3:1 distinto de las otras partes en uso; con dos partes en uso que se confunden con daltonismo aparece el ⓘ `edi.contraste.partesParecidas` y la pestaña no lleva punto; un color de ranura que nadie usa no da avisos (test de la comprobación). Con los colores predeterminados y el tema «Shinobi» no aparece ningún ⚠.
+
+**Convivencia y accesibilidad**
+- C1-E20. La lista es `aria-multiselectable`; todo el flujo (añadir y nombrar cantantes, asignar, juntar carriles, quitar) se hace solo con teclado; los chips y carriles tienen nombre accesible con la parte completa.
+- C1-E21. Durante el modo «Sincronizar al ritmo», C, Alt + 1…4, la selección múltiple y el arrastre no hacen nada; con la sesión en otra pantalla, están bloqueados como el resto de la edición.
+- C1-E22. Una canción con `parte: "c3"` en una línea y sin Cantante 3 en `partes`, o con un valor desconocido, abre esa línea como del Cantante 1 sin aviso ni escritura (test de lectura tolerante).
+- C1-E23. A 300 px de ancho del panel y a 256 px de ancho de la lista, la sección, la fila «Canta» y los chips no se parten ni producen scroll horizontal.
+- C1-E25. En una canción con reparto, «Letra en pantalla» muestra «Varias voces» con «Cada una en su zona» elegido si el tema no tiene el dato (sin escribir nada al abrir); elegir «Todas en un bloque» guarda `estilo.pantalla.zonas = "una"`, cambia la vista previa en < 100 ms y se deshace en un paso; con zonas se ve `edi.pantalla.zonas`. En una canción sin reparto el control no aparece fuera de D3.
+- C1-E24. Capturas en `docs/ux/revisiones/0.2.3-feature-1/`, nombre `editor-{ancho}x{alto}-{escala}-{estado}.png` a 1280 × 720 al 100 % y 125 % y a 1024 × 576: `sin-reparto`, `solo-coros`, `lista-varios`, `menu-quien-canta`, `seleccion-multiple`, `carriles-tres`, `carril-vacio`, `arrastre-carril`, `carriles-juntos`, `carriles-sin-espacio`, `funciones-un-cantante`, `funciones-varios`, `estilo-colores`, `aviso-parte`.
+
+**Verificación manual** (guía de `docs/Test-manuales/0.2.3/`): repartir un dúo real de principio a fin (con ratón y sin ratón) y anotar el tiempo; marcar los coros de una de las 2 canciones del usuario que los traen entre paréntesis; comprobar con un simulador de daltonismo que, con los colores predeterminados, las insignias bastan para saber quién canta.
+
+### Voces a la vez (condicionada a la factibilidad que dictamine el arquitecto)
+
+> **Condicionada.** Esta sección **no** se implementa salvo que el arquitecto dictamine que es factible en 0.2.3 (ADR del reparto; el plan 5 la tenía fuera, pendiente de una prueba técnica: [factibilidad §3](../versiones/0.2.2/exploracion/varios-cantantes-y-coros-factibilidad.md#3-la-regla-de-los-inicios-crecientes-adr-0006-y-lo-que-depende-de-ella)). Si no entra, todo lo anterior vale tal cual y nada de lo de aquí aparece. El alcance lo decide el usuario ([0170](../preguntas/0170-decisiones-provisionales-de-ux-de-0-2-3.md) §B).
+
+**Qué añade**: dos líneas de **partes distintas** pueden sonar a la vez (un cantante responde mientras el otro sigue; el coro acompaña a la voz principal). La base por carriles y zonas no cambia: cada parte sigue en su carril y en su zona; solo deja de exigirse que una línea termine antes de que empiece la de otra parte.
+
+| Aspecto | Comportamiento |
+|---|---|
+| **Regla de tiempos** | Dentro de una misma parte, las reglas de siempre (inicio < fin ≤ inicio de la siguiente **de esa parte**). Entre partes distintas, el **fin** de una línea puede pasar el inicio de la de otra parte. Los inicios de toda la letra siguen en orden (dos líneas que empiezan juntas se separan 1 ms, inaudible), según la propuesta de la [factibilidad §3.2](../versiones/0.2.2/exploracion/varios-cantantes-y-coros-factibilidad.md#32-etapa-3-qué-se-rompe); la regla definitiva es del arquitecto. |
+| **Línea de tiempo** | Dos regiones de carriles distintos pueden solaparse en el tiempo. Los tiradores del **fin** solo respetan a la siguiente región **de su carril**; los del inicio, como hoy. El fin automático de una línea llega hasta la siguiente de su parte. |
+| **Lista** | Sigue en orden de inicio. Una línea que empieza mientras suena la de otra parte lleva el icono `layers` 14 px con el tooltip `edi.partes.solapa` («Suena a la vez que la línea {k}»). |
+| **Asignar** | Pasar a la misma parte dos líneas que se solapan no se permite; una línea de **Todos** cuenta como de todos los cantantes (solo puede solaparse con el Coro, ADR 0029 §7): el menú muestra esa parte inactiva con el motivo `edi.partes.solapaMisma` y el arrastre no deja soltar en ese carril (el carril se tiñe con borde `error` y el cursor `not-allowed`). |
+| **Modo «Sincronizar al ritmo»** | Sin cambios: marca inicios en orden. Para marcar fines que se solapan se usan los tiradores o el editor preciso. |
+| **Funciones automáticas** | «Ajustar los silencios», «Sincronizar con la voz» y la detección de líneas dudosas no tocan las líneas que se solapan con otra parte (la voz separada mezcla a los dos cantantes); lo dicen en su resumen con `edi.partes.solapaExcluidas`. «Comprobar la letra» las cuenta una vez. |
+| **Pantalla** | Cada zona barre su línea a la vez que las demás ([07 · Voces a la vez](07-reproductor.md#voces-a-la-vez-condicionada-a-la-factibilidad-que-dictamine-el-arquitecto)). |
+
+| Clave | Texto |
+|---|---|
+| `edi.partes.solapa` | Suena a la vez que la línea {k} |
+| `edi.partes.solapaMisma` | No puede ser de {parte}: se solapa con su línea {k}. |
+| `edi.partes.solapaExcluidas` | {n} líneas que suenan a la vez que otras no se han tocado. |
+
+- C1S-E1. Con dos cantantes, arrastrar el tirador de fin de una línea de Ana más allá del inicio de la siguiente línea de Luis se permite y se guarda; más allá de la siguiente línea de Ana, no.
+- C1S-E2. Las dos regiones solapadas se ven completas en sus carriles; la fila que empieza durante la otra lleva `layers` con `edi.partes.solapa`.
+- C1S-E3. Asignar a Luis una línea que se solapa con otra de Luis no se permite por ninguna vía (menú, C, Alt, arrastre) y se explica con `edi.partes.solapaMisma`.
+- C1S-E4. «Ajustar los silencios» y «Sincronizar con la voz» no cambian las líneas solapadas y lo dicen; los invariantes por parte se cumplen tras cualquier edición (test de la validación).
+- C1S-E5. Una canción sin solapes se comporta exactamente como en la sección no condicionada (mismos tests).
+
+## 0.2.3 · Feature 2 — Voz en los coros
+
+Contrato: [ADR 0030](../adr/0030-voz-original-en-las-lineas-de-coro.md). Origen: [plan 5, feature 2](../versiones/0.2.3/plan-5.md), [exploración §5](../versiones/0.2.2/exploracion/varios-cantantes-y-coros.md#5-coros-con-voz-guía-etapa-2) y [factibilidad §2](../versiones/0.2.2/exploracion/varios-cantantes-y-coros-factibilidad.md#2-audio). Reproductor: [07 · 0.2.3 · Feature 2](07-reproductor.md#023--feature-2--voz-en-los-coros). Video: [10 · 0.2.3 · Feature 2](10-exportacion.md#023--feature-2--voz-de-los-coros-en-el-video).
+
+### Concepto
+
+En las líneas de **Coro**, la voz separada (`voz.flac`) suena a un **nivel elegido para la canción**, también cuando quien canta tiene la voz guía silenciada. Así quien hace la voz principal no tiene que hacer también los coros. Fuera de los coros no cambia nada.
+
+- **Nivel**: `letra.partes.voz_en_coros`, de 0 a 100 % en pasos del 5 %, **50 % por defecto** (decisión 18 de 0160). 0 % = coros sin voz.
+- **Tramos**: los calcula una sola función pura del tiempo ([factibilidad §2.2](../versiones/0.2.2/exploracion/varios-cantantes-y-coros-factibilidad.md#22-propuesta-una-sola-función-pura-del-tiempo-tres-consumidores-provisional-0165-3)): desde 150 ms antes del inicio de la primera línea de coro hasta 300 ms después del fin efectivo de la última, uniendo las líneas de coro separadas por menos de 1 s, con rampas de 150 ms. El reproductor, el editor y el video usan la misma.
+- **Límite que se cuenta al usuario**: la voz separada lleva la voz principal y los coros juntos; si en una línea de coro también canta la voz principal, también se oirá (`edi.coros.limite`).
+- Sin voz separada (separación sin terminar o pista ausente), no hay voz en los coros.
+
+### Sección en Funciones › «Cantantes y coros»
+
+Solo en **canciones con coros**, al final de la sección, tras un separador:
+```
+│ Voz en los coros                                          │  h4
+│ [━━━━━━━━━●━━━━━━━━━] 50 %          [▶ Escuchar un coro]  │  deslizador · botón secundario
+│ La voz original suena a este volumen mientras se          │  t-pequeno, texto-2
+│ cantan las líneas de coro, aunque la voz guía esté        │
+│ silenciada.                                               │
+│ Si en esas líneas también canta la voz principal,         │  `edi.coros.limite`, texto-3
+│ también se oirá.                                          │
+```
+
+| Elemento | Comportamiento |
+|---|---|
+| **Deslizador** | De 0 a 100 %, paso 5 % (←/→ 5 %, Re Pág/Av Pág 25 %, Inicio/Fin). Valor a la derecha en `t-tiempo` («0 %» se lee `edi.coros.cero`). Una ráfaga de cambios (menos de 1 s entre ellos) es **un** paso de deshacer. Se guarda en la canción. |
+| **Escuchar un coro** | Reproduce con el **instrumental con coros** desde 2 s antes de la primera línea de coro que empieza tras el cabezal (si no hay, la primera de la canción) hasta 1 s después de su fin efectivo; al acabar, pausa y devuelve el cabezal a donde estaba. No cambia la pista de escucha elegida. Mientras suena, el botón es «■ Detener» (Esc también detiene). Sin voz separada: `aria-disabled` con `edi.coros.sinVoz`. |
+| **Vista previa del editor** | Con «Escuchar: **Instrumental**», suena el **instrumental con coros** (lo que oirá quien canta sin voz guía). Con «Original» o «Voz» no cambia nada (ya suena la voz entera). Bucle, velocidad lenta, tono conservado y búsqueda funcionan igual. |
+| **Cuándo se recalcula** | Al cambiar el nivel, asignar o quitar una línea de coro o cambiar los tiempos de una línea de coro, con una espera de 300 ms tras el último cambio (ADR 0030). Mientras tanto suena la mezcla anterior. |
+
+**Pista derivada en el editor** (factibilidad §2.2, opción del arquitecto: «instrumental con coros» calculada en memoria). Estados:
+
+| Estado | Presentación |
+|---|---|
+| Canción sin coros, o nivel 0 % | «Instrumental» es el instrumental de siempre. |
+| Calculando (más de 500 ms) | Junto al selector «Escuchar», `edi.coros.preparando` en `t-pequeno` `texto-3` (sin spinner que se mueva con movimiento reducido). El audio no se detiene: suena la mezcla anterior o el instrumental solo. |
+| Lista | Nada visible: suena la mezcla. |
+| Error (sin memoria o pista de voz ilegible) | Suena el instrumental solo y aparece una vez por visita el toast `edi.coros.error` (`aviso`). El reproductor y la exportación no dependen de esto. |
+| Sin voz separada | Deslizador editable (el valor se guarda), «Escuchar un coro» inactivo con `edi.coros.sinVoz`. |
+
+### Accesibilidad (0.2.3 · feature 2, editor)
+
+- El deslizador es un `slider` con nombre `edi.coros.nivel` y `aria-valuetext` «{n} %»; la ayuda y el límite van en `aria-describedby`.
+- «Escuchar un coro» anuncia al empezar `edi.coros.anuncio.escuchando` y al terminar nada (vuelve el foco al botón).
+- Sin atajo de teclado propio.
+
+### Microcopy (0.2.3 · feature 2, editor)
+
+| Clave | Texto |
+|---|---|
+| `edi.coros.nivel` | Voz en los coros |
+| `edi.coros.ayuda` | La voz original suena a este volumen mientras se cantan las líneas de coro, aunque la voz guía esté silenciada. |
+| `edi.coros.limite` | Si en esas líneas también canta la voz principal, también se oirá. |
+| `edi.coros.cero` | Sin voz (0 %) |
+| `edi.coros.escuchar` | Escuchar un coro · (sonando) Detener |
+| `edi.coros.anuncio.escuchando` | Escuchando el coro de {m:ss} con la voz al {n} %. |
+| `edi.coros.sinVoz` | Hace falta separar la voz para oír los coros. |
+| `edi.coros.preparando` | Preparando los coros… |
+| `edi.coros.error` | No se pudo preparar la voz de los coros en el editor: «Instrumental» suena sin ella. En el reproductor y en el video sí se oirá. |
+| `edi.coros.paso` | Voz en los coros |
+
+### Criterios de aceptación (0.2.3 · feature 2, editor)
+
+- C2-E1. «Voz en los coros» aparece solo en canciones con alguna línea de coro, con 50 % en una canción que no tiene el dato; abrirla no escribe nada.
+- C2-E2. El deslizador va de 0 a 100 % en pasos de 5; una ráfaga de flechas es un paso de deshacer; el valor queda en `letra.partes.voz_en_coros` (0,5 → 50 %).
+- C2-E3. Con «Escuchar: Instrumental» y nivel 50 %, en el centro de una línea de coro la señal reproducida es instrumental + voz × 0,5 (± 1 dB, test de la mezcla derivada con pistas sintéticas) y a más de 450 ms de cualquier tramo de coro es solo el instrumental; con «Original» y «Voz», la mezcla no cambia.
+- C2-E4. El bucle de «Bloquear enunciado» y las velocidades 0,5× y 0,75× funcionan con la mezcla derivada igual que con el instrumental (mismos tests del motor con la pista derivada).
+- C2-E5. «Escuchar un coro» suena de 2 s antes a 1 s después de la siguiente línea de coro, pausa y devuelve el cabezal; Esc lo detiene; sin voz separada está inactivo con `edi.coros.sinVoz`.
+- C2-E6. Cambiar el nivel o asignar una línea al Coro rehace la mezcla 300 ms después del último cambio sin cortar el audio; si el cálculo tarda más de 500 ms, se ve `edi.coros.preparando`. Con un fallo simulado de la mezcla, suena el instrumental y aparece `edi.coros.error` una sola vez.
+- C2-E7. La sección y el deslizador se manejan solo con teclado y el deslizador anuncia «{n} %».
+- C2-E8. Capturas en `docs/ux/revisiones/0.2.3-feature-2/`, nombre `editor-1280x720-100-{estado}.png`: `coros-nivel`, `coros-sin-voz`, `coros-preparando`.
+
+**Verificación manual** (guía de 0.2.3): con 3 canciones con coros, escuchar con «Instrumental» al 0, 50 y 100 % y anotar si se oyen chasquidos al entrar y salir de los coros, y si la voz principal se cuela (límite esperado).
