@@ -4,7 +4,7 @@
 - Paso del pipeline: — (transversal; afecta a la Biblioteca)
 - Depende de: 0016, 0020
 - ADRs: 0007
-- Spec UX: docs/ux/sistema-visual.md §6 (Menú contextual), docs/ux/02-biblioteca.md (menú ⋯), docs/preguntas/0008-ajustes-ui-tras-revision-fase-1.md (B1), capturas `docs/ux/revision-fase-1/05*.png`
+- Spec UX: docs/ux/sistema-visual.md §6 (Menú contextual), docs/ux/02-biblioteca.md (menú ⋯), docs/preguntas/0008-ajustes-ui-tras-revision-fase-1.md (B1), capturas `docs/ux/revisiones/fase-1/05*.png`
 
 ## Objetivo
 

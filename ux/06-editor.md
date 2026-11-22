@@ -933,7 +933,7 @@ Matriz de verificación: los seis viewports de «Unidades y tamaños de prueba»
 24. El seguimiento de la línea que suena en la lista, la selección desde la línea de tiempo, los tiradores, el zoom, el bucle y los atajos de la tabla del editor funcionan igual con cualquier combinación de tamaños y modos; la vista de la línea de tiempo no sigue sola al cabezal.
 
 **Capturas de revisión**
-25. Se guardan en `docs/ux/revision-fase-2.1/` en PNG con el nombre `editor-{ancho}x{alto}-{escala}-{estado}.png` (tamaño físico, p. ej. `editor-1280x720-125-defecto.png`). Como mínimo, para los seis viewports: `defecto` (Sincronía) y `estilo`; y a 1280 × 720 al 100 % y al 125 %: `lista-min`, `panel-min`, `timeline-min`, `todo-min`, `sync` (modo sincronizar) y `foco-divisor`. Además, `panel-300` con la fila del desplazamiento y `bajo-minimo` (disposición B). Cada captura muestra la ventana completa, sin recortes.
+25. Se guardan en `docs/ux/revisiones/fase-2.1/` en PNG con el nombre `editor-{ancho}x{alto}-{escala}-{estado}.png` (tamaño físico, p. ej. `editor-1280x720-125-defecto.png`). Como mínimo, para los seis viewports: `defecto` (Sincronía) y `estilo`; y a 1280 × 720 al 100 % y al 125 %: `lista-min`, `panel-min`, `timeline-min`, `todo-min`, `sync` (modo sincronizar) y `foco-divisor`. Además, `panel-300` con la fila del desplazamiento y `bajo-minimo` (disposición B). Cada captura muestra la ventana completa, sin recortes.
 
 ## Fase 3 de 0.2.0 · Temas y biblioteca
 
@@ -1336,7 +1336,7 @@ Todos con el componente «Diálogo modal» de sistema-visual §6: atrapan el foc
 - T28. Las muestras de tema del selector y del resumen reproducen fondo, fuente y color de letra del tema (comparación visual en la captura).
 
 **Capturas de revisión**
-- T29. Se guardan en `docs/ux/revision-fase-3/` (ver su [README](revision-fase-3/README.md)) con el nombre `editor-{ancho}x{alto}-{escala}-{estado}.png` a 1280 × 720 al 100 % y al 125 %: `tema-definidos`, `tema-asignado`, `tema-personalizado`, `tema-editando`, `tema-no-disponible`, `tema-catalogo-vacio`, `dialogo-guardar-impacto` (con la lista revelada), `dialogo-guardar-obsoleto`, `dialogo-nuevo-nombre`, `dialogo-eliminar` y `dialogo-salir-borrador`.
+- T29. Se guardan en `docs/ux/revisiones/fase-3/` (ver su [README](revisiones/fase-3/README.md)) con el nombre `editor-{ancho}x{alto}-{escala}-{estado}.png` a 1280 × 720 al 100 % y al 125 %: `tema-definidos`, `tema-asignado`, `tema-personalizado`, `tema-editando`, `tema-no-disponible`, `tema-catalogo-vacio`, `dialogo-guardar-impacto` (con la lista revelada), `dialogo-guardar-obsoleto`, `dialogo-nuevo-nombre`, `dialogo-eliminar` y `dialogo-salir-borrador`.
 - T30. Sin regresiones de la subfase 2.1: los criterios 1–7, 13 y 20 de la subfase se mantienen con la pestaña Estilo en cada estado D1–D4.
 
 ## Fase 4 de 0.2.0 — ventana secundaria y cola
@@ -1408,7 +1408,7 @@ Por eso al abrir la secundaria nunca hay un editor montado: el orden del [ADR 00
 - E5. Con el editor abierto, un cambio sin guardar y un borrador de tema, pulsar el indicador de sesión o ‹ Biblioteca muestra primero `tema.dialogo.salir`, después vacía el guardado (el archivo contiene el cambio) y solo entonces se puede abrir el reproductor; con un fallo de guardado simulado aparece `edi.dialogo.salir`.
 - E6. Durante la sesión, la escucha de Voz / Instrumental de la vista de progreso está `aria-disabled` con `edi.bloqueo.escucha` y no suena nada en la principal.
 - E7. Los elementos bloqueados conservan el foco con teclado, llevan el icono de candado y su nombre accesible incluye `edi.bloqueo.aria`.
-- E8. Captura `docs/ux/revision-fase-4/editor-1280x800-100-dialogo-bloqueo.png`.
+- E8. Captura `docs/ux/revisiones/fase-4/editor-1280x800-100-dialogo-bloqueo.png`.
 
 ## Fase 5 de 0.2.0 — estilo, espera y Letra lista
 
@@ -1811,7 +1811,7 @@ Lista revelada (hasta 8 filas visibles, scroll propio, orden de la letra; datos 
 - AS9. (Verificación manual) Con las 6 canciones de referencia sincronizadas a mano por el usuario (solo en su equipo), comparar los fines propuestos con los suyos y anotar en la guía manual cuántos difieren en más de 200 ms; el umbral se afina con esos datos (ver [propuesta 003](../propuestas/003-calibrar-el-ajuste-de-silencios-por-cancion.md)).
 
 **Capturas de revisión**
-- F5-1. En `docs/ux/revision-0.2.0-fase-5/` (la carpeta `revision-fase-5/` es de la fase 5 del MVP), nombre `editor-{ancho}x{alto}-{escala}-{estado}.png` a 1280 × 720 al 100 % y al 125 %: `fondo-radial`, `fondo-conico-movimiento`, `fondo-reducido`, `espera-d2`, `espera-d1-propios`, `espera-ejemplo`, `dock-letra-lista`, `dialogo-letra-lista`, `silencios-no-disponible`, `dialogo-silencios` (con la lista revelada) y `silencios-aplicado`.
+- F5-1. En `docs/ux/revisiones/0.2.0-fase-5/` (la carpeta `revision-fase-5/` es de la fase 5 del MVP), nombre `editor-{ancho}x{alto}-{escala}-{estado}.png` a 1280 × 720 al 100 % y al 125 %: `fondo-radial`, `fondo-conico-movimiento`, `fondo-reducido`, `espera-d2`, `espera-d1-propios`, `espera-ejemplo`, `dock-letra-lista`, `dialogo-letra-lista`, `silencios-no-disponible`, `dialogo-silencios` (con la lista revelada) y `silencios-aplicado`.
 
 **Verificación manual** (para la guía de `docs/Test-manuales/0.2.0/` de la fase 5): G4, G12, AS9; además, la sensación de las velocidades del movimiento en una TV a 5 m, la legibilidad de la cuenta y la barra sobre degradados en movimiento, y que el aviso de Letra lista se entiende a la primera.
 
@@ -2137,7 +2137,7 @@ Ya no existen: **S** (Sincronizar al ritmo), **,** y **.** (desplazamiento). La 
 - E8-18. Las funciones mayores (exportar, ajustar los silencios, cambiar de modalidad y volver a borrador) se alcanzan sin abrir ⋯, con ratón y con teclado.
 
 **Capturas de revisión**
-- E8-19. En `docs/ux/revision-0.2.1-fase-8/`, nombre `editor-{ancho}x{alto}-{escala}-{estado}.png` a 1280 × 720 al 100 % y al 125 %: `final-ruin-sin-palabras`, `panel-sin-desplazamiento`, `dock-borrador`, `dock-lista`, `dock-letra-lista`, `funciones-borrador`, `funciones-lista`, `funciones-no-disponible`, `riel-funciones`, `menu-cabecera`.
+- E8-19. En `docs/ux/revisiones/0.2.1-fase-8/`, nombre `editor-{ancho}x{alto}-{escala}-{estado}.png` a 1280 × 720 al 100 % y al 125 %: `final-ruin-sin-palabras`, `panel-sin-desplazamiento`, `dock-borrador`, `dock-lista`, `dock-letra-lista`, `funciones-borrador`, `funciones-lista`, `funciones-no-disponible`, `riel-funciones`, `menu-cabecera`.
 
 ## Fase 9 de 0.2.1 — Editor preciso de línea
 
@@ -2454,6 +2454,6 @@ Con el foco en la ventana no actúan: L, Mayús + L, P, Supr, F, Ctrl/Cmd + E, I
 
 **Teclado y capturas**
 - P22. Todo el flujo (abrir, mover, cambiar el tamaño, elegir palabra, ajustar, marcar, escuchar, editar el texto, aplicar, cancelar, cambiar de línea) es operable solo con teclado; el diálogo de atajos incluye la sección `edi.preciso.atajos.titulo`; los atajos de una tecla no actúan en el campo de texto.
-- P23. Capturas en `docs/ux/revision-0.2.1-fase-9/` con nombre `editor-{ancho}x{alto}-{escala}-{estado}.png` a 1280 × 720 al 100 % y al 125 %: `preciso-abierto`, `preciso-marcando`, `preciso-palabra-seleccionada`, `preciso-texto-repartido`, `preciso-descartar`, `preciso-sin-onda`, `lista-indicador`, `toast-palabras-descartadas`, y `preciso-1024x576-125` en el tamaño mínimo de ventana.
+- P23. Capturas en `docs/ux/revisiones/0.2.1-fase-9/` con nombre `editor-{ancho}x{alto}-{escala}-{estado}.png` a 1280 × 720 al 100 % y al 125 %: `preciso-abierto`, `preciso-marcando`, `preciso-palabra-seleccionada`, `preciso-texto-repartido`, `preciso-descartar`, `preciso-sin-onda`, `lista-indicador`, `toast-palabras-descartadas`, y `preciso-1024x576-125` en el tamaño mínimo de ventana.
 
 **Verificación manual** (guía de `docs/Test-manuales/0.2.1/`): marcar a mano una línea rápida y una lenta de una canción real a 0,5× y a 1× y comprobar que el barrido coincide con la voz en el reproductor; que el bucle a 0,5× y 0,75× conserva el tono y se entiende la voz (y que la primera vuelta grave, si se nota, no molesta); que mover y redimensionar la ventana es cómodo con un portátil de 1366 × 768; que Esc aplicando no sorprende.

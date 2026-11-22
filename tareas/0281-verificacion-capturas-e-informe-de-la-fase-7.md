@@ -15,7 +15,7 @@ Cerrar la fase 7 con las pruebas de integración imprescindibles, las capturas d
 ## Archivos (solo estos)
 
 - `app/e2e/exportacion-capturas.spec.ts` (*opt-in* `SHINOBI_CAPTURAS_6=1`; añadir los casos de 0.2.1 o un `SHINOBI_CAPTURAS_7=1`)
-- `docs/ux/revision-0.2.1-fase-7/` (solo las capturas que genera la spec)
+- `docs/ux/revisiones/0.2.1-fase-7/` (solo las capturas que genera la spec)
 - `docs/versiones/0.2.1/informe-fase-7.md` (nuevo)
 
 ## Criterios de aceptación

@@ -14,7 +14,7 @@ Validar cuanto antes los riesgos técnicos de la Fase 0 y obtener **datos medido
 2. tiempos reales de separación por perfil y modo;
 3. tamaños reales de descarga y de disco del runtime por perfil.
 
-Es una prueba de concepto **desechable**: el código va en `spikes/separacion/` (scripts sueltos, no se importa desde `app/` ni `worker/`). El entregable son las notas de esta tarea.
+Es una prueba de concepto **desechable**: el código va en `docs/spikes/separacion/` (scripts sueltos, no se importa desde `app/` ni `worker/`). El entregable son las notas de esta tarea.
 
 ## Criterios de aceptación
 
@@ -37,14 +37,14 @@ Es una prueba de concepto **desechable**: el código va en `spikes/separacion/` 
 
 ### Qué se hizo
 
-Spike desechable en `spikes/separacion/` (todo ignorado por git salvo los scripts): entorno uv aislado, scripts de mezcla, separación instrumentada, cancelación y comparación, y mediciones en una sola máquina. Preguntas abiertas para el arquitecto (no bloquean): [0009](../preguntas/0009-audio-separator-exige-ffmpeg.md) y [0010](../preguntas/0010-apple-silicon-cpu-mas-rapida-que-mps.md).
+Spike desechable en `docs/spikes/separacion/` (todo ignorado por git salvo los scripts): entorno uv aislado, scripts de mezcla, separación instrumentada, cancelación y comparación, y mediciones en una sola máquina. Preguntas abiertas para el arquitecto (no bloquean): [0009](../preguntas/0009-audio-separator-exige-ffmpeg.md) y [0010](../preguntas/0010-apple-silicon-cpu-mas-rapida-que-mps.md).
 
-Archivos: `env.sh` (variables que mantienen uv, Python, caché y venv dentro de `spikes/separacion/`), `generar_formatos.py` (MP3/M4A/MP4 de prueba con PyAV), `mezcla.py` (PyAV -> `mezcla.flac` + LUFS), `separar.py` (separación con tiempos, RAM y captura de `tqdm`), `medir.sh` (ejecuta con PATH sin ffmpeg), `comparar.py`, `cancelar.py`, `tamanos_descarga.py` / `tamanos_plataforma.py` (tamaños de wheels).
+Archivos: `env.sh` (variables que mantienen uv, Python, caché y venv dentro de `docs/spikes/separacion/`), `generar_formatos.py` (MP3/M4A/MP4 de prueba con PyAV), `mezcla.py` (PyAV -> `mezcla.flac` + LUFS), `separar.py` (separación con tiempos, RAM y captura de `tqdm`), `medir.sh` (ejecuta con PATH sin ffmpeg), `comparar.py`, `cancelar.py`, `tamanos_descarga.py` / `tamanos_plataforma.py` (tamaños de wheels).
 
 ### Cómo reproducirlo (macOS arm64; el resto de SO: ver "Sin medir")
 
 ```
-cd spikes/separacion && mkdir -p salida/bin && # descargar uv (binario) en salida/bin/uv; luego:
+cd docs/spikes/separacion && mkdir -p salida/bin && # descargar uv (binario) en salida/bin/uv; luego:
 source env.sh
 $UV python install 3.12 && $UV venv --python 3.12 .venv
 $UV pip install --python .venv/bin/python --torch-backend=auto "audio-separator[cpu]" av soundfile pyloudnorm audioread
@@ -240,4 +240,4 @@ Se puede interceptar: basta con envolver `tqdm.std.tqdm.update` (los módulos ha
 
 ### Disco ocupado y cómo borrarlo
 
-Todo lo descargado está dentro de `spikes/separacion/` (ignorado por git: `.venv/` y `salida/`): **≈ 4,2 GB** (venv 1,2 GB, caché uv 1,1 GB, modelos 0,94 GB, pistas generadas 0,61 GB, audio y mezclas 0,2 GB, Python 72 MB, uv 27 MB). Borrar: `rm -rf spikes/separacion/.venv spikes/separacion/salida`. Aviso: uv creó además `~/.cache/uv` (≈ 33 MB) fuera de `spikes/`; se puede borrar con `rm -rf ~/.cache/uv` (no se pudo borrar desde la sesión). No se instaló nada global.
+Todo lo descargado está dentro de `docs/spikes/separacion/` (ignorado por git: `.venv/` y `salida/`): **≈ 4,2 GB** (venv 1,2 GB, caché uv 1,1 GB, modelos 0,94 GB, pistas generadas 0,61 GB, audio y mezclas 0,2 GB, Python 72 MB, uv 27 MB). Borrar: `rm -rf docs/spikes/separacion/.venv docs/spikes/separacion/salida`. Aviso: uv creó además `~/.cache/uv` (≈ 33 MB) fuera de `docs/spikes/`; se puede borrar con `rm -rf ~/.cache/uv` (no se pudo borrar desde la sesión). No se instaló nada global.

@@ -5,7 +5,7 @@
 - Bloquea: sí, solo B1 (el menú ⋯ no se puede usar con el ratón); el resto no
 
 ## Contexto
-Primera revisión de la interfaz a ojo (app compilada con la semilla, capturas en [docs/ux/revision-fase-1/](../ux/revision-fase-1/README.md)). Las specs ya están actualizadas (`ux/02` §"Microcopy" y "Línea de paso", `ux/sistema-visual.md` §6). Lo que sigue necesita cambio de código; se pide convertirlo en tareas. Las referencias de archivo son orientativas.
+Primera revisión de la interfaz a ojo (app compilada con la semilla, capturas en [docs/ux/revisiones/fase-1/](../ux/revisiones/fase-1/README.md)). Las specs ya están actualizadas (`ux/02` §"Microcopy" y "Línea de paso", `ux/sistema-visual.md` §6). Lo que sigue necesita cambio de código; se pide convertirlo en tareas. Las referencias de archivo son orientativas.
 
 ## Pregunta
 ¿Puedes crear las tareas para estos cambios (o decir si alguno no es viable)?

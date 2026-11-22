@@ -71,5 +71,5 @@ npm run dev   # #/muestrario
 ## Notas de implementación
 
 - PantallaLetra renderiza con DOM/CSS, actualiza el barrido en RAF y solo cambia la estructura con la transición o el indicador. Aplica fuente, fondo, sombra y preferencias de movimiento.
-- [Captura del Muestrario en Electron](../ux/revision-fase-5/0098-muestrario.png). A escala pequeña puede verse un tercer renglón al alcanzar el mínimo del 75 %, como prevé la tarea.
+- [Captura del Muestrario en Electron](../ux/revisiones/fase-5/0098-muestrario.png). A escala pequeña puede verse un tercer renglón al alcanzar el mínimo del 75 %, como prevé la tarea.
 - Pasaron los tests de render y la verificación completa del bloque 2 (1625 Vitest y 69 E2E).

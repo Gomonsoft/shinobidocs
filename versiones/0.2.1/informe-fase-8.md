@@ -18,7 +18,7 @@ Tareas: [0261](../../tareas/0261-origen-de-las-palabras-y-regla-de-descarte.md) 
 | 0268 | S, `,`/`.`, desplazamiento y marcas de palabras importadas retirados; textos nuevos. |
 | 0269 | `shared/escucha.ts`, doble clic y Mayús + L. Límite: con «Bloquear enunciado» en la misma línea el margen se suena con una reproducción previa y se vuelve a armar el bucle (posible corte de decenas de ms). |
 | 0270 | Dock, «Funciones», riel y menú ⋯ reducido. Pestañas como `radiogroup` (pregunta [0152](../../preguntas/0152-cambio-de-modalidad-en-lista-incompleta-y-pestanas-del-panel.md)). |
-| 0271 | `fase8.spec.ts` (2 pruebas), capturas E8-19 en [`revision-0.2.1-fase-8/`](../../ux/revision-0.2.1-fase-8/), borrado de `desplazar`/`fijarDesplazamiento`/`formatearDesplazamiento`/`interpretarDesplazamiento` y de `Limite` `desplazamiento` en `shared/letras/tiempos.ts`. |
+| 0271 | `fase8.spec.ts` (2 pruebas), capturas E8-19 en [`revision-0.2.1-fase-8/`](../../ux/revisiones/0.2.1-fase-8/), borrado de `desplazar`/`fijarDesplazamiento`/`formatearDesplazamiento`/`interpretarDesplazamiento` y de `Limite` `desplazamiento` en `shared/letras/tiempos.ts`. |
 
 Además: `main/biblioteca/servicio.ts` `marcarLista` ya no exige `LINEAS_SIN_INICIO` si la canción ya está lista (cambio de modalidad de una Lista incompleta, spec 8.6).
 
@@ -33,7 +33,7 @@ Verificación final en Windows, rama `version-0.2.1` (el informe de la fase 9 co
 
 ## Capturas
 
-`docs/ux/revision-0.2.1-fase-8/`: `editor-1280x720-{100,125}-{final-ruin-sin-palabras, panel-sin-desplazamiento, dock-borrador, dock-lista, dock-letra-lista, funciones-borrador, funciones-lista, funciones-no-disponible, riel-funciones, menu-cabecera}.png` (con letras inventadas de la semilla). B8-7 y R8-7 (biblioteca por fecha y barra de carga) son de las tareas 0266 y 0265 y no se han regenerado aquí.
+`docs/ux/revisiones/0.2.1-fase-8/`: `editor-1280x720-{100,125}-{final-ruin-sin-palabras, panel-sin-desplazamiento, dock-borrador, dock-lista, dock-letra-lista, funciones-borrador, funciones-lista, funciones-no-disponible, riel-funciones, menu-cabecera}.png` (con letras inventadas de la semilla). B8-7 y R8-7 (biblioteca por fecha y barra de carga) son de las tareas 0266 y 0265 y no se han regenerado aquí.
 
 ## Para la guía manual de `qa`
 

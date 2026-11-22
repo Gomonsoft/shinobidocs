@@ -22,7 +22,7 @@ Mezclaba configuración, licencias, CI, documentación y una prueba manual con r
 | App en asar; `resources/fonts`                                                                                    | 0130, 0131                                                                 |
 | `uv` por plataforma con SHA-256 verificado                                                                        | 0129 (descarga), 0130 y 0131 (paquete)                                     |
 | Código del worker, `pyproject.toml` y `uv.lock` fuera del asar                                                    | 0130, 0131                                                                 |
-| Nada de `spikes/`, tests ni `.datos-dev`                                                                          | 0131                                                                       |
+| Nada de `docs/spikes/`, tests ni `.datos-dev`                                                                          | 0131                                                                       |
 | _Fuses_ del ADR 0008 aplicados                                                                                    | 0130 (con `electronFuses`, no en `afterPack`: ADR 0012 §3), 0131 (lectura) |
 | La app arranca con los _fuses_                                                                                    | 0135                                                                       |
 | `LICENSE`, `THIRD_PARTY_NOTICES.md` y `OFL.txt` en el paquete                                                     | 0130, 0131, 0135 (lectura real)                                            |
@@ -48,7 +48,7 @@ Los criterios siguientes se conservan como referencia. **Mandan las tareas y los
 ## Criterios de aceptación (originales)
 
 - [ ] `app/electron-builder.yml`: NSIS por usuario x64 (Windows), **solo DMG arm64** (Mac Intel no compatible en el MVP, decisión del usuario en `preguntas/0016`, opción C; sin subir `LSMinimumSystemVersion`: la app comprueba macOS ≥ 14 y muestra B6b, `preguntas/0015`) con firma _ad hoc_ (macOS), AppImage + deb x64 (Linux). Campos de firma presentes y desactivados. `appId`, nombre de producto "Shinobi Karaoke" y `AppUserModelID` coherentes (necesario para notificaciones en Windows, `arquitectura.md` §6).
-- [ ] Contenido: app en asar; `resources/fonts`; binario `uv` por plataforma en `resources/bin/` (descargado en el build, con SHA-256 verificado); código fuente de `worker/shinobi_worker` + `pyproject.toml` + `uv.lock` como recurso fuera del asar. Nada de `spikes/`, tests ni `.datos-dev`.
+- [ ] Contenido: app en asar; `resources/fonts`; binario `uv` por plataforma en `resources/bin/` (descargado en el build, con SHA-256 verificado); código fuente de `worker/shinobi_worker` + `pyproject.toml` + `uv.lock` como recurso fuera del asar. Nada de `docs/spikes/`, tests ni `.datos-dev`.
 - [ ] _Fuses_ (ADR 0008 punto 9) aplicados con `@electron/fuses` en `afterPack`, y prueba de que la app empaquetada arranca con ellos.
 - [ ] `LICENSE`, `THIRD_PARTY_NOTICES.md` (completado con las dependencias JS de producción y sus licencias, generado o revisado con una herramienta de licencias) y los `OFL.txt` incluidos en el paquete.
 - [ ] Trabajo de CI (manual o por etiqueta) que genera los artefactos de los 3 SO y los publica como artefactos del workflow; prueba de humo E2E contra la app empaquetada en Linux.

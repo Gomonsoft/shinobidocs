@@ -1,7 +1,7 @@
 # Capturas de revisión de la fase 6 (exportación de video)
 
-Para el diseñador UX: criterio V29 de [10-exportacion](../10-exportacion.md). Tarea
-[0241](../../tareas/0241-pruebas-de-integracion-capturas-e-informe-de-la-fase-6.md).
+Para el diseñador UX: criterio V29 de [10-exportacion](../../10-exportacion.md). Tarea
+[0241](../../../tareas/0241-pruebas-de-integracion-capturas-e-informe-de-la-fase-6.md).
 
 ## Cómo se generan
 

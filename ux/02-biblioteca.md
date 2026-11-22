@@ -5,7 +5,7 @@
 - Restricciones: [arquitectura.md "Restricciones e implicaciones para UX" §2–§3](../arquitectura.md)
 - Sistema visual: [sistema-visual.md](sistema-visual.md)
 - Preguntas: [0005](../preguntas/0005-viabilidad-detalles-ux-fase-0.md) §8 y [0006](../preguntas/0006-ajustes-specs-ux-tras-0005.md) §4 (lista incompleta; respondidas); [0007](../preguntas/0007-textos-y-comportamientos-de-ui-no-definidos-fase-1.md) (textos de la Fase 1; respondida) y [0008](../preguntas/0008-ajustes-ui-tras-revision-fase-1.md) (cambios tras la revisión visual); [0020](../preguntas/0020-huecos-ux-de-la-separacion-fase-3.md) (estados de separación de la Fase 3; respondida)
-- Revisión visual de la Fase 1: [revision-fase-1/](revision-fase-1/README.md) (2026-11-04)
+- Revisión visual de la Fase 1: [revision-fase-1/](revisiones/fase-1/README.md) (2026-11-04)
 - 0.2.0, fase 3 (2026-11-09): agrupación por artista y álbum, búsqueda en álbum, selección múltiple con «Aplicar tema…», tema de artista y álbum y línea de tema en la tarjeta. Ver [Fase 3 · Temas y biblioteca](#fase-3-de-020--temas-y-biblioteca).
 - 0.2.0, fase 4 (2026-11-11): abrir el reproductor en otra pantalla, panel «Cola de reproducción», controles de la sesión, cierre con cola y recuperación. Ver [Fase 4 de 0.2.0 — ventana secundaria y cola](#fase-4-de-020--ventana-secundaria-y-cola).
 - 0.2.0, fase 5 (2026-11-20): insignia «Letra lista» y toast al marcarla; portadas con el fondo quieto. Ver [Fase 5 de 0.2.0 — estilo, espera y Letra lista](#fase-5-de-020--estilo-espera-y-letra-lista).
@@ -480,7 +480,7 @@ Anatomía con la línea nueva:
 - B13. En vistas agrupadas, ←/→ y ↑/↓ cruzan grupos, Ctrl/Cmd + Inicio/Fin llevan a la primera y última tarjeta, y las de grupos plegados se saltan; plegar y desplegar se anuncian por `aria-expanded`.
 - B14. La portada de una canción de YouTube muestra la miniatura solo con `apariencia.neutra` (procedencia predeterminado, al azar, predeterminado anterior o estilo incluido, o personalizada de 0.1.0 con estilo igual al predeterminado), y deja de mostrarla al asignar un tema a la canción, a su álbum o a su artista. Quitar el predeterminado en Ajustes no cambia la portada de ninguna canción; la línea de tema de las que lo seguían pasa a «… · predeterminado anterior».
 - B15. Volver del reproductor conserva agrupación, grupos plegados, filtro, búsqueda, modo selección y desplazamiento, con el foco en la tarjeta.
-- B16. Capturas en `docs/ux/revision-fase-3/` (ver [README](revision-fase-3/README.md)), nombre `biblioteca-{ancho}x{alto}-{escala}-{estado}.png`, a 1280 × 800 al 100 % y 1280 × 720 al 125 %: `artista`, `album` (con homónimos), `sin-metadatos`, `busqueda-album`, `seleccion` (con «fuera de la vista»), `dialogo-aplicar-tema`, `resultado-lote` (con fallos), `dialogo-tema-grupo`, `foco-tras-mover`.
+- B16. Capturas en `docs/ux/revisiones/fase-3/` (ver [README](revisiones/fase-3/README.md)), nombre `biblioteca-{ancho}x{alto}-{escala}-{estado}.png`, a 1280 × 800 al 100 % y 1280 × 720 al 125 %: `artista`, `album` (con homónimos), `sin-metadatos`, `busqueda-album`, `seleccion` (con «fuera de la vista»), `dialogo-aplicar-tema`, `resultado-lote` (con fallos), `dialogo-tema-grupo`, `foco-tras-mover`.
 
 ## Fase 4 de 0.2.0 — ventana secundaria y cola
 
@@ -823,7 +823,7 @@ Se usan banners en el panel y no toasts: el panel es el puesto del operador, los
 - S15b. «Reproducir en otra pantalla…» del ⋯ de una Lista abre el diálogo con la variante «con canción» de `ses.empieza`; al abrir, esa canción suena primero y las pendientes siguen detrás. En Linux con Wayland el diálogo muestra `ses.wayland` sin lista de pantallas.
 - S16. Todo el panel es operable solo con teclado y ninguna acción de sesión tiene atajo de una tecla en la principal; el foco nunca queda en `body`.
 - S17. A 1024 × 576 (1280 × 720 al 125 %) con el panel abierto, la rejilla muestra 2 columnas, el panel tiene scroll propio y no hay scroll horizontal.
-- S18. Capturas en `docs/ux/revision-fase-4/` con nombre `biblioteca-{ancho}x{alto}-{escala}-{estado}.png` a 1280 × 800 al 100 % y 1280 × 720 al 125 %: `dialogo-pantalla`, `dialogo-una-pantalla`, `sesion`, `cuenta`, `fallo`, `espera`, `fin-cola`, `cola-conservada`, `dialogo-cierre`, `monitor-desconectado`, `caida`, `tarjetas-sesion`.
+- S18. Capturas en `docs/ux/revisiones/fase-4/` con nombre `biblioteca-{ancho}x{alto}-{escala}-{estado}.png` a 1280 × 800 al 100 % y 1280 × 720 al 125 %: `dialogo-pantalla`, `dialogo-una-pantalla`, `sesion`, `cuenta`, `fallo`, `espera`, `fin-cola`, `cola-conservada`, `dialogo-cierre`, `monitor-desconectado`, `caida`, `tarjetas-sesion`.
 
 ## Fase 5 de 0.2.0 — estilo, espera y Letra lista
 
@@ -873,7 +873,7 @@ Igual que tras «Marcar como lista» (spec 06 §«Volver a la Biblioteca»: filt
 - LB4. La modalidad persiste al reiniciar la app; «Volver a borrador» y «Aplicar tema…» no la cambian por sí solos (tras volver a borrador, la insignia es «✎ Borrador»).
 - LB5. Una Letra lista con líneas sin inicio muestra `bib.lista.incompleta` y sigue en *Listas*.
 - LB6. Las portadas de canciones con fondo en movimiento se ven quietas (fase 0).
-- LB7. Captura `docs/ux/revision-0.2.0-fase-5/biblioteca-1280x800-100-letra-lista.png` con una Lista, una Letra lista, una Letra lista incompleta y un borrador.
+- LB7. Captura `docs/ux/revisiones/0.2.0-fase-5/biblioteca-1280x800-100-letra-lista.png` con una Lista, una Letra lista, una Letra lista incompleta y un borrador.
 
 ## Fase 6 de 0.2.0 — exportación
 
@@ -920,7 +920,7 @@ Las claves `exp.*`, `bib.exp.*` y `act.exp` están en [spec 10 · Microcopy](10-
 - X4. El panel de actividad lista la exportación con [Ir] y [✕] y la cuenta en el indicador.
 - X5. Eliminar una canción que se exporta muestra `exp.eliminar.extra` y, al confirmar, no queda temporal en el disco.
 - X6. Durante una sesión, «Exportar video…» está disponible sin candado y el diálogo muestra `exp.nota.sesion`; con una exportación en curso, el diálogo de pantallas no cambia y, al abrir la sesión, la exportación sigue.
-- X7. Captura `docs/ux/revision-fase-6/exportacion-1280x800-100-tarjeta-exportando.png` (tarjeta con la línea y el ⋯ abierto).
+- X7. Captura `docs/ux/revisiones/fase-6/exportacion-1280x800-100-tarjeta-exportando.png` (tarjeta con la línea y el ⋯ abierto).
 
 ## Fase 8 de 0.2.1 — estados y fecha de añadido
 
@@ -1004,4 +1004,4 @@ Origen: [plan 0.2.1, fase 8](../versiones/0.2.1/plan-3.md#fase-8--sincronía-y-e
 - B8-4. Con el reloj simulado el miércoles 2026-11-18 a las 10:00 y canciones creadas el 18-11, el 17-11, el 16-11 (lunes), el 03-11, el 20-10, el 15-12-2025 y una sin `creada` válida, los grupos son exactamente Hoy (1), Ayer (1), Esta semana (1), Este mes (1), Octubre de 2026 (1), Diciembre de 2025 (1) y Sin agrupar (1), en ese orden (test unitario de la función de agrupación). Con el reloj el lunes 2026-11-02 (la semana empieza ese día), una canción del 01-11 va a «Ayer» y una del 31-10 a «Octubre de 2026»; no aparece «Esta semana».
 - B8-5. Dentro de un grupo por fecha las tarjetas van por `creada` descendente; los encabezados no tienen [Tema…]; la búsqueda y el filtro ocultan los grupos sin coincidencias y muestran «{v} de {n}».
 - B8-6. El grupo «Sin agrupar» va al final con `bib.grupo.sinFecha.ayuda`; una `creada` futura cuenta como «Hoy».
-- B8-7. Captura `docs/ux/revision-0.2.1-fase-8/biblioteca-1280x800-100-fecha.png` con al menos cuatro grupos de fecha y una tarjeta Lista y una Letra lista con sus dos botones.
+- B8-7. Captura `docs/ux/revisiones/0.2.1-fase-8/biblioteca-1280x800-100-fecha.png` con al menos cuatro grupos de fecha y una tarjeta Lista y una Letra lista con sus dos botones.

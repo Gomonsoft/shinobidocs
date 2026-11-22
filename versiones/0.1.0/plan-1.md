@@ -170,7 +170,7 @@ Las Fases 3 y 4 pueden avanzar en parte a la vez: la búsqueda de letra no neces
   - Windows 10/11 x64: NSIS por usuario, de un clic;
   - macOS 14 o posterior, solo chip Apple: DMG con firma *ad hoc*;
   - Linux x64: `.deb` (recomendado en Ubuntu, Debian y Mint) y AppImage (el resto).
-- **Contenido**: worker, requisitos, manifiesto, `uv` con SHA-256 verificado, licencias, avisos y fuentes OFL. Nada de `spikes/`, tests ni `.datos-dev`: lo comprueba un script.
+- **Contenido**: worker, requisitos, manifiesto, `uv` con SHA-256 verificado, licencias, avisos y fuentes OFL. Nada de `docs/spikes/`, tests ni `.datos-dev`: lo comprueba un script.
 - **Workflow solo manual**: guarda los instaladores como artefactos durante 14 días. No crea *Releases* y no cambia el CI automático.
 - **Licencias Python (0133)**: el ADR 0014 excluye DiffQ del motor y exige validar la migración y la inferencia con ambos modelos antes de cerrar el inventario.
 - **Prueba de humo** contra el instalador real, sin modelos ni código de pruebas en la app. Cada runner declara hasta dónde llegó: instalado, desempaquetado o solo construido.

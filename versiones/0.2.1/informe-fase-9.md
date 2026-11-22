@@ -30,7 +30,7 @@ Verificación final compartida con la fase 8 (Windows):
 
 ## Capturas (P23)
 
-`docs/ux/revision-0.2.1-fase-9/editor-{1280x720-100,1280x720-125,1024x576-125}-{lista-indicador, preciso-abierto, preciso-marcando, preciso-texto-repartido}.png`. Faltan `preciso-palabra-seleccionada`, `preciso-descartar`, `preciso-sin-onda` y `toast-palabras-descartadas` (no hay `editor-preciso-capturas` para ellos todavía). En 1280 × 720 la ventana inicial (440 px de alto) enseña el contenido con scroll interno: conviene revisarlo con diseño.
+`docs/ux/revisiones/0.2.1-fase-9/editor-{1280x720-100,1280x720-125,1024x576-125}-{lista-indicador, preciso-abierto, preciso-marcando, preciso-texto-repartido}.png`. Faltan `preciso-palabra-seleccionada`, `preciso-descartar`, `preciso-sin-onda` y `toast-palabras-descartadas` (no hay `editor-preciso-capturas` para ellos todavía). En 1280 × 720 la ventana inicial (440 px de alto) enseña el contenido con scroll interno: conviene revisarlo con diseño.
 
 ## Para la guía manual de `qa`
 

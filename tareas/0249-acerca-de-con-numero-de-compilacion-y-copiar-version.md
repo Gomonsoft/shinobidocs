@@ -20,7 +20,7 @@ Mostrar en «Acerca de» (Ajustes y el diálogo del primer arranque, que compart
 ## Criterios de aceptación
 - [ ] AC1–AC5 de la spec 08 · Fase 10, con `InfoSistema` falsos para `publicada` previa, `publicada` estable, `desarrollo` y `local` con y sin commit.
 - [ ] Nunca aparecen `undefined`, `null`, `NaN` ni `-` final (AC3).
-- [ ] AC8: capturas `docs/ux/revision-fase-10/ajustes-1280x800-100-acerca-{previa|desarrollo|local}.png` para la revisión del diseñador. Son las únicas capturas de la tarea: se generan con una spec E2E *opt-in*, como las de fases anteriores.
+- [ ] AC8: capturas `docs/ux/revisiones/fase-10/ajustes-1280x800-100-acerca-{previa|desarrollo|local}.png` para la revisión del diseñador. Son las únicas capturas de la tarea: se generan con una spec E2E *opt-in*, como las de fases anteriores.
 
 ## Pruebas de feedback
 - Unitarias: `AcercaDe.test.tsx`, con los 4 estados, [Copiar versión] con el portapapeles bien y mal, y la primera línea de `infoSoporte`.
@@ -32,5 +32,5 @@ Mostrar en «Acerca de» (Ajustes y el diálogo del primer arranque, que compart
 
 - Hecho: `AcercaDe.tsx` pinta `T.version(numeroVisible(...))`, la línea de canal (`aviso` + ⚠ en desarrollo, `texto-3` en local, hash en monoespaciada sin enlace; previa si la versión lleva `-alpha/-beta/-rc.`) y [Copiar versión] (fantasma, 28 px, nombre accesible con el número, toasts `Versión copiada.` / `No se pudo copiar la versión.`, el foco se queda). `textoVersion` (`Shinobi Karaoke {identificador}`) encabeza `infoSoporte` y es lo que copia el botón. Textos en `textos.ts`; estilos en `acerca.module.css`. Sin `sistema.info()` no hay líneas ni botón. El diálogo del primer arranque comparte el bloque.
 - Pruebas: `AcercaDe.test.tsx` (5 estados: previa, estable, desarrollo, local con y sin commit; copia correcta y con portapapeles fallido; primera línea de `infoSoporte`).
-- AC8: spec opt-in `e2e/acerca-capturas.spec.ts` (`SHINOBI_CAPTURAS_10=1`), que sustituye en main el manejador `sistema:info` para cada estado y escribe `docs/ux/revision-fase-10/ajustes-1280x800-100-acerca-{previa|desarrollo|local}.png`. No se ha ejecutado (requiere `npm run build`); solo se comprobó que Playwright la lista.
+- AC8: spec opt-in `e2e/acerca-capturas.spec.ts` (`SHINOBI_CAPTURAS_10=1`), que sustituye en main el manejador `sistema:info` para cada estado y escribe `docs/ux/revisiones/fase-10/ajustes-1280x800-100-acerca-{previa|desarrollo|local}.png`. No se ha ejecutado (requiere `npm run build`); solo se comprobó que Playwright la lista.
 - Manual: AC1 con la app de la Release `v0.2.0-alpha.2` instalada (guía de la versión).

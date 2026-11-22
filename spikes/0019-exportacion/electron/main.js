@@ -1,7 +1,7 @@
 // Prueba de concepto del ADR 0019 (no es código de producción).
 // Ventana offscreen gobernada por índice de fotograma → captura → pipe con contrapresión → PyAV.
 //
-//   app/node_modules/.bin/electron docs/poc/0019-exportacion/electron/main.js \
+//   app/node_modules/.bin/electron docs/spikes/0019-exportacion/electron/main.js \
 //     --ancho 1920 --alto 1080 --fps 30 --segundos 10 --modo captura --perfil av1 --salida /tmp/x.mkv
 //
 // --modo captura: webContents.capturePage() tras dos requestAnimationFrame.

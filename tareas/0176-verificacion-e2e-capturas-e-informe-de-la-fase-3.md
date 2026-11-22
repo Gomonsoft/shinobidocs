@@ -4,7 +4,7 @@
 - Paso del pipeline: 1, 4 y 5
 - Depende de: [0163](0163-modelo-puro-de-temas-e-identidad.md)–[0175](0175-ajustes-seccion-temas.md)
 - ADRs: [0016](../adr/0016-catalogo-de-temas-e-identidad-de-artista-y-album.md) («Pruebas»), [0006](../adr/0006-persistencia-y-modelo-de-datos.md#revisión-para-020--fase-3)
-- Specs: [Editor · Fase 3](../ux/06-editor.md#fase-3-de-020--temas-y-biblioteca) (T19, T22b, T29), [Biblioteca · Fase 3](../ux/02-biblioteca.md#fase-3-de-020--temas-y-biblioteca) (B5b, B16), [Ajustes · Fase 3](../ux/08-ajustes-y-acerca.md#fase-3-de-020--temas-y-biblioteca) (A7c, A12–A15), [Revisión visual](../ux/revision-fase-3/README.md)
+- Specs: [Editor · Fase 3](../ux/06-editor.md#fase-3-de-020--temas-y-biblioteca) (T19, T22b, T29), [Biblioteca · Fase 3](../ux/02-biblioteca.md#fase-3-de-020--temas-y-biblioteca) (B5b, B16), [Ajustes · Fase 3](../ux/08-ajustes-y-acerca.md#fase-3-de-020--temas-y-biblioteca) (A7c, A12–A15), [Revisión visual](../ux/revisiones/fase-3/README.md)
 
 ## Objetivo
 
@@ -21,7 +21,7 @@ Los fallos de escritura se inyectan con el mecanismo de pruebas existente de la 
 
 ## Capturas
 
-En `docs/ux/revision-fase-3/`, con el procedimiento de [revision-fase-2.1](../ux/revision-fase-2.1/README.md) y los nombres y tamaños del [README de la fase 3](../ux/revision-fase-3/README.md): 11 estados del editor (1280 × 720 al 100 % y 125 %), 9 de la Biblioteca (1280 × 800 al 100 % y 1280 × 720 al 125 %) y 10 de Ajustes (1280 × 800 al 100 %), entre ellos `dialogo-quitar-predeterminado` (`aj.temas.dialogo.ninguno` con la lista revelada).
+En `docs/ux/revisiones/fase-3/`, con el procedimiento de [revision-fase-2.1](../ux/revisiones/fase-2.1/README.md) y los nombres y tamaños del [README de la fase 3](../ux/revisiones/fase-3/README.md): 11 estados del editor (1280 × 720 al 100 % y 125 %), 9 de la Biblioteca (1280 × 800 al 100 % y 1280 × 720 al 125 %) y 10 de Ajustes (1280 × 800 al 100 %), entre ellos `dialogo-quitar-predeterminado` (`aj.temas.dialogo.ninguno` con la lista revelada).
 
 **Semilla**: la de 0168, que cumple los datos de prueba del README e incluye una canción con procedencia «Tema predeterminado anterior» y otra asignada con esa base (T2b). Si la captura `temas` o la tarjeta de la Biblioteca deben mostrarla, se usa esa canción y no se recrea a mano. Actualizar el README con el estado «tomadas» y el equipo usado.
 
@@ -33,7 +33,7 @@ En `docs/ux/revision-fase-3/`, con el procedimiento de [revision-fase-2.1](../ux
 
 - `app/e2e/temas-migracion.spec.ts`, `temas-editor.spec.ts`, `temas-biblioteca.spec.ts`, `temas-ajustes.spec.ts` (nuevos).
 - `app/e2e/fixtures/temas.ts` (nuevo: catálogos, bibliotecas de 0.1.0, inyección de fallos) y `app/e2e/fixtures/biblioteca-010/` si hace falta una copia real.
-- `docs/ux/revision-fase-3/*.png`, `docs/ux/revision-fase-3/README.md`.
+- `docs/ux/revisiones/fase-3/*.png`, `docs/ux/revisiones/fase-3/README.md`.
 - `docs/versiones/0.2.0/informe-fase-3.md` (nuevo), `plan-2.md`, `backlog.md`.
 
 ## Criterios de aceptación
@@ -49,7 +49,7 @@ En `docs/ux/revision-fase-3/`, con el procedimiento de [revision-fase-2.1](../ux
 
 **Hecha.** Cuatro especificaciones E2E nuevas (48 casos), ayudantes, 50 capturas, informe y estabilización de pruebas. Ver el [informe](../versiones/0.2.0/informe-fase-3.md).
 
-- **Archivos.** `app/e2e/temas-migracion.spec.ts`, `temas-editor.spec.ts`, `temas-biblioteca.spec.ts`, `temas-ajustes.spec.ts`, `temas-capturas.spec.ts` (opt-in con `SHINOBI_CAPTURAS_3=1`) y `fixtures/temas.ts` (siembra, hashes, `envenenarEscritura`/`repararEscritura`, `clonarCancion`, `botonesDentroDelDialogo`). `docs/ux/revision-fase-3/*.png` y README, `informe-fase-3.md`, `plan-2.md`, `backlog.md`, pregunta 0057.
+- **Archivos.** `app/e2e/temas-migracion.spec.ts`, `temas-editor.spec.ts`, `temas-biblioteca.spec.ts`, `temas-ajustes.spec.ts`, `temas-capturas.spec.ts` (opt-in con `SHINOBI_CAPTURAS_3=1`) y `fixtures/temas.ts` (siembra, hashes, `envenenarEscritura`/`repararEscritura`, `clonarCancion`, `botonesDentroDelDialogo`). `docs/ux/revisiones/fase-3/*.png` y README, `informe-fase-3.md`, `plan-2.md`, `backlog.md`, pregunta 0057.
 - **Cómo probarlo.** Desde `app/`: `npm run build` y `npx playwright test e2e/temas-*.spec.ts --workers=1`. Capturas: `SHINOBI_CAPTURAS_3=1 npx playwright test e2e/temas-capturas.spec.ts --workers=1`.
 - **Errores reales corregidos con su prueba** (detalle en el informe): lista del selector inerte dentro de diálogos (`SelectorTema.tsx`), encabezado de grupo sin tema por usar claves en vez de la grafía visible (`agrupacion.ts`), botones del diálogo de salida cortados (`.acciones` sin `flex-wrap`, corregido por la sesión principal) y pie de D3 cortado a 300 px (`panelEstilo.module.css`).
 - **E2E existentes** actualizados: caja de búsqueda `/^Buscar título/`, nombre accesible de la tarjeta con «Tema: …» y exclusión de `temas.json` al listar canciones.

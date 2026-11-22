@@ -12,7 +12,7 @@ Generar las capturas que el diseñador pide para revisar la fase 5, siguiendo el
 
 ## Contrato
 
-- `e2e/fase5-capturas.spec.ts`, que solo se ejecuta con `SHINOBI_CAPTURAS_5=1`. Escribe en `docs/ux/revision-0.2.0-fase-5/` con los nombres de la spec:
+- `e2e/fase5-capturas.spec.ts`, que solo se ejecuta con `SHINOBI_CAPTURAS_5=1`. Escribe en `docs/ux/revisiones/0.2.0-fase-5/` con los nombres de la spec:
   - **editor** a 1280 × 720 al 100 % y al 125 %: `fondo-radial`, `fondo-conico-movimiento`, `fondo-reducido`, `espera-d2`, `espera-d1-propios`, `espera-ejemplo`, `dock-letra-lista`, `dialogo-letra-lista`, `silencios-no-disponible`, `dialogo-silencios` y `silencios-aplicado`;
   - **reproductor** a 1920 × 1080 y 1280 × 720: `hueco-tres-indicadores`, `hueco-cuenta`, `hueco-barra`, `letra-lista`, `fondo-radial` y `fondo-conico`;
   - **biblioteca** `biblioteca-1280x800-100-letra-lista`.
@@ -20,7 +20,7 @@ Generar las capturas que el diseñador pide para revisar la fase 5, siguiendo el
 
 ## Archivos
 
-`app/e2e/fase5-capturas.spec.ts` (nuevo) y las capturas en `docs/ux/revision-0.2.0-fase-5/`.
+`app/e2e/fase5-capturas.spec.ts` (nuevo) y las capturas en `docs/ux/revisiones/0.2.0-fase-5/`.
 
 ## Criterios de aceptación
 
@@ -36,7 +36,7 @@ Generar las capturas que el diseñador pide para revisar la fase 5, siguiendo el
 
 ## Notas de implementación
 
-- `app/e2e/fase5-capturas.spec.ts` (opt-in con `SHINOBI_CAPTURAS_5=1`; sin la variable se salta, comprobado). Genera 35 capturas en `docs/ux/revision-0.2.0-fase-5/` (22 de editor, 12 de reproductor, 1 de biblioteca) y su `README.md`. Cada estado es independiente (`intentar`).
+- `app/e2e/fase5-capturas.spec.ts` (opt-in con `SHINOBI_CAPTURAS_5=1`; sin la variable se salta, comprobado). Genera 35 capturas en `docs/ux/revisiones/0.2.0-fase-5/` (22 de editor, 12 de reproductor, 1 de biblioteca) y su `README.md`. Cada estado es independiente (`intentar`).
 - La carpeta es `revision-0.2.0-fase-5/` (spec F5-1/R14/LB7 y este contrato), no `revision-fase-5/`, que es del MVP.
 - Cómo: `cd app && npm run build && SHINOBI_CAPTURAS_5=1 npx playwright test e2e/fase5-capturas.spec.ts --workers=1` (~4 min).
 - Los estados de silencios necesitan una voz con silencios reales y fines largos; el diálogo y el aplicado los fabrican ellos mismos.

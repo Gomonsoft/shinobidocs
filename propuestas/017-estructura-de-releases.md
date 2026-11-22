@@ -28,7 +28,7 @@ Mantener lo que ya decide el ADR 0020 (etiqueta → borrador → recursos → pu
 1. **Publicar de verdad la primera Release.** Etiquetar `v0.2.0-alpha.1` (o `alpha.2` con las correcciones de la fase 7) para que la descarga salga de Releases y no de Actions. Es el paso que más cambia y no requiere trabajo nuevo.
 2. **Canal de compilaciones de desarrollo, como RPCS3.** Un repositorio aparte, `shinobi-karaoke-builds`, con una Release por compilación de `develop`: etiqueta `build-<hash>`, título `0.2.0-alpha.1-<N>` y el SHA-256 en el cuerpo. Así las Releases del repositorio principal quedan limpias y «latest» sigue significando «última versión».
 3. **Número de compilación visible.** `<versión>-<N>` con N = número de commits, mostrado en «Acerca de» y en los detalles de error que se copian. Un reporte indica entonces el commit exacto.
-4. **Notas con dos partes, como DroidDeck.** Arriba las notas escritas a mano que ya existen (`docs/versiones/<X.Y.Z>/notas/`); debajo, siempre, «Qué cambió» generado por GitHub con los PR y el enlace de comparación, y la ejecución de CI que construyó los instaladores.
+4. **Notas con dos partes, como DroidDeck.** Arriba las notas escritas a mano que ya existen (`lanzamientos/notas/<X.Y.Z>/`); debajo, siempre, «Qué cambió» generado por GitHub con los PR y el enlace de comparación, y la ejecución de CI que construyó los instaladores.
 5. **README con descarga directa.** Insignia o botón por sistema que lleve al instalador de la última versión, pasos numerados y el aviso de bajar solo desde Releases. Mientras solo haya alfas, el enlace debe apuntar a la etiqueta concreta, porque `/releases/latest` ignora las *pre-releases* (ADR 0020 §5).
 
 Lo que **no** se copia:

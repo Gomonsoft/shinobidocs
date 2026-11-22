@@ -19,7 +19,7 @@
 - **Un solo número** para app y worker, en SemVer `MAYOR.MENOR.CORRECCIÓN`, con versiones previas numeradas `-alpha.N`, `-beta.N` y `-rc.N` (en el worker, su forma PEP 440: `aN`, `bN`, `rcN`).
 - **0.1.0 no se publica.** La primera *Release* es `v0.2.0-alpha.1` (*pre-release*); cada corrección de la alfa sube `N`. La etiqueta `v0.2.0-alpha` del plan pasa a ser la última `v0.2.0-alpha.N`. `0.2.0` sin sufijo, solo si lo decides.
 - Se sube con `npm run version:subir -- <versión>` (tarea 0191) y el workflow comprueba que la etiqueta coincide.
-- Cada *Release* lleva su lista de cambios (`docs/versiones/<X.Y.Z>/notas/<versión>.md` o, si falta, la que genera GitHub).
+- Cada *Release* lleva su lista de cambios (`lanzamientos/notas/<X.Y.Z>/<versión>.md` o, si falta, la que genera GitHub).
 
 Si respondes otra cosa (p. ej., 1.0.0 o numeración distinta), basta con otro `version:subir`; nada más depende del número.
 

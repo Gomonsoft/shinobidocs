@@ -79,7 +79,7 @@ Medidas disponibles: `sesion-flujo.spec.ts` completa en unos 20 s (límite de la
 
 ### Capturas
 
-40 PNG en [`docs/ux/revision-fase-4/`](../../ux/revision-fase-4/README.md), tomadas el 2026-11-20 en un Mac con una sola pantalla Retina (pantalla 2 simulada): Biblioteca 12 estados × 2 (1280 × 800 al 100 % y 1280 × 720 al 125 %), reproductor 7 estados × 2 (1920 × 1080 y 1280 × 720), `ajustes-1280x800-100-reproductor` y `editor-1280x800-100-dialogo-bloqueo`. **Limitación:** las de 1920 × 1080 del reproductor salen recortadas a 1920 × 762, porque macOS limita `setContentSize` a la altura de la pantalla real; para P16 completo hace falta un monitor de al menos 1080 px de alto. La revisión del diseñador sigue por hacer. Comando: `SHINOBI_CAPTURAS_4=1 npx playwright test e2e/sesion-capturas.spec.ts --workers=1` desde `app/`.
+40 PNG en [`docs/ux/revisiones/fase-4/`](../../ux/revisiones/fase-4/README.md), tomadas el 2026-11-20 en un Mac con una sola pantalla Retina (pantalla 2 simulada): Biblioteca 12 estados × 2 (1280 × 800 al 100 % y 1280 × 720 al 125 %), reproductor 7 estados × 2 (1920 × 1080 y 1280 × 720), `ajustes-1280x800-100-reproductor` y `editor-1280x800-100-dialogo-bloqueo`. **Limitación:** las de 1920 × 1080 del reproductor salen recortadas a 1920 × 762, porque macOS limita `setContentSize` a la altura de la pantalla real; para P16 completo hace falta un monitor de al menos 1080 px de alto. La revisión del diseñador sigue por hacer. Comando: `SHINOBI_CAPTURAS_4=1 npx playwright test e2e/sesion-capturas.spec.ts --workers=1` desde `app/`.
 
 ## Resultado por criterio
 
@@ -109,7 +109,7 @@ Abreviaturas de los E2E de `sesion-flujo.spec.ts`: **F1** «roles y ventanas…�
 | S15b · «Reproducir en otra pantalla…», variante con canción y Wayland | V `DialogoPantallas.test.tsx` (S15b, Wayland sin lista), `PanelCola.test.tsx` (Wayland). Wayland real: Guía 3 | Parcial (Wayland real pendiente de la guía manual) |
 | S16 · Panel operable con teclado; sin atajos de una tecla; el foco nunca en `body` | V `ListaPendientes.test.tsx` («navegación (S16)», roving tabindex), `PanelCola.test.tsx` (foco al ocultar y al abrir). No hay prueba que afirme «ninguna acción de sesión con atajo de una tecla en la principal» ni «el foco nunca queda en `body`» | Parcial (sin evidencia de las dos afirmaciones globales) |
 | S17 · A 1024 × 576 con el panel, 2 columnas, scroll propio, sin scroll horizontal | **Sin evidencia.** 0185 lo dejó «pendiente de E2E/captura (0190)» y 0190 no añadió ese caso (límite de 4 pruebas). El CSS lo prevé (`panelCola.module.css`: panel de 320 px bajo 1280 px), y las capturas `biblioteca-1280x720-125-*` lo muestran, pero ninguna prueba mide el scroll horizontal (ver además la [pregunta 0057](../../preguntas/0057-ancho-minimo-del-cuerpo-y-scroll-horizontal-a-1024-px.md) sobre `min-width: 1024px`) | **Sin evidencia** |
-| S18 · Capturas de Biblioteca | 24 PNG en `docs/ux/revision-fase-4/` (12 estados × 2 tamaños) | Correcto (revisión del diseñador pendiente) |
+| S18 · Capturas de Biblioteca | 24 PNG en `docs/ux/revisiones/fase-4/` (12 estados × 2 tamaños) | Correcto (revisión del diseñador pendiente) |
 
 ### Reproductor (P)
 

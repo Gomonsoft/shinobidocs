@@ -24,7 +24,7 @@ Ejecutar solo esta spec, `exportacion-captura.spec.ts` (0234) y los críticos.
 M1–M9 de la spec 10 (M9: suspensión del equipo) y, además: tiempo y tamaño de 1080p30 y 3840 × 2160 a 60 FPS en Windows y Linux (contrastar con la tabla del ADR 0019 §2 de la prueba); exportar durante una sesión en dos pantallas reales con un perfil modesto y con 4K/60 (cortes de audio, tirones de la secundaria, CPU, GPU y memoria). Si hay cortes, se abre una revisión del ADR 0019 §9 (tabla de `perfilCompatibleConSesion`).
 
 ## Capturas
-Las de V29 en `docs/ux/revision-fase-6/` (sin `bloqueo-sesion`; con `nota-sesion`, `formato-webm` y `ayuda-formato`) con una spec *opt-in* (`e2e/exportacion-capturas.spec.ts`, `SHINOBI_CAPTURAS_6=1`), fuera del CI, y un `README.md`.
+Las de V29 en `docs/ux/revisiones/fase-6/` (sin `bloqueo-sesion`; con `nota-sesion`, `formato-webm` y `ayuda-formato`) con una spec *opt-in* (`e2e/exportacion-capturas.spec.ts`, `SHINOBI_CAPTURAS_6=1`), fuera del CI, y un `README.md`.
 
 ## Informe
 `docs/versiones/0.2.0/informe-fase-6.md` con el formato de los anteriores: tareas, criterios V1–V30 (V24 retirado) con dónde se comprueba (Vitest, E2E o guía manual), CI en verde en los 3 SO y resultado de la guía manual.
@@ -42,7 +42,7 @@ Las de V29 en `docs/ux/revision-fase-6/` (sin `bloqueo-sesion`; con `nota-sesion
   2. Cancelar a mitad (30 s de audio, tras 20 fotogramas) sobre un archivo previo: resultado `cancelada`, la carpeta solo contiene el previo con el mismo hash, sin diario. Usa `webm_vp9`.
   3. «Letra lista» a `webm_vp9`: 72 fotogramas y ningún píxel del color de resaltado (sin barrido).
   Los dos formatos quedan cubiertos (MKV en 1, WebM en 2 y 3). No se probó «exportar con sesión abierta» (V23) en E2E: se priorizó Letra lista; la nota con sesión sí se captura. La sonda mide color y no la diferencia media del fotograma (probé esa primero: con texto pequeño no separaba barrido de no barrido, 0,29 frente a 0,36).
-- `app/e2e/exportacion-capturas.spec.ts` (`SHINOBI_CAPTURAS_6=1`): 20 PNG en `docs/ux/revision-fase-6/` y su `README.md` (qué estados faltan y por qué). 35 s en total.
+- `app/e2e/exportacion-capturas.spec.ts` (`SHINOBI_CAPTURAS_6=1`): 20 PNG en `docs/ux/revisiones/fase-6/` y su `README.md` (qué estados faltan y por qué). 35 s en total.
 - Requisito local: `npm run build` antes (el worktree no tenía `out/`; sin él `electron.launch` se queda esperando) y Playwright sin sandbox.
 - Medidas de tiempo (macOS, local): 3 s a 640×480 24 FPS en MKV AV1 ≈ 2,8 s de prueba completa (arranque incluido); 5 s a 1080p30 MKV, «Tardó 3 s».
 - Pendiente (no es del programador): guía manual (`qa`) e informe de la fase.

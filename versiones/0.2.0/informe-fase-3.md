@@ -85,7 +85,7 @@ Editor (T). Casos en `app/e2e/temas-editor.spec.ts` salvo indicación; «V» = V
 | T26 · Seis viewports y paneles sin partir ni cortar | `D1 y D3 en {6 viewports}` y «panel a 300, 360 y 480 px» | Correcto tras los errores 3 y 4 |
 | T27 · Panel minimizado en D3 | Solo V | Correcto (V) |
 | T28 · Muestras del selector | Capturas | Correcto (a ojo) |
-| T29 · Capturas | 22 PNG en `docs/ux/revision-fase-3/` | Correcto |
+| T29 · Capturas | 22 PNG en `docs/ux/revisiones/fase-3/` | Correcto |
 | T30 · Sin regresiones de 2.1 | `editor-layout.spec.ts` y `editor.spec.ts` completos | Correcto |
 
 Biblioteca (B). Casos en `app/e2e/temas-biblioteca.spec.ts`.
@@ -135,7 +135,7 @@ Ajustes (A). Casos en `app/e2e/temas-ajustes.spec.ts`.
 
 ### Capturas
 
-50 PNG en [`docs/ux/revision-fase-3/`](../../ux/revision-fase-3/README.md) con el nombre y los tamaños del README, tamaño físico: editor 11 × 2 (1280 × 720 al 100 % y al 125 %), Biblioteca 9 × 2 (1280 × 800 al 100 %, 1280 × 720 al 125 %) y Ajustes 10 × 1 (1280 × 800), incluida `ajustes-1280x800-100-dialogo-quitar-predeterminado.png` (con la lista revelada). Se abrieron para revisarlas: `editor-1280x720-125-dialogo-salir-borrador`, `editor-1280x720-100-tema-editando`, `biblioteca-1280x800-100-seleccion`, `biblioteca-1280x720-125-resultado-lote`, `ajustes-1280x800-100-dialogo-quitar-predeterminado` y `ajustes-1280x800-100-temas-borrado-pendiente`. Observaciones en el README de la carpeta.
+50 PNG en [`docs/ux/revisiones/fase-3/`](../../ux/revisiones/fase-3/README.md) con el nombre y los tamaños del README, tamaño físico: editor 11 × 2 (1280 × 720 al 100 % y al 125 %), Biblioteca 9 × 2 (1280 × 800 al 100 %, 1280 × 720 al 125 %) y Ajustes 10 × 1 (1280 × 800), incluida `ajustes-1280x800-100-dialogo-quitar-predeterminado.png` (con la lista revelada). Se abrieron para revisarlas: `editor-1280x720-125-dialogo-salir-borrador`, `editor-1280x720-100-tema-editando`, `biblioteca-1280x800-100-seleccion`, `biblioteca-1280x720-125-resultado-lote`, `ajustes-1280x800-100-dialogo-quitar-predeterminado` y `ajustes-1280x800-100-temas-borrado-pendiente`. Observaciones en el README de la carpeta.
 
 Comando: `SHINOBI_CAPTURAS_3=1 npx playwright test e2e/temas-capturas.spec.ts --workers=1` desde `app/`.
 

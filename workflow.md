@@ -6,6 +6,30 @@
 2. Al cerrar la fase, incluye su informe y abre un PR hacia `develop`. La revisión comprueba los criterios de aceptación y las verificaciones de la fase.
 3. Al cerrar la versión, abre un PR de `develop` hacia `main`. Tras fusionarlo, etiqueta el commit de publicación con su versión (`v0.2.0-alpha.N`) según [Versiones y publicación](#versiones-y-publicación).
 
+## Dos repositorios
+
+La app y su documentación viven separadas desde el 2026-11-22:
+
+| Repositorio | Contenido |
+|---|---|
+| `Gomonsoft/shinobi-karaoke` | Código (`app/`, `worker/`), CI y `lanzamientos/` (notas de versión, botones de descarga y plantilla del README). |
+| `Gomonsoft/shinobidocs` | Esta documentación y `spikes/`. Se monta en la app como submódulo en `docs/`. |
+
+Un cambio que toca documentación son dos commits:
+
+1. En `docs/` (este repositorio): confirma y sube a `main`, o a la rama `version-X.Y.Z` si define una versión que aún no se implementa.
+   ```sh
+   cd docs
+   git add -A && git commit -m "…" && git push
+   ```
+2. En la app: confirma el puntero nuevo junto con el código al que acompaña.
+   ```sh
+   cd ..
+   git add docs && git commit -m "…"
+   ```
+
+El puntero de `develop` y de `main` de la app debe apuntar siempre a un commit ya subido de `main` de este repositorio. El CI de la app no descarga el submódulo: nada de lo que construye o prueba puede leer de `docs/`.
+
 ## Versiones y publicación
 
 Cada versión publicada tiene su *Release* en GitHub, creada por el workflow `empaquetado.yml` al subir una etiqueta `v*` ([ADR 0020](adr/0020-publicacion-en-github-releases-y-politica-de-versiones.md)).
@@ -20,7 +44,7 @@ Cada versión publicada tiene su *Release* en GitHub, creada por el workflow `em
    npm run version:comprobar
    ```
    Cambia `app/package.json`, `app/package-lock.json`, `worker/pyproject.toml`, `worker/shinobi_worker/__init__.py` y `worker/uv.lock` (en el worker con la forma PEP 440: `0.2.0a1`).
-2. Escribe las novedades en `docs/versiones/<X.Y.Z>/notas/<versión>.md` (plantilla de la [spec 09 §3](ux/09-descarga-e-instalacion.md#3-notas-de-cada-release), con "Sin probar en esta versión"). Son **obligatorias**: con una etiqueta, el workflow falla si no existen o si conservan una línea `> Borrador`. «Qué cambió», «Todos los cambios» y «Compilación» los añade el workflow debajo.
+2. Escribe las novedades en `lanzamientos/notas/<X.Y.Z>/<versión>.md` (plantilla de la [spec 09 §3](ux/09-descarga-e-instalacion.md#3-notas-de-cada-release), con "Sin probar en esta versión"). Son **obligatorias**: con una etiqueta, el workflow falla si no existen o si conservan una línea `> Borrador`. «Qué cambió», «Todos los cambios» y «Compilación» los añade el workflow debajo.
 3. Opcional, recomendado: ensaya sin publicar con `gh workflow run empaquetado.yml --ref <rama>`. El resumen de la ejecución muestra los instaladores, `SHA256SUMS.txt` y las notas tal como saldrán; el artefacto `publicacion-<versión>` los contiene.
 4. Fusiona en `main` por PR. La etiqueta tiene que apuntar a un commit contenido en `main`; si no, el workflow falla sin construir.
 5. Crea y sube la etiqueta anotada sobre ese commit:

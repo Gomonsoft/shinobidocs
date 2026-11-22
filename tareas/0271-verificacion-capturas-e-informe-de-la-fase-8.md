@@ -17,7 +17,7 @@ Comprobar la fase 8 de punta a punta con una canción con palabras importadas, b
 - `app/e2e/fase8.spec.ts` (nueva) y `app/e2e/fase8-capturas.spec.ts` (nueva, *opt-in* `SHINOBI_CAPTURAS_8=1`)
 - Una fixture de canción con palabras importadas inventadas (en `app/e2e/fixtures/` o la semilla de pruebas; **ninguna letra real**)
 - `app/src/shared/letras/tiempos.ts` y `tiempos.test.ts`: **solo** borrar `desplazar`, `fijarDesplazamiento`, `formatearDesplazamiento` e `interpretarDesplazamiento` si ya no tienen usos
-- `docs/ux/revision-0.2.1-fase-8/` (capturas) y `docs/versiones/0.2.1/informe-fase-8.md` (nuevo)
+- `docs/ux/revisiones/0.2.1-fase-8/` (capturas) y `docs/versiones/0.2.1/informe-fase-8.md` (nuevo)
 
 ## Criterios de aceptación
 
@@ -36,6 +36,6 @@ Comprobar la fase 8 de punta a punta con una canción con palabras importadas, b
 
 ## Notas de implementación
 
-- **Qué se hizo**: `e2e/fase8.spec.ts` (2 pruebas: abrir con palabras importadas no escribe `cancion.json` ni muestra ◆/«por palabra»/desplazamiento y S no hace nada; corregir el fin con el campo deja la línea sin palabras, las demás intactas, sin toast, y Ctrl+Z las devuelve), `e2e/fase8-capturas.spec.ts` (opt-in `SHINOBI_CAPTURAS_8=1`) con las 20 capturas E8-19 en `docs/ux/revision-0.2.1-fase-8/`, borrado de `desplazar`, `fijarDesplazamiento`, `formatearDesplazamiento`, `interpretarDesplazamiento` y del tipo `Limite` `desplazamiento` en `shared/letras/tiempos.ts` (y sus pruebas), informe en `docs/versiones/0.2.1/informe-fase-8.md`.
+- **Qué se hizo**: `e2e/fase8.spec.ts` (2 pruebas: abrir con palabras importadas no escribe `cancion.json` ni muestra ◆/«por palabra»/desplazamiento y S no hace nada; corregir el fin con el campo deja la línea sin palabras, las demás intactas, sin toast, y Ctrl+Z las devuelve), `e2e/fase8-capturas.spec.ts` (opt-in `SHINOBI_CAPTURAS_8=1`) con las 20 capturas E8-19 en `docs/ux/revisiones/0.2.1-fase-8/`, borrado de `desplazar`, `fijarDesplazamiento`, `formatearDesplazamiento`, `interpretarDesplazamiento` y del tipo `Limite` `desplazamiento` en `shared/letras/tiempos.ts` (y sus pruebas), informe en `docs/versiones/0.2.1/informe-fase-8.md`.
 - **Desviaciones**: R8-6 (misma fracción de la barra en la vista previa y en «Probar») no tiene E2E propio: lo cubre la prueba compartida del modelo de render de 0265. B8-7 y R8-7 no se regeneraron (son de 0266 y 0265). No hubo aserciones E2E sobre la barra antigua (`[data-indicador=barra]` con su ancho) que ajustar.
 - **Resultado de la verificación**: ver el informe (typecheck, lint, format limpios; Vitest 3410 pasan y 8 EPERM del entorno; Playwright completo `--workers=1`: 202 pasan, 1 falla en `editor.spec.ts › el bucle nativo…` (solo pasa si es la primera prueba que lanza la app)).

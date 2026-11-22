@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Ejecuta codificar.py sobre la matriz de perfiles candidatos y guarda JSON Lines.
 
-    cd worker && uv run python ../docs/poc/0019-exportacion/matriz.py --segundos 20 --salida /tmp/m.jsonl
+    cd worker && uv run python ../docs/spikes/0019-exportacion/matriz.py --segundos 20 --salida /tmp/m.jsonl
 """
 import argparse
 import subprocess

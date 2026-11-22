@@ -61,7 +61,7 @@ Un _fuse_ que no esté en la tabla hace fallar la verificación.
 
 ## Criterios de aceptación
 
-- [ ] Tests sin red ni paquete real: árbol correcto pasa; falta `uv`; requisito con hash distinto; `spikes/`, un test o `.datos-dev` presentes; asar con `react`; _fuse_ con otro valor; _fuse_ desconocido. Las lecturas de _fuses_ y asar son funciones inyectadas.
+- [ ] Tests sin red ni paquete real: árbol correcto pasa; falta `uv`; requisito con hash distinto; `docs/spikes/`, un test o `.datos-dev` presentes; asar con `react`; _fuse_ con otro valor; _fuse_ desconocido. Las lecturas de _fuses_ y asar son funciones inyectadas.
 - [ ] Mensajes de error con la ruta o el _fuse_ concreto.
 - [ ] Contra un paquete real generado con 0130, en el SO del programador: pasa.
 

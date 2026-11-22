@@ -578,7 +578,7 @@ Tras «Cerrar y conservar cola» (o una caída), la principal guarda la última 
 - P13. Desconectar la pantalla de la secundaria la recoloca en ventana en la pantalla primaria sin cortar el audio ni cambiar la cola; cerrar la secundaria a la fuerza (proceso del renderer terminado) termina la sesión conservando la cola y libera el bloqueo de reposo y el de edición.
 - P14. La pantalla del equipo no se apaga en ningún estado de la sesión (incluidos S2 y S3) y vuelve a apagarse según el sistema al terminar la sesión.
 - P15. La secundaria no muestra `rep.incompleta` ni toasts; la principal sí recibe sus toasts durante la sesión.
-- P16. Capturas en `docs/ux/revision-fase-4/` con nombre `reproductor-{ancho}x{alto}-{estado}.png` a 1920 × 1080 y 1280 × 720: `cuenta`, `cuenta-reducido`, `espera`, `espera-vacia`, `fin-cola`, `fallo`, `reanudada`.
+- P16. Capturas en `docs/ux/revisiones/fase-4/` con nombre `reproductor-{ancho}x{alto}-{estado}.png` a 1920 × 1080 y 1280 × 720: `cuenta`, `cuenta-reducido`, `espera`, `espera-vacia`, `fin-cola`, `fallo`, `reanudada`.
 
 ## Fase 5 de 0.2.0 — estilo, espera y Letra lista
 
@@ -657,7 +657,7 @@ Esta sección **amplía** la spec y vale igual para el reproductor local, la pru
 - R11. Al empezar un hueco de 8 s con indicadores (cambio de `clave` del fotograma al empezar la espera; los cambios por dígito no se anuncian) se anuncia una vez `rep.espera.aria` («La letra sigue en 8 segundos.»); no hay anuncios por segundo, en la primera entrada ni al pausar.
 - R12. En una canción Letra lista, durante una línea (también con tiempos de palabra) ningún píxel de la letra tiene el color de lo ya cantado (captura a mitad de línea) y los indicadores usan el color de la letra; en la misma canción, la vista previa del editor sí muestra el barrido.
 - R13. Una Letra lista se reproduce desde la Biblioteca, entra en la cola y se reproduce sin barrido en la secundaria; la modalidad se fija al empezar la reproducción. Con el reproductor abierto en otra pantalla no se puede cambiar (la edición está bloqueada: `EDICION_BLOQUEADA`); con el reproductor local, un cambio hecho después solo afecta a la siguiente reproducción.
-- R14. Capturas en `docs/ux/revision-0.2.0-fase-5/` con nombre `reproductor-{ancho}x{alto}-{estado}.png` a 1920 × 1080 y 1280 × 720: `hueco-tres-indicadores`, `hueco-cuenta`, `hueco-barra`, `letra-lista`, `fondo-radial`, `fondo-conico`.
+- R14. Capturas en `docs/ux/revisiones/0.2.0-fase-5/` con nombre `reproductor-{ancho}x{alto}-{estado}.png` a 1920 × 1080 y 1280 × 720: `hueco-tres-indicadores`, `hueco-cuenta`, `hueco-barra`, `letra-lista`, `fondo-radial`, `fondo-conico`.
 
 **Verificación manual** (guía de la fase 5): legibilidad de la cuenta y la barra a 5 m en una TV de 55" y en un proyector, con fondos degradados claros y oscuros; sensación de las velocidades del movimiento y que no maree; el movimiento fluido en la secundaria de un equipo modesto con dos pantallas; que la Letra lista se lea bien sin barrido en una canción rápida.
 
@@ -704,6 +704,6 @@ Origen: [plan 0.2.1, fases 8 y 9](../versiones/0.2.1/plan-3.md#fase-8--sincroní
 - R8-4. La pista usa `letra.color` y el relleno `color_resaltado`; en Letra lista, la pista es `letra.color` al 35 % y el relleno `letra.color`, y ningún píxel tiene `color_resaltado` (captura a mitad de un hueco).
 - R8-5. Con movimiento reducido emulado, el relleno sigue avanzando de forma continua. Sustituye a R10 en lo que se refiere a la barra.
 - R8-6. En el mismo tiempo de canción, la vista previa del editor, el reproductor y un fotograma exportado dan el mismo modelo de barra (pista, relleno y posición relativos; test compartido).
-- R8-7. Capturas en `docs/ux/revision-0.2.1-fase-8/` con nombre `reproductor-{ancho}x{alto}-{estado}.png` a 1920 × 1080 y 1280 × 720: `barra-carga-inicio`, `barra-carga-mitad`, `barra-carga-letra-lista`, `palabras-importadas-progresivo`.
+- R8-7. Capturas en `docs/ux/revisiones/0.2.1-fase-8/` con nombre `reproductor-{ancho}x{alto}-{estado}.png` a 1920 × 1080 y 1280 × 720: `barra-carga-inicio`, `barra-carga-mitad`, `barra-carga-letra-lista`, `palabras-importadas-progresivo`.
 
 **Verificación manual** (guía de 0.2.1): la barra de carga se entiende a 5 m en una TV de 55" con fondos claros y oscuros y con un tema de colores parecidos; en Letra lista se distingue el relleno de la pista.

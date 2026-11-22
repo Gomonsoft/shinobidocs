@@ -1,6 +1,6 @@
 # Revisión visual — Fase 5 de 0.2.0 (estilo, espera y Letra lista)
 
-- Specs de referencia: [06-editor.md, fase 5](../06-editor.md#fase-5-de-020--estilo-espera-y-letra-lista) (F5-1), [07-reproductor.md, fase 5](../07-reproductor.md#fase-5-de-020--estilo-espera-y-letra-lista) (R14) y [02-biblioteca.md, fase 5](../02-biblioteca.md#fase-5-de-020--estilo-espera-y-letra-lista) (LB7).
+- Specs de referencia: [06-editor.md, fase 5](../../06-editor.md#fase-5-de-020--estilo-espera-y-letra-lista) (F5-1), [07-reproductor.md, fase 5](../../07-reproductor.md#fase-5-de-020--estilo-espera-y-letra-lista) (R14) y [02-biblioteca.md, fase 5](../../02-biblioteca.md#fase-5-de-020--estilo-espera-y-letra-lista) (LB7).
 - Estado: **tomadas** (tarea 0218, 2026-11-20): 35 capturas con `SHINOBI_CAPTURAS_5=1 npx playwright test e2e/fase5-capturas.spec.ts --workers=1` desde `app/`. La revisión del diseñador sigue por hacer.
 - Equipo: macOS 15 (Darwin 25.5), una sola pantalla Retina. Sin red, datos inventados (semilla `sembrar`, canción «Reproductor: lista», 30 s).
 - La carpeta `revision-fase-5/` es de la fase 5 del MVP; esta es la de 0.2.0.
