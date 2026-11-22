@@ -46,3 +46,4 @@ Ideas de mejora **todavía sin definir ni autorizar**. No forman parte del alcan
 | [033](033-legibilidad-y-resaltado-accesible.md) | Legibilidad y resaltado que no dependa solo del color | Exploración 0.2.2 (accesibilidad) | Idea |
 | [034](034-cantantes-en-la-cola-y-mando-desde-el-movil.md) | Cantantes en la cola y mando desde el móvil | Exploración 0.2.2 (referentes) | Idea |
 | [035](035-ajustes-almacenamiento-y-estado-del-motor.md) | Ajustes: almacenamiento y estado del motor | Exploración 0.2.2; feedback de alpha.1 §1.6 | Idea |
+| [036](036-varios-cantantes-y-coros.md) | Varios cantantes y coros (dúos a cuartetos, «Todos», coros con voz guía) | Usuario (2026-11-22) | Idea |
