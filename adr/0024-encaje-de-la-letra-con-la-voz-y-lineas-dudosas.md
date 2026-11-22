@@ -175,3 +175,9 @@ detectarDudosas(letra, voz | null, { duracionMs, p })
 - `intacta` y `origen_fin` no cambian con el desfase.
 - Prueba: Vitest de `guardarTiempos` (cambiar `offset_ms` retira `revisada`; repetir el mismo `offset_ms` la conserva).
 
+## Revisión 2026-11-22 · Quién escribe la corrección del desfase (pregunta 0210)
+
+- `letras.guardarTiempos` admite `desfase_corregido_ms: number | null` (±30 s): un número lo anota, `null` lo borra y si falta no cambia. Junto con `offset_ms`, es como se corrige y se quita la corrección en el editor y en la vista Letra (C, con `abrirEdicion` → `guardarTiempos` → `cerrarEdicion`). No hay canal propio.
+- `letras.guardar` admite `desfase_ms` (±30 s): main aplica `corregirDesfase({ offset_ms: 0 }, desfase_ms)` y guarda `offset_ms` y `desfase_corregido_ms` con la letra nueva. La letra queda `intacta`.
+- **Comprobación diferida** (spec 05, F4-L7): cuando los picos de una canción quedan listos tras separar, si su letra guardada está `intacta`, sin corrección previa, con tiempos y la canción no es Lista ni Letra lista, main la evalúa con `evaluarEncaje`. Si sale `desfasada`, aplica la corrección por el mismo camino que `guardarTiempos` y emite un aviso con [Deshacer] para el toast. Dentro de una tanda de varias canciones no hay toast por canción. La preparación desatendida (ADR 0025 §2, paso `comprobando`) usa la misma función y no la duplica.
+

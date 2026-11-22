@@ -1,7 +1,7 @@
 # 0301 — Feature 4 · Verificación, calibración e informe
 - Estado: Pendiente
 - Paso del pipeline: 3
-- Depende de: 0297–0300
+- Depende de: 0297–0300, 0367
 - ADRs: 0024
 - Spec UX: docs/ux/05-letra.md y 06-editor.md (0.2.2 · Feature 4)
 - Tamaño: S
