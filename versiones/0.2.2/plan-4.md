@@ -34,9 +34,42 @@ Hoy el reproductor muestra dos enunciados (el actual y el siguiente) y, en las p
 - Exploración de diseño con opciones, recomendación y maqueta: [`exploracion/letra-en-pantalla.md`](exploracion/letra-en-pantalla.md).
 - Propuesta formal: `docs/propuestas/018-…`.
 
+### Diseño recomendado (aplicado por defecto)
+
+Resumen de la [exploración](exploracion/letra-en-pantalla.md); hay una [maqueta HTML](../../propuestas/diseno/letra-en-pantalla.html) para ver las animaciones (sin ejecutar por el diseñador: puede tener defectos).
+
+- **Modelo.** La línea activa conserva su tamaño de hoy y queda anclada a una altura fija. Debajo, las futuras: la primera al 70 % y el resto al 60 %, cada vez más tenues. Encima, la pasada: al 60 % y en gris, con un contraste mínimo de 3:1. Por defecto 5 = 1 pasada + activa + 3 futuras. Con 2 queda exactamente lo de hoy.
+- **Línea pasada.** Una línea pasa a pasada al llegar a su fin; si en 2 s no empieza otra, se retira. Disponible con 4 o más líneas; hasta 2 pasadas con 6 o 7.
+- **Transiciones.** «Desplazamiento» (350 ms): todo el bloque sube un puesto y la cantada encoge y se vuelve gris. «Fundido» (250 ms): nadie viaja, cada línea se funde hacia su puesto; va mejor en canciones rápidas y en video a 24–30 FPS. Y «Sin animación». Todo depende del tiempo de la canción: la pausa congela, una búsqueda no se anima y el video sale idéntico.
+- **Líneas muy cortas.** La animación se acorta al 60 % del tiempo hasta la siguiente; por debajo de 120 ms el cambio es instantáneo.
+- **Dónde se configura.** En el tema: sección nueva «Letra en pantalla» del panel Estilo, entre «Letra» e «Indicadores de espera», heredable y con «Cambiar solo en esta canción». Tres controles: «Líneas a la vez» (2 a 7), «Líneas ya cantadas» (Ninguna, 1 o 2) y «Cambio de línea» (Desplazamiento, Fundido o Sin animación). Sin ajuste global ni control propio en la exportación.
+- **Pausas largas.** Las líneas futuras siguen a la vista junto a los indicadores de espera, en lugar de la pantalla casi vacía de hoy.
+
+### Decisiones tomadas por defecto
+
+| N.º | Decisión | Opción aplicada |
+|---|---|---|
+| 1 | Dónde viven los ajustes | En el tema, con «solo en esta canción» |
+| 2 | Bibliotecas y temas existentes al actualizar | Pasan a 5 líneas |
+| 3 | «Líneas ya cantadas» por defecto | 1 |
+| 4 | Línea pasada con 3 líneas | No; solo con 4 o más |
+| 5 | Dos pasadas con 6 y 7 líneas | Sí |
+| 6 | Segunda animación | «Fundido», más «Sin animación» |
+| 7 | Fin de línea con hueco corto | Dos tiempos: sube al acabar y la siguiente entra en su inicio |
+| 8 | Pausas largas | Futuras a la vista; la pasada se retira a los 2 s |
+| 9 | Líneas de dos renglones | Conservan su forma en todos los puestos |
+| 10 | Tamaño de la activa con 6 y 7 líneas | Igual que hoy |
+| 11 | Exportación | Usa lo del tema |
+
+### Sin comprobar
+
+- La maqueta HTML no se ha abierto ni ejecutado.
+- Las cifras de las canciones de referencia se sacaron a mano, sin script; conviene repetirlas antes de fijar umbrales.
+- La legibilidad a 5 m de las líneas al 60 % y el coste de mover hasta 8 líneas por fotograma en un equipo modesto.
+
 ### Estado
 
-En exploración. Tras la aprobación del usuario: spec en `docs/ux/07-reproductor.md` y `06-editor.md`, ADR del arquitecto y desglose en tareas.
+Diseño recomendado aplicado por defecto, pendiente de que el usuario lo vea. Tras la aprobación del usuario: spec en `docs/ux/07-reproductor.md` y `06-editor.md`, ADR del arquitecto y desglose en tareas.
 
 ## Propuestas por aprobar
 
