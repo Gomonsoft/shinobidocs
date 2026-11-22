@@ -58,14 +58,15 @@ Opciones **1A y 2A**.
 
 - Con «Escuchar: Instrumental» y la canción con alguna línea `coro` y nivel > 0, `MotorAudio` usa la pista **`instrumental_coros`** en lugar de `instrumental`. Con «Voz» u «Original» no cambia nada (ya suena la voz entera).
 - `instrumental_coros` = `instrumental + voz × nivelEn(t)`, muestra a muestra, calculada en un **Web Worker** (el de estiramiento u otro hermano, con `Float32Array` transferidos, sin copiar). Se recalcula con un retardo de 300 ms tras el último cambio de nivel, de reparto o de tiempos de una línea `coro`; mientras tanto suena la anterior (o el instrumental la primera vez). Con un pico mayor que 0,999 se escala como en la exportación.
+- **Estados** (revisión de 0171 §6): el cliente del worker mide el tiempo desde la petición y, si pasa de **500 ms**, la interfaz muestra «Preparando los coros…»; el worker responde con la pista (`{ tipo: "lista", … }`) o con un error (`{ tipo: "error", codigo }`: memoria insuficiente o voz ilegible, también si salta `onerror`). Con error, `MotorAudio` vuelve al instrumental solo y la interfaz avisa una vez por visita; el reproductor y la exportación no dependen de esto. Una petición nueva cancela la anterior (solo vale la última).
 - `maxBuffers` sube de 2 a **3** solo mientras existe la pista derivada (o se libera la voz tras mezclar si la memoria lo pide; lo mide la tarea). Coste medido o estimado en la tarea: ≈ 85 MB por 4 min, ≈ 210 MB por 10 min.
-- **[▶ Escuchar]** de Funciones › «Cantantes y coros»: reproduce con `instrumental_coros` desde 2 s antes de la próxima línea `coro` tras el cabezal hasta 1 s después de su fin y vuelve a la posición previa en pausa (patrón de la escucha de comprobación).
+- **[▶ Escuchar un coro]** de Funciones › «Cantantes y coros»: reproduce con `instrumental_coros` (sin cambiar la pista de escucha elegida) desde 2 s antes de la primera línea `coro` que empieza tras el cabezal (si no hay, la primera de la canción) hasta 1 s después de su `finEfectivo`; al acabar, pausa y devuelve el cabezal a donde estaba; Esc lo detiene. Sin voz separada, inactivo; el deslizador se puede seguir cambiando.
 
 ### 5. Exportación de video
 
 - `iniciarExportacion` e `iniciarLote` admiten **`coros: boolean`** (opcional; ausente = `false`). Solo cuenta con `audio: "instrumental"` y en canciones con líneas `coro` y nivel > 0; con «Instrumental y voz» la voz va al 100 % como hoy.
 - Main calcula los puntos con `tramosCoro` y `envolvente` desde la **instantánea** de la exportación (ADR 0019 §3; en un lote, por canción) y los pasa al worker como `audio.voz_envolvente: [[ms, nivel], …]` (como mucho 10 000 puntos; `ms` crecientes; nivel 0–1). Con envolvente, el worker decodifica la voz y hace `mezcla += voz × np.interp(t, ms, nivel) × g` antes de la normalización de pico. `_validar` rechaza puntos mal formados con `ARGUMENTOS_NO_VALIDOS`.
-- La casilla «Incluir la voz en los coros ({n} %)» aparece en el diálogo de una canción y en el de varias (0.2.2, feature 8) cuando aplica, **marcada** por defecto (decisión 20 de 0160); su último valor se recuerda en `config.exportacion.coros: boolean` (lectura tolerante, por defecto `true`, escribible por el renderer). Provisional: lo confirma la spec 10.
+- La casilla «Incluir la voz en los coros ({n} %)» aparece en el diálogo de una canción y en el de varias (0.2.2, feature 8) cuando aplica, **marcada** por defecto (decisión 20 de 0160); su último valor se recuerda en `config.exportacion.coros: boolean` (lectura tolerante, por defecto `true`: marcada la primera vez; escribible por el renderer), confirmado por la spec 10. Solo se ofrece con «Solo instrumental», voz separada y nivel > 0; con nivel 0 no hay casilla. En el lote aparece si **alguna** canción tiene coros con nivel > 0, y cada canción usa su nivel.
 - La estimación de tamaño y el tiempo no cambian de forma apreciable.
 
 ### 6. Pruebas mínimas
@@ -90,3 +91,7 @@ Opciones **1A y 2A**.
 - MDN, [AudioParam](https://developer.mozilla.org/en-US/docs/Web/API/AudioParam) (`setValueAtTime`, `linearRampToValueAtTime`, `cancelScheduledValues`) y [Transferable objects](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Transferable_objects).
 - NumPy, [`numpy.interp`](https://numpy.org/doc/stable/reference/generated/numpy.interp.html).
 - ADR [0004](0004-separacion-voz-instrumental.md), [0010](0010-editor-motor-de-audio-reloj-y-guardado.md), [0011](0011-reproductor-pantalla-completa-y-reutilizacion-del-motor.md) §3, [0019](0019-exportacion-de-video-render-por-fotograma-y-worker-pyav.md) §3–§4, [0022](0022-letra-en-pantalla-varias-lineas-y-subrayado-de-lo-cantado.md) §2.
+
+## Revisión 2026-11-22 · Alineación con las specs de 0.2.3 (pregunta 0171)
+
+Integrado arriba: los estados de la pista derivada (aviso a los 500 ms medido por el cliente, error del worker y vuelta al instrumental), «Escuchar un coro» sin cambiar la pista elegida, y la casilla del video recordada en `config.exportacion.coros`, también en el lote.

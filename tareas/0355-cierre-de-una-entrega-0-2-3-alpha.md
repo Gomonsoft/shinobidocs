@@ -11,8 +11,8 @@
 Publicar una entrega preliminar con las features cerradas hasta ese momento.
 
 ## Criterios de aceptación
-- [ ] Versión con `version:subir`, notas en `lanzamientos/notas/0.2.3/0.2.3-alpha.N.md` (incluida la pérdida del reparto si se guarda la canción con 0.2.1, y que 0.2.2 lo conserva), ensayo del workflow y etiqueta.
-- [ ] La entrega anterior (0.2.2 o la alfa previa) avisa de esta (feature 3 de 0.2.2).
+- [ ] Versión con `version:subir`, notas en `lanzamientos/notas/0.2.3/0.2.3-alpha.N.md` (incluida la pérdida del reparto si se guarda la canción con 0.2.1, que 0.2.2 lo conserva y, si entra la feature 3, qué ve 0.2.2 de una canción con solapes), ensayo del workflow y etiqueta.
+- [ ] La entrega anterior avisa de esta (feature 3 de 0.2.2).
 
 ## Pruebas de feedback
 - Unitarias: —

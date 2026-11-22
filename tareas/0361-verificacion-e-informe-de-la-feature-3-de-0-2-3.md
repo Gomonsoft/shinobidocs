@@ -3,7 +3,7 @@
 - Paso del pipeline: 4–6
 - Depende de: 0356 y, si sirve, 0357–0360
 - ADRs: 0029 §7
-- Spec UX: docs/ux/06-editor.md (0.2.3 · Voces a la vez, sección condicionada)
+- Spec UX: docs/ux/06-editor.md#voces-a-la-vez-condicionada-a-la-factibilidad-que-dictamine-el-arquitecto y docs/ux/07-reproductor.md#voces-a-la-vez-condicionada-a-la-factibilidad-que-dictamine-el-arquitecto
 - Tamaño: S
 - Versión: 0.2.3 ([backlog](../versiones/0.2.3/backlog.md))
 
@@ -11,8 +11,8 @@
 Cerrar la feature 3 de 0.2.3.
 
 ## Criterios de aceptación
-- [ ] Si la prueba no sirve: informe `docs/versiones/0.2.3/informe-feature-3.md` con el resultado y la propuesta 037 devuelta a «Aplazada».
-- [ ] Si sirve: capturas en `docs/ux/revisiones/0.2.3-feature-3/`, informe con el CI del PR borrador y lo que pasa a la guía manual (un dúo real con frases cruzadas, en el reproductor y en el video).
+- [ ] Si la prueba no sirve: informe `docs/versiones/0.2.3/informe-feature-3.md` con el resultado y la propuesta 037 pasada a «Aplazada».
+- [ ] Si sirve: capturas en `docs/ux/revisiones/0.2.3-feature-3/`, informe con el CI del PR borrador y lo que pasa a la guía manual (dúo real con frases cruzadas, en el reproductor y en el video).
 
 ## Pruebas de feedback
 - Unitarias: —

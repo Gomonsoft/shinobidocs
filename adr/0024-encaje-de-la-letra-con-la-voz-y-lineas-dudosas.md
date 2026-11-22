@@ -167,3 +167,11 @@ detectarDudosas(letra, voz | null, { duracionMs, p })
 - ADR [0015](0015-linea-de-tiempo-y-picos-de-voz.md) (formato de la caché) y [0018](0018-estilo-ampliado-espera-letra-lista-y-ajuste-de-silencios.md) §6 (`detectarVoz`, `proponerAjusteSilencios`).
 - Calibración propia sobre la biblioteca del usuario, 2026-11-21 (script de solo lectura en el equipo del usuario; resultados de esta página, sin letras).
 - Medida F (precisión y exhaustividad): C. J. van Rijsbergen, *Information Retrieval*, 2.ª ed., cap. 7 ([texto](http://www.dcs.gla.ac.uk/Keith/Preface.html)).
+
+## Revisión 2026-11-22 · El desfase retira las marcas «está bien» (pregunta 0172)
+
+- Al escribir una letra cuyo `offset_ms` difiere del guardado («Corregir el desfase», «Quitar la corrección» o el campo de desfase del editor), main **retira `revisada` de todas las líneas**, aunque el cliente las envíe. Una línea dada por buena antes de mover la letra respecto a la voz ya no está comprobada en su sitio nuevo.
+- El reducer del editor hace lo mismo en el estado local, dentro del mismo paso de deshacer (deshacer recupera las marcas).
+- `intacta` y `origen_fin` no cambian con el desfase.
+- Prueba: Vitest de `guardarTiempos` (cambiar `offset_ms` retira `revisada`; repetir el mismo `offset_ms` la conserva).
+

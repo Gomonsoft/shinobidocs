@@ -23,6 +23,7 @@ Sin efecto visible en 0.2.2. Decisión del usuario del 2026-11-22: la función v
 
 - [ ] El color del barrido se resuelve por línea: una función `colorDeLinea(linea, estilo)` (en 0.2.2 devuelve siempre `color_resaltado`) y variables CSS en el nodo de cada línea. Los indicadores de espera toman el color de la línea que viene.
 - [ ] El ancho de línea deja de ser un 88 % fijo en el CSS: pasa a la variable `--k-ancho-linea` (88 % por defecto), usada también en la reducción por longitud.
+- [ ] `PantallaLetra` pinta una lista de zonas `[{ id, lineas, region }]` (en 0.2.2, siempre una que cubre toda la pantalla); los indicadores de espera y la cuenta se dibujan en la zona de la línea que viene; la clave de cada nodo incluye la zona ([ADR 0029](../adr/0029-reparto-de-la-letra-entre-cantantes-y-coro.md) §4 bis).
 
 ## Pruebas de feedback
 - Unitarias: `PantallaLetra.test.tsx`: mismos cortes de renglón en todos los puestos (medición simulada), Letra lista sin color de resaltado, palabra a palabra igual que 0.2.1, modo fotograma.

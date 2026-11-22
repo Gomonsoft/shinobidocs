@@ -14,6 +14,7 @@ Función pura de motivos y recuento guardado para la Biblioteca.
 - [ ] `detectarDudosas` con `PARAMETROS_DUDOSAS`; excluye `revisada` vigente.
 - [ ] Main guarda `preparacion.dudosas` al terminar la preparación y en cada escritura de la letra de esa canción.
 - [ ] `app/scripts/calibrar-dudosas.ts` (desarrollo, fuera del paquete, solo cifras).
+- [ ] Tras cambiar `offset_ms`, las líneas que estaban dadas por buenas vuelven a poder señalarse (main retira `revisada`; ADR 0024, revisión 2026-11-22). Test.
 
 ## Pruebas de feedback
 - Unitarias: `dudosas.test.ts` (cada motivo positivo y negativo, sin picos, `revisada`).

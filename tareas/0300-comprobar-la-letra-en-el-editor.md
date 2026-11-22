@@ -13,6 +13,7 @@ Acción de la pestaña Funciones con la letra en memoria, corrección y «Quitar
 ## Criterios de aceptación
 - [ ] Lectura del nivel base con `picos.leer` (como «Ajustar los silencios»).
 - [ ] Acciones del reducer y guardado de `offset_ms` y `desfase_corregido_ms`.
+- [ ] Cambiar el desfase (corregir, quitar la corrección o el campo de desfase) quita `revisada` de todas las líneas del estado, en el mismo paso de deshacer (ADR 0024, revisión 2026-11-22; pregunta 0172).
 - [ ] Criterios de la spec 06 · Feature 4.
 
 ## Pruebas de feedback

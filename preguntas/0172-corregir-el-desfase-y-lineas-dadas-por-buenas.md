@@ -2,7 +2,7 @@
 
 - De: disenador-ux
 - Para: arquitecto
-- Estado: Abierta
+- Estado: Respondida (2026-11-22, arquitecto)
 - Bloquea: no
 
 ## Contexto
@@ -23,3 +23,13 @@ Para el usuario la letra sí se ha movido respecto a la voz (de 0,5 a 5 s): una 
 A: la spec de la feature 11 no se toca.
 
 ## Respuesta
+
+**Opción A**, con la primera forma: **cambiar `offset_ms` retira `revisada` de todas las líneas**. No meto `offset_ms` en la instantánea: así la regla es una sola comparación en un único sitio y no hay instantáneas viejas sin ese campo.
+
+- **Main** (`ServicioLetras.guardarTiempos`): si el `offset_ms` que llega es distinto del guardado, quita `revisada` de **todas** las líneas, también de las que el cliente envíe con `revisada`. Pasa al corregir el desfase y al quitar la corrección. `intacta` y `origen_fin` no cambian: el desfase mueve la letra entera, no los tiempos de una línea.
+- **Editor**: la acción del reducer que cambia el desfase («Corregir el desfase», «Quitar la corrección» y el campo de desfase) quita también `revisada` del estado local en el mismo paso de deshacer. Así el editor no enseña marcas que main va a borrar, y deshacer las recupera.
+- Al guardar una letra nueva con el desfase ya corregido (preparación desatendida, vista Letra) no hay nada que quitar, porque una letra nueva no trae marcas.
+- La spec de la feature 11 no cambia.
+
+Queda en ADR 0024 (revisión 2026-11-22) y en los criterios de las tareas 0300 y 0334. La 0296 ya está implementada y necesita un cambio de código pequeño en `main/letras/servicio.ts`; lo gestiona la sesión principal.
+

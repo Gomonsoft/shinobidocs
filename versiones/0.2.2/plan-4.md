@@ -139,7 +139,7 @@ Origen: [exploración de mejoras de experiencia](exploracion/mejoras-de-experien
 
 ## Preparación para 0.2.3 · Varios cantantes y coros
 
-La propuesta [036](../../propuestas/036-varios-cantantes-y-coros.md) va en la versión 0.2.3 (decisión del usuario, 2026-11-22). El alcance de 0.2.2 no cambia: solo se añaden seis ajustes sin efecto visible para no rehacer trabajo después ([factibilidad §8.3](exploracion/varios-cantantes-y-coros-factibilidad.md)).
+La propuesta [036](../../propuestas/036-varios-cantantes-y-coros.md) va en la versión 0.2.3 (decisión del usuario, 2026-11-22). El alcance de 0.2.2 no cambia: solo se añaden ajustes sin efecto visible (seis iniciales y cinco por las zonas de pantalla de [ADR 0029](../../adr/0029-reparto-de-la-letra-entre-cantantes-y-coro.md)) para no rehacer trabajo después ([factibilidad §8.3](exploracion/varios-cantantes-y-coros-factibilidad.md)).
 
 | Ajuste | Tarea |
 |---|---|
@@ -149,6 +149,10 @@ La propuesta [036](../../propuestas/036-varios-cantantes-y-coros.md) va en la ve
 | Ancho de línea como variable | 0290 |
 | Tests de disposición con líneas de 3 y 4 renglones | 0289 |
 | Subrayado con el color de su línea y comprobación de daltonismo de dos colores | 0293, 0294 |
+| Forma exacta del reparto reservado (ADR 0029 §1) y reserva de `estilo.pantalla.zonas` | 0296, 0287 |
+| Zonas de pantalla: `fotogramaEn` sobre una subsecuencia de líneas con su propio índice | 0288 |
+| Zonas de pantalla: `disponerBloque` dentro de una región `{ y0Px, altoPx }` | 0289 |
+| Zonas de pantalla: `PantallaLetra` pinta una lista de zonas (en 0.2.2, una); indicadores en la zona de la línea que viene | 0290 |
 
 ## Regla de decisión
 
