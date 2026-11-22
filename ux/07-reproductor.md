@@ -1041,7 +1041,7 @@ Cada parte tiene **su espacio en pantalla**: una **zona**, una franja horizontal
 | **Tamaño** | `S` de siempre si cabe; si la línea en curso (hasta 2 renglones) no cabe en el alto de su zona, la zona usa `S_zona = alto de la zona / (2 × 1,2 + 0,7 × 1,2 si hay siguiente)`, con un mínimo del **75 % de `S`**; por debajo, la zona deja de mostrar la siguiente. Se calcula **una vez por canción y tamaño de ventana**, igual para todas las zonas de cantante (no por línea). |
 | **«Letra en pantalla» del tema** | En canciones con reparto, «Líneas a la vez» y «Líneas ya cantadas» no se aplican (cada zona muestra su línea y la siguiente); «Cambio de línea» sí, dentro de cada zona. El editor lo dice bajo esos controles (`edi.pantalla.zonas`). |
 | **«Varias voces: todas en un bloque»** | El tema puede elegir no usar zonas (`estilo.pantalla.zonas = "una"`, [ADR 0029](../adr/0029-reparto-de-la-letra-entre-cantantes-y-coro.md) §4 bis; control en [06](06-editor.md#023--feature-1--cantantes-por-línea), «Letra en pantalla»): entonces la canción con reparto se ve en el bloque único de 0.2.2 (con `N`, `P` y ancla), con los colores, las insignias y los paréntesis de esta sección. Por defecto, zonas. |
-| **Indicadores de espera** | Se dibujan **en la zona de la línea que viene**, con las mismas posiciones relativas a esa línea (barra encima, cuenta en su sitio, puntos sobre ella) y en el color de su parte. |
+| **Indicadores de espera** | Se dibujan **en la zona de la línea que viene**, con las mismas posiciones relativas a esa línea (barra encima, cuenta en su sitio, puntos sobre ella) y en el color de su parte. Si la línea que viene es de **Todos** (que se repite en todas las zonas de cantante), se dibujan **una sola vez, en la primera zona de cantante** (la del Cantante 1), en el color de Todos: repetirlos en cada zona sería ruido y todos los cantantes miran la misma cuenta. |
 | **Pantalla de título, silencio previo, final** | Sin cambios. |
 
 **Dueto con coro** (Ana canta; Luis y el coro esperan)
@@ -1087,7 +1087,7 @@ Cada parte tiene **su espacio en pantalla**: una **zona**, una franja horizontal
 | Caso | Comportamiento |
 |---|---|
 | **Paso de un cantante a otro** | La línea que acaba sale de su zona (con el cambio de línea del tema) y la siguiente de esa parte sube a su sitio; a la vez, la zona que entra pasa de 55 % a 100 % en el inicio de su línea (en `D`, sin movimiento). Nada cambia de zona. |
-| **Dos líneas seguidas de la misma parte** | Relevo o dos tiempos de 0.2.2, dentro de la zona. |
+| **Dos líneas seguidas de la misma parte** | Sin hueco (menor que `D`): relevo de 0.2.2 dentro de la zona. **Con hueco**: no hay «dos tiempos»; al acabar la línea, sale y **la siguiente sube en el mismo cambio** a su sitio, donde espera al 55 % hasta su inicio (`subidaAlSalir`, [ADR 0029](../adr/0029-reparto-de-la-letra-entre-cantantes-y-coro.md) §4 bis: sin líneas ya cantadas, el «dos tiempos» dejaría vacío el sitio de la próxima). |
 | **Zona sin más líneas** | Queda vacía hasta el final (no se recolocan las demás). |
 | **Línea de dos renglones** | Insignia junto al primer renglón; el segundo, sin insignia. Si con la siguiente no cabe en la zona, la siguiente no se dibuja (nunca una línea cortada). |
 | **Barrido palabra a palabra** | Igual, en el color de la parte. |
@@ -1116,7 +1116,7 @@ Sin textos nuevos (las insignias son iniciales del nombre de cada cantante).
 - C1-R6. Con varios cantantes, ninguna línea pasa del 80 % del ancho; con 4 cantantes y coro, la línea que suena mide al menos el 75 % de `S` y ninguna línea se dibuja cortada ni fuera de su zona.
 - C1-R7. La insignia mide lo indicado en el sistema visual y está a la izquierda del primer renglón sin solaparlo.
 - C1-R8. En Letra lista, el texto de cada línea va entero en el color de su parte, sin barrido ni subrayado.
-- C1-R9. En un hueco antes de una línea de Luis, los indicadores de espera se dibujan en la zona de Luis, en su color; la cuenta 3·2·1 no cambia de forma.
+- C1-R9. En un hueco antes de una línea de Luis, los indicadores de espera se dibujan en la zona de Luis, en su color; antes de una línea de Todos, una sola vez, en la zona del Cantante 1 y en el color de Todos; la cuenta 3·2·1 no cambia de forma.
 - C1-R10. «Líneas a la vez» y «Líneas ya cantadas» del tema no cambian nada en una canción con reparto en zonas; «Cambio de línea» sí (dentro de cada zona). Con «Todas en un bloque» en el tema, la canción se ve con el modelo de bloque de 0.2.2 (mismo fotograma que una sin reparto salvo colores, insignias y paréntesis).
 - C1-R11. La vista previa del editor, el reproductor, la ventana secundaria y un fotograma exportado dan el mismo modelo (zonas, colores, insignias, paréntesis) en el mismo instante (test compartido, amplía F1-R23).
 - C1-R12. Capturas en `docs/ux/revisiones/0.2.3-feature-1/`, nombre `reproductor-{ancho}x{alto}-{estado}.png` a 1920 × 1080 y 1280 × 720: `duo-canta-1`, `duo-canta-2`, `duo-todos`, `duo-coro`, `solo-coros`, `cuarteto-coro`, `letra-lista-duo`, `espera-zona`, `escala-de-grises` (filtro de grises sobre `duo-canta-2`), y `cuatro-tercios-duo` a 1440 × 1080.

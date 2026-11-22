@@ -212,3 +212,8 @@ Roles (ADR 0017 §11): sin canales nuevos.
 - W3C, [WCAG 2.2: luminancia relativa y contraste](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html) y [2.3.3 Animación por interacción](https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html).
 - G. M. Machado, M. M. Oliveira y L. A. F. Fernandes, «A Physiologically-based Model for Simulation of Color Vision Deficiency», IEEE TVCG 15(6), 2009: [página de los autores con las matrices](https://www.inf.ufrgs.br/~oliveira/pubs_files/CVD_Simulation/CVD_Simulation.html).
 - Exploración [letra en pantalla](../versiones/0.2.2/exploracion/letra-en-pantalla.md) y cifras de la biblioteca del usuario (script de solo lectura, sin letras).
+
+## Revisión 2026-11-22 · Color del suelo de contraste (pregunta 0195)
+
+`suelosDeOpacidad(estiloResuelto, pantalla, colorLetra = estiloResuelto.letra.color)`: el color del texto atenuado es un parámetro con `letra.color` por defecto (y su gris para las ya cantadas, como en §4). En 0.2.2 nadie pasa otro; 0.2.3 pasa el color de la parte en Letra lista con reparto (ADR 0029 §4). Nunca `color_resaltado`, que solo pinta lo barrido de la línea activa, al 100 %.
+

@@ -90,3 +90,11 @@ Opción **A**.
 - GitHub, [REST API: Releases](https://docs.github.com/en/rest/releases/releases) (`latest` excluye previas y borradores; lista de *Releases*) y [Getting started: User-Agent obligatorio](https://docs.github.com/en/rest/using-the-rest-api/getting-started-with-the-rest-api#user-agent).
 - [SemVer 2.0.0, §11 precedencia](https://semver.org/spec/v2.0.0.html#spec-item-11).
 - Electron, [`net.fetch`](https://www.electronjs.org/docs/latest/api/net#netfetchinput-init) y [`powerMonitor`](https://www.electronjs.org/docs/latest/api/power-monitor); electron-updater detecta AppImage por `process.env.APPIMAGE` ([electron-builder, AppImageUpdater](https://github.com/electron-userland/electron-builder/blob/master/packages/electron-updater/src/AppImageUpdater.ts)).
+
+## Revisión 2026-11-22 · Detalles de implementación (pregunta 0180)
+
+- **IPC**: `actualizaciones.estado()` devuelve también `enlaces: { novedades, descargar, directa } | null`, construidos en main (que sabe si la app es AppImage) y validados con `enlaceSchema`. El renderer solo abre esos.
+- **Reintento** (§3): tras un intento automático, con respuesta o sin ella, no hay otro automático hasta pasadas 24 h. Se cuenta en la memoria del proceso; un fallo no escribe en `config.json` y un reinicio vuelve a evaluar. «Buscar ahora» no está sujeto a esta espera.
+- **Cabeceras** (§1): la app fija solo las tres de §1. La E2E comprueba la lista **exacta** de lo que recibe el doble, que incluye las técnicas que añade Chromium (`Host`, `Connection`, `Accept-Encoding`, `Accept-Language`, `Sec-Fetch-Dest`, `Sec-Fetch-Mode`, `Sec-Fetch-Site`), ninguna identificativa. Si una versión de Electron cambia esa lista, la prueba falla a propósito y se revisa aquí.
+- **Guía**: el botón abre `INSTALAR.md#actualizar-a-una-versión-nueva`; la sección la escribe qa.
+
