@@ -45,6 +45,15 @@ Las once decisiones del plan siguen aplicadas tal cual (ajustes en el tema; lo e
    - **A (provisional).** ⚠ como los demás avisos de contraste, con el botón «Subrayar lo ya cantado». Desaparece al activar el subrayado.
    - B. Solo informativo (ⓘ).
 
+Añadidas tras implementar la feature 2 (2026-11-22):
+
+14. **Subrayado con tiempos por palabra.** ([0215](0215-espacio-entre-palabras-en-el-subrayado.md))
+    - **A (provisional).** Un tramo de subrayado por palabra; los espacios entre palabras no se subrayan (como el barrido, que tampoco los pinta). Sin tiempos por palabra, el subrayado es continuo.
+    - B. Subrayar también los espacios: exige rehacer cómo se colocan las palabras y puede cambiar dónde se parte un renglón.
+15. **El aviso de daltonismo salta con el tema de pruebas «Neón»** (letra casi blanca `#E8F1FF`, resaltado cian claro `#4DE1FF`).
+    - **A (provisional).** El aviso es correcto y el umbral no cambia: con daltonismo esos dos colores solo se distinguen por luminosidad y entre sí apenas tienen contraste (1,36:1). «Neón» es un tema de la semilla de desarrollo, no se distribuye; el tema de serie «Shinobi» no avisa. Si uno de tus temas reales avisa y crees que se lee bien, dímelo y lo revisamos con el arquitecto.
+    - B. Hacer el aviso menos estricto para que «Neón» no avise (dejaría pasar pares que se confunden de verdad).
+
 ### Feature 3 · Aviso de versión nueva
 
 9. **Activado por defecto.**

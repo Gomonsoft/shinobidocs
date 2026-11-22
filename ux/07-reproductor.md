@@ -982,7 +982,7 @@ En karaoke, la parte cantada de la línea activa se distingue de la que falta **
 | **Cuándo se ve** | Si el estilo de la canción tiene «Subrayar lo ya cantado» **o** este equipo tiene activado «Subrayar siempre lo ya cantado» en Ajustes. Se resuelve al empezar la canción o la entrada de la cola. Por defecto, apagado: nada cambia en las canciones existentes. |
 | **Qué es** | Una línea bajo el texto de la **línea activa**, en el color de lo ya cantado, que **avanza con el barrido**: en cada instante mide exactamente lo que mide la parte pintada de cada renglón. No aparece de golpe ni tiene animación propia. |
 | **Dos renglones** | Cada renglón tiene su subrayado; avanzan en orden de lectura, como el barrido. |
-| **Palabra a palabra** (0.2.1) | Sigue el relleno de cada palabra: espera entre palabras donde espera el barrido, y el espacio que sigue a una palabra se subraya al empezar la siguiente. |
+| **Palabra a palabra** (0.2.1) | Sigue el relleno de cada palabra: espera entre palabras donde espera el barrido. **Los espacios entre palabras no se subrayan**: el subrayado queda en tramos, uno por palabra, como el propio barrido (que no pinta los espacios) **(decisión provisional, [0215](../preguntas/0215-espacio-entre-palabras-en-el-subrayado.md); 0155 n.º 14)**. En una línea sin tiempos por palabra (barrido progresivo), el subrayado es continuo, espacios incluidos. |
 | **Otras líneas** | Las futuras no llevan subrayado. La línea ya cantada **tampoco**: ya se distingue por su puesto. |
 | **Cambio de línea** (feature 1) | El subrayado es parte de la línea activa y viaja con ella. Al salir la línea, se funde con el avance de la salida y ha desaparecido al llegar al puesto −1. En «Fundido», lo lleva solo la copia del puesto de la activa. |
 | **La letra no se mueve** | El subrayado cabe en la caja de la línea: activarlo no cambia la posición ni el tamaño de ninguna línea ni indicador. |
@@ -1011,7 +1011,7 @@ En karaoke, la parte cantada de la línea activa se distingue de la que falta **
 
 - F2-R1. Con el subrayado activo, a mitad de una línea de un renglón el subrayado mide lo mismo que la parte pintada del barrido (± 1 px a 1080p) y empieza en el borde izquierdo del texto; al 0 % no se ve y al 100 % ocupa todo el ancho del texto (test del modelo de render).
 - F2-R2. En una línea de dos renglones de 120 y 60 px, al 75 % el subrayado mide 120 px en el primero y 15 px en el segundo.
-- F2-R3. En una línea con tiempos por palabra hechos a mano, entre el fin de una palabra y el inicio de la siguiente el subrayado no avanza, y el espacio entre ambas se subraya al empezar la segunda.
+- F2-R3. En una línea con tiempos por palabra hechos a mano, entre el fin de una palabra y el inicio de la siguiente el subrayado no avanza; cada palabra tiene su tramo de subrayado, que mide lo mismo que su parte pintada (± 1 px), y el espacio entre dos palabras no se subraya nunca (ni antes ni después de empezar la segunda). Con barrido progresivo (sin tiempos por palabra), el subrayado es continuo.
 - F2-R4. Las cajas de todas las líneas y de los indicadores tienen las mismas coordenadas con el subrayado activo y apagado (test geométrico con 2, 5 y 7 líneas).
 - F2-R5. Las líneas futuras y la ya cantada no tienen subrayado; a mitad de la salida de una línea el subrayado tiene la opacidad `1 − avance`, y al terminarla no existe.
 - F2-R6. En una canción Letra lista con el subrayado activo (por el tema o por Ajustes), el reproductor no dibuja ningún subrayado ni ningún píxel del color de lo ya cantado.

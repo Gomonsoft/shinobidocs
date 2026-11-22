@@ -415,7 +415,7 @@ Comportamiento en [Reproductor · Feature 2](07-reproductor.md#022--feature-2--r
 | Elemento | Valor |
 |---|---|
 | **Subrayado de lo ya cantado** | Solo en la línea activa y solo si está activado. Línea continua (no se interrumpe en los rasgos descendentes) en `color_resaltado`, de grosor `máx(2 px, 0,07 × tamaño de la línea)` (≈ 6 px en 1080p), con su borde superior a `0,12 × tamaño` por debajo de la línea base. Extremos rectos. Sombra de §10. |
-| Longitud | En cada renglón, desde el borde izquierdo del texto hasta el frente del barrido de ese renglón: la misma medida que la parte pintada. |
+| Longitud | En cada renglón, desde el borde izquierdo del texto hasta el frente del barrido de ese renglón: la misma medida que la parte pintada. Con barrido palabra a palabra, un tramo por palabra (los espacios entre palabras quedan sin subrayar; provisional, pregunta 0215). |
 | Caja | Queda dentro de la caja de la línea (interlínea 1,2): no cambia ninguna medida de la disposición. |
 | Salida de la línea | Opacidad `1 − avance de la salida`. |
 | **Barra de espera con subrayado activo** | Pista: `letra.color` al 35 % de opacidad. Relleno: `color_resaltado`. (Sin subrayado: pista al 100 %, como en 0.2.1. En Letra lista: como en 0.2.1.) |
@@ -428,6 +428,7 @@ Comportamiento en [Reproductor · Feature 2](07-reproductor.md#022--feature-2--r
 
 - Con el subrayado activado **en el estilo**, esta comprobación no avisa y «Resaltado vs letra» (ΔE < 25) baja a ⓘ: el avance se ve por la forma.
 - El par predeterminado (`#FFFFFF` y `#FFD400`) no debe avisar; el par `#E53935` y `#43A047` sí (criterio F2-E5 del editor).
+- **El umbral se mantiene en 25** (revisión 2026-11-22, provisional, 0155 n.º 15). El tema «Neón» de la semilla de desarrollo (letra `#E8F1FF`, resaltado `#4DE1FF`) avisa con ΔE simulado ≈ 15, y **el aviso es correcto**: sin la diferencia rojo-verde, los dos colores solo se separan por luminosidad, con un contraste entre sí de **1,36:1** (casi blanco frente a cian claro). Bajar el umbral hasta que no avise (≤ 15) dejaría pasar pares que de verdad se confunden. «Neón» no se distribuye (solo existe en la semilla) y sirve como caso positivo de la comprobación; el único tema de serie, «Shinobi» (`#FFFFFF` / `#FFD400`), no avisa.
 
 **Interfaz**
 

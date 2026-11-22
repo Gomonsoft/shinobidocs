@@ -2736,7 +2736,7 @@ Esta sección **amplía** la sección «Letra» del panel Estilo y el aviso de c
 - F2-E10. En D1 con colores que se confunden, el aviso se muestra con `tema.contraste.ayuda` y sin acciones rápidas.
 - F2-E11. Capturas en `docs/ux/revisiones/0.2.2-feature-2/` con nombre `editor-{ancho}x{alto}-{escala}-{estado}.png` a 1280 × 720 al 100 %: `subrayado-casilla`, `subrayado-previa`, `aviso-daltonismo`, `subrayado-nota-ajustes`, `subrayado-letra-lista`.
 
-**Verificación manual** (guía de 0.2.2): que el texto del aviso se entienda sin saber qué es el ΔE; que el aviso no salga con los temas habituales del usuario (si sale en más de uno, revisar el umbral con el arquitecto).
+**Verificación manual** (guía de 0.2.2): que el texto del aviso se entienda sin saber qué es el ΔE; que el aviso no salga con los temas habituales del usuario (si sale en más de uno, revisar el umbral con el arquitecto). El tema «Neón» de la semilla de desarrollo **sí** avisa y es lo esperado (letra casi blanca y resaltado cian claro: 1,36:1 entre sí; ver [sistema visual · Feature 2](sistema-visual.md#022--feature-2--resaltado-accesible)); no cuenta como tema habitual.
 
 ## 0.2.2 · Feature 4 — Comprobar la letra con la voz y corregir el desfase
 
