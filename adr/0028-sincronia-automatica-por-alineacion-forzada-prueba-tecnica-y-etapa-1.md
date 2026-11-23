@@ -168,3 +168,14 @@ Rol principal, grupo propio `alineacion.*` (la descarga es una acción explícit
 
 - **Quién aplica**: en el editor, **el renderer** con `aplicarAlineacion` (§3.3) como un solo paso de deshacer, y descarta las líneas que cambiaron mientras se escuchaban (pregunta 0167); main no escribe la letra de una canción abierta en el editor. En la preparación desatendida aplica main.
 - `previsualizar` y `alinear` leen la **letra guardada**: el editor vacía su guardado pendiente antes de llamarlos. El `idioma` vale para esa ejecución; si el usuario lo cambia, el renderer lo guarda en `letra.idioma` con el guardado normal.
+
+## Revisión 2026-11-22 · Fase de filtro con letras sin fines (medida con canciones reales)
+
+El único material con voz separada disponible ahora en el equipo de trabajo es la copia de 18 canciones del MVP ([medidas-con-canciones-reales](../versiones/0.2.2/medidas-con-canciones-reales.md)). Tiene inicios de línea de LRCLIB sin revisar, fines no fiables y palabras en 2 canciones de origen desconocido. **No contiene V1**, así que no puede decidir §2.4.
+
+- La prueba se ejecuta en **dos fases** (tarea [0328](../tareas/0328-prueba-tecnica-de-alineacion-forzada.md)):
+  1. **Filtro** con esa copia. Mide el inicio de la primera palabra alineada frente al inicio del LRC, con una ventana de −1000 ms para no anclarlo. También los criterios 5 (coste con CPU) y 6 (equivalencia), que no necesitan verdad.
+  2. **Decisión** con V1 (§2.4 sin cambios).
+- **Umbrales del filtro**: cobertura ≥ 80 %, mediana de `|Δ|` ≤ 300 ms y p90 de `|Δ − sesgo de la canción|` ≤ 600 ms. Doblan los del fin de §2.4 porque la referencia tiene su propio error.
+- Si el filtro falla, **no sirve** y se aplica §4 sin esperar a V1. Si pasa, solo se anota «pasa el filtro»: ni los fines ni las palabras se dan por buenos sin V1.
+- Se excluyen las canciones cuya letra no corresponde al audio según la medida (5, 8, 12 y 15) y las de idiomas sin modelo del candidato.

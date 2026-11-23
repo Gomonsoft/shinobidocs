@@ -229,3 +229,44 @@ En cualquier otro caso: `elige_letra` con los candidatos ordenados como en la vi
 - Sustituye la comprobación de §5 («`HEAD` a `https://lrclib.net` cada 60 s»): **LRCLIB nunca se usa como sonda de conexión**. Una parada de descargas por `SIN_CONEXION` se comprueba reintentando cada 60 s **la primera descarga parada**: si termina o falla por otro motivo, se liberan las demás. `YOUTUBE_BLOQUEADO` sigue sin reanudación automática por sonda.
 - Así, con «Buscar la letra automáticamente» apagado, no sale ninguna petición a LRCLIB que el usuario no haya pedido (tarea 0377).
 
+## Revisión 2026-11-22 · Elección con el veredicto prudente y «Preparar» sobre letras sin marca (preguntas 0277 y 0278)
+
+**Provisional** hasta medir con canciones revisadas y con red real (pregunta [0280](../preguntas/0280-que-hace-hoy-la-comprobacion-de-la-letra-con-tus-canciones.md)).
+
+### Elección automática (§3) y corrección del desfase
+
+- Los fines prudentes **no se adoptan** para evaluar candidatos: el criterio de la pregunta 0222 no se cumple (pregunta 0277). La revisión «LRC sin fines» de arriba se queda como está.
+- §3 no cambia de texto: se elige solo con `coincide` o `desfasada`. Lo que cambia es el veredicto. Con las guardas de ADR 0024 (revisión «Medida con canciones reales»), una letra cuya comprobación no es fiable (voz continua o letra que no notaría un desfase de 0,8 s) sale `dudosa`, y la canción va a «Elige la letra» con el motivo `duda`.
+- Consecuencia aceptada: con LRC de LRCLIB sin fines, lo normal será «Elige la letra» y no la elección sola. Es el lado seguro. Elegir sola una letra ajena o mal desplazada es peor que pedir al usuario que elija.
+- La corrección sola del desfase (paso `comprobando` y comprobación diferida) solo actúa con `desfasada`, que ahora exige contraste suficiente, voz no continua y d\* fuera del borde de la búsqueda.
+- Criterio de seguridad de la elección (sustituye a la condición «ajenas = 0» de 0222 como medida de producto): en `calibrar:encaje`, **0 ajenas aceptadas** y **0 desplazadas ≥ 0,8 s que salgan `coincide`**. No se ha medido la situación real de la elección: varias versiones de la **misma** canción en LRCLIB. Se mide con red real (guía de la feature 5).
+
+### «Preparar» sobre una letra sin `intacta` (pregunta 0278)
+
+Las letras del MVP y de 0.2.1 no tienen `intacta`. Tampoco la tiene una letra de 0.2.2 cuyo usuario cambió un tiempo. No hay forma fiable de distinguir los dos casos: el MVP no guardaba quién tocó los tiempos. Por eso **no se infiere** `intacta` de ninguna heurística.
+
+Decisión:
+
+1. **`aplicaPreparar`**: un borrador con letra que **no** está `intacta`, tiene alguna línea con inicio y `fin_ms: null` y no tiene `preparacion.fines` **aplica** con `pasos: ["ajustando_fines"]` y `confirmar: "finesSinMarca"`. No incluye `comprobando`: sin `intacta` no se corrige nunca el desfase solo. Las letras `intacta` siguen como estaban, sin confirmación.
+2. **Confirmación explícita**: `preparacion.preparar(ids, { finesSinMarca?: boolean })` (segundo argumento opcional; el primero no cambia).
+   - Con `finesSinMarca: true`, las canciones con `confirmar: "finesSinMarca"` se aceptan.
+   - Sin el campo, se omiten con `NADA_QUE_HACER`, como hasta hoy.
+   - `preparacion.previsualizar` devuelve `confirmar` por canción para que la interfaz lo pida (una vez por acción, también en lote).
+   - El diario `trabajos/pendientes.json` guarda `finesSinMarca` por entrada (lectura tolerante, `false`), para que una corrida reanudada al abrir no lo pierda.
+3. **Qué hace la corrida con esa marca**: el paso `ajustando_fines` usa la variante prudente de siempre (`soloFinesAutomaticos: true, activarComodin: false, origenFin: "preparacion"`).
+   - Solo pone fin en líneas con `fin_ms: null` donde la voz para con claridad.
+   - **Nunca** toca un inicio, un fin ya fijado, unas palabras ni `offset_ms`.
+   - Sigue sin escribir con el editor abierto sobre la canción.
+   - Se deshace con «Quitar esos fines» (`origen_fin: "preparacion"`).
+   - Después, el recuento de dudosas, como siempre.
+4. **Borrador con letra sin tiempos** (texto pegado): sigue en `NADA_QUE_HACER`. «Preparar» nunca sustituye una letra.
+5. La comprobación diferida (ADR 0024, revisión 0210) **no** cambia: exige `intacta`.
+
+Tareas: [0380](../tareas/0380-preparar-letras-sin-marca-con-confirmacion.md) (contrato y main) y [0382](../tareas/0382-confirmacion-de-preparar-con-letras-sin-marca.md) (interfaz; la confirmación la define el diseñador en la spec 02). El resumen de la Biblioteca gana `prepararFinesSinMarca: boolean`, para que la tarjeta sepa si puede ofrecerlo sin leer la letra.
+
+### Corrección de §«Consecuencias»
+
+Donde dice «los 5 borradores actuales se rescatan con "Preparar"», se lee así:
+- Los borradores **sin letra** se preparan con «Preparar»; para eso hace falta red.
+- Los borradores **con letra anterior a 0.2.2** reciben fines automáticos tras confirmar, sin mover ningún inicio. Su desfase no se corrige solo.
+- Que la elección automática acierte con LRCLIB real no está demostrado.

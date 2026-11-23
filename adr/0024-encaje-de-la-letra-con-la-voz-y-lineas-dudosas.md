@@ -1,6 +1,6 @@
 # 0024 — Encaje de la letra con la voz (comprobación y desfase global) y líneas dudosas con revisión recordada
 
-- Estado: Aceptado (umbrales provisionales; ver [0159](../preguntas/0159-decisiones-provisionales-del-arquitecto-de-0-2-2.md))
+- Estado: Aceptado (umbrales provisionales; ver [0159](../preguntas/0159-decisiones-provisionales-del-arquitecto-de-0-2-2.md)). **Las constantes de §1 no aguantan con letras de LRCLIB sin fines** (medida del 2026-11-22): rigen las guardas de prudencia de la revisión «Medida con canciones reales» (al final), provisionales hasta medir con canciones revisadas a mano.
 - Fecha: 2026-11-21
 - Paso del pipeline: 3 (letra) y 4 (editor)
 - Versión: 0.2.2, features 4 ([propuesta 022](../propuestas/022-comprobar-la-letra-contra-el-audio.md)) y 11 ([propuesta 023](../propuestas/023-revision-guiada-de-lineas-dudosas.md)). Specs: [05 · Feature 4](../ux/05-letra.md), [06 · Features 4 y 11](../ux/06-editor.md). Responde a las preguntas de contratos [0153](../preguntas/0153-contratos-de-las-features-4-a-7-para-las-specs.md) y [0157](../preguntas/0157-contratos-de-las-features-8-a-11-para-las-specs.md) en lo que toca a estas dos features.
@@ -213,3 +213,90 @@ detectarDudosas(letra, voz | null, { duracionMs, p })
 - El recuento de líneas por revisar (`dudosas`, `dudosasImportantes`) es un **derivado en memoria de main** para toda canción que derive «Lista para revisar», tenga o no registro `preparacion`. Se calcula en segundo plano tras el arranque, al quedar listos los picos y tras cada escritura de la letra. No se escribe en disco ni se crea un registro.
 - El resumen lo expone como `revision: { dudosas, dudosasImportantes } | null`, y `biblioteca.recuentoRevision(id)` lo calcula al momento. Biblioteca y editor toman la misma decisión. `preparacion.dudosas` en disco solo sirve de valor inicial (tarea 0377).
 
+## Revisión 2026-11-22 · Medida con canciones reales y guardas de prudencia (preguntas 0275, 0276, 0277 y 0279)
+
+**Provisional** hasta repetir la medida con canciones revisadas a mano por el usuario (pregunta [0280](../preguntas/0280-que-hace-hoy-la-comprobacion-de-la-letra-con-tus-canciones.md)).
+
+### Qué se midió y qué se puede concluir
+
+`qa` midió con 18 canciones de la biblioteca del MVP del usuario ([medidas-con-canciones-reales](../versiones/0.2.2/medidas-con-canciones-reales.md)). 16 de las 17 letras con tiempos son LRC de LRCLIB sin fines y sin revisar a mano.
+
+| | Calibración de §1 (10 canciones revisadas, con fines) | 17 LRC casi sin fines, sin revisar |
+|---|---|---|
+| Propias aceptadas | 10/10 | 8/17 |
+| Ajenas aceptadas | 0/90 | 6/272 (9 sin fines, 18 con fines prudentes) |
+| Desplazadas ±0,8 s corregidas | sí, salvo la canción sin huecos | 0/34; 14/34 siguen saliendo `coincide` |
+| Voz detectada ≥ 90 % entre la primera y la última línea | no se midió (se citó una canción «sin huecos») | 8 de 17 |
+
+Lo que **sí** se concluye (no depende de que las letras estén revisadas):
+
+1. **Sin fines, F apenas cambia al desplazar la letra.** Cada línea ocupa hasta el inicio de la siguiente, así que mover la letra 0,8 s mueve muy pocos bloques. La ganancia a ±0,8 s tiene una mediana de 0,006, y el mínimo para proponer es 0,02. Con estas letras, la búsqueda de d\* **no puede** detectar un desfase de 0,8 s, y `coincide` no descarta que la letra esté desplazada. Es un **límite del método**, no un defecto de código.
+2. **Con la voz casi continua, F no distingue una letra de otra.** Todas las ajenas aceptadas, en las tres variantes, caen sobre voces con ≥ 91 % de voz detectada. Una ajena llega a F = 0,989. Ningún umbral de F ni de `detectarVoz` las separa (lo midió `qa` de −30 a −12 dB). También es un límite del método.
+3. **La regla del veredicto tiene un defecto** (pregunta 0276). Un `d*` espurio, de curva plana y con `desfaseVariable`, convierte en `no_coincide` («puede ser otra versión») letras que en d = 0 cumplen F ≥ 0,88 e I ≥ 0,95. §1 decía «veredicto sobre d\*» y «un desfase variable no se corrige». La implementación (tarea 0297) leyó la segunda frase como «desfase variable ⇒ `no_coincide`» aunque d = 0 ya coincidiera, y la calibración de §1 contaba la canción rápida como `coincide`. La regla era ambigua y se corrige aquí.
+4. Una ajena sale `desfasada` con d\* = +5000 ms, justo en el borde de la búsqueda. Un máximo en el borde no es un pico encontrado.
+
+Lo que **no** se concluye: si las constantes valen con letras **revisadas y con fines**. Esta biblioteca no tiene ninguna. Tampoco cuántas letras correctas aceptaría la regla nueva con ese material. **No se recalibra ninguna constante** con esta muestra.
+
+### Decisión
+
+En el producto rige el criterio más prudente: una falsa aceptación o una corrección automática equivocada son peores que decir «no está claro».
+
+**1. Regla del veredicto (corrige §1).** `vMejor` y `v0` son los veredictos de F/I en d\* y en d = 0.
+
+| Caso | Veredicto |
+|---|---|
+| \|d\*\| < 500 ms | El mejor de `v0` y `vMejor` (orden `coincide` > `dudosa` > `no_coincide`). Un d\* pequeño es el sesgo propio de la medida |
+| Se cumple la regla de corrección de §1 **y** d\* no está en el borde de la búsqueda | `desfasada` |
+| `v0 = coincide` y no se propone corrección | `coincide`. Un d\* de curva plana o un desfase variable no tapan lo que ya se ve en d = 0 |
+| `vMejor = coincide`, `v0 ≠ coincide` y `desfaseVariable` | `no_coincide` (otra versión: spec 05, F4-L2) |
+| `vMejor = coincide`, `v0 ≠ coincide` y no se propone corrección (ganancia corta, I peor o borde) | `v0` |
+| Resto | `vMejor` |
+
+- **Borde**: d\* es el primer o el último valor de la rejilla de desfases. La rejilla está acotada por ±`desfaseMaxMs` y por la regla de «nunca saca una línea del audio».
+- **`desfaseVariable`** exige además que al menos una de las dos mitades tenga ganancia de F ≥ `gananciaMinimaF` sobre su propia F(0). Dos mitades de curva plana dan d\* de ruido, y eso no es un desfase variable.
+
+**2. Guardas de fiabilidad (nuevas).** Solo actúan sobre un veredicto `coincide` o `desfasada`:
+
+```ts
+// En PARAMETROS_ENCAJE (provisionales, revisión 2026-11-22):
+densidadVozMaxima: 0.9,       // voz detectada / tiempo entre el inicio de la primera línea y el fin de la última
+desfaseSensibilidadMs: 800,   // el desfase más pequeño que la comprobación debe poder ver
+contrasteMinimoF: 0.02        // = gananciaMinimaF: lo que F debe bajar si la letra se mueve 0,8 s
+```
+
+- **`densidadVoz`**: bloques con voz dividido entre los bloques de `[inicio de la primera línea, finEfectivo de la última)`. Se mide con el desfase del veredicto y en tiempo de audio, recortado al audio. Si es ≥ 0,90, el veredicto pasa a `dudosa` con `limitacion: "vozContinua"`.
+- **`contrasteF`**: `F(dv) − máx(F(dv − 800), F(dv + 800))`. `dv` es d\* con `desfasada` y 0 en el resto. Solo cuentan los lados que están dentro de la rejilla; si no hay ninguno, el contraste es 0. Si es < 0,02, el veredicto pasa a `dudosa` con `limitacion: "sinContraste"`. En palabras: «coincide» solo se afirma si la comprobación **habría notado** la misma letra movida 0,8 s. El umbral es la ganancia que §1 exige para proponer una corrección, así que no es una constante nueva calibrada a ciegas.
+- Con `limitacion`, `desfaseMs` se sigue informando (d\*), pero **no es una propuesta**. `lineasSinVoz` y `tramosVozSinLetra` se calculan en d = 0.
+- `ResultadoEncaje` gana `densidadVoz`, `contrasteF` y `limitacion: "vozContinua" | "sinContraste" | null`. `EncajeCandidato` (IPC de la vista Letra y de la preparación) gana `limitacion?: … | null`, con lectura tolerante.
+- `no_coincide` y `no_comprobable` no cambian.
+
+**3. Quién usa el veredicto.** Los llamadores no cambian de regla: la prudencia ya está dentro del veredicto.
+- **Elección automática** (ADR 0025 §3, criterio 3): sigue exigiendo `coincide` o `desfasada`. Con las guardas, una letra con limitación es `dudosa` y la canción va a «Elige la letra» (motivo `duda`).
+- **Corrección automática** (comprobación diferida, paso `comprobando` de la preparación y «Usar esta letra» de un candidato `desfasada`): solo con `desfasada`, que ahora implica contraste suficiente, voz no continua y d\* fuera del borde.
+- **Editor y vista Letra**: `dudosa` con limitación muestra un texto propio que explica por qué no se puede comprobar. La spec la pide al diseñador (tarea 0379). Hasta entonces se ve el texto genérico de `dudosa`, que no afirma nada.
+
+**4. Fines prudentes para estimar d\*** (opción A de la pregunta 0275): **no se adoptan**. Corregirían 36 de 102 desplazamientos con un sesgo fijo de −100 ms, pero suben las ajenas y el criterio de la pregunta 0222 no se cumple. Se vuelve a medir con canciones revisadas: la tarea 0381 añade las cifras.
+
+**5. `gananciaMinimaF` más baja para letras sin fines** (opción B de la pregunta 0275): **no**. Con 0,005 recupera 9 de 102 desplazamientos, y 6 de las correcciones quedan a más de 200 ms.
+
+**6. Líneas dudosas (pregunta 0279)**: **sin cambios** en umbrales ni motivos.
+- `finCorta` en fines por palabra del MVP y `muyCorta` en canciones rápidas o con fines prudentes señalan cosas que conviene escuchar.
+- Una línea que acaba más allá del audio ya se señala (`sinVoz`, importante). La lectura no la recorta: no se cambian datos del usuario al leer.
+- El objetivo «≤ 10 %» se mide **solo** con canciones revisadas a mano. Con letras sin revisar es informativo.
+
+### Efecto esperado en la biblioteca medida (a confirmar por `qa`; no es una calibración)
+
+- Ajenas aceptadas: de 6/272 a **0**, porque todas caían en voces continuas.
+- Propias `coincide`: de 8/17 a **4 como mucho**. Las 8 de voz continua pasan a «No está claro», y de las 4 restantes (2, 6, 10 y 16) decide el contraste.
+- Desplazadas ±0,8 s que salen `coincide`: de 14/34 a **0** previsto.
+
+Con LRC sin fines la app dirá «No está claro» casi siempre, y la preparación no elegirá sola. Es el comportamiento buscado mientras el método no sea fiable con ese material.
+
+### Medida pendiente
+
+| Medida | Quién | Para qué |
+|---|---|---|
+| `calibrar:encaje` (con 0378 y 0381) sobre la copia de las 18 canciones | `qa`, ya: la copia está en su equipo | Confirmar la seguridad: 0 ajenas aceptadas, 0 desplazadas ≥ 0,8 s que digan `coincide`, 0 propias `desfasada` y 0 correcciones automáticas con error > 200 ms |
+| `calibrar:encaje --variantes` y `calibrar:dudosas` con ≥ 8 canciones **revisadas a mano con fines**, mejor de varios artistas y con alguna de voz continua | el usuario (o `qa` con una copia que el usuario prepare) | Saber si las guardas rechazan demasiadas letras buenas; recalibrar `densidadVozMaxima`, `contrasteMinimoF` y los fines prudentes con nota aquí |
+
+Tareas: [0378](../tareas/0378-encaje-veredicto-en-d0-y-guardas-de-fiabilidad.md) (`encaje.ts`), [0379](../tareas/0379-limitacion-del-encaje-en-la-interfaz.md) (interfaz) y [0381](../tareas/0381-calibrar-encaje-con-guardas-de-fiabilidad.md) (script).

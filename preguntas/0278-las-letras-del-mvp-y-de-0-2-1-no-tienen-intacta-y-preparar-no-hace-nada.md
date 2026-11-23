@@ -2,7 +2,7 @@
 
 - De: qa
 - Para: arquitecto
-- Estado: Abierta
+- Estado: Respondida (2026-11-22, arquitecto)
 - Bloquea: no
 
 ## Contexto
@@ -20,3 +20,26 @@ Con la biblioteca del MVP 0.1.0 del usuario (18 canciones, `esquema: 1`; informe
 ## Opción provisional
 
 Ninguna; se mantiene el comportamiento de f2b66bf.
+
+## Respuesta
+
+Arquitecto, 2026-11-22. **No se infiere `intacta`.** Ninguna heurística distingue una letra de LRCLIB que nadie tocó de una a la que el usuario ajustó los inicios en el MVP: el MVP no guardaba quién tocó los tiempos. Lo que se decide (ADR [0025](../adr/0025-preparacion-desatendida-y-datos-de-la-cancion-automaticos.md), revisión «Elección con el veredicto prudente y "Preparar" sobre letras sin marca»):
+
+- «Preparar» sobre un borrador cuya letra **no** está `intacta` y tiene líneas con inicio y sin fin **aplica**, pero solo con el paso `ajustando_fines` y **tras una confirmación explícita**.
+  - Contrato: `previsualizar` devuelve `confirmar: "finesSinMarca"`; `preparar(ids, { finesSinMarca: true })`.
+  - Pone fines prudentes solo en las líneas con `fin_ms: null` (`origen_fin: "preparacion"`, se quitan con «Quitar esos fines»).
+  - **Nunca** toca inicios, fines ya fijados, palabras ni `offset_ms`, y **nunca** corrige el desfase solo.
+- Se elige esto y no «actuar sin pedir confirmación» porque `intacta` falta también cuando el usuario cambió un tiempo **en 0.2.2**. La confirmación cubre los dos casos con el consentimiento del usuario. El riesgo que queda es bajo: un fin automático se cambia por uno ajustado a la voz, y es reversible.
+- La comprobación diferida no cambia: sigue exigiendo `intacta`.
+- Un borrador con letra sin tiempos sigue en `NADA_QUE_HACER`.
+
+**Cambios de código**: tareas [0380](../tareas/0380-preparar-letras-sin-marca-con-confirmacion.md) (contrato y main: `aplicaPreparar` en `shared/derivados.ts`, `pasoFines` en `main/preparacion/servicio.ts`, el diario, el resumen con `prepararFinesSinMarca` y la IPC) y [0382](../tareas/0382-confirmacion-de-preparar-con-letras-sin-marca.md) (interfaz, tras la spec).
+
+**Criterio de «hecha» de la feature 5**: «los 5 borradores del usuario se rescatan con "Preparar"» pasa a decir:
+- Los borradores sin letra se preparan con «Preparar» (con red real).
+- Los que tienen una letra anterior a 0.2.2 reciben fines tras confirmar, sin mover ningún inicio.
+
+**Cambios de spec para el diseñador** (`docs/ux/02-biblioteca.md`):
+1. Hoy «Preparar» de la tarjeta solo aparece en borradores sin letra, y los borradores del MVP con letra completa se ven como «Lista para revisar», sin «Preparar». Hay que decidir dónde se ofrece para una canción con `prepararFinesSinMarca`. Propuesta del arquitecto: un ítem en el ⋯ de esas tarjetas (p. ej. «Ajustar los fines automáticamente»), y el caso dentro de «Preparar» de la selección múltiple.
+2. **Confirmación obligatoria** antes de actuar. Sentido: «Esta letra puede tener cambios tuyos. Solo pondremos fin a las líneas que no lo tienen, donde la voz se para claramente. No moveremos ningún inicio ni la letra entera. Puedes quitar esos fines después.» [Cancelar] [Ajustar los fines]. En lote, una sola confirmación: la del diálogo de Feature 8, con una variante nueva de `bib.acc.preparar.nota` («Ya tiene letra (puede tener cambios tuyos): solo pondrá los fines que faltan»).
+3. La fila «Canciones de antes de 0.2.2» de «Preparar una canción» se actualiza con lo anterior.
