@@ -1,5 +1,5 @@
 # 0374 — Feature 5 · Red de seguridad del cierre con trabajos
-- Estado: Pendiente
+- Estado: Hecha
 - Paso del pipeline: 0 (transversal)
 - Depende de: 0309
 - ADRs: 0025 §5 (revisión de la pregunta 0236), 0010 (cierre con guardado pendiente)
@@ -24,4 +24,7 @@ Que la app pueda salir aunque el renderer no pueda responder a la solicitud de c
 - Siempre: `npm run typecheck`, `npm run lint`, `npm run format:check` y `npm run test:cambios`.
 
 ## Notas de implementación
-(las rellena el programador al terminar)
+Hecha. `vigilarRenderer(webContents, control, registrar, plazo=10 s)` en `app/src/main/cierre.ts`; `ControlCierre.confirmar({ comoSalir })` fuerza la intención `salir` (la ruta es la misma que la confirmación del usuario: `pausar` cancela con motivo `cierre`, conserva `trabajos/pendientes.json` y deja la preparación `detenida`). Cableado mínimo en `main/index.ts` (una línea tras `ventana.on('close')`).
+- Dispara con solicitud pendiente en `render-process-gone`, `destroyed` o `unresponsive` sin `responsive` en 10 s; anota la causa con `console.warn('[cierre] …')`. Sin solicitud pendiente no hace nada (si el renderer no responde y aún no hay solicitud, vuelve a contar 10 s). Con el renderer respondiendo no hay ningún temporizador.
+- Tests (`cierre.test.ts`, reloj falso): caída, destrucción, unresponsive+10 s, responsive antes de 10 s, espera sin límite, sin solicitud. El diario se conserva por reutilizar `pausar` (su cancelación con `cierre` ya está probada en los tests del gestor); no se probó con un gestor real aquí.
+- Críticos: no ejecutados (los corre qa); no hay E2E propio. Manual: matar el renderer con una solicitud de cierre abierta y comprobar que la app sale y reanuda los trabajos.

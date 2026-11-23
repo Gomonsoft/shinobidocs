@@ -1,5 +1,5 @@
 # 0371 — Feature 5 · `calibrar:encaje` con letras sin fines (LRC de LRCLIB) y con fines prudentes
-- Estado: Pendiente
+- Estado: Hecha
 - Paso del pipeline: 3
 - Depende de: 0368 (hecha). Puede empezar ya.
 - ADRs: 0024 §1, 0025 §3 (revisión de la pregunta 0222)
@@ -31,4 +31,10 @@ Medir si un LRC sin fines cae en «dudosa» en canciones con huecos instrumental
 - Siempre: `npm run typecheck`, `npm run lint`, `npm run format:check` y `npm run test:cambios`.
 
 ## Notas de implementación
-(las rellena el programador al terminar)
+Hecha. `calibrar:encaje --variantes` (se combina con `--ids` y `--json`; sin ella la salida no cambia: el campo `variantes` solo existe con la opción).
+- Archivos: `app/scripts/calibrar-encaje.ts` (variantes, `resumirVariantes`, criterio y formato), `calibrar-encaje-cli.mjs`, `calibrar-encaje.test.ts`.
+- Cómo se usa (guía 0312): `cd app && npm run calibrar:encaje -- <carpeta-de-biblioteca> --variantes` (añade `--json` para cifras en JSON). Solo lectura: no escribe ni imprime letras.
+- Cómo leer la salida: tres filas (tal cual / sin fines / sin fines + prudentes) con propias aceptadas x/N (%), ajenas aceptadas x/pares y desplazamientos recuperados; y la línea «Criterio de adopción (pregunta 0222): SÍ/NO», con las tres condiciones en sí/no: sin fines < 90 %, prudentes ≥ 90 %, ajenas = 0 en las tres. SÍ = adoptar fines prudentes en `pasoComprobar` y `busqueda.ts` (ADR 0024/0025).
+- Los fines prudentes se calculan con `proponerAjusteSilencios({soloFinesAutomaticos: true, activarComodin: false})` sobre el nivel de la voz contra la que se evalúa (también en las ajenas y desplazadas), en memoria.
+- Test: biblioteca sintética (texto inventado): sin fines baja, con prudentes vuelve a 3/3, ajenas 0 en las tres, árbol intacto. No se ejecutó contra ninguna biblioteca real.
+- Deuda: «sin fines» solo anula `fin_ms` (no `palabras`).
