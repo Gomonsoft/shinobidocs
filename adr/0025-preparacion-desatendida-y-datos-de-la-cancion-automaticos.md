@@ -291,3 +291,9 @@ Con las guardas de ADR 0024, la copia de 18 canciones reales da 0/17 letras prop
 ## Revisión 2026-11-23 · Elección automática con LRC sin fines: fuera de 0.2.2 (pregunta 0311)
 
 La señal D tampoco sirve (ADR 0024, revisión del 2026-11-23). En 0.2.2, la preparación **no elige sola** letras de LRCLIB sin fines: llegan a «Elige la letra», ya buscadas y ordenadas. Solo se reabre con evidencia nueva (canciones revisadas u otro modelo) o si el usuario elige la opción del punto 2 de la pregunta 0280.
+
+## Revisión 2026-11-23 · Picos bajo demanda en «Ajustar los fines» (pregunta 0315)
+
+- En una Lista (camino de solo fines de la revisión de la pregunta 0296), si falta la caché de picos, main la **genera bajo demanda** (`picos.solicitar`) y espera con el mismo límite que la corrida de un borrador. La caché es un dato derivado (ADR 0015): generarla no cambia `cancion.json` ni la letra.
+- Motivos nuevos de omisión: `SIN_VOZ` (falta `pistas/voz.flac`) y `SIN_PICOS` (la generación falla o tarda demasiado). `prepararFinesSinMarca` es `false` sin pista de voz.
+- Tarea [0389](../tareas/0389-ajustar-los-fines-genera-los-picos-si-faltan.md).

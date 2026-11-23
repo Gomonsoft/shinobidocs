@@ -2,7 +2,7 @@
 
 - De: programador
 - Para: arquitecto
-- Estado: Abierta
+- Estado: Respondida (2026-11-23, arquitecto)
 - Bloquea: no
 
 ## Contexto
@@ -18,3 +18,14 @@ Al ejecutar por primera vez la E2E de la 0386 (`e2e/preparacion.spec.ts`) con un
 ## Opción provisional
 
 Conservadora: no se cambia main (sigue el diseño de la 0296). La E2E genera los picos con `picos.solicitar` antes de abrir el menú, que es lo que ocurre en canciones separadas con 0.2.1 o posterior. Queda anotado para la guía manual con la copia del MVP.
+
+## Respuesta
+
+Arquitecto, 2026-11-23. **Se generan los picos bajo demanda.** Ni el fallo genérico ni ocultar el ítem sirven: los dos dejarían sin efecto la acción justo en las Listas del MVP para las que se hizo. La caché es un dato derivado (ADR 0015), así que generarla no cambia `cancion.json` ni la letra, y cuesta de 0,5 a 1,5 s por canción. Queda en ADR [0025](../adr/0025-preparacion-desatendida-y-datos-de-la-cancion-automaticos.md), revisión «Picos bajo demanda en "Ajustar los fines"».
+
+- `soloFinesLista`: si no hay caché, llama a `picos.solicitar` y espera con la misma función y el mismo límite que la corrida de un borrador. Después calcula los fines.
+- Mientras espera, el toast «Ajustando los fines de «{título}»…» ya existente; no hace falta texto nuevo.
+- Sin pista de voz: omitida con `SIN_VOZ`, y el ítem no se ofrece (`prepararFinesSinMarca: false`). Si la generación falla o pasa del límite: `SIN_PICOS`. Los textos de esos dos casos los fija el diseñador; hasta entonces, el genérico.
+
+Cambios de código: tarea [0389](../tareas/0389-ajustar-los-fines-genera-los-picos-si-faltan.md). La E2E de la 0386 deja de generar los picos antes de abrir el menú.
+

@@ -14,7 +14,7 @@ Ver el [plan](plan-4.md) y el [flujo de Git](../../workflow.md). **Una feature =
 | 2 | Contratos de la letra (4, 5, 10, 11) | 0296 | M | 0339 | — |
 | 3 | **4** · Comprobar la letra contra la voz | 0297–0301, 0367–0369, 0378, 0379, 0381 | M | 0296 | alpha.1 (guardas de prudencia: siguiente alpha) |
 | 4 | **6** · Datos automáticos | 0302–0305 | S–M | 0339 | alpha.2 |
-| 5 | **5** · Preparación desatendida | 0306–0312, 0371–0374, 0377, 0380, 0382, 0386 | L | 4, 6 (0302) | alpha.2 (letras sin marca: siguiente alpha) |
+| 5 | **5** · Preparación desatendida | 0306–0312, 0371–0374, 0377, 0380, 0382, 0386, 0389 | L | 4, 6 (0302) | alpha.2 (letras sin marca: siguiente alpha) |
 | 6 | **11** · Revisión guiada | 0334–0337, 0370 | M | 0296; UI tras 4 y 5 | alpha.2 |
 | 7 | **7** · Importación por lotes | 0313–0317, 0375, 0384 | L | 5 (0309), 6 | alpha.3 |
 | 8 | **8** · Acciones por lotes | 0318–0322, 0388 | M | 5; la exportación por lotes no depende de nada | alpha.3 |
@@ -134,7 +134,8 @@ flowchart LR
 | [0380 · «Preparar» con letras sin marca (main y contrato)](../../tareas/0380-preparar-letras-sin-marca-con-confirmacion.md) | S–M | 0308 |
 | [0382 · Confirmación de «Preparar» con letras sin marca](../../tareas/0382-confirmacion-de-preparar-con-letras-sin-marca.md) | S | 0380 y la spec (02) |
 | [0386 · «Ajustar los fines…» en Lista y Letra lista sin cambiar su estado](../../tareas/0386-ajustar-los-fines-en-canciones-lista-sin-cambiar-su-estado.md) | S–M | 0380, 0382 |
-| [0312 · Verificación e informe](../../tareas/0312-verificacion-e-informe-de-la-feature-5.md) | S | 0306–0311, 0371–0374, 0377, 0380, 0382 |
+| [0389 · «Ajustar los fines…» genera los picos si faltan](../../tareas/0389-ajustar-los-fines-genera-los-picos-si-faltan.md) | S | 0386 |
+| [0312 · Verificación e informe](../../tareas/0312-verificacion-e-informe-de-la-feature-5.md) | S | 0306–0311, 0371–0374, 0377, 0380, 0382, 0386, 0389 |
 
 **Hecha cuando** (revisado el 2026-11-22; preguntas 0277 y 0278):
 
