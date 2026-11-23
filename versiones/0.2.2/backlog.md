@@ -14,7 +14,7 @@ Ver el [plan](plan-4.md) y el [flujo de Git](../../workflow.md). **Una feature =
 | 2 | Contratos de la letra (4, 5, 10, 11) | 0296 | M | 0339 | — |
 | 3 | **4** · Comprobar la letra contra la voz | 0297–0301, 0367–0369 | M | 0296 | alpha.1 |
 | 4 | **6** · Datos automáticos | 0302–0305 | S–M | 0339 | alpha.2 |
-| 5 | **5** · Preparación desatendida | 0306–0312, 0371–0374 | L | 4, 6 (0302) | alpha.2 |
+| 5 | **5** · Preparación desatendida | 0306–0312, 0371–0374, 0377 | L | 4, 6 (0302) | alpha.2 |
 | 6 | **11** · Revisión guiada | 0334–0337, 0370 | M | 0296; UI tras 4 y 5 | alpha.2 |
 | 7 | **7** · Importación por lotes | 0313–0317, 0375 | L | 5 (0309), 6 | alpha.3 |
 | 8 | **8** · Acciones por lotes | 0318–0322 | M | 5; la exportación por lotes no depende de nada | alpha.3 |
@@ -116,11 +116,12 @@ flowchart LR
 | [0309 · Tanda, pausa, paradas y reanudar](../../tareas/0309-tanda-pausa-paradas-y-reanudar-al-abrir.md) | M | 0308 |
 | [0310 · Biblioteca](../../tareas/0310-lista-para-revisar-en-la-biblioteca.md) | M | 0306, 0308 |
 | [0311 · Progreso, Letra, editor y Ajustes](../../tareas/0311-preparacion-en-progreso-letra-editor-y-ajustes.md) | M | 0308, 0307 |
+| [0377 · Recuento sin registro, sonda sin LRCLIB y notificación](../../tareas/0377-recuento-de-revision-sin-registro-y-privacidad-de-la-sonda.md) | M | 0309, 0310, 0334, 0336 |
 | [0374 · Red de seguridad del cierre con trabajos](../../tareas/0374-red-de-seguridad-del-cierre-con-trabajos.md) | S | 0309 |
 | [0373 · Motivo de la no elección y del error de búsqueda](../../tareas/0373-motivo-de-la-no-eleccion-en-la-preparacion.md) | S | 0310, 0311 |
 | [0372 · Evento del aviso de tanda y LRCLIB sin red real en E2E](../../tareas/0372-avisos-de-tanda-y-pruebas-sin-red-real.md) | S | 0309 |
 | [0371 · `calibrar:encaje` con letras sin fines](../../tareas/0371-calibrar-encaje-con-letras-sin-fines.md) | S | 0368 |
-| [0312 · Verificación e informe](../../tareas/0312-verificacion-e-informe-de-la-feature-5.md) | S | 0306–0311, 0371–0374 |
+| [0312 · Verificación e informe](../../tareas/0312-verificacion-e-informe-de-la-feature-5.md) | S | 0306–0311, 0371–0374, 0377 |
 
 **Hecha cuando**: F6-N7 y F6-N8 (álbum desde LRCLIB y aviso de búsqueda automática) pasan; un WAV y un vídeo llegan solos a «Lista para revisar» con el doble y con red real; los 5 borradores del usuario se rescatan con «Preparar»; con el interruptor apagado no sale ninguna petición a LRCLIB al añadir; cerrar con trabajos en cola y volver a abrir los reanuda.
 
@@ -132,7 +133,7 @@ flowchart LR
 | [0335 · Modo «Revisar»](../../tareas/0335-modo-revisar-en-el-editor.md) | M | 0334 (y 0300 terminada: mismo panel Funciones) |
 | [0336 · Desde la Biblioteca](../../tareas/0336-revision-guiada-desde-la-biblioteca.md) | S | 0334, 0335, 0310 |
 | [0370 · Retirar `origen_fin` al fijar un fin a mano](../../tareas/0370-retirar-origen-fin-al-editar-un-fin-a-mano.md) | S | 0335 (antes de 0308 y 0332) |
-| [0337 · Verificación e informe](../../tareas/0337-verificacion-e-informe-de-la-feature-11.md) | S | 0334–0336, 0370 |
+| [0337 · Verificación e informe](../../tareas/0337-verificacion-e-informe-de-la-feature-11.md) | S | 0334–0336, 0370, 0377 |
 
 **Hecha cuando**: en las canciones ya revisadas del usuario se señala ≤ 10 % de líneas, una línea dada por buena no vuelve salvo que cambie, y «Fin al final de la voz» es un paso de deshacer.
 

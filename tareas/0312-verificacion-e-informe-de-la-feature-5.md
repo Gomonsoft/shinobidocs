@@ -1,7 +1,7 @@
 # 0312 — Feature 5 · Verificación e informe
 - Estado: En revisión (hecha con reservas: faltan criterios del usuario)
 - Paso del pipeline: 3
-- Depende de: 0306–0311, 0371–0374
+- Depende de: 0306–0311, 0371–0374, 0377
 - ADRs: 0025
 - Spec UX: docs/ux/02, 04, 05, 06 y 08 (0.2.2 · Feature 5)
 - Tamaño: S

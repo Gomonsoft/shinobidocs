@@ -224,3 +224,8 @@ En cualquier otro caso: `elige_letra` con los candidatos ordenados como en la vi
 - `GestorTrabajos` comprueba la cancelación entre marcar el paso `en_curso` y lanzar el worker.
 - **Red de seguridad**: sin límite de tiempo mientras el renderer responda. Si la ventana principal se cae, se destruye o no responde durante más de 10 s con una solicitud pendiente, main sale como si el usuario hubiera confirmado: cancela con motivo `cierre` y conserva el diario para reanudar (tarea 0374).
 
+## Revisión 2026-11-22 · Sonda de conexión sin LRCLIB (pregunta 0243)
+
+- Sustituye la comprobación de §5 («`HEAD` a `https://lrclib.net` cada 60 s»): **LRCLIB nunca se usa como sonda de conexión**. Una parada de descargas por `SIN_CONEXION` se comprueba reintentando cada 60 s **la primera descarga parada**: si termina o falla por otro motivo, se liberan las demás. `YOUTUBE_BLOQUEADO` sigue sin reanudación automática por sonda.
+- Así, con «Buscar la letra automáticamente» apagado, no sale ninguna petición a LRCLIB que el usuario no haya pedido (tarea 0377).
+

@@ -178,3 +178,7 @@ Fecha: 2026-11-21. Detalle en los ADR [0024](0024-encaje-de-la-letra-con-la-voz-
 
 Las pruebas automáticas nunca llaman a lrclib.net. Usan el doble local (`SHINOBI_LRCLIB_URL`) o `http://lrclib.invalid`, y sin empaquetar con `SHINOBI_E2E=1` la app no admite otra URL base (ADR 0025, revisión de 0224).
 
+## Revisión 2026-11-22 · LRCLIB no es una sonda de red (pregunta 0243)
+
+La app solo llama a LRCLIB para buscar o pedir una letra: cuando el usuario lo pide, o cuando lo hace la búsqueda automática con su interruptor activo (ADR 0025 §4). Nunca para comprobar si hay conexión.
+

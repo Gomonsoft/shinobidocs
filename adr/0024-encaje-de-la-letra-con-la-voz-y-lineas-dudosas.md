@@ -208,3 +208,8 @@ detectarDudosas(letra, voz | null, { duracionMs, p })
 - **`origen_fin`** (§4, complemento): toda acción del usuario que fija o mueve un fin a mano lo quita en el reducer del editor, en el mismo paso de deshacer. Main no puede distinguirlo (tarea 0370). Las acciones automáticas lo ponen. `proponerAjusteSilencios` admite `soloIds` y pone `origen_fin: "silencios"` en los fines que cambia.
 - `revisada` en memoria del editor puede quedar no vigente tras editar la línea: es aceptable (el detector solo usa marcas vigentes y main la retira al escribir).
 
+## Revisión 2026-11-22 · Recuento para «Lista para revisar» sin registro (pregunta 0241)
+
+- El recuento de líneas por revisar (`dudosas`, `dudosasImportantes`) es un **derivado en memoria de main** para toda canción que derive «Lista para revisar», tenga o no registro `preparacion`. Se calcula en segundo plano tras el arranque, al quedar listos los picos y tras cada escritura de la letra. No se escribe en disco ni se crea un registro.
+- El resumen lo expone como `revision: { dudosas, dudosasImportantes } | null`, y `biblioteca.recuentoRevision(id)` lo calcula al momento. Biblioteca y editor toman la misma decisión. `preparacion.dudosas` en disco solo sirve de valor inicial (tarea 0377).
+
