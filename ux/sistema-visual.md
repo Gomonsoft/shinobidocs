@@ -467,7 +467,7 @@ Comportamiento en [Editor · 0.2.3](06-editor.md#023--feature-1--cantantes-por-l
 | Cantante 2 | `#35C6E8` (cian profundo) | Revisión 2026-11-23 (pregunta 0345): sustituye a `#4ADEDE`, que frente a la letra blanca daba ΔE simulado 16,5 (protanopía) y un ⚠ en todo dúo. Con el tema «Shinobi», medido con `contraste.ts`: 5,63:1 con el fondo (peor muestra), ΔE 46,0 con la letra, ΔE simulado 31,9; sin ⚠. Sigue siendo un azul claro, distinto de rosa, lima, lavanda y naranja. (El cian `#4ADEDE` sigue entre las muestras sugeridas de §8: allí lo elige el usuario y el aviso le informa.) |
 | Cantante 3 | `#FF5C8A` (rosa) | ≈ 3,9:1 sobre `#5A1E6E` (la zona más clara del degradado). |
 | Cantante 4 | `#7CFF6B` (lima) | Con deuteranopía puede confundirse con el oro (`#FFD400`): da el ⓘ informativo. |
-| Todos | `#B388FF` (lavanda) | ≈ 4,2:1 sobre `#5A1E6E`. |
+| Todos | `#B388FF` (lavanda) | ≈ 4,2:1 sobre `#5A1E6E`. Con daltonismo se acerca al cian del Cantante 2: un dúo con Todos da el ⓘ informativo (visto en la revisión 2026-11-23; no enciende el punto de la pestaña). |
 | Coro | `#FF9F1C` (naranja) | ≈ 5,5:1 sobre `#5A1E6E`. Con daltonismo se acerca al oro: lo distinguen los paréntesis y su zona. |
 
 Valores calculados a mano con la fórmula WCAG (orientativos); el test de C1-E19 los comprueba con la función de contraste. Si alguno diese ⚠ sobre el tema «Shinobi», se cambia la ranura antes de publicar.
@@ -505,13 +505,13 @@ Valores calculados a mano con la fórmula WCAG (orientativos); el test de C1-E19
 
 | Componente | Tratamiento visual |
 |---|---|
-| **Chip de parte** (lista, panel, menú) | Píldora de 20 px de alto, ancho mínimo 24 px, radio completo, sin relleno, borde 2 px en el color de la parte, texto `t-pequeno` 600 en `texto-1` (o icono `users` 14 px). Área de clic 24 × 24. El borde es refuerzo: la inicial es la señal (sobre `fondo-1` un color de parte oscuro puede no llegar a 3:1, y no importa). Coro: «( )». |
+| **Chip de parte** (lista, panel, menú) | Píldora de 20 px de alto, ancho mínimo 24 px, radio completo, sin relleno, borde 2 px en el color de la parte, texto `t-pequeno` 600 en `texto-1` (o icono `users` 14 px). Área de clic 24 × 24. El borde es refuerzo: la inicial es la señal (sobre `fondo-1` un color de parte oscuro puede no llegar a 3:1, y no importa). Coro: «( )». El mismo chip (ancho por contenido) en la lista, el panel, el menú, Funciones y Estilo: en Funciones y Estilo va en una columna de 40 px, sin estirarse a lo ancho de ella (revisión 2026-11-23). |
 | **Texto del coro en la lista** | `texto-2` con los paréntesis dibujados. |
 | **Selección múltiple** | Fila seleccionada no principal: fondo `fondo-2` y barra izquierda de 3 px `acento-texto`; la principal, el tratamiento de selección de siempre. |
-| **Etiqueta de carril** | Columna de 72 px en `fondo-1`, borde derecho 1 px `borde`: chip + nombre `t-pequeno` `texto-2` cortado con «…». |
+| **Etiqueta de carril** | Columna de 96 px en `fondo-1` (antes 72; revisión 2026-11-23), borde derecho 1 px `borde`: chip + nombre `t-pequeno` `texto-2` cortado con «…». «Todos», «Coro» y «Cantante» (nombre predeterminado, el número va en el chip) caben enteros. |
 | **Carril** | Alto 32 px (mínimo 24); separador de 1 px `borde` entre carriles; la onda de la voz en `texto-3` de fondo detrás de todos los carriles. Carril de destino durante un arrastre: borde 2 px `acento-texto`. Carril prohibido (solo en la sección condicionada): borde 2 px `error`. |
-| **Carril vacío** | Texto `t-pequeno` `texto-3` centrado en la parte visible. |
-| **Franja de destino** («+ Nuevo cantante», «Todos») | 24 px, borde discontinuo 1 px `borde-control`, texto `t-pequeno` `texto-2`. |
+| **Carril vacío** | Texto `t-pequeno` `texto-3` centrado en la parte visible, con un fondo del color del carril y 8 px de relleno lateral para que la línea base de la onda no lo atraviese. |
+| **Franja de destino** («+ Nuevo cantante», «Todos») | 24 px, borde discontinuo 1 px `borde-control`, texto `t-pequeno` `texto-2`. Con el puntero encima: borde 2 px `acento-texto`, como un carril de destino. |
 | **Región con «Juntar carriles»** | Franja superior de 3 px en el color de la parte e inicial `t-pequeno` al principio de la región. |
 | **Selector de color de parte** | El selector de color de siempre, precedido del chip. |
 | **Deslizador «Voz en los coros»** | Deslizador de §6, ancho del panel menos el valor (56 px, `t-tiempo`) y el botón. |

@@ -1063,7 +1063,7 @@ Cada parte tiene **su espacio en pantalla**: una **zona**, una franja horizontal
 
 **Línea de Todos** (cantan los dos): la misma frase en la zona de Ana y en la de Luis, las dos con el barrido en el color de Todos y la insignia «A·L» (con 3 o 4 cantantes, el icono `users`).
 
-**Un solo cantante con coros**: dos zonas, la del Cantante 1 (sin insignias) y la del Coro, abajo.
+**Un solo cantante con coros**: dos zonas, la del Coro arriba (como en el resto de la disposición) y la del Cantante 1 debajo, sin insignias (corregido en la revisión 2026-11-23: aquí decía «abajo», en contra de la regla «Orden»).
 
 ### Reglas de color
 
@@ -1136,9 +1136,12 @@ La disposición por zonas no cambia: lo único nuevo es que **varias zonas puede
 | **Todos con solape** | No aplica: Todos ya ocupa las zonas de todos los cantantes; una línea de un cantante no puede solaparse con una de Todos (lo impide el editor). |
 | **Indicadores de espera** | Solo cuando **ninguna** zona suena; en la zona de la próxima línea. |
 | **Rendimiento** | Hasta 5 barridos a la vez; lo mide la prueba técnica del arquitecto (factibilidad §4.3). |
+| **Color del barrido en un solape** | Cada barrido usa el color de su parte **exacto**, igual que sin solape: sonar a la vez no mezcla, aclara ni atenúa colores (revisión 2026-11-23). |
+| **«Todas en un bloque»** | El bloque de 0.2.2 tiene una sola línea activa: con un solape, la línea que empieza después toma el puesto activo y la anterior acaba su barrido en el puesto que le toque. Es una limitación aceptada ([0380](../preguntas/0380-todas-en-un-bloque-con-voces-a-la-vez.md)) y el editor la avisa con `edi.pantalla.bloqueSolapes`. |
 
 - C1S-R1. En un tramo en que se solapan una línea de Ana y una de coro, las dos zonas están al 100 % y cada barrido avanza con sus propios tiempos (test del modelo en 10 instantes del solape).
 - C1S-R2. Fuera de los solapes, el modelo es idéntico al de la disposición sin solapes (mismos tests C1-R2 a C1-R9).
+- C1S-R4. En cada instante del solape de C1S-R1, el color de lo ya cantado de cada línea es exactamente el de su parte (comparación del modelo y de píxeles en una captura sin desenfoque), igual que la misma línea fuera del solape.
 - C1S-R3. En la exportación a 60 FPS de un solape de 4 zonas no se pierden fotogramas en el equipo de referencia del arquitecto (medida de la prueba técnica).
 
 ## 0.2.3 · Feature 2 — Voz en los coros

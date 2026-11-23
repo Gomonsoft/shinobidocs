@@ -1,0 +1,36 @@
+# Revisión de diseño · 0.2.3 · Feature 3 — Voces a la vez (reproductor; provisional)
+
+Fecha: 2026-11-23. Revisa el Diseñador UX. Capturas: `reproductor-{1920x1080,1280x720}-{dos-voces,tres-voces-con-coro,dos-voces-final,todos-sin-solape,espera-tras-solape}.png`. Las capturas del editor de esta feature llegarán después y se revisarán aparte.
+
+Referencia: [07 · Voces a la vez](../../07-reproductor.md#voces-a-la-vez-condicionada-a-la-factibilidad-que-dictamine-el-arquitecto) (condicionada y provisional) y [06 · Voces a la vez](../../06-editor.md#voces-a-la-vez-condicionada-a-la-factibilidad-que-dictamine-el-arquitecto). Gravedad: **bloquea** (antes de cerrar la alpha) o **menor**.
+
+## Veredicto por criterio
+
+| Criterio | Veredicto | Notas |
+|---|---|---|
+| C1S-R1 | Cumple (visual) | `dos-voces`: las zonas de Cantante 1 «M» y Cantante 2 «I» están al 100 % y cada una barre por su punto. `tres-voces-con-coro`: también barre el coro. `dos-voces-final`: el coro y «I» barren mientras la zona de «M», que ya no tiene líneas, queda vacía. Los 10 instantes del solape, en el test. |
+| C1S-R2 | Cumple (visual) | `todos-sin-solape`: la línea de Todos se dibuja en las dos zonas, barrida en lavanda y con «M·I», sin otra voz a la vez. `espera-tras-solape`: los indicadores salen solo cuando no suena ninguna zona, una sola vez, en la primera zona y en el color de Todos (C1-R9), en la fila de 0360. |
+| C1S-R3 | Del arquitecto | Es la medida de la prueba técnica (60 FPS). |
+| C1S-R4 (nuevo) | A comprobar | En `tres-voces-con-coro` y `dos-voces-final`, lo ya cantado se ve menos saturado (oro, cian y naranja más pálidos) que la misma parte en `dos-voces` y que en las capturas de la feature 1. Puede ser la transición de opacidad o la compresión de la captura, pero también una mezcla de colores durante el solape. |
+
+## Correcciones
+
+1. **Menor** (bloquea si el test falla). Durante un solape, el color de lo ya cantado de cada línea es el de su parte **exacto**: sonar a la vez no mezcla, aclara ni atenúa colores.
+   - Se comprueba con el nuevo C1S-R4 (modelo y píxeles en una captura sin desenfoque).
+   - Si la diferencia viene de la subida de 55 % a 100 % (`D`), hay que repetir la captura cuando esa transición haya terminado.
+   - Spec: 07, fila «Color del barrido en un solape».
+2. **Menor.** «Todas en un bloque» con solapes (pregunta 0380):
+   - El editor muestra la nota `edi.pantalla.bloqueSolapes` con «Ver en zonas».
+   - El reproductor sigue el modelo de bloque (limitación aceptada).
+   - Spec: 06, fila «"Todas en un bloque" con solapes», C1S-E7, y 07, fila «"Todas en un bloque"».
+3. **Bloquea** (para el editor de esta feature). «Juntar carriles» con regiones solapadas: hoy una región se pinta encima de la otra y la de debajo no se puede seleccionar. Decisión:
+   - Juntar se permite siempre.
+   - La pista juntada se divide en `k` sub-filas de 24 px, siendo `k` el máximo de líneas que suenan a la vez en la canción. Cada región va en la primera sub-fila libre, en el orden de los carriles, y su sub-fila es estable al hacer zoom y al desplazar.
+   - Si las sub-filas no caben, la pista tiene scroll vertical propio, nunca de página.
+   - Sin solapes, todo queda igual.
+   - Se descarta impedir juntar, porque con poco espacio los carriles se juntan solos y no habría salida.
+   - Spec: 06, fila «"Juntar carriles" con solapes», y C1S-E6, con la captura `editor-1280x720-100-juntos-solapes.png`.
+
+## Observación sin cambio
+
+La lectura funciona: cada voz en su franja, quien canta ahora al 100 % y quien espera al 55 %, y las insignias se leen a 1280 × 720. Con tres barridos a la vez la pantalla está cargada pero se puede seguir. Se anota en la guía manual para probarlo a 5 m.
