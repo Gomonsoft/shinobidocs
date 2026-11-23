@@ -13,6 +13,7 @@
 | 1 · Cantantes por línea | El usuario añade los cantantes de la canción (hasta 4), más «Todos» y «Coro». Cada línea entera se asigna a uno. Un carril por cantante en la línea de tiempo, visible desde que se añade. **Cada parte con su color y su zona en pantalla**; insignia con la inicial; coro entre paréntesis. | L | 0341–0349, 0362–0364 | [0029](../../adr/0029-reparto-de-la-letra-entre-cantantes-y-coro.md) | alpha.1 | Definida (spec lista) |
 | 2 · Voz en los coros | En las líneas de coro, la voz original suena al nivel elegido para la canción, en el reproductor, la vista previa del editor y la exportación. | M | 0350–0354, 0365, 0366 | [0030](../../adr/0030-voz-original-en-las-lineas-de-coro.md) | alpha.1 | Definida (spec lista) |
 | 3 · Voces a la vez | Líneas de partes distintas que se solapan en el tiempo, cada una en su zona con su barrido. **Condicionada** a una prueba técnica con criterio cerrado (ADR 0029 §7); provisional, pregunta 0165. | M (prueba) + L | 0356 · 0357–0361 | 0029 §7 | prueba en alpha.1 · feature en alpha.2 | Condicionada |
+| 10 (de 0.2.2) · Sincronizar con la voz | Etapa 1 de la alineación forzada: fines y palabras propuestos sobre la voz separada. **Pasada a 0.2.3 de forma provisional** (pregunta [0280](../../preguntas/0280-que-hace-hoy-la-comprobacion-de-la-letra-con-tus-canciones.md), punto 4, pendiente del usuario). **Condicionada** a la fase 2 de la prueba técnica [0328](../../tareas/0328-prueba-tecnica-de-alineacion-forzada.md), que necesita canciones con fines hechos a mano del usuario. Si entra, empieza por la acción explícita del editor, sin automatismos (propuesta [038](../../propuestas/038-sincronizar-con-la-voz-solo-a-peticion.md)) | L | 0329–0333 (de 0.2.2, sin tareas nuevas) | [0028](../../adr/0028-sincronia-automatica-por-alineacion-forzada-prueba-tecnica-y-etapa-1.md) (Propuesto) | alpha.2 o posterior, solo si la fase 2 sirve | Condicionada |
 | — | Cierre de cada entrega | S | [0355](../../tareas/0355-cierre-de-una-entrega-0-2-3-alpha.md) | 0020 | — | Definida |
 
 Una canción de un solo cantante no cambia: sin cantantes añadidos no hay carriles, zonas, insignias ni colores nuevos.
@@ -23,6 +24,7 @@ Una canción de un solo cantante no cambia: sin cantantes añadidos no hay carri
 - Separar la voz principal de los coros: el modelo que lo hace no tiene una licencia comprobada.
 - Texto aún sin cantar teñido con el color de su cantante (una de las referencias): el modelo lo admite más adelante (ADR 0029 §6), pero no entra (decisión 7 de 0160; el usuario puede pedirlo en 0165).
 - Voces a la vez **si su prueba técnica no sirve** (feature 3).
+- Sincronizar con la voz (feature 10 de 0.2.2) **si la fase 2 de su prueba no sirve o no llega**: se aplica el plan B de ADR 0028 §4 (propuesta 027) en la versión que decida el usuario.
 
 ## Preparación en 0.2.2
 
@@ -32,4 +34,4 @@ Seis ajustes sin efecto visible, ya añadidos a las tareas 0287, 0289, 0290, 029
 
 - Specs en `docs/ux/` (editor, reproductor, exportación, Letra, Biblioteca y sistema visual): **hechas**. Quedan dos retoques pequeños del diseñador (respuesta a [0171](../../preguntas/0171-contratos-de-0-2-3-para-las-specs.md), §2 y §4).
 - Decisiones provisionales abiertas: preguntas [0160](../../preguntas/0160-decisiones-provisionales-de-ux-de-varios-cantantes-y-coros.md) y [0170](../../preguntas/0170-decisiones-provisionales-de-ux-de-0-2-3.md) (UX) y [0165](../../preguntas/0165-decisiones-provisionales-del-arquitecto-de-varios-cantantes-y-coros.md) (técnicas, con la ampliación de 0.2.3).
-- 0.2.2 integrada en `develop`.
+- 0.2.2 integrada en `develop`. **Excepción decidida por la sesión principal (2026-11-23)**: la implementación empezó en la rama `version-0.2.3`, creada a partir de `version-0.2.2` antes de integrarla. Los arreglos que lleguen a 0.2.2 se traen a 0.2.3.

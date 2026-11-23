@@ -195,3 +195,18 @@ Si sirve, las tareas 0357–0360 se ejecutan y la feature 3 entra en la misma al
 
 Cambios respecto a la primera redacción, ya integrados arriba: «canción con reparto» pasa a ser un derivado (2 o más cantantes o alguna línea de coro) y `partes` puede existir sin reparto (§1); «Todos» exige 2 o más cantantes (§1, §4); carriles de Coro siempre y de Todos según el número de cantantes (§3); `inicial` e `insignia` separadas, con número de ranura e icono (§3); 80 % e insignias solo con varios cantantes (§4); zonas con los valores de la spec, la variante `subidaAlSalir` y la opacidad por zona (§4 bis); primera línea corregida, que hereda de la siguiente (§2); orden de Esc y `Alt + ↑/↓` en la lista (§5).
 
+
+## Revisión 2026-11-23 · Firmas de `shared/reparto.ts` (pregunta 0330)
+
+Completa §3 con lo implementado en la tarea 0340:
+- `parteDe(linea, letra?)`: con la letra aplica la lectura tolerante de §1 (un cantante que no existe, o `todos` con un solo cantante, se lee como `c1`). Sin la letra, solo mira el campo. Quien pinta, cuenta o exporta pasa siempre la letra.
+- `textoEnPantalla(linea)` → `{ texto, parentesis }`: `texto` es el guardado, sin tocar; `parentesis`, si el render debe dibujarlos.
+- `recuentoPorParte(letra)` → `Record<Parte, number>` con las seis partes (líneas, no pausas).
+- `inicial` e `insignia` → `{ tipo: "texto", texto } | { tipo: "icono", icono: "users" }` (`insignia` puede dar `null`). Con iniciales en choque, dos letras («An», «Al»). Un nombre que no empieza por letra ni número usa el número de ranura.
+- `asignar`, `anadirCantante` (con 4 cantantes) y `quitarCantante('c1')` imposibles devuelven **la misma letra**, sin lanzar. Main valida al escribir.
+- Funciones auxiliares: `cantantesDe`, `vozEnCoros` (nivel o 0,5), `nombreNormalizado` y `validarReparto` (invariantes de §1; lista vacía si es válido).
+- `normalizarReparto` conserva un `voz_en_coros` explícito mientras exista `partes`. La regla de quitar `partes` de §1 trata 0,5 explícito como ausente.
+- `estilosIguales` compara también `pantalla.zonas` (ausente = `por_parte`) y los colores efectivos.
+- `colores_partes` no tiene ranura `c1` en el esquema: una clave `c1` se descarta al leer y no se vuelve a escribir.
+- `guardarTiemposSchema`: con `partes`, cada `parte` apunta a un cantante de la lista y `todos` exige 2 o más. Con `partes: null`, solo se admite `coro`. «`parte` solo en líneas» lo comprueba main.
+- Semilla de reparto opt-in (`sembrar(datos, { reparto: true })`, `npm run semilla -- --reparto`).

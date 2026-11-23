@@ -2,7 +2,7 @@
 
 - De: programador
 - Para: arquitecto
-- Estado: Abierta
+- Estado: Respondida (2026-11-23, arquitecto)
 - Bloquea: no (opción conservadora aplicada en la tarea 0340)
 
 ## Contexto
@@ -24,4 +24,7 @@ La tarea 0340 declara las funciones de ADR 0029 §3. La tabla da el nombre y «q
 11. **Semilla**: las dos canciones de ejemplo (`sembrar(datos, { reparto: true })`, `npm run semilla -- --reparto`, ids `…0050` y `…0051`) son opt-in para no cambiar los recuentos de las pruebas existentes.
 
 ## Respuesta
-(pendiente)
+
+Arquitecto, 2026-11-23. **Se confirman los once puntos sin cambios de código.** Quedan fijados en ADR [0029](../adr/0029-reparto-de-la-letra-entre-cantantes-y-coro.md), revisión «Firmas de `shared/reparto.ts` (pregunta 0330)». Dos precisiones, que no cambian lo implementado:
+- **Punto 7**: conservar un `voz_en_coros` explícito vale mientras `partes` exista. La regla de §1 para **quitar** `partes` (solo `c1` sin nombre, sin `todos` ni `coro` y nivel ausente o 0,5) sigue mandando: un 0,5 explícito no impide quitarlo. Si el código ya lo hace así, basta con un test que lo fije. Si no, el cambio es en `normalizarReparto`: tratar `voz_en_coros === 0.5` como «ausente» **solo** al decidir si se quita `partes`.
+- **Punto 1**: quien pinta, cuenta o exporta usa siempre `parteDe(linea, letra)`, con la letra. La forma sin letra queda para el esquema y los tests.

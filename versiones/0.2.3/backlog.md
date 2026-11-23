@@ -12,6 +12,7 @@ Ver el [plan](plan-5.md) y el [flujo de Git](../../workflow.md). **Una feature =
 | 1 | **1** · Cantantes por línea (zonas incluidas) | 0341–0349, 0362–0364 | L | 0340 | alpha.1 |
 | 2 | **2** · Voz en los coros | 0350–0354, 0365, 0366 | M | 0340; 0365 tras 0346 | alpha.1 (o alpha.2) |
 | 1 (prueba) · 3 | **3** · Voces a la vez (**condicionada** a su prueba técnica) | 0356 · 0357–0361 | M + L | 0340; 0357–0360 tras 0356 si sirve, 0341, 0345 y 0364 | prueba en alpha.1 · feature en alpha.2 |
+| — | **10 (de 0.2.2)** · Sincronizar con la voz (**condicionada**; provisional, pregunta 0280) | 0329–0333 | L | fase 2 de 0328 («sirve»); 0340; con reparto, 0341 | alpha.2 o posterior |
 | — | Cierre de cada entrega | [0355](../../tareas/0355-cierre-de-una-entrega-0-2-3-alpha.md) | S | las features de la entrega | — |
 
 ```mermaid
@@ -89,6 +90,14 @@ Indicación del usuario del 2026-11-22: dúo, trío, «Todos» y coro tienen la 
 **Hecha cuando**: (a) la prueba técnica tiene su resultado escrito en ADR 0029 con el criterio de §7; y (b) si sirve, dos cantantes con frases cruzadas y un coro que acompaña a la voz principal se ven a la vez, cada uno en su zona con su barrido, en el reproductor y en el video, y una letra sin solapes da los mismos resultados que antes en todas las funciones automáticas; si no sirve, la propuesta 037 queda aplazada con el informe.
 
 **Criterios de la spec por tarea**: cada criterio `C1-`, `C2-` y `C1S-` de las specs 02, 05, 06, 07 y 10 aparece citado en el texto de al menos una tarea (73 de 73, comprobado el 2026-11-22).
+
+## Feature 10 de 0.2.2 · Sincronizar con la voz (condicionada)
+
+Pasó de 0.2.2 a 0.2.3 de forma provisional (ADR 0028, revisión del 2026-11-23; pregunta 0280, punto 4, pendiente del usuario).
+- **Condición**: la fase 2 de la prueba técnica [0328](../../tareas/0328-prueba-tecnica-de-alineacion-forzada.md) da «todo» o «solo fines» con los fines hechos a mano del usuario (V1). La fase 1 pasó el filtro, pero no demuestra fines ni palabras.
+- **Tareas**: las de 0.2.2, sin tareas nuevas. Son [0329](../../tareas/0329-worker-alinear-letra.md), [0330](../../tareas/0330-modelos-de-alineacion-y-servicio-en-main.md), [0331](../../tareas/0331-aplicar-alineacion-y-palabras-automaticas.md), [0332](../../tareas/0332-sincronizar-con-la-voz-en-la-interfaz.md) y [0333](../../tareas/0333-verificacion-e-informe-de-la-feature-10.md). Si entra, primero la acción explícita del editor y sin el paso de la preparación (propuesta [038](../../propuestas/038-sincronizar-con-la-voz-solo-a-peticion.md)). Al retomarlas, el arquitecto añade dos criterios: `aplicarAlineacion` conserva `parte`, y la pestaña Funciones con «Cantantes y coros» (0346) tiene sitio para la acción.
+- **Si no sirve o no llega**: plan B de ADR 0028 §4 (propuesta 027), en la versión que decida el usuario.
+- **Lote**: F (el de la prueba). Las tareas 0329–0333 no comparten archivos con la feature 1 salvo el panel Funciones (después de 0346) y `shared/alineacion.ts`, que también toca 0358 (la toma primero quien llegue y la otra espera).
 
 ## Preparación pedida a 0.2.2 (sin efecto visible)
 

@@ -18,6 +18,13 @@ Que main escriba y conserve el reparto por todos los caminos de la letra.
 - [ ] Exportar e importar un paquete de una canción con reparto lo conserva entero (C1-B2).
 - [ ] La preparación desatendida no asigna ninguna parte (test del servicio, C1-E12).
 - [ ] Abrir una canción de 0.2.1 o 0.2.2 no escribe nada.
+- [ ] **Coherencia con lo que dejó 0.2.2** (añadido el 2026-11-23):
+  - `letras.exportarLrcVarias` usa la misma función que una sola letra y saca los coros entre paréntesis.
+  - Un paquete o una copia con un **tema** que tiene `colores_partes` y `pantalla.zonas` los conserva al importar. La reutilización de un tema local con «mismo estilo» (ADR 0027, revisión de 0255–0258) usa el `estilosIguales` nuevo.
+  - `aplicarFinesPreparacion` («Ajustar los fines…», preparación) y «Quitar esos fines» conservan `parte`.
+  - Asignar partes no retira `intacta`, así que «Preparar» y la comprobación diferida se comportan igual con reparto que sin él.
+  - El recuento de dudosas tras guardar solo partes no cambia.
+  - Test de cada punto.
 
 ## Pruebas de feedback
 - Unitarias: tests del servicio de letras, `editar.test.ts`, `lrc.test.ts` (ida y vuelta), copias y preparación.
