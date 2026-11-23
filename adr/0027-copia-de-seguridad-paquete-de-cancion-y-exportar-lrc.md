@@ -153,3 +153,21 @@ La spec no tiene diálogo propio para exportar la letra: abre directamente el de
 - `letras.exportarLrcVarias({ ids })` → `{ escritas, omitidas: [{ id, motivo }], ubicacionId } | null`: main abre «Elegir carpeta» y escribe un archivo por canción, con « (2)», « (3)»… si el nombre existe (nunca sustituye).
 - Nuevo `letras.mostrarEnCarpeta({ ubicacionId })` (rol principal) para el botón del toast. `ubicacionId` es un UUID que main asocia a la ruta escrita mientras la app siga abierta; el renderer nunca ve rutas.
 - Copias: `copias.exportarCanciones` / `exportarBiblioteca` → `{ trabajoId }`; eventos `copias:cambio` `{ trabajoId, estado, codigo? }` y `copias:progreso`.
+
+## Revisión 2026-11-22 · Specs, temas, contratos y dependencias (preguntas 0255–0258)
+
+- **Canción con trabajo en curso** (§2): ya no se omite con `EN_CURSO`. Entra `cancion.json` y solo los archivos de pasos completados (nunca uno en escritura); una canción que se está separando entra sin pistas, con la separación `pendiente`, y al importarla se comporta como un paquete ligero para lo que falta (spec 08, `aj.copia.nota.enCurso`).
+- **`.lrc`** (§4): nombre `{título} — {artista}.lrc` (sin artista, `{título}.lrc`), igual para una y para varias. Las pausas no se escriben aparte (regla de la marca vacía con hueco ≥ 2 s); la spec 02 se ajusta.
+- **Entradas hostiles** (§3 y §8): `..`, rutas absolutas, `\`, enlaces simbólicos, entradas cifradas o repetidas → el paquete **entero** se rechaza con `PAQUETE_NO_VALIDO`. Las entradas con nombre válido no declaradas en el manifiesto se ignoran.
+- **Temas** (§3): mismo nombre y mismo estilo normalizado con otro `id` → se reutiliza el local (el primero por creación; nunca uno con `borrado_pendiente`). Así una restauración en una instalación nueva conserva el predeterminado.
+- **Manifiesto**: campos opcionales por canción (`modificada`, `creada`, `album`, `duracion_ms`, `estado`) y `extras[]` con la comprobación de `temas.json` y `ajustes.json`. Son aditivos, así que `version_formato` sigue en 1.
+- **IPC** (§6), todo aditivo:
+  - `destinoCopiaIpcSchema` gana `existe` y `estimacion`;
+  - `resumenPaqueteSchema` y `resultadoImportacionSchema` se amplían (pregunta 0257);
+  - `copias:cambio` lleva `en_cola`, `tipo` y `resultado`, y `copias:progreso` lleva `cancion`;
+  - **`copias.importar` devuelve `{ trabajoId }`** y su resultado llega en `copias:cambio` `terminada`;
+  - «Mostrar en la carpeta» usa `letras.mostrarEnCarpeta({ ubicacionId })` (tabla de ubicaciones común de main);
+  - canal **`copias.origenDesdeRuta({ ruta })`** para soltar un `.shinobi`, expuesto en el preload solo como `copias.origenDeArchivo(file: File)` (con `webUtils.getPathForFile`), de modo que el renderer no maneja rutas.
+- **Dependencias** (§7): `@types/yazl` y `@types/yauzl` como `devDependencies` (MIT, no se distribuyen). La lista de dependencias permitidas en el `app.asar` (`scripts/verificar-paquete.mjs`) es `yaml, zod, yazl, yauzl, buffer-crc32, pend` (todas MIT, sin nativas), con sus notas en `THIRD_PARTY_NOTICES.md` (ADR 0012).
+- `ServicioBiblioteca.incorporar(id, cancion)`: método interno de main para materializar una canción importada por la vía del único escritor (ADR 0006). Confirmado.
+

@@ -18,7 +18,7 @@ Ver el [plan](plan-4.md) y el [flujo de Git](../../workflow.md). **Una feature =
 | 6 | **11** · Revisión guiada | 0334–0337, 0370 | M | 0296; UI tras 4 y 5 | alpha.2 |
 | 7 | **7** · Importación por lotes | 0313–0317, 0375 | L | 5 (0309), 6 | alpha.3 |
 | 8 | **8** · Acciones por lotes | 0318–0322 | M | 5; la exportación por lotes no depende de nada | alpha.3 |
-| 8 | **9** · Copia, paquete y `.lrc` | 0323–0327 | M–L | 0296 | alpha.3 |
+| 8 | **9** · Copia, paquete y `.lrc` | 0323–0327, 0376 | M–L | 0296 | alpha.3 |
 | 9 | **10 (etapa 1)** · Sincronizar con la voz | 0329–0333 (si la prueba sirve) | L | 0328, 0296, 5 | alpha.4 |
 | — | Cierre de cada entrega | [0338](../../tareas/0338-cierre-de-una-entrega-0-2-2-alpha.md) | S | las features de la entrega | — |
 
@@ -168,7 +168,8 @@ flowchart LR
 | [0323 · Exportar `.lrc`](../../tareas/0323-exportar-la-letra-a-lrc.md) | S | 0296 |
 | [0324 · Escribir paquetes y copias](../../tareas/0324-escribir-paquetes-y-copias.md) | M | 0339 |
 | [0325 · Importar y restaurar](../../tareas/0325-importar-paquetes-y-restaurar.md) | L | 0324 |
-| [0326 · Interfaz](../../tareas/0326-paquete-y-copia-en-la-interfaz.md) | M | 0325, 0323 |
+| [0376 · Remates de copias y paquetes](../../tareas/0376-remates-de-copias-y-paquetes.md) | S–M | 0324, 0325 |
+| [0326 · Interfaz](../../tareas/0326-paquete-y-copia-en-la-interfaz.md) | M | 0325, 0323, 0376 |
 | [0327 · Verificación e informe](../../tareas/0327-verificacion-e-informe-de-la-feature-9.md) | S | 0323–0326 |
 
 **Hecha cuando**: la biblioteca real se copia y se restaura en otro usuario del sistema sin perder nada, un paquete ligero de una canción de YouTube recupera solo su audio, un `.lrc` exportado se vuelve a importar con los mismos inicios, y la decisión legal del paquete con audio está confirmada o anotada.
