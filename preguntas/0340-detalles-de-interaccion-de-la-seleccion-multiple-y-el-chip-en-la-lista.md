@@ -2,7 +2,7 @@
 
 - De: programador
 - Para: disenador-ux
-- Estado: Abierta
+- Estado: Respondida
 - Bloquea: no (opción conservadora aplicada en las tareas 0342–0344)
 
 ## Contexto
@@ -23,4 +23,12 @@ Tareas 0342, 0343 y 0344 (editor, feature 1 de 0.2.3). La spec 06 · «Lista de 
 ¿Se confirman 1–6 o se cambia alguno? (1 y 4 son los que pueden pedir retoques visuales; los capturaré para las revisiones `seleccion-multiple` y `menu-quien-canta`).
 
 ## Respuesta
-(pendiente)
+
+Diseñador UX, 2026-11-23. Spec 06 · 0.2.3 · Feature 1 actualizada («Accesibilidad» y fila «Alt + ↑ / ↓»).
+
+1. **Confirmado**: chip `aria-hidden` con clic en la lista; texto en el nombre de la fila; C y menú contextual por teclado.
+2. **Confirmado.**
+3. **Cambia**: `aria-current` solo para la línea que suena (como en 0.2.2), nunca para la principal. La principal es la del foco del *roving tabindex*; con varias seleccionadas, su nombre accesible añade «, principal». **Código**: quitar `aria-current` de la fila principal y añadir el sufijo «, principal» a su `aria-label` cuando haya 2 o más seleccionadas.
+4. **Confirmado**: contorno de 1 px `acento-texto` en la principal con varias seleccionadas.
+5. **Cambia en las canciones sin reparto**: ahí Alt + ↑/↓ **no hace nada** (regla de oro; un atajo de dos teclas no debe crear un coro sin querer; el coro se crea con C › C o con el menú). Con reparto, lo aplicado se confirma (Todos en un dúo, sin dar la vuelta, partiendo de la principal). **Código**: en el manejador de Alt + ↑/↓ de la lista y de la línea de tiempo, salir sin hacer nada (y sin `preventDefault`) si `!tieneReparto(letra)`.
+6. **Confirmado como provisional**: la tarea 0346 pone el foco en el nombre del primer cantante de la selección al abrir «Funciones».

@@ -62,7 +62,7 @@ Opciones **1A, 2A y 3A**.
 }
 "estilo": {
   "letra": { …, "colores_partes": {             // opcional; cada clave opcional; ausente = predeterminado de la ranura
-    "c2": "#4ADEDE", "c3": "#FF5C8A", "c4": "#7CFF6B", "todos": "#B388FF", "coro": "#FF9F1C" } },
+    "c2": "#35C6E8", "c3": "#FF5C8A", "c4": "#7CFF6B", "todos": "#B388FF", "coro": "#FF9F1C" } },
   "pantalla": { …, "zonas": "por_parte" }       // opcional: "por_parte" | "una"; ausente = "por_parte" (§4 bis)
 }
 ```
@@ -210,3 +210,12 @@ Completa §3 con lo implementado en la tarea 0340:
 - `colores_partes` no tiene ranura `c1` en el esquema: una clave `c1` se descarta al leer y no se vuelve a escribir.
 - `guardarTiemposSchema`: con `partes`, cada `parte` apunta a un cantante de la lista y `todos` exige 2 o más. Con `partes: null`, solo se admite `coro`. «`parte` solo en líneas» lo comprueba main.
 - Semilla de reparto opt-in (`sembrar(datos, { reparto: true })`, `npm run semilla -- --reparto`).
+
+## Revisión 2026-11-23 · Guardado del reparto, partes en pausas y color del Cantante 2 (preguntas 0341 y 0345)
+
+- **Quién envía `partes`** (§2): `GuardadoEditor` normaliza con `normalizarReparto` y manda `partes: letra.partes ?? null` en cada guardado. Main trata `null` como «quitar» y nunca escribe la clave con `null`, así que una canción sin reparto no cambia en disco.
+- **`parte` en una pausa**: main la **descarta en silencio** al escribir (`guardarTiempos`) y no rechaza la petición. Es una excepción acotada al «estricto» de §1, que sigue rigiendo para todo lo demás. Motivo:
+  - el elemento de tiempos no lleva `tipo` y es un dato inofensivo;
+  - rechazar la petición haría fallar el guardado del editor y arriesgaría las ediciones del usuario por un detalle que no se pinta.
+  - El reducer no debe enviarla nunca: lo fija un test del reducer (0342).
+- **Paleta predeterminada** (§4): el Cantante 2 pasa de `#4ADEDE` a **`#35C6E8`** (pregunta 0345, diseñador). Con el tema «Shinobi» tiene 5,63:1 frente al fondo, ΔE 46,0 frente a la letra blanca y ΔE simulado 31,9 en daltonismo: pasa las tres comprobaciones, mientras que `#4ADEDE` hacía saltar el aviso de daltonismo frente a la letra. Las demás ranuras no cambian. El ejemplo de §1 ya está corregido.

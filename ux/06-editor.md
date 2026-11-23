@@ -3695,7 +3695,7 @@ Componente «Menú contextual» del sistema visual, anclado a la fila principal 
 | **+ Añadir cantante** | Crea el cantante en la primera ranura libre **y asigna la selección** a él, en un solo paso de deshacer (así se empieza un dúo sin pasar por ningún ajuste). Su carril aparece al momento. Anuncio `edi.partes.anuncio.nuevo`. |
 | **Nombres de los cantantes…** | Abre «Funciones» con el foco en el nombre del primer cantante de la selección. |
 | **Alt + 1…4** (atajo directo) | Asigna la selección al Cantante N **si existe**; si no, no hace nada y anuncia `edi.partes.noExiste`. Se lee la tecla física (`Digit1`…`Digit4`), sin Ctrl ni Cmd (AltGr no cuenta), fuera de campos de texto y nunca con el foco en el editor preciso ([0161](../preguntas/0161-viabilidad-tecnica-de-varios-cantantes-y-coros.md) §6). |
-| **Alt + ↑ / ↓** (lista y línea de tiempo) | Lleva la selección a la parte anterior o siguiente en el **orden de los carriles visibles** (abajo); con Alt + ↓ desde el último carril de un dueto se llega también a Todos. Un paso por pulsación; las pulsaciones seguidas en menos de 1 s cuentan como uno. No crea cantantes. |
+| **Alt + ↑ / ↓** (lista y línea de tiempo) | Lleva la selección a la parte anterior o siguiente en el **orden de los carriles visibles** (abajo); con Alt + ↓ desde el último carril de un dueto se llega también a Todos. Un paso por pulsación; las pulsaciones seguidas en menos de 1 s cuentan como uno. No crea cantantes. No da la vuelta en los extremos; con partes distintas seleccionadas, parte de la de la principal. **Solo en canciones con reparto**: sin reparto no hace nada (regla de oro: la canción se comporta como en 0.2.2 y una pulsación accidental no debe crear un coro); el coro se crea con C › C o con el menú (revisión 2026-11-23, 0340 n.º 5). |
 
 ### Panel Sincronía
 
@@ -3878,7 +3878,8 @@ Ninguno actúa en campos de texto, con el foco en el editor preciso, en el modo 
 ### Accesibilidad (0.2.3 · feature 1, editor)
 
 - **El color nunca va solo**: chip, etiqueta de carril, franja de «Juntar carriles» y fila «Canta» llevan siempre la inicial o «( )»; el coro lleva además paréntesis y `texto-2`. Los nombres accesibles dicen la parte completa («Canta: Luis», «Canta: Coro»).
-- La lista pasa a `aria-multiselectable="true"`; cada fila seleccionada tiene `aria-selected="true"` y la principal, además, `aria-current="true"`.
+- La lista pasa a `aria-multiselectable="true"`; cada fila seleccionada tiene `aria-selected="true"`. La principal es la que tiene el foco del *roving tabindex* y su nombre accesible añade «, principal» con varias seleccionadas. **`aria-current` conserva su sentido de 0.2.2** (la línea que suena) y no se usa para la principal: dos filas con `aria-current` de significado distinto confundirían (revisión 2026-11-23, 0340 n.º 3).
+- **Chip de la fila** (0340 n.º 1): en la lista es decorativo para la accesibilidad (`aria-hidden`, clic de ratón con objetivo de 24 × 24); su texto va en el nombre accesible de la fila («…, Canta: Luis») y por teclado se llega al menú con C o con el menú contextual. Con varias seleccionadas, la principal se distingue además por un contorno de 1 px `acento-texto` (0340 n.º 4). Clic secundario sobre una fila ya seleccionada conserva la selección y la hace principal; sobre una no seleccionada, vuelve a una sola (0340 n.º 2).
 - El arrastre tiene equivalente de teclado (C, Alt + 1…4, Alt + ↑/↓) y de menú.
 - Anuncios (`aria-live="polite"`), uno por gesto: `edi.partes.anuncio`, `edi.partes.anuncio.nuevo`, `edi.partes.quitado`, juntar o separar carriles (`edi.partes.anuncio.juntar`).
 - Objetivos: chip 24 × 24; carril ≥ 24 px de alto; franjas de destino del arrastre ≥ 24 px.

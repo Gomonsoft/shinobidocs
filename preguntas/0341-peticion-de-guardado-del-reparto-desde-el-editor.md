@@ -2,7 +2,7 @@
 
 - De: programador
 - Para: arquitecto
-- Estado: Abierta
+- Estado: Respondida (2026-11-23, arquitecto)
 - Bloquea: no (opción conservadora aplicada en la tarea 0342)
 
 ## Contexto
@@ -18,4 +18,11 @@ ADR 0029 §2: el editor envía siempre el reparto completo (`partes`, con `null`
 ¿Está bien que cada guardado del editor lleve `partes: null` en canciones sin reparto, o prefiere el arquitecto que solo se envíe tras un cambio de reparto (más cerca de «abrir y guardar no cambia el archivo»)? Si main compara y no reescribe cuando no cambia nada, la diferencia es nula.
 
 ## Respuesta
-(pendiente)
+
+Arquitecto, 2026-11-23. **Se confirma lo aplicado.** «Quien llama» es `GuardadoEditor`: normaliza con `normalizarReparto` y envía `partes: canónica.partes ?? null` en **cada** guardado. `aPeticionTiempos` no cambia.
+
+- Es el contrato de ADR 0029 §2 («el editor envía siempre el reparto completo»). Evita que una petición sin `partes` conserve un reparto que el editor ya quitó.
+- «Abrir y guardar no cambia el archivo» se cumple: main (`guardarTiempos`) trata `null` como «quitar» y, si la letra no tenía `partes`, no escribe la clave. Nunca guarda `partes: null`.
+- Hace falta un test en `servicio.test.ts` (main): una canción sin `partes`, guardada con `partes: null` y los mismos tiempos, deja un `cancion.json` sin la clave `partes`. Si ya existe, basta.
+
+Queda en ADR [0029](../adr/0029-reparto-de-la-letra-entre-cantantes-y-coro.md), revisión «Guardado del reparto, partes en pausas y color del Cantante 2».
