@@ -31,6 +31,36 @@ Referencia: [07 · Voces a la vez](../../07-reproductor.md#voces-a-la-vez-condic
    - Se descarta impedir juntar, porque con poco espacio los carriles se juntan solos y no habría salida.
    - Spec: 06, fila «"Juntar carriles" con solapes», y C1S-E6, con la captura `editor-1280x720-100-juntos-solapes.png`.
 
+## Segunda vuelta (2026-11-23): editor y reproductor regenerado, veredicto final
+
+**Aprobada con correcciones menores** (provisional, como toda la sección condicionada).
+
+Capturas del editor revisadas: `solape-carriles`, `solape-carriles-juntos`, `solape-menu-inactivo`, `solape-arrastre-prohibido` y `solape-silencios-excluidas`, a los tres tamaños salvo el arrastre, que solo está a 1280 × 720 al 100 %. Están guardadas en `0.2.3-feature-1/`. También `juntos-solapes`, en esta carpeta.
+
+| Criterio | Veredicto final |
+|---|---|
+| C1S-E1 | Cubierto por los tests. En `solape-carriles` se ve el fin de la línea de Ana pasando el inicio de la de Luis. |
+| C1S-E2 | Aprobado. Las dos regiones se ven enteras en sus carriles y la fila 2 lleva el icono `layers`. |
+| C1S-E3 | Aprobado con corrección menor 4: las partes inactivas y su motivo se ven en el menú, y en el arrastre el carril de Ana se marca como prohibido. |
+| C1S-E4 | Aprobado. `solape-silencios-excluidas` muestra «2 líneas que suenan a la vez que otras no se han tocado.» |
+| C1S-E5 | Cubierto por los tests. |
+| C1S-E6 | Aprobado con correcciones menores 5 y 6: dos sub-filas, ninguna región tapa a otra, y a 1024 × 576 igual. |
+| C1S-E7 | Sin captura (corrección menor 7). |
+| C1S-R1, C1S-R2 | Aprobados, igual que en la primera vuelta. |
+| C1S-R4 | Aprobado por el test del programador, con corrección menor 8 para las capturas. Las regeneradas **siguen sin ser coherentes entre sí**: `tres-voces-con-coro` y `dos-voces-final` se ven más pálidas que `dos-voces`. Pero la palidez afecta a todo el fotograma (bordes de las insignias, barra de progreso y deslizadores), no solo a lo ya cantado. Eso cuadra con la explicación del perfil de color de la captura y no con una mezcla durante el solape. |
+
+4. **Menor.** Menú y arrastre con una parte prohibida (spec 06, fila «Asignar», y sistema visual · «Carril»):
+   - En el menú, el motivo `edi.partes.solapaMisma` sale cortado con «…» («se solapa con su lín…»). Debe leerse entero: el menú crece hasta 360 px y, si no cabe, el motivo pasa a un segundo renglón.
+   - En el arrastre, el carril prohibido usa el mismo rojo que el carril de destino permitido. Debe llevar borde **discontinuo** de 2 px `error` y el motivo centrado en el carril, para no depender solo del color.
+5. **Menor.** En la pista juntada, las regiones de cada sub-fila van pegadas arriba y el texto de 20 px pierde los trazos descendentes («gaviota», «bahía»). Cambio:
+   - Las sub-filas se reparten el alto de la pista a partes iguales.
+   - Cada región va centrada en vertical en su sub-fila.
+   - El texto va centrado en los 17 px que deja la franja, sin recortes.
+   - Spec 06, fila «"Juntar carriles" con solapes».
+6. **Menor.** `solape-carriles-juntos` y `juntos-solapes` salieron con el puntero encima de «Separar carriles», y su tooltip tapa «Sincronizar al ritmo». Hay que repetirlas con el puntero fuera de la fila de controles.
+7. **Menor.** Falta la captura de C1S-E7. Cambio: añadir `editor-1280x720-100-bloque-solapes.png` en esta carpeta, con «Todas en un bloque» elegido y la nota `edi.pantalla.bloqueSolapes` con «Ver en zonas» a la vista.
+8. **Menor.** Repetir las cinco capturas del reproductor de esta feature en una sola ejecución con un perfil de color fijo (por ejemplo, Chromium con `--force-color-profile=srgb`), para que los colores de las partes coincidan entre capturas y con las de la feature 1.
+
 ## Observación sin cambio
 
 La lectura funciona: cada voz en su franja, quien canta ahora al 100 % y quien espera al 55 %, y las insignias se leen a 1280 × 720. Con tres barridos a la vez la pantalla está cargada pero se puede seguir. Se anota en la guía manual para probarlo a 5 m.

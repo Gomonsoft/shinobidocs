@@ -79,6 +79,35 @@ Los criterios de comportamiento (deshacer, teclas, datos) no se ven en una captu
     | `arrastre-carril` | El puntero sobre un carril de destino, con la región arrastrada visible y el borde de destino. Si la región no se dibuja durante el arrastre, el fallo es de la corrección 2 y bloquea. |
     | `estilo-voces` (nueva) | «Letra en pantalla › Varias voces» con la nota `edi.pantalla.zonas`. |
 
+## Segunda vuelta del editor (2026-11-23): veredicto final
+
+**Aprobada con correcciones menores.** Las diez correcciones del editor están aplicadas y se ven en las capturas regeneradas:
+
+| N.º | Comprobado en |
+|---|---|
+| 1 | Solo icono para «Juntar carriles» y «Ajustar los silencios» a 1024 × 576 y al 125 %, sin botones recortados: `lista-varios`, `sin-reparto`. |
+| 2 | Durante el arrastre la pista crece y el Coro queda por encima de la vista general: `arrastre-carril`. |
+| 3 | Etiquetas de 96 px, con «Todos» y «Cantante» enteros. |
+| 4 | El icono de la onda va sobre las etiquetas: `coros-sin-voz`. |
+| 5 | El texto del carril vacío lleva fondo. |
+| 6 | El chip tiene ancho según su contenido en Funciones y Estilo. |
+| 7 | Funciones a 300 px no queda debajo de la barra de desplazamiento. |
+| 8 | La lista a 256 px deja ≈ 100 px al texto. |
+| 9 | La franja de destino se resalta. |
+| 10 | Capturas completas: `estilo-colores` llega hasta «Más colores», `funciones-varios` y `funciones-cuatro` llegan hasta `edi.partes.maximo`, y `arrastre-carril` muestra la región arrastrada. |
+
+| Criterio | Veredicto final |
+|---|---|
+| C1-E1, C1-E7, C1-E8, C1-E10, C1-E13, C1-E14, C1-E15, C1-E16, C1-E17, C1-E19, C1-E23 | Aprobados |
+| C1-E9 | Aprobado (`funciones-cuatro`: «Hasta 4 cantantes por canción.» y sin «+ Añadir cantante») |
+| C1-E25 | Aprobado con corrección menor 12 |
+| C1-E24 | Aprobado con corrección menor 12 |
+| Criterios de comportamiento | Cubiertos por los tests de la tarea |
+
+12. **Menor.** `estilo-voces` muestra «Varias voces» con sus dos opciones, pero se corta en «Líneas a la vez» y no deja ver la nota `edi.pantalla.zonas`, que C1-E24 pide. Cambio: repetir la captura a los tres tamaños desplazando el panel hasta que se vea la nota (bajo «Líneas ya cantadas»).
+
+Las capturas `solape-*` que se guardaron en esta carpeta son de la feature 3 y se revisan en [su revisión](../0.2.3-feature-3/revision.md).
+
 ## Reproductor (segunda parte, 2026-11-23)
 
 Capturas `reproductor-*.png`: 9 estados a 1920 × 1080 y a 1280 × 720, más `cuatro-tercios-duo` a 1440 × 1080. Referencia: [07 · 0.2.3 · Feature 1](../../07-reproductor.md#023--feature-1--cantantes-por-línea-en-pantalla).
