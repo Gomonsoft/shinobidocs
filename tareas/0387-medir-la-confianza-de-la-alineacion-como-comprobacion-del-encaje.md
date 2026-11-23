@@ -1,5 +1,5 @@
 # 0387 — Feature 5 · Medir la confianza de la alineación como comprobación del encaje («señal D»), sin cambiar nada del producto
-- Estado: Pendiente
+- Estado: Hecha (medida; criterio de adopción: NO; decide el arquitecto, pregunta 0311)
 - Paso del pipeline: 3
 - Depende de: 0328 fase 1 (hecha; emisiones guardadas fuera del repositorio)
 - ADRs: 0024 §1 (opción D), 0028 («Resultado de la prueba técnica», fase 1), 0025 (revisión de las preguntas 0305 y 0296)
@@ -42,9 +42,9 @@ Saber si alinear **toda la letra** contra la voz separada permite afirmar «es l
 
 ## Criterios de aceptación
 
-- [ ] Script `encaje_alineacion.py` en `docs/spikes/0028-alineacion/` (mismo entorno `uv`), de solo lectura, que imprime cifras por par e ids abreviados, sin texto. Emisiones y JSON fuera del repositorio.
-- [ ] Tabla por canción y resumen por `cMin` con las cinco condiciones y la línea `Criterio de adopción (señal D): SÍ/NO`.
-- [ ] Resultado en el README del spike y en una pregunta al arquitecto, que decide y lo anota en ADR 0024/0025/0028.
+- [x] Script `encaje_alineacion.py` en `docs/spikes/0028-alineacion/` (mismo entorno `uv`), de solo lectura, que imprime cifras por par e ids abreviados, sin texto. Emisiones y JSON fuera del repositorio.
+- [x] Tabla por canción y resumen por `cMin` con las cinco condiciones y la línea `Criterio de adopción (señal D): SÍ/NO`.
+- [x] Resultado en el README del spike y en una pregunta al arquitecto, que decide y lo anota en ADR 0024/0025/0028.
 
 ## Pruebas de feedback
 
@@ -56,4 +56,9 @@ Saber si alinear **toda la letra** contra la voz separada permite afirmar «es l
 
 ## Notas de implementación
 
-(las rellena el programador al terminar)
+Programador, 2026-11-23. **Criterio de adopción (señal D): NO.** Cifras, definición exacta y tablas en el [README del spike](../spikes/0028-alineacion/README.md#señal-d-tarea-0387-la-confianza-de-alinear-la-letra-entera-como-comprobación-del-encaje). Pregunta [0311](../preguntas/0311-senal-d-la-confianza-de-alinear-la-letra-entera-no-cumple-el-criterio-de-adopcion.md).
+
+- **Qué se hizo**: `docs/spikes/0028-alineacion/encaje_alineacion.py` (solo lectura, sin texto); emisiones de 5, 8, 12 y 15 con `alinear.py --guardar-emisiones` (fuera del repositorio).
+- **Resultado**: 0 ajenas aceptadas y 5/8 rechazadas (cumple 1 y 2); 1 de 78 desplazadas aceptada (falla el 3: `2fec1a9d` +0,8 s, por su sesgo propio de +430 ms); propias aceptadas 10/9/9/9/6 de 13 para cMin 0,3 a 0,7 (cumple el 4 hasta 0,6); margen −0,236 a +0,081 (falla el 5): la propia `ca2bf253` (0,577) puntúa menos que una ajena (0,629).
+- **Lo que la tarea no resolvía (anotado, no inventado)**: la «desplazada» con una alineación de letra entera solo cambia el sesgo (sesgo − d); se aplicó tal cual, y su rechazo depende del sesgo propio sin verdad. Cruce de idiomas y letras de longitud muy distinta no se midieron (sin pares inalineables en la muestra).
+- **Cómo probarlo**: ver README del spike (necesita las emisiones y la copia de la biblioteca).

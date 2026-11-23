@@ -142,3 +142,55 @@ GLOBAL: lineas alineadas 747; alineacion con voz>=300 ms tras el fin: m0 265 (35
 Comparación en las mismas 91 líneas: la alineación deja voz detrás en 54 (59,3 %; con margen de 100 ms, 43 = 47,3 %) frente a 23 (25,3 %) de los fines prudentes; la alineación pone el fin 300 ms antes (mediana). Es decir, **sobre las líneas donde «Ajustar los silencios» encuentra un silencio claro, el fin por alineación cae antes y deja más voz detrás**; no hay verdad para decidir cuál es mejor.
 
 V2 (palabras de las canciones 10 y 17, origen desconocido; error del inicio de palabra, con la ventana del filtro): ver las dos últimas líneas de arriba. `8766c2f2` (10): mediana 40 ms, 85 % a ≤ 100 ms, 91 % a ≤ 200 ms (cumpliría 120 ms / 80 % de ADR 0028 §2.4); `f538b75e` (17): mediana 191 ms, 29 % a ≤ 100 ms, 53 % a ≤ 200 ms (no cumpliría). Son 489 palabras de dos canciones cuyas palabras no son una verdad comprobada.
+
+
+## Señal D (tarea 0387): la confianza de alinear la letra entera como comprobación del encaje
+
+Script: `encaje_alineacion.py` (solo lectura; usa las emisiones guardadas, 17 en total: las 13 de la fase 1 más las canciones 5, 8, 12 y 15 calculadas con `alinear.py --guardar-emisiones`). Resultado: **Criterio de adopción (señal D): NO.**
+
+**Definición exacta.** Por par (letra L, voz V del mismo idioma; 15 `es` y 2 `en`), se alinea **toda la letra de una vez** con Viterbi CTC (palabras y líneas separadas por `|`), sin usar los tiempos del LRC.
+- `conf` = media de exp(logp) de **todos los fotogramas no-blanco** de la alineación. `conf_linea` = la misma media sobre los fotogramas de los tokens de una línea.
+- Δ de una línea = inicio de su primera palabra alineada − (inicio_LRC + d). `sesgo` = mediana de Δ; `p90` = percentil 90 de |Δ − sesgo|.
+- «Coincide» si `conf` ≥ `cMin`, p90 ≤ 600 ms y |sesgo| ≤ 500 ms. Un par con menos fotogramas que tokens no es alineable y se cuenta como rechazado (no ocurrió: 14/14 y 1/1 alineables).
+- **Desplazada** (lo resuelve la tarea): la alineación no cambia; solo cambia `d`, así que `conf` y p90 son los mismos y el sesgo pasa a ser sesgo − d. Se aplican ±0,8, ±1,5 y ±3 s a cada una de las 13 propias (78 casos). Consecuencia: una desplazada solo se rechaza por el criterio |sesgo| ≤ 500 ms, que depende del sesgo propio de la canción.
+- Ajenas: cada una de las 13 letras contra las otras 14 voces `es` (o la otra `en`); las de distinto idioma se descartan por idioma y no se midieron (el modelo de un idioma sobre la voz de otro no está definido en la prueba). Letras de otra versión (5, 8, 12, 15): se miden contra su propia voz y contra las demás, informativo.
+
+| id | cancion | idioma | conf propia | p90 (ms) | sesgo (ms) | lineas conf>=0,5 | med conf linea | frac >1 s | mejor ajena (voz) | conf ajena | margen | alineables ajenas |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 18a9c864 | 2 | es | 0.936 | 235 | 205 | 100% | 0.95 | 0% | 2fec1a9d | 0.613 | +0.323 | 14/14 |
+| 24728256 | 3 | es | 0.781 | 284 | 255 | 87% | 0.82 | 2% | 2fec1a9d | 0.463 | +0.318 | 14/14 |
+| 2fec1a9d | 4 | es | 0.835 | 210 | 430 | 92% | 0.85 | 0% | fd955121 | 0.279 | +0.556 | 14/14 |
+| 613de88b | 6 | es | 0.710 | 76 | 10 | 96% | 0.72 | 0% | 2fec1a9d | 0.615 | +0.095 | 14/14 |
+| 76a5239f | 7 | es | 0.661 | 155 | 145 | 75% | 0.70 | 0% | 2fec1a9d | 0.524 | +0.137 | 14/14 |
+| 8275d460 | 9 | en | 0.257 | 510 | 830 | 3% | 0.23 | 2% | f538b75e | 0.192 | +0.065 | 1/1 |
+| 8766c2f2 | 10 | es | 0.782 | 280 | 105 | 92% | 0.80 | 8% | 2fec1a9d | 0.566 | +0.216 | 14/14 |
+| 906aeca5 | 11 | es | 0.693 | 835 | 50 | 65% | 0.84 | 9% | 2fec1a9d | 0.447 | +0.246 | 14/14 |
+| ca2bf253 | 13 | es | 0.577 | 662 | -30 | 64% | 0.56 | 6% | 2fec1a9d | 0.623 | -0.046 | 14/14 |
+| e0cea680 | 14 | es | 0.695 | 345 | 215 | 74% | 0.67 | 5% | 2fec1a9d | 0.495 | +0.201 | 14/14 |
+| f413b443 | 16 | es | 0.757 | 250 | 40 | 90% | 0.76 | 3% | 2fec1a9d | 0.629 | +0.128 | 14/14 |
+| f538b75e | 17 | en | 0.393 | 546 | 40 | 30% | 0.31 | 7% | 8275d460 | 0.174 | +0.219 | 1/1 |
+| fd955121 | 18 | es | 0.618 | 370 | 180 | 47% | 0.46 | 8% | 2fec1a9d | 0.339 | +0.278 | 14/14 |
+| 4dabb6ff | 5 (otra version/informativa) | es | 0.689 | 3220 | 3660 | 82% | 0.74 | 71% | 2fec1a9d | 0.554 | +0.135 | 14/14 |
+| 78b9d69d | 8 (otra version/informativa) | es | 0.629 | 10418 | 645 | 60% | 0.55 | 24% | 2fec1a9d | 0.569 | +0.060 | 14/14 |
+| b688c62b | 12 (otra version/informativa) | es | 0.668 | 1200 | -170 | 72% | 0.64 | 14% | 2fec1a9d | 0.615 | +0.053 | 14/14 |
+| e1b65f41 | 15 (otra version/informativa) | es | 0.894 | 284 | -440 | 95% | 0.93 | 3% | 2fec1a9d | 0.550 | +0.345 | 14/14 |
+
+| cMin | propias aceptadas | ajenas aceptadas | 5 y 8 aceptadas | desplazadas aceptadas | margen (min propia aceptada - max ajena) | cumple 1 | 2 | 3 | 4 | 5 | TODO |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 0.3 | 10/13 | 0 (+0 de letras de otra version) | 0 | 1/78 | -0.236 | sí | sí | no | sí | no | no |
+| 0.4 | 9/13 | 0 (+0 de letras de otra version) | 0 | 1/78 | -0.011 | sí | sí | no | sí | no | no |
+| 0.5 | 9/13 | 0 (+0 de letras de otra version) | 0 | 1/78 | -0.011 | sí | sí | no | sí | no | no |
+| 0.6 | 9/13 | 0 (+0 de letras de otra version) | 0 | 1/78 | -0.011 | sí | sí | no | sí | no | no |
+| 0.7 | 6/13 | 0 (+0 de letras de otra version) | 0 | 1/78 | +0.081 | sí | sí | no | no | no | no |
+
+max conf ajena (13 letras propias contra las otras voces del mismo idioma): 0.629
+Criterio de adopcion (senal D): NO
+
+**Lectura punto a punto (criterio cerrado de la tarea).**
+1. 0 ajenas aceptadas: **cumple** con todos los `cMin`. La mayor confianza de una ajena es 0,629 (letra de `f413b443` sobre la voz de `2fec1a9d`). La voz de `2fec1a9d` (113 líneas, densa y continua) es la mejor ajena de 10 de las 11 letras `es` (0,46 a 0,63).
+2. 5 y 8 no aceptadas: **cumple** (p90 de 3,2 s y 10,4 s). Pero no por la confianza (0,689 y 0,629, parecidas a las de varias propias), sino por la regla de los tiempos del LRC.
+3. 0 desplazadas aceptadas: **falla** con todos los `cMin` (1 de 78): `2fec1a9d` desplazada +0,8 s queda con sesgo −370 ms porque su sesgo propio es +430 ms. Es inherente a la regla |sesgo| ≤ 500 ms con el sesgo propio sin verdad.
+4. Propias aceptadas ≥ 7/13: **cumple** de 0,3 a 0,6 (10, 9, 9, 9) y **falla** con 0,7 (6). No aceptadas con 0,5: 9 y 17 (inglés, confianza 0,26 y 0,39), 11 (p90 835 ms) y 13 (p90 662 ms).
+5. Margen ≥ 0,1: **falla** con todos. La confianza propia de `ca2bf253` (0,577) es **menor** que la de una ajena (0,629), y con 0,7 el margen es +0,081.
+- **Señal débil por sí sola**: la confianza separa bien (margen +0,06 a +0,56) en 10 de 13 canciones, pero tres propias (6: +0,095, 9: +0,065 y 13: −0,046) quedan dentro del ruido de la mejor ajena; sin los tiempos del LRC (p90 y sesgo) la regla no distingue la 5, la 8 ni la 12 de las propias, y la 15 (0,894, p90 284 ms) sale mejor que casi todas.
+- Ajenas muy distintas en longitud o idioma: sin pares inalineables en esta muestra; no se midió el cruce de idiomas.
