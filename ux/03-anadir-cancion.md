@@ -413,7 +413,7 @@ Origen: [plan 0.2.2, feature 7](../versiones/0.2.2/plan-4.md) y [propuesta 021](
 flowchart LR
     A[Elegir origen] -->|1 archivo o 1 video| U[Flujo de una canción<br/>como en 0.2.1]
     A -->|varios archivos · carpeta| AN[Leyendo N archivos…]
-    A -->|varios enlaces · lista o álbum| LE{¿Aviso de YouTube<br/>aceptado?}
+    A -->|varios enlaces · lista o álbum| LE{¿Aviso aceptado?<br/>lista: el de listas · enlaces sueltos: el de YouTube}
     LE -- No --> AV[Aviso legal en línea] --> LI
     LE -- Sí --> LI[Consultando la lista…]
     AN --> T[Tabla de revisión]
@@ -504,7 +504,7 @@ Con archivos locales, el origen dice «De la carpeta «Querido Album» · 13 arc
 | **Qué se considera lote** | Dos o más enlaces de video distintos; un enlace de lista de reproducción o de álbum; una mezcla de ambos. Un único enlace de video: flujo de una canción. |
 | **Video que está en una lista** | Un enlace de video con una lista dentro se trata como **ese video**. Bajo su vista previa aparece `add.lote.ofertaLista` con [Añadir la lista entera], que consulta la lista y pasa a L2 (los datos ya escritos del video se conservan en su fila). La lista no se consulta hasta pulsarlo. |
 | **Lo que no se admite** | Directos, canales enteros y las mezclas automáticas de YouTube (listas que YouTube genera y no tienen fin): `add.error.URL_NO_SOPORTADA` con su texto nuevo. |
-| **Aviso legal** | El aviso ya aceptado vale para los lotes **(decisión provisional: no se pide aceptar de nuevo)**; su texto gana un punto sobre listas y álbumes para quien lo vea por primera vez o lo relea en Ajustes. La tabla de un lote de YouTube muestra siempre el recordatorio `add.lote.legal` con «Leer el aviso» (abre el diálogo de solo lectura de la spec 08). |
+| **Aviso legal** | La **primera** lista o álbum de YouTube muestra el aviso legal con su punto sobre listas y pide aceptarlo (se guarda aparte del aviso de YouTube). Después no se vuelve a pedir. Si el aviso de YouTube tampoco se había aceptado, **un solo diálogo** acepta los dos. Varios enlaces sueltos no lo piden: usan el aviso de siempre ([ADR 0026](../adr/0026-importacion-por-lotes-y-acciones-por-lotes-en-la-biblioteca.md) §3, respuesta a [0260](../preguntas/0260-aviso-legal-de-las-listas-adr-0026-frente-a-la-spec-03.md); provisional para el usuario en 0159 fila 4). La tabla de un lote de YouTube muestra siempre el recordatorio `add.lote.legal` con «Leer el aviso» (abre el diálogo de solo lectura de la spec 08). |
 | **L1 · archivos** | Solo se leen las etiquetas y la duración (rápido); el audio se prepara después, en la cola. Barra determinada «{i} de {n}». [Cancelar] vuelve a A sin crear nada. Las filas van apareciendo debajo según se leen. |
 | **L1 · YouTube** | Consulta rápida de la lista (títulos, duraciones, canal), sin descargar nada ni consultar video a video. Barra indeterminada. Con varios enlaces sueltos, «Consultando {i} de {n} enlaces…». Si YouTube bloquea la consulta, la actualización automática del descargador de siempre (C1). [Cancelar] o Esc vuelven al campo con lo pegado. |
 | **Una sola fila válida** | Si tras leer queda una única canción añadible, se pasa al flujo de una canción (formulario D) con sus datos. |
@@ -521,7 +521,7 @@ Con archivos locales, el origen dice «De la carpeta «Querido Album» · 13 arc
 | **Aviso de datos comunes** | Si el artista o el álbum se pusieron a todas las filas por el nombre de la lista, de la carpeta o del canal, un único aviso arriba (`add.lote.comunes`) en vez de marcar cada fila como dudosa. |
 | **Artista para todas… / Álbum para todas…** | Abren un popover con un campo (con autocompletado) y [Aplicar a las {n} marcadas]. Sustituye el valor en las filas marcadas; se deshace con Ctrl/Cmd + Z mientras el foco siga en la tabla. |
 | **Solo las que hay que comprobar ({k})** | Casilla que deja a la vista solo las filas con un dato dudoso. Con 0 no se muestra. No cambia qué filas están marcadas. |
-| **Resumen** | `add.lote.resumen`: canciones marcadas, espacio aproximado (100 MB por canción de 4 minutos, proporcional a la duración) y tiempo aproximado (duración total × el factor de separación medido en este equipo, más las descargas). Con duraciones desconocidas: «al menos». Se recalcula al marcar y desmarcar. |
+| **Resumen** | `add.lote.resumen`: canciones marcadas, espacio aproximado (100 MB por canción de 4 minutos, proporcional a la duración) y tiempo aproximado (duración total × el factor de separación medido en este equipo, más las descargas). Con duraciones desconocidas: «al menos». Se recalcula al marcar y desmarcar. Datos (respuesta a [0261](../preguntas/0261-datos-que-el-modo-lote-necesita-y-el-contrato-de-lectura-no-trae.md)): la lectura trae `libreBytes` y `factorMinutos`, y el renderer calcula con `estimarEspacioLote` y `estimarTiempoLote` (las mismas funciones que main). **Sin factor medido** (`factorMinutos: null`, equipo que aún no ha separado nada): el resumen omite el tiempo (`add.lote.resumen.sinTiempo`). **Sin espacio libre conocido** (`libreBytes: null`): no se avisa de espacio en la tabla; si al pulsar «Añadir» main responde `SIN_ESPACIO`, se muestra entonces `add.lote.sinEspacio` con su `{k}` (`detalles.caben`) y no se crea nada. |
 | **Qué pasará después** | Con la búsqueda automática activada: `add.lote.despues`. Desactivada (o sin la feature 5): `add.lote.despues.sinLetra` con el enlace «Activar en Ajustes». |
 | **Botón primario** | «Añadir {n} canciones» o «Descargar y añadir {n} canciones» (YouTube). Inactivo con 0 marcadas, con un título vacío o sin espacio. Al pulsarlo: «Añadiendo… {i} de {n}», se crean los borradores en el orden de la tabla, entran en la cola y se abre la Biblioteca (spec 02, feature 7). |
 | **Cancelar / Esc / ‹ Biblioteca** | Sin cambios en la tabla: vuelve a la Biblioteca. Con algún campo editado o alguna casilla cambiada: diálogo `add.lote.descartar` (foco en «Seguir revisando»). |
@@ -533,15 +533,17 @@ Con archivos locales, el origen dice «De la carpeta «Querido Album» · 13 arc
 | Dato dudoso (feature 6) | Marcada | ⚠ `add.lote.fila.dudoso.*` |
 | Ya está en la biblioteca (mismo video; en archivos, mismo nombre de archivo y misma duración, o mismo título, artista y duración) | **Desmarcada**; se puede marcar | ⓘ `add.lote.fila.duplicada`; al marcarla, `add.lote.fila.duplicada.marcada` |
 | Dura más de 10 minutos | Marcada | ⚠ `add.lote.fila.larga` |
-| Video privado, eliminado o restringido | No se puede marcar | ✕ `add.lote.fila.noDisponible` |
-| Directo | No se puede marcar | ✕ `add.lote.fila.directo` |
-| Archivo que no se puede leer | No se puede marcar | ✕ `add.lote.fila.ilegible` |
-| Dura menos de 10 segundos | No se puede marcar | ✕ `add.lote.fila.corta` |
+| Video privado, eliminado o restringido (`problema: "no_disponible"`) | No se puede marcar | ✕ `add.lote.fila.noDisponible` |
+| Directo o directo programado (`problema: "directo"`) | No se puede marcar | ✕ `add.lote.fila.directo` |
+| Archivo de audio que no se puede leer (`problema: "ilegible"`) | No se puede marcar | ✕ `add.lote.fila.ilegible`. La fila muestra el título sacado del nombre del archivo (sin editar: campos de solo lectura) y la duración «—». |
+| Dura menos de 10 segundos (`problema: "corta"`) | No se puede marcar | ✕ `add.lote.fila.corta` |
+
+En las filas con ✕ los campos son de solo lectura (texto en `texto-2`), no se cuentan en el resumen ni en el límite de 50, y la casilla es `aria-disabled` con el motivo en su descripción. Una entrada de lista no disponible muestra el título que trae la lista (p. ej. «[Video privado]») tal cual.
 | Fuera del límite del lote | Desmarcada | ⓘ `add.lote.fila.limite` |
 
 ### Límite, espacio y duplicados
 
-- **Límite: 50 canciones por lote** **(decisión provisional)**. Si la lista o la carpeta trae más, la tabla las muestra todas (hasta 500; por encima, `add.lote.demasiadas`) con las **50 primeras añadibles marcadas** y el aviso `add.lote.limite`. Marcar una más con 50 marcadas no hace nada y muestra `add.lote.limite.tope` junto a la casilla. Como los duplicados salen desmarcados, repetir la misma lista en otra tanda marca solas las 50 siguientes.
+- **Límite: 50 canciones por lote** **(decisión provisional)**. Si la lista o la carpeta trae más, la tabla las muestra todas (hasta 500; si la lectura llega `recortada` —lista— o `truncada` —archivos o carpeta: más de 500 audios, o se dejó de buscar tras 5 000 entradas—, aviso `add.lote.demasiadas` en su variante, sobre la tabla, en `info`) con las **50 primeras añadibles marcadas** y el aviso `add.lote.limite`. Marcar una más con 50 marcadas no hace nada y muestra `add.lote.limite.tope` junto a la casilla. Como los duplicados salen desmarcados, repetir la misma lista en otra tanda marca solas las 50 siguientes.
 - **Espacio**: si el espacio libre no alcanza para las marcadas (con un margen de 1 GB), el resumen pasa a `error` con `add.lote.sinEspacio` y el botón primario queda inactivo hasta desmarcar o liberar espacio (se vuelve a comprobar al marcar, al desmarcar y al volver a la ventana).
 - **Duplicados**: nunca se añaden sin querer (salen desmarcados), y nunca se impiden (se pueden marcar).
 - Un lote se puede añadir con la cola de preparación ya en marcha: se pone detrás (spec 04).
@@ -615,13 +617,14 @@ Con archivos locales, el origen dice «De la carpeta «Querido Album» · 13 arc
 | `add.lote.fila.corta` | Dura menos de 10 segundos |
 | `add.lote.fila.limite` | Fuera del límite de este lote |
 | `add.lote.repetidas` | {n} estaban repetidas y se han unido. · (n = 1) 1 estaba repetida y se ha unido. |
-| `add.lote.ignorados` | No se han tenido en cuenta {n} archivos que no son de audio ni de video. · (n = 1) … 1 archivo que no es de audio ni de video. |
+| `add.lote.ignorados` | No se han tenido en cuenta {n} archivos que no son de audio ni de video o que están en la carpeta de datos de Shinobi Karaoke. · (n = 1) … 1 archivo que no es de audio ni de video o que está en la carpeta de datos. — `{n}` = `rechazadas` menos los que pasan de 500 (esos los cuenta `add.lote.demasiadas`); con `{n}` = 0 no se muestra. |
 | `add.lote.enlacesIgnorados` | {n} renglones no son enlaces de YouTube y se han ignorado. · (n = 1) 1 renglón no es un enlace de YouTube y se ha ignorado. |
 | `add.lote.paqueteIgnorado` | Los paquetes de Shinobi Karaoke no se añaden aquí. Impórtalos desde «Importar paquete…». |
 | `add.lote.limite` | Se pueden añadir hasta 50 canciones de una vez. Hemos marcado las 50 primeras; añade el resto en otra tanda. |
 | `add.lote.limite.tope` | Ya hay 50 marcadas. Desmarca alguna para marcar esta. |
-| `add.lote.demasiadas` | Esta lista tiene más de 500 elementos. Mostramos los 500 primeros. |
+| `add.lote.demasiadas` | Esta lista tiene más de 500 elementos. Mostramos los 500 primeros. · (archivos o carpeta) Hay más de 500 archivos de audio. Mostramos los 500 primeros; añade el resto desde otra carpeta. · (carpeta enorme, corte por 5 000 entradas) Esta carpeta es muy grande: mostramos lo que hemos encontrado hasta ahora. Elige una carpeta más concreta para ver el resto. |
 | `add.lote.resumen` | {n} canciones · unos {tamaño} · unos {t} minutos en tu equipo · (duraciones desconocidas) {n} canciones · al menos {tamaño} · al menos {t} minutos en tu equipo |
+| `add.lote.resumen.sinTiempo` | {n} canciones · unos {tamaño} · (duraciones desconocidas) {n} canciones · al menos {tamaño} |
 | `add.lote.despues` | Cada canción se separará, buscará su letra y quedará lista para revisar. |
 | `add.lote.despues.sinLetra` | Cada canción se separará. La búsqueda automática de letra está desactivada: quedarán como borradores sin letra. — Activar en Ajustes |
 | `add.lote.legal` | Recuerda: descarga solo contenido que tengas derecho a descargar. — Leer el aviso |
@@ -642,11 +645,12 @@ Con archivos locales, el origen dice «De la carpeta «Querido Album» · 13 arc
 - F7-N2. «Elegir carpeta…» con una carpeta que contiene 4 audios, una subcarpeta con 2 y 3 imágenes produce 6 filas y `add.lote.ignorados` con 3; una carpeta sin audio muestra `add.lote.error.carpetaVacia`.
 - F7-N3. Pegar el enlace de una lista de 12 videos (doble de YouTube) muestra «Consultando la lista…» y la tabla con 12 filas sin descargar nada (0 descargas en el doble); pegar 3 enlaces en 3 renglones produce 3 filas; un renglón que no es de YouTube se ignora con `add.lote.enlacesIgnorados`; Mayús + Intro añade un renglón e Intro consulta.
 - F7-N4. Un enlace de video que incluye una lista abre el flujo de una canción con `add.lote.ofertaLista`; la lista no se consulta hasta pulsar [Añadir la lista entera]. Un directo, un canal o una mezcla automática muestran `add.error.URL_NO_SOPORTADA` con el texto nuevo.
-- F7-N5. Sin el aviso de YouTube aceptado, pegar una lista muestra primero el aviso (con su punto sobre listas); con el aviso aceptado no se vuelve a pedir, y la tabla muestra `add.lote.legal` con «Leer el aviso».
+- F7-N5. Pegar una lista por primera vez muestra el aviso (con su punto sobre listas) **aunque el de YouTube ya estuviera aceptado**; sin ninguno aceptado, un solo diálogo acepta los dos. Aceptado una vez, no se vuelve a pedir, y la tabla muestra `add.lote.legal` con «Leer el aviso». Varios enlaces sueltos con el aviso de YouTube aceptado no lo piden.
 - F7-N6. Las filas llegan con título, artista y álbum propuestos por la feature 6; una lista que es un álbum pone su nombre como álbum de todas con el aviso único `add.lote.comunes`; «Álbum para todas…» cambia el álbum de las marcadas y Ctrl/Cmd + Z lo deshace.
 - F7-N7. Un video cuyo identificador ya está en la biblioteca sale desmarcado con `add.lote.fila.duplicada` y se puede marcar (`.marcada`); dos enlaces iguales en el mismo lote dan una sola fila y `add.lote.repetidas`; un video privado sale sin casilla con `add.lote.fila.noDisponible`.
 - F7-N8. Con una lista de 80 videos, la tabla muestra los 80 con los 50 primeros añadibles marcados y `add.lote.limite`; marcar el 51 no cambia nada y muestra `add.lote.limite.tope`. Tras añadir esos 50, repetir la misma lista marca los 30 restantes.
-- F7-N9. El resumen muestra el número de marcadas, el tamaño y el tiempo aproximados, y se recalcula al marcar y desmarcar; con espacio libre insuficiente (simulado) muestra `add.lote.sinEspacio` y el primario queda inactivo.
+- F7-N9. El resumen muestra el número de marcadas, el tamaño y el tiempo aproximados (los mismos valores que `estimarEspacioLote` y `estimarTiempoLote`), y se recalcula al marcar y desmarcar; con espacio libre insuficiente (simulado) muestra `add.lote.sinEspacio` antes de pulsar y el primario queda inactivo; al volver a la ventana se vuelve a pedir el espacio libre. Con `factorMinutos: null` sale `add.lote.resumen.sinTiempo`; con `libreBytes: null` no hay aviso previo y un `SIN_ESPACIO` de main al pulsar muestra `add.lote.sinEspacio` sin crear nada.
+- F7-N17. Una carpeta con un audio ilegible y uno de 5 s da dos filas sin casilla con `add.lote.fila.ilegible` (duración «—») y `add.lote.fila.corta`; una lista con un vídeo privado y un directo da filas con `add.lote.fila.noDisponible` y `add.lote.fila.directo`; ninguna cuenta en el resumen ni en el límite. Una lectura `truncada` o `recortada` muestra `add.lote.demasiadas` en su variante.
 - F7-N10. «Añadir {n} canciones» crea exactamente las `n` marcadas, con los datos de la tabla y en su orden, las encola y abre la Biblioteca; cancelar o Esc no crea ninguna canción ni deja archivos; con cambios en la tabla pide `add.lote.descartar` con el foco en «Seguir revisando».
 - F7-N11. Con la búsqueda automática desactivada, la tabla muestra `add.lote.despues.sinLetra` y las canciones terminan como «Falta la letra»; activada, `add.lote.despues` y terminan según la feature 5.
 - F7-N12. Una fila marcada con el título vacío muestra «Escribe un título.» y bloquea el primario; desmarcarla lo desbloquea.
