@@ -1391,7 +1391,7 @@ Mismo diálogo para un paquete de canciones y para una copia de seguridad; la co
 | Resumen | Nombre del archivo, fecha y versión con que se creó, si es completo o ligero, número de canciones y temas y tamaño. Una copia de seguridad lo dice en el título («Restaurar copia de seguridad»). |
 | Lista | Una fila por canción con icono + texto: **Nueva** (✚) · **Ya la tienes** (⟲), con cuál es más reciente por su fecha de modificación · **Ya la tienes igual** (=): mismo identificador y misma fecha de modificación; se omite siempre. `role="list"`, scroll propio hasta 280 px. |
 | **Para las que ya tienes** | Control segmentado que fija la respuesta de todas las «Ya la tienes»: **Omitir** (por defecto; no toca la tuya) · **Sustituir** (la del paquete ocupa el lugar de la tuya; **la tuya va a la papelera del sistema**, recuperable) · **Conservar las dos** (la del paquete entra como una canción nueva con el título `paq.imp.tituloCopia`). Cada fila «Ya la tienes» tiene además su propio selector para cambiar solo esa; al usarlo, el control general muestra «Mixto». |
-| Sustituir con un paquete ligero | Solo se sustituyen la letra, los tiempos, el estilo, los datos y el estado; **el audio que ya tienes se conserva**. Es el caso «recuperar mi sincronía». La fila lo dice con `paq.imp.nota.ligeroSustituir`. |
+| Sustituir con un paquete ligero | Solo se sustituyen la letra, los tiempos, el estilo, los datos y el estado; **el audio que ya tienes se conserva**. Es el caso «recuperar mi sincronía». **No va nada a la papelera** (la canción sigue siendo la misma carpeta): la versión anterior de sus datos queda como copia de seguridad de la canción (su `.bak`), igual que tras cualquier guardado **(decisión provisional, 0158 n.º 23)**. La fila lo dice con `paq.imp.nota.ligeroSustituir` y el resultado con `paq.imp.fila.sustituidaLigera`. |
 | Nueva desde un paquete ligero | Entra como **borrador sin audio**, con su letra y sus tiempos. Su tarjeta muestra «Falta descargar el audio» (origen YouTube; «Continuar» la descarga y la separa) o «Falta preparar el audio» (origen archivo; «Continuar» pide el archivo). Una Lista o Letra lista entra como borrador (no se puede cantar sin pistas); al volver a tener pistas, el usuario la marca otra vez. La fila lo avisa con `paq.imp.nota.ligeroNueva`. |
 | Canción parecida | Si una «Nueva» coincide en título, artista y duración (± 2 s) con una de la biblioteca, la fila añade `paq.imp.nota.parecida` (informativo; se importa igual). |
 | Temas | Línea de resumen con lista revelable. Reglas: un tema del paquete **idéntico** a uno tuyo (mismo identificador y mismo aspecto) se reutiliza; uno con el mismo identificador y **distinto aspecto** entra como copia con el nombre `paq.imp.temaCopia` y las canciones importadas usan la copia (tus canciones no cambian); uno nuevo cuyo nombre ya existe entra con ese mismo sufijo. Las canciones importadas de un **paquete de canciones** que heredaban su tema del álbum, del artista o del predeterminado quedan con ese tema **asignado a la canción**, para verse igual que en origen **(decisión provisional)**. Con el catálogo en solo lectura (`TEMAS_SOLO_LECTURA`) no se importan temas: las canciones entran con su aspecto guardado y la nota `paq.imp.temasSoloLectura`. |
@@ -1399,7 +1399,7 @@ Mismo diálogo para un paquete de canciones y para una copia de seguridad; la co
 | Botón | «Importar {n} canciones» con las que entrarán (nuevas + sustituidas + duplicadas). Con 0: inactivo con `paq.imp.nada`. |
 | Foco | Inicial en la lista (primera fila con decisión; si no hay, en el botón). Esc = Cancelar. |
 
-**3. Importando**: «Importando «{título}»… {i} de {n}» con barra; [Cancelar] detiene tras la canción en curso (las ya importadas se quedan). Cada canción se copia a una carpeta de preparación y solo aparece en la Biblioteca cuando está completa (nunca una canción a medias).
+**3. Importando**: «Importando «{título}»… {i} de {n}» con barra; [Cancelar] detiene la importación **al momento**: la canción que se estaba copiando **no** se importa (se descarta su carpeta de preparación), las ya importadas se quedan y las que faltaban salen en el resultado como `paq.imp.motivo.CANCELADO` (respuesta a 0259 n.º 3). Cada canción se copia a una carpeta de preparación y solo aparece en la Biblioteca cuando está completa (nunca una canción a medias). Como trabajo, aparece en el panel de actividad (`act.paq`, «Importando paquete · {i} de {n}») y el diálogo se puede cerrar con «Seguir en segundo plano», como al crear un paquete.
 
 **4. Resultado** (resultado por canción de la feature 8)
 ```
@@ -1410,8 +1410,31 @@ Mismo diálogo para un paquete de canciones y para una copia de seguridad; la co
 │ Temas: 1 importado («Neón (importado)»).                     │
 │                                              [Cerrar]        │
 ```
+- **Una fila por canción del paquete**, con icono + texto: ✓ `paq.imp.fila` (importada, sustituida, sustituida con paquete ligero, importada como copia) · – `paq.imp.motivo.*` (omitida, con su motivo) · ✕ `paq.imp.fallo.*` (error, con [Copiar detalles] en la fila). Tabla de motivos abajo. Lista con scroll propio (máx. 280 px), `role="list"`.
+- Con el diálogo cerrado al terminar: toast `paq.imp.toast` (o `paq.imp.toast.parcial` si hubo omitidas o errores, con [Ver resultado]).
 - Al cerrar: la Biblioteca pasa al filtro *Todas* si el actual ocultaría alguna importada, la primera importada recibe el foco y las importadas se resaltan 2 s (borde `info`; sin transición con movimiento reducido). Toast `paq.imp.toast`.
 - Las canciones importadas conservan su **fecha de añadido** y su fecha de modificación de origen.
+
+**Motivos del resultado por canción** (códigos de main; respuesta a [0259](../preguntas/0259-detalles-de-datos-de-la-copia-que-la-spec-no-precisa.md) n.º 4)
+
+| Resultado · código | Icono | Clave | Texto |
+|---|---|---|---|
+| importada | ✓ | `paq.imp.fila.importada` | Importada |
+| sustituida (paquete completo) | ✓ | `paq.imp.fila.sustituida` | Sustituida (la anterior está en la papelera) |
+| sustituida (paquete ligero) | ✓ | `paq.imp.fila.sustituidaLigera` | Sustituidas la letra, los tiempos y el estilo; tu audio se conserva |
+| importada como copia | ✓ | `paq.imp.fila.copia` | Importada como «{título} (importada)» |
+| omitida · `IGUAL` | – | `paq.imp.motivo.IGUAL` | Omitida: ya la tenías igual |
+| omitida · `OMITIDA` | – | `paq.imp.motivo.OMITIDA` | Omitida: conservaste la tuya |
+| omitida · `CANCION_MAS_NUEVA` | – | `paq.imp.motivo.CANCION_MAS_NUEVA` | Omitida: es de una versión más nueva de Shinobi Karaoke |
+| omitida · `EN_CURSO` | – | `paq.imp.motivo.EN_CURSO` | Omitida: la tuya tenía un trabajo en curso. Vuelve a importarla cuando termine |
+| omitida · `CANCION_EN_REPRODUCCION` | – | `paq.imp.motivo.CANCION_EN_REPRODUCCION` | Omitida: la tuya estaba sonando. Vuelve a importarla cuando termine |
+| omitida · `CANCELADO` | – | `paq.imp.motivo.CANCELADO` | No importada: cancelaste la importación |
+| error · `PAQUETE_INCOMPLETO` | ✕ | `paq.imp.fallo.incompleta` | Sus archivos están dañados en el paquete. No se ha importado. |
+| error · `PAQUETE_NO_VALIDO` | ✕ | `paq.imp.fallo.noValida` | Sus datos no son válidos. No se ha importado. |
+| error · `SIN_ESPACIO` | ✕ | `paq.imp.fallo.espacio` | No quedaba espacio en el disco. Libera espacio y vuelve a importarla. |
+| error · `ERROR_INTERNO` (y cualquier otro) | ✕ | `paq.imp.fallo.guardar` | No se pudo guardar. — [Copiar detalles] |
+
+`paq.imp.resultado` cuenta como importadas las ✓. Un código que no esté en la tabla usa `paq.imp.fallo.guardar`.
 
 **Errores de lectura** (paso 1; el diálogo muestra el error con [Elegir otro archivo] y [Cerrar])
 
@@ -1505,7 +1528,7 @@ Mismo diálogo para un paquete de canciones y para una copia de seguridad; la co
 | `paq.imp.paraExistentes` | Para las que ya tienes: Omitir · Sustituir · Conservar las dos · (varias respuestas) Mixto |
 | `paq.imp.aria.decision` | Qué hacer con «{título}» |
 | `paq.imp.nota.sustituir` | La tuya irá a la papelera de tu sistema. |
-| `paq.imp.nota.ligeroSustituir` | Se sustituyen la letra, los tiempos y el estilo. Tu audio se conserva. |
+| `paq.imp.nota.ligeroSustituir` | Se sustituyen la letra, los tiempos y el estilo. Tu audio se conserva y la versión anterior se guarda como copia de la canción. |
 | `paq.imp.nota.ligeroNueva` | Sin audio: entrará como borrador y habrá que volver a añadir su audio. |
 | `paq.imp.nota.parecida` | Tienes otra canción con el mismo título y artista. Se importará como una canción aparte. |
 | `paq.imp.tituloCopia` | {título} (importada) |
@@ -1517,7 +1540,9 @@ Mismo diálogo para un paquete de canciones y para una copia de seguridad; la co
 | `paq.imp.nada` | No hay nada que importar: ya tienes todas estas canciones. |
 | `paq.imp.progreso` | Importando «{título}»… {i} de {n} |
 | `paq.imp.resultado` | Se importaron {a} de {n} canciones. · (todas) Se importaron {n} canciones. |
-| `paq.imp.fila` | Importada · Sustituida (la anterior está en la papelera) · Importada como «{título} (importada)» · Omitida: ya la tenías · {motivo de fallo} |
+| `paq.imp.fila` | (ver la tabla «Motivos del resultado por canción»: `paq.imp.fila.*`, `paq.imp.motivo.*`, `paq.imp.fallo.*`) |
+| `paq.imp.toast.parcial` | Se importaron {a} de {n} canciones. — [Ver resultado] |
+| `paq.imp.segundoPlano` | Puedes cerrar este cuadro: la importación sigue. — [Cancelar] [Seguir en segundo plano] |
 | `paq.imp.fallo.incompleta` | Sus archivos están dañados en el paquete. No se ha importado. |
 | `paq.imp.fallo.guardar` | No se pudo guardar. — [Copiar detalles] |
 | `paq.imp.toast` | {n} canciones importadas. · (n = 1) «{título}» importada. |
@@ -1542,7 +1567,8 @@ Mismo diálogo para un paquete de canciones y para una copia de seguridad; la co
 - F9-8. Un paquete **ligero** importado en un equipo sin la canción crea un borrador sin audio con su letra y sus tiempos, cuya tarjeta dice «Falta descargar el audio» (origen YouTube) o «Falta preparar el audio» (archivo); tras volver a obtener el audio y separar, los tiempos siguen ahí. Importado con «Sustituir» sobre una canción existente con pistas, cambia letra, tiempos y estilo y conserva las pistas (los archivos de audio no cambian byte a byte).
 - F9-9. Temas: un tema idéntico no se duplica; uno con el mismo identificador y otro aspecto entra como «{nombre} (importado)» y las canciones existentes que usaban el original no cambian de aspecto; una canción importada que heredaba su tema del álbum queda con ese tema asignado y se ve igual que en origen.
 - F9-10. Un archivo que no es un paquete, uno de un esquema más nuevo y uno truncado muestran `PAQUETE_NO_VALIDO`, `PAQUETE_VERSION_NUEVA` y `PAQUETE_INCOMPLETO` con sus textos; en ninguno de los tres casos cambia la biblioteca. Un paquete truncado se rechaza **entero** en el paso 1 (no se muestra ninguna lista parcial). Con un paquete legible de 3 canciones en el que un archivo de una de ellas no coincide con su comprobación del manifiesto, se importan las otras 2 y el resultado muestra la tercera con ✕ y `paq.imp.fallo.incompleta`.
-- F9-11. Cancelar una importación a mitad conserva las canciones ya importadas completas y no deja ninguna a medias (la carpeta de preparación queda vacía).
+- F9-11. Cancelar una importación a mitad conserva las canciones ya importadas completas, no importa la que se estaba copiando y no deja ninguna a medias (la carpeta de preparación queda vacía); el resultado muestra las pendientes como `paq.imp.motivo.CANCELADO`.
+- F9-17. Cada código de la tabla «Motivos del resultado por canción» produce su icono y su texto (test con un doble de main que devuelve uno de cada); «Sustituir» con un paquete ligero muestra `paq.imp.fila.sustituidaLigera`, no envía nada a la papelera y deja el `.bak` de la canción con los datos anteriores.
 - F9-12. Arrastrar un `.shinobi` sobre la Biblioteca abre el diálogo de importar con ese archivo; arrastrar un audio sigue abriendo la vista 03. El estado vacío muestra el enlace de restaurar o importar.
 - F9-13. «Exportar la letra (.lrc)…» abre el diálogo «Guardar» del sistema con el nombre propuesto y escribe un LRC en UTF-8 con la cabecera, una marca por línea con inicio (con el desplazamiento aplicado), marcas vacías en el fin de las líneas seguidas de 2 s o más de silencio y sin las líneas sin inicio (test de la función pura con una letra de ejemplo: texto exacto esperado). Volver a importar ese archivo en una canción nueva da los mismos inicios (± 10 ms) y los mismos fines en las líneas con marca vacía.
 - F9-14. Exportar la letra de 4 canciones seleccionadas, una sin tiempos, escribe 3 archivos en la carpeta elegida sin sustituir ninguno existente (añade « (2)») y el resultado lista la omitida con su motivo.
