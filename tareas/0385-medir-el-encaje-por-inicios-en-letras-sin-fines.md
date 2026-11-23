@@ -1,5 +1,5 @@
 # 0385 — Feature 4 · Medir una señal de encaje por inicios de línea (letras sin fines), sin cambiar el veredicto
-- Estado: Pendiente
+- Estado: Hecha
 - Paso del pipeline: 3
 - Depende de: 0378 y 0381 (hechas o en el árbol). Puede empezar ya.
 - ADRs: 0024 (revisión «Resultado con las guardas: 0/17 coincide (pregunta 0295)»)
@@ -49,4 +49,11 @@ Sobre `detectarVoz` (los mismos intervalos que el encaje):
 
 ## Notas de implementación
 
-(las rellena el programador al terminar)
+Hecha (2026-11-22, programador). Solo medida: no cambia `shared/encaje.ts` ni ningún veredicto de la app.
+
+- **Código**: `app/scripts/calibrar-inicios.ts` (señal, barrido de reglas y formato; funciones puras), `calibrar-encaje.ts` (opción `inicios` y `--inicios` en `calibrar-encaje-cli.mjs`; combinable con `--ids`, `--variantes` y `--json`; sin la opción la salida no cambia), `calibrar-inicios.test.ts` (señal con picos sintéticos: pausas, voz continua, ajena, azar analítico frente a contado ±0,02) y un caso en `calibrar-encaje.test.ts` (biblioteca temporal con texto inventado: árbol intacto, sin textos, sin la opción no sale nada de inicios).
+- **Qué hace**: 3 pausas (150/250/400 ms) × 2 ventanas ((−300,+150), (−200,+200)) × `arranquesMinimos` (8/12/20) × `oMin` (0,5/0,6/0,7) × `cMin` (0,2/0,3/0,4) = 162 reglas. Por cada pausa y ventana imprime, por propia (id abreviado, sin título): arranques, densidad, O(0), Azar, O\*(0), O\*(±400/±800/±1500), contraste, d\*\_inicios, veredicto actual, la mejor ajena y la propia desplazada ±0,8 s. Por regla, una línea con las cifras y `Criterio de adopción (pregunta 0295): SÍ/NO`; elige la más estricta que cumple 1–4 (menos propias aceptadas; empate: umbrales más altos) y, como referencia que **no** es una elección, lo máximo que se acepta sin ajenas, desplazadas ni falsas correcciones.
+- **Decisiones de implementación** (pregunta 0305): d\*\_inicios es el punto medio de la meseta del máximo (la más cercana a 0; un máximo que toca el borde de la rejilla no propone corrección); la regla se aplica a `dudosa` y, para proponer una corrección, se exige también en d\*; criterios 1–3 se exigen con la letra tal cual y sin fines; 4 y 5 con tal cual; «las 12 plausibles» son las propias con `veredictoBase = coincide`; el denominador del punto 5 son las desplazadas ≥ 0,5 s de las propias aceptadas.
+- **Cifras con la copia de las 18 canciones** (17 con tiempos, 272 pares; ids abreviados): ver pregunta 0305. Resumen: **ninguna de las 162 combinaciones cumple el criterio de adopción** (la que más acepta con 0 ajenas, 0 desplazadas y 0 falsas correcciones acepta 1 de las 12 plausibles: `18a9c864`). Las ajenas quedan lejos (O\* ≤ 0,14) pero solo 3 o 4 propias llegan a O\* ≥ 0,2 y 1 a 0,5.
+- **Cómo probarlo**: `npm run calibrar:encaje -- <biblioteca> --inicios [--json] [--ids a,b]`; test: `npx vitest run scripts/calibrar-inicios.test.ts scripts/calibrar-encaje.test.ts`.
+- **Deuda**: nada en la app. `typecheck` y `lint` fallan solo en archivos ajenos de `renderer/` (`lote.test.tsx` y dos reglas `react-hooks`); el código de esta tarea pasa typecheck, lint, format y los tests.
