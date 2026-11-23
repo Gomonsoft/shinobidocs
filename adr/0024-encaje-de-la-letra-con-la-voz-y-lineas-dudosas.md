@@ -309,3 +309,11 @@ Medida con 0378 y 0381 sobre la copia de las 18 canciones:
 - Las 4 `no_coincide` son 5, 8 y 15 (veredicto correcto: otra versión o desfase creciente) y 17 (falso, porque sus fines por palabra cortan la voz).
 
 Decisión: **no se recalibra**. Las guardas se quedan. Se mide una señal por **inicios** (arranques de voz tras una pausa, corregidos por el azar), con criterio cerrado de adopción, en la tarea [0385](../tareas/0385-medir-el-encaje-por-inicios-en-letras-sin-fines.md). La otra vía es la confianza de la alineación forzada (§1, opción D; ADR 0028). Hasta que una de las dos cumpla, la elección automática de la feature 5 no elige letras de LRCLIB sin fines (ADR 0025).
+
+## Revisión 2026-11-22 · Señal por inicios: medida y descartada (pregunta 0305)
+
+`calibrar:encaje --inicios` (tarea 0385) sobre la copia de las 18 canciones:
+- **Seguridad**: 162 combinaciones, todas seguras (0 ajenas, 0 desplazadas, 0 falsas correcciones).
+- **Utilidad**: ninguna útil (como mucho 1 de las 12 propias plausibles). Los LRC de LRCLIB no marcan el arranque de la voz y hay pocas pausas.
+
+**Se descarta** y `encaje.ts` no cambia. El script se conserva para medir con canciones revisadas. Afirmar «coincide» con letras sin fines queda pendiente de la confianza de la alineación forzada (§1, opción D; ADR 0028) o de una medida con canciones revisadas a mano (pregunta 0280).

@@ -2,7 +2,7 @@
 
 - De: programador
 - Para: arquitecto
-- Estado: Abierta
+- Estado: Respondida (2026-11-22, arquitecto)
 - Bloquea: no
 
 ## Contexto
@@ -32,3 +32,20 @@
 ## Opción provisional
 
 No se adopta nada; la app queda como está (0378).
+
+## Respuesta
+
+Arquitecto, 2026-11-22. **Se cierra esta vía.** Ninguna combinación cumple el criterio y la causa es el material: los LRC de LRCLIB no marcan el arranque de la voz y hay pocas pausas. No es un problema de parámetros. El corte de oMin 0,2 sale de mirar los datos y no se adopta. No cambia `encaje.ts`. El script `--inicios` se queda como herramienta, por si se mide con canciones revisadas.
+
+**Las cuatro decisiones del script quedan validadas:**
+1. **d\* en el punto medio de la meseta más cercana a 0, y sin corrección si toca el borde**: correcto. Con una ventana de ~400 ms, «el más cercano a 0» sesgaría la corrección. El borde ya era la regla del encaje.
+2. **Falsa corrección o corrección propuesta exigen O\*(d\*) ≥ oMin y contraste ≥ cMin**: correcto. Es la misma estructura que el encaje, donde se propone solo lo que pasa la regla, y sin ella el criterio 3 mediría ruido.
+3. **Seguridad (1–3) con tal cual y sin fines; utilidad (4–5) solo con tal cual**: correcto. Las variantes simulan lo que la app puede recibir, y la utilidad se mide con lo que la app recibe de verdad.
+4. **Azar con la densidad del tramo entre el primer y el último inicio, desplazado con d**: correcto, y coherente con la densidad de voz del encaje.
+
+**Confirmado lo de la pregunta 0295**: las `no_coincide` son 5, 8, 15 y 17, y la `dudosa` sin limitación es la 12.
+
+**Consecuencia, escrita en ADR 0024, ADR 0025 y el backlog**: la elección automática de la feature 5 con letras de LRCLIB sin fines queda pendiente de una de dos cosas:
+- (a) la feature 10 (la fase 1 de la prueba 0328 ya está en marcha con la copia; su confianza mira el texto contra la voz);
+- (b) una medida con canciones revisadas a mano (pregunta [0280](0280-que-hace-hoy-la-comprobacion-de-la-letra-con-tus-canciones.md)) que justifique otra regla.
+No se buscan más parámetros sobre esta copia.

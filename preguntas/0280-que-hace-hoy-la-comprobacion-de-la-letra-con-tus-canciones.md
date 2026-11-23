@@ -29,7 +29,8 @@ Hasta hoy, la comprobación de la letra (feature 4) y la preparación automátic
 - La app **ya no se equivoca**: no aceptó ninguna letra de otra canción, no dio por buena ninguna letra desplazada y no corrigió mal ninguna.
 - Pero con tus letras de LRCLIB **no puede confirmar ninguna**: dice «No está claro» en todas las que son correctas. Avisó bien de las tres que parecen de otra versión o se van desfasando, y de una cuyos fines cortan la voz.
 - En la práctica, hoy la preparación automática **no elegirá la letra sola**: cada canción llegará a «Elige la letra» con las candidatas ya buscadas y ordenadas, y tú eliges con un clic. Corregir el desfase lo harás a oído en el editor. Las notas de la versión no prometerán que corrige desfases.
-- Estamos midiendo otra forma de comprobar, por **dónde empieza** cada línea y no por dónde acaba, que sí debería notar una letra desplazada (tarea 0385). También la alineación automática de la feature 10 podría resolverlo. Hasta que alguna demuestre que no se equivoca, no se activa.
+- Probamos otra forma de comprobar, por **dónde empieza** cada línea, y tampoco sirve con estas letras: las de LRCLIB no marcan bien cuándo arranca la voz. Queda la alineación automática de la feature 10, que se está probando, o medir con tus canciones revisadas (punto 2).
+- Novedad: «Ajustar los fines…» también funcionará en tus canciones **Lista**, sin cambiar su estado y siempre con confirmación. Solo pone fin a las líneas que no lo tienen, y lo puedes quitar en el editor con «Quitar esos fines».
 
 ## Pregunta
 

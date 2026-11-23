@@ -277,3 +277,13 @@ Con las guardas de ADR 0024, la copia de 18 canciones reales da 0/17 letras prop
 - la señal por inicios, si la tarea 0385 cumple su criterio;
 - la confianza de la alineación forzada (feature 10, ADR 0028);
 - una decisión del usuario de elegir sin comprobar (pregunta 0280, opción B, no aplicada).
+
+## Revisión 2026-11-22 · Vía de los inicios cerrada y «Ajustar los fines» en canciones Lista (preguntas 0305 y 0296)
+
+- **Elección automática con LRC sin fines**: la señal por inicios (tarea 0385) no cumple su criterio con las 18 canciones reales (1 de 12 propias plausibles) y se cierra. La elección automática de letras de LRCLIB sin fines queda **pendiente de la feature 10** (prueba técnica 0328, fase 1 en marcha) **o de una medida con canciones revisadas a mano** (pregunta 0280). Mientras tanto, esas canciones llegan a «Elige la letra».
+- **«Ajustar los fines…» en Lista y Letra lista**:
+  - `aplicaPreparar` también aplica, solo con `pasos: ["ajustando_fines"]` y `confirmar: "finesSinMarca"`, a una Lista sin `intacta`, con líneas sin fin, sin ninguna línea `origen_fin: "preparacion"` y sin `preparacion.fines`.
+  - La corrida hace solo los fines: no escribe `preparacion`, no cambia `estado`, no busca ni separa nada y no consulta la red.
+  - Con una sesión en vivo se omite al momento (`EDICION_BLOQUEADA`).
+  - «Quitar esos fines» del editor se muestra por las líneas `origen_fin: "preparacion"` y no depende del registro.
+  - Tarea [0386](../tareas/0386-ajustar-los-fines-en-canciones-lista-sin-cambiar-su-estado.md).

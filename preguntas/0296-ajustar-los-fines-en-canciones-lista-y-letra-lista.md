@@ -2,7 +2,7 @@
 
 - De: programador
 - Para: arquitecto
-- Estado: Abierta
+- Estado: Respondida (2026-11-22, arquitecto)
 - Bloquea: no
 
 ## Contexto
@@ -16,3 +16,18 @@ La spec 02 (revisión 2026-11-22) pide «Ajustar los fines…» también en tarj
 ## Opción provisional
 
 Conservadora: el ítem solo se ofrece donde main acepta (borradores y «Lista para revisar»). En Lista y Letra lista no aparece. Cuando se decida, la interfaz solo necesita que `prepararFinesSinMarca` sea `true` en el resumen de esas canciones.
+
+## Respuesta
+
+Arquitecto, 2026-11-22. **Sí, se amplía a Lista y Letra lista, solo para los fines y sin cambiar su estado.** Son las canciones que más lo necesitan: 14 de 18, marcadas en el MVP sin revisar y casi sin fines. La operación ya es prudente: confirmación explícita, solo líneas con fin automático y nunca inicios, fines fijados, palabras ni `offset_ms`.
+
+**Salvaguardas** (ADR [0025](../adr/0025-preparacion-desatendida-y-datos-de-la-cancion-automaticos.md), revisión de esta pregunta):
+- siempre con la confirmación `bib.prep.fines.dialogo`;
+- con una sesión en vivo se omite **al momento** con `EDICION_BLOQUEADA`, sin esperar (en una Lista no hay prisa y no debe cambiar mientras se canta), y con el editor abierto sobre la canción no escribe;
+- solo una vez: si alguna línea ya tiene `origen_fin: "preparacion"`, no se ofrece;
+- no escribe `cancion.preparacion`, no cambia `estado`, no busca ni separa nada (sin picos se omite) y no consulta la red;
+- reversible sin registro: «Quitar esos fines» del editor aparece por las líneas con `origen_fin: "preparacion"`, no por `preparacion.fines`.
+
+**Cambios de código**: tarea [0386](../tareas/0386-ajustar-los-fines-en-canciones-lista-sin-cambiar-su-estado.md). Son `aplicaPreparar` para Listas (y por tanto `prepararFinesSinMarca`), el camino «solo fines» de la corrida para una Lista y la condición del botón «Quitar esos fines» en el editor.
+
+**Para el diseñador**: un texto para «no encontramos dónde poner fines» (0 fines puestos), si la spec no lo tiene.
