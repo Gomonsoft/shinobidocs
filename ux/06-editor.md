@@ -3801,7 +3801,7 @@ Subsección dentro de «Letra», tras «Color de lo ya cantado» y la casilla de
 ```
 │ Colores de los cantantes                          │  h4
 │ (A)   Ana     = Color de lo ya cantado ↑          │  enlace que lleva al selector de arriba
-│ (L)   Luis    [■ #4ADEDE]                         │  selector de color de siempre
+│ (L)   Luis    [■ #35C6E8]                         │  selector de color de siempre
 │ (3)   Cantante 3 [■ #FF5C8A]                      │
 │ (A·L) Todos   [■ #B388FF]                         │
 │ ( )   Coro    [■ #FF9F1C]                         │

@@ -464,7 +464,7 @@ Comportamiento en [Editor · 0.2.3](06-editor.md#023--feature-1--cantantes-por-l
 | Ranura | Color | Nota |
 |---|---|---|
 | Cantante 1 | `color_resaltado` del tema | Por eso una canción sin reparto no cambia. |
-| Cantante 2 | `#4ADEDE` (cian) | Sobre el tema «Shinobi»: ≥ 9:1 en todo el degradado. |
+| Cantante 2 | `#35C6E8` (cian profundo) | Revisión 2026-11-23 (pregunta 0345): sustituye a `#4ADEDE`, que frente a la letra blanca daba ΔE simulado 16,5 (protanopía) y un ⚠ en todo dúo. Con el tema «Shinobi», medido con `contraste.ts`: 5,63:1 con el fondo (peor muestra), ΔE 46,0 con la letra, ΔE simulado 31,9; sin ⚠. Sigue siendo un azul claro, distinto de rosa, lima, lavanda y naranja. (El cian `#4ADEDE` sigue entre las muestras sugeridas de §8: allí lo elige el usuario y el aviso le informa.) |
 | Cantante 3 | `#FF5C8A` (rosa) | ≈ 3,9:1 sobre `#5A1E6E` (la zona más clara del degradado). |
 | Cantante 4 | `#7CFF6B` (lima) | Con deuteranopía puede confundirse con el oro (`#FFD400`): da el ⓘ informativo. |
 | Todos | `#B388FF` (lavanda) | ≈ 4,2:1 sobre `#5A1E6E`. |
