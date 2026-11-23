@@ -48,3 +48,4 @@ Ideas de mejora **todavía sin definir ni autorizar**. No forman parte del alcan
 | [035](035-ajustes-almacenamiento-y-estado-del-motor.md) | Ajustes: almacenamiento y estado del motor | Exploración 0.2.2; feedback de alpha.1 §1.6 | Idea |
 | [036](036-varios-cantantes-y-coros.md) | Varios cantantes y coros (dúos a cuartetos, «Todos», coros con voz guía) | Usuario (2026-11-22) | Aceptada para 0.2.3 |
 | [038](038-sincronizar-con-la-voz-solo-a-peticion.md) | «Sincronizar con la voz» solo a petición, sin automatismos | Arquitecto, medidas de las features 4, 5 y 10 (2026-11-23) | Idea (condicionada a la fase 2 de ADR 0028) |
+| [039](039-mover-una-linea-en-el-editor.md) | Mover una línea en el editor sin perder sus tiempos | Prueba técnica 0356, pregunta 0368 (2026-11-23) | Idea |

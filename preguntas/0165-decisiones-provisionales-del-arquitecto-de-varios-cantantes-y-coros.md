@@ -63,3 +63,15 @@ Al definir la versión ([plan 5](../versiones/0.2.3/plan-5.md), [backlog](../ver
 ### Pendiente de ti (no bloquea)
 
 - Si quieres que la prueba de la feature 3 se haga con **un dúo real tuyo**, hará falta que anotes a mano cuándo empieza y acaba cada frase de cada cantante (la app aún no lo permite); si no, se hace con una letra inventada que reproduce tus tres referencias.
+
+### Resultado de la prueba de voces a la vez (fila 10; arquitecto, 2026-11-23)
+
+La prueba ha salido bien: dos cantantes con frases cruzadas, la misma frase a la vez y un coro encima de la voz principal se pueden guardar y dibujar, cada uno en su zona, sin hacer más lento el video y sin cambiar nada en las canciones sin solapes. Por eso **recomiendo que las voces a la vez entren en 0.2.3** (segunda entrega).
+
+Lo que debes saber para confirmarlo:
+- Una canción en la que **hayas hecho que dos líneas suenen a la vez** no se podrá abrir con versiones anteriores de la app: la verán como «dañada». No se pierde nada, porque al volver a 0.2.3 se abre bien. Las demás canciones, con cantantes o sin ellos, siguen abriéndose como siempre.
+- Las líneas que se pisan no reciben ayuda automática (ajustar silencios, líneas dudosas): se excluyen y la app lo dice.
+- El texto tiene que ir en el orden en que se canta.
+
+¿Te vale así?
+
