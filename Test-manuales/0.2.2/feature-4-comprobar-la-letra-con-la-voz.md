@@ -13,7 +13,9 @@
 
 Objetivo (ADR 0024 §«Calibración»): con las 10 canciones Lista con picos, la regla «F(d\*) ≥ 0,88 e I(d\*) ≥ 0,95» acepta **10 de 10** letras propias y **0 de 90** letras ajenas; una letra propia desplazada ±0,8 s sale `desfasada` con `d` ≈ 0,8 s; ninguna letra correcta sale `desfasada`.
 
-El script de calibración **no existe todavía** (pregunta [0206](../../preguntas/0206-no-existe-el-script-de-calibracion-de-la-feature-4.md)); cuando exista (`app/scripts/calibrar-encaje.ts`, patrón de `calibrar-silencios`) los pasos son:
+> **Actualización 2026-11-22**: el script ya existe (`npm run calibrar:encaje -- <carpeta-de-biblioteca> [--variantes]`, solo imprime cifras y títulos) y se ejecutó con 18 canciones del MVP (LRC de LRCLIB sin fines, sin revisar): propias 8/17, ajenas 6/272, ±0,8 s corregido 0/34 ([medidas](../../versiones/0.2.2/medidas-con-canciones-reales.md)). Ese resultado **no es el criterio de «hecha»** (el ADR midió letras revisadas con fines): repítelo con tus canciones **revisadas a mano con fines**. En 1.3, con una letra sin fines (de LRCLIB) **no esperes** que se proponga corregir 0,8 s: anótalo (pregunta 0275).
+
+Los pasos son:
 
 1. Copia tu carpeta de datos (**Ajustes → Abrir carpeta de datos**) a un sitio **fuera del repositorio**, p. ej. `~/copia-shinobi`. Solo se lee; no ejecutes el script sobre la carpeta viva.
 2. Abre cada una de las canciones en la app una vez, en la copia o antes de copiar, para que existan los picos (`pistas/.picos-voz-v1-*.bin`) en cada `biblioteca/<id>/pistas/`.
