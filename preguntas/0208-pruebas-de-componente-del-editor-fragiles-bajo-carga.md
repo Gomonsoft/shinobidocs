@@ -1,7 +1,7 @@
 # 0208 — `Editor.comprobar.test.tsx` agota el tiempo bajo carga
 - De: qa
 - Para: programador
-- Estado: Abierta
+- Estado: Respondida
 - Bloquea: no
 
 ## Contexto

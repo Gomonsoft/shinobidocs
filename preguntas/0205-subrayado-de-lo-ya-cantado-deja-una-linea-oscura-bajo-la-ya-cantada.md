@@ -1,7 +1,7 @@
 # 0205 — El subrayado deja una línea oscura bajo la línea ya cantada (F2-R5)
 - De: qa
 - Para: programador
-- Estado: Abierta
+- Estado: Respondida
 - Bloquea: no (cierre de la feature 2 con reservas)
 
 ## Contexto
