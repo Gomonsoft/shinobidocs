@@ -351,6 +351,7 @@ R4 · Letra pendiente
 
 | Elemento | Comportamiento |
 |---|---|
+| **Con resultado (R1–R4): orden y título** (revisión 2026-11-22, respuesta a 0244 n.º 4 y 5) | Al llegar un resultado, el título pasa a `prog.prep.titulo.fin` y desaparece el subtítulo. El **bloque R va justo bajo el título**, antes de los subpasos y de «Escucha el resultado», para que su acción se vea sin desplazar a 1280 × 800 y a 1024 × 640. Su botón primario (Revisar, Elegir la letra, Añadir la letra, Reintentar) es el primario de la vista y recibe el foco; **[Volver a la biblioteca]** pasa a secundario, en la misma fila del bloque, a la derecha de los botones del resultado. Los subpasos y la escucha quedan debajo (pueden necesitar scroll, que es conforme). El indicador «✓ Terminado» de la barra superior es el de actividad de siempre (4 s y desaparece), no parte de la vista. |
 | **Título y subtítulo** | `prog.prep.titulo` y `prog.prep.subtitulo` cuando la canción tiene preparación (interruptor activado o «Preparar»). Con el interruptor desactivado y sin «Preparar», la vista es la de 0.2.1 (título `prog.titulo`, bloque «Mientras tanto…»). |
 | **Subpasos nuevos** | «Buscar la letra», «Comprobar la letra con la voz» y «Ajustar los fines de línea», bajo «Separar voz e instrumental», con los iconos de siempre (○ ⟳ ✓ ✕ ⚠). A la derecha, su resultado en `texto-2`: `prog.prep.res.*`. Un paso que no se va a hacer muestra «—» y su motivo (`prog.prep.omitido.*`): por ejemplo, con una letra ya elegida por el usuario, «Buscar la letra — Ya tiene letra». |
 | **Volver a la biblioteca** (primario, foco inicial) | Sustituye a «Buscar la letra mientras tanto» como acción principal: lo esperado es irse. |
@@ -392,6 +393,7 @@ R4 · Letra pendiente
 |---|---|
 | `prog.prep.titulo` | Preparando tu canción |
 | `prog.prep.subtitulo` | No hace falta que esperes: te avisaremos cuando esté lista para revisar. |
+| `prog.prep.titulo.fin` | (R1) Tu canción está lista para revisar · (R2) Falta que elijas la letra · (R3) No encontramos la letra · (R4) Falta la letra |
 | `prog.sub.letra` | Buscar la letra |
 | `prog.sub.comprobar` | Comprobar la letra con la voz |
 | `prog.sub.fines` | Ajustar los fines de línea |
@@ -444,6 +446,7 @@ R4 · Letra pendiente
 - F5-P9. El stepper muestra ⟳ en Letra mientras se busca o se comprueba y el indicador de atención en R2, R3 y R4, con su nombre accesible.
 - F5-P10. Cerrar la app con una separación en curso y dos en cola, y reabrirla, retoma las tres sin intervención y muestra `bib.prep.retomando`; [Detener] las deja en pausa. Un trabajo que quedó a medias en dos arranques seguidos queda «Interrumpido» con [Reintentar] y no se retoma.
 - F5-P11. La app no cambia nunca por sí sola el estado de una canción a Lista o Letra lista (test: tras preparar 3 canciones con dobles, las 3 siguen en borrador).
+- F5-P13. Con un resultado R1–R4 a 1280 × 800 y a 1024 × 640, sin desplazar se ven el título `prog.prep.titulo.fin`, el bloque R entero y sus botones (incluido [Volver a la biblioteca], secundario en la misma fila); el foco está en el primario del bloque. Con el artista vacío, R2 y la vista Letra usan el motivo `sinArtista`.
 - F5-P12. Capturas en `docs/ux/revisiones/0.2.2-feature-5/`, nombre `progreso-1280x800-100-{estado}.png`: `preparando`, `lista-para-revisar`, `elige-la-letra`, `no-encontrada`, `letra-pendiente`.
 
 **Verificación manual** (guía de `docs/Test-manuales/0.2.2/`): añadir tres canciones reales conocidas y no tocar nada; comprobar que llegan solas a «Lista para revisar» y que la letra elegida es la correcta al cantarlas; añadir una versión en directo o una canción poco conocida y comprobar que queda en «Elige la letra» o «No encontramos la letra» y no con una letra equivocada; desconectar la red al añadir y comprobar «Letra pendiente»; cerrar la app a mitad de una separación y comprobar que se retoma.

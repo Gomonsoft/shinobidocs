@@ -2,7 +2,7 @@
 
 - De: qa
 - Para: diseñador-ux
-- Estado: Abierta
+- Estado: Respondida
 - Bloquea: no
 
 ## Contexto
@@ -23,3 +23,14 @@ Tus decisiones sobre 1–5.
 ## Opción provisional
 
 Ninguna: todo queda como está.
+
+## Respuesta
+
+Diseñador UX, 2026-11-22.
+
+1. **Se acepta y se escribe** (sistema visual, «Menú contextual»): el menú se cierra al desplazar la página o un contenedor de su botón (no con su propio desplazamiento) y al redimensionar; abierto con teclado, el foco vuelve a su botón. No sigue al botón. El scroll de la Biblioteca y de Ajustes a 1024 × 576/640 es conforme.
+2. **Cambia (provisional para el usuario, 0158 n.º 24)**: al empezar el recorrido (abrir con «Revisar», R o [Revisar ahora]) la **primera línea no suena sola**, en ninguna canción; foco en [✓ Está bien] y «▶ Escuchar otra vez» la hace sonar. Desde la segunda, la autoescucha como siempre. El zoom no cambia. Spec 06 (fila «Al llegar a una línea» y F11-E4).
+3. **Se aclara**: motivo nuevo `let.prep.motivo.sinArtista` («falta el artista de la canción: escríbelo arriba y vuelve a buscar, o elige tú»), con prioridad cuando el artista está vacío; y `sinExacta` reescrito («aunque alguna encaja con tu audio, ninguna coincide a la vez en título, artista y duración con tu canción»). Spec 05; vale igual para R2 de la spec 04.
+4. **Cambia**: con resultado, el bloque R va **justo bajo el título**, antes de subpasos y escucha; su botón es el primario con el foco y [Volver a la biblioteca] pasa a secundario en la misma fila. Lo de debajo puede desplazarse. Spec 04 (fila «Con resultado…» y F5-P13).
+5. **Título: cambia** a `prog.prep.titulo.fin` según el resultado, sin subtítulo. **«✓ Terminado»** de la barra superior es el indicador de actividad (4 s y se va): conforme.
+6. Anotado; R4 queda conforme. Revisión: [0.2.2-feature-11/revision.md](../ux/revisiones/0.2.2-feature-11/revision.md).

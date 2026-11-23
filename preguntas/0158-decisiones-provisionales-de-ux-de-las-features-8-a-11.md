@@ -96,11 +96,15 @@ Specs: [02 · Features 8, 9 y 11](../ux/02-biblioteca.md#022--feature-8--accione
 23. **«Sustituir» con un paquete sin audio** (añadida el 2026-11-22, pregunta 0259).
     - **A (provisional).** Sustituye la letra, los tiempos y el estilo de la canción que ya tienes y conserva su audio. La versión anterior no va a la papelera, porque la canción sigue siendo la misma: queda guardada como copia dentro de la canción. Cancelar una importación descarta la canción que se estaba copiando en ese momento; las ya importadas se quedan.
     - B. Mandar antes una copia completa de la canción a la papelera (ocupa el tamaño del audio otra vez).
+24. **¿Suena algo sola al abrir la revisión?** (añadida el 2026-11-22, pregunta 0244)
+    - **A (provisional).** No. Al pulsar «Revisar» (en cualquier canción, preparada por la app o hecha por ti) se abre la primera línea dudosa en silencio, con el botón «Escuchar otra vez» a mano. Desde la segunda línea, cada línea suena sola al llegar, como hasta ahora.
+    - B. Que suene también la primera nada más abrir.
+    - C. Que no suene sola ninguna (solo al pulsar «Escuchar»).
 
 Sin pregunta, por si quieres otros valores: una línea se señala si casi no se oye voz mientras dura (menos del 10 %), si el fin llega 1,2 s o más después de la voz, si el fin corta la voz (sigue habiendo voz durante el segundo siguiente y la línea siguiente tarda 1 s o más en empezar), si no hay voz en los 500 ms siguientes al inicio, si dura menos de 0,25 s o más de 6 s para su texto, o si la sincronía automática no la reconoce. Son los valores del ADR 0024 §3 (revisión del 2026-11-22, pregunta 0225). El objetivo es que una canción bien sincronizada no tenga más de una de cada diez líneas señaladas; los valores se ajustan con tus 12 canciones.
 
 ## Opción provisional tomada (si no bloquea)
 
-La A en las 23.
+La A en las 24.
 
 ## Respuesta

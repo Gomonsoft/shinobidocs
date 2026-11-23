@@ -29,3 +29,16 @@
 | **D5** | «Intercambiar» | Solo recalcula la sugerencia de unificar del Artista; la del Álbum se conserva. | Después |
 
 **Lista abierta que tapa «Intercambiar…» (observación de QA)**: conforme. Es lo esperado de una lista flotante; se cierra con Esc, Tab, Intro, al elegir y al hacer clic fuera. La spec añade que se cierre sola cuando lo escrito coincide exactamente con la única opción, para que no se quede abierta sin aportar nada (después, sin prioridad).
+
+## Segunda revisión (2026-11-22)
+
+Revisadas las dos capturas repetidas: `anadir-1280x800-100-unificar.png` y `biblioteca-1280x800-100-editar-datos-unificar.png`.
+
+| N.º | Resultado | Evidencia |
+|---|---|---|
+| **D1** | **Corregida** | En las dos, el foco sigue en el campo Álbum y la sugerencia ya está a la vista con [Usar «Querido…»] y [Dejarlo así]. |
+| **V1** | **Corregida en «Editar datos»; pendiente menor en «Añadir canción»** | En «Editar datos»: campo → sugerencia → botones → separación → «Opcional, ayuda a encontrar la letra exacta». En «Añadir canción» la ayuda del Álbum sigue sin aparecer mientras está la sugerencia (tras los botones viene directamente el aviso de LRCLIB); debe verse «Opcional, ayuda a encontrar la letra exacta» debajo de los botones, 8 px más abajo, como en «Editar datos». |
+
+D2–D5 no se ven en capturas: se cierran con sus pruebas (F6-N12 y F6-N3).
+
+**Veredicto: aprobada con correcciones menores** (V1 en «Añadir canción»; no bloquea alpha.2).

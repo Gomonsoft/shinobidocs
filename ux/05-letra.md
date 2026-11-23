@@ -475,7 +475,8 @@ Origen: [plan 0.2.2, feature 5](../versiones/0.2.2/plan-4.md) y [propuesta 020](
 | `let.prep.actual` | Letra actual |
 | `let.prep.elige` | **Elige la letra.** No la elegimos por ti porque {motivo}. |
 | `let.prep.motivo.varias` | hay varias versiones que coinciden con tu audio |
-| `let.prep.motivo.sinExacta` | ninguna es la coincidencia exacta de título, artista y duración |
+| `let.prep.motivo.sinArtista` | falta el artista de la canción: escríbelo arriba y vuelve a buscar, o elige tú (tiene prioridad sobre los demás motivos cuando el artista está vacío; respuesta a 0244 n.º 3) |
+| `let.prep.motivo.sinExacta` | aunque alguna encaja con tu audio, ninguna coincide a la vez en título, artista y duración con tu canción · (ninguna encaja con el audio) ninguna coincide a la vez en título, artista y duración con tu canción |
 | `let.prep.motivo.duda` | no está claro que coincida con tu audio |
 | `let.prep.motivo.noCoincide` | ninguna coincide con tu audio |
 | `let.prep.motivo.soloTexto` | solo hay letras sin sincronizar |

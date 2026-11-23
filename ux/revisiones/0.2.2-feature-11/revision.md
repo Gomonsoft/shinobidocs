@@ -34,3 +34,26 @@
 ## Banner de la feature 4 junto al popover (`popover-pendientes`)
 
 **Aceptable en una canción real.** Los dos avisos tratan problemas distintos (la letra entera puede ser de otra versión; algunas líneas tienen tiempos dudosos), están en zonas separadas (lista y dock) y no se tapan. El popover solo sale al pulsar «Marcar como lista», que es justo el momento de recordar los dos. Si la letra no encaja con la voz, lo normal es que también haya muchas líneas dudosas, y que el usuario las vea juntas es coherente. No hace falta coordinar nada. Para la captura de referencia sería más limpio un fixture sin el banner, pero no es necesario.
+
+## Segunda revisión (2026-11-22)
+
+Revisadas **las 20 capturas** de la carpeta, una a una: las 8 de cada escala, `recorrido-panel-300`, `recorrido-otra-pestana` y las dos de la Biblioteca.
+
+| N.º | Resultado | Evidencia |
+|---|---|---|
+| **R1** | **Corregida** | `recorrido` (100 y 125) y `recorrido-panel-300`: [✓ Está bien] a todo el ancho, justo bajo el motivo, entero y sin desplazar; debajo, navegación, «Escuchar otra vez» y «Fin al final de la voz». |
+| **R2** | **Corregida** | «Está bien» y «Siguiente» con la tecla «N» a la derecha, sin números. |
+| **R3** | **Corregida** | `recorrido-corregida` (100 y 125): principal [Siguiente N] y en la navegación solo [‹ Anterior]. |
+| **R4** | **Conforme** (sin cambio) | QA confirma que el fixture fija el fin de la línea 2: el texto y el recuento de 2 son correctos. |
+| **R5** | **Corregida** | `recorrido-fin` (100 y 125): ✓ delante de «Has revisado las 2 líneas señaladas…». |
+| **R6** | **Corregida** | `recorrido-otra-pestana`: «Sincronía» con el `flag` pequeño a la derecha, sin punto `aviso`. |
+
+**Biblioteca (F11-B4)**
+- `biblioteca-…-lista-para-revisar`: conforme. «⚑ 4 líneas por revisar», «✓ Sin líneas dudosas» y el menú ⋯ con «Marcar como lista» y «Marcar como letra lista» tras «Probar».
+- `biblioteca-…-revision-dialogo`: conforme. Título, cuerpo con el número de líneas **importantes** (2, mientras la tarjeta muestra el total, 4: regla de 0158 n.º 22) y [Revisar ahora] primario. No se ve el anillo de foco en la captura: que el foco inicial esté en «Revisar ahora» lo cubre F11-B3 con prueba.
+
+Resto (`funciones-revisar`, `lista-con-marcas`, `recorrido-fuera`, `popover-pendientes`, `sin-dudas`, a 100 % y 125 %): conformes, como en la primera pasada.
+
+**Cambio de spec tras esta pasada** (0244 n.º 2, provisional 0158 n.º 24): al empezar el recorrido, la primera línea ya no suena sola. Las capturas no lo muestran (son imágenes fijas); lo verifica F11-E4 con prueba.
+
+**Veredicto: aprobada.**
