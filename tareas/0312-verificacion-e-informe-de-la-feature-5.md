@@ -1,5 +1,5 @@
 # 0312 — Feature 5 · Verificación e informe
-- Estado: Pendiente
+- Estado: En revisión (hecha con reservas: faltan criterios del usuario)
 - Paso del pipeline: 3
 - Depende de: 0306–0311, 0371–0374
 - ADRs: 0025
@@ -11,10 +11,10 @@
 Cerrar la feature 5.
 
 ## Criterios de aceptación
-- [ ] Con la biblioteca del usuario: `npm run calibrar:encaje -- <carpeta> --variantes` (tarea 0371) y decisión sobre los fines prudentes con el criterio de la pregunta 0222, anotada en el informe y en ADR 0025. También el número de canciones que caen en «Elige la letra» en una preparación real.
-- [ ] Incluye F6-N7 y F6-N8 de la spec 03 (álbum desde LRCLIB y aviso de búsqueda automática en «Añadir canción»), que pasaron de la feature 6 (pregunta 0220).
-- [ ] Preparar los 5 borradores reales del usuario (guía).
-- [ ] Informe `docs/versiones/0.2.2/informe-feature-5.md`.
+- [ ] **(Pendiente del usuario)** Con la biblioteca del usuario: `npm run calibrar:encaje -- <carpeta> --variantes` (tarea 0371) y decisión sobre los fines prudentes con el criterio de la pregunta 0222, anotada en el informe y en ADR 0025. También el número de canciones que caen en «Elige la letra» en una preparación real.
+- [x] Incluye F6-N7 y F6-N8 de la spec 03 (álbum desde LRCLIB y aviso de búsqueda automática en «Añadir canción»), que pasaron de la feature 6 (pregunta 0220).
+- [ ] **(Pendiente del usuario)** Preparar los 5 borradores reales del usuario (guía, caso 3).
+- [x] Informe `docs/versiones/0.2.2/informe-feature-5.md`.
 
 ## Pruebas de feedback
 - Unitarias: —
@@ -24,4 +24,7 @@ Cerrar la feature 5.
 - Siempre: `npm run typecheck`, `npm run lint`, `npm run format:check` y `npm run test:cambios` (y `uv run pytest` / `ruff` si toca el worker).
 
 ## Notas de implementación
-(las rellena el programador al terminar)
+- Ejecutado por `qa` el 2026-11-22 sobre una copia limpia de `10496b8`. **Veredicto: hecha con reservas.** Informe: [informe-feature-5](../versiones/0.2.2/informe-feature-5.md); guía: [feature-5-preparacion-desatendida](../Test-manuales/0.2.2/feature-5-preparacion-desatendida.md).
+- Hecho: cifras de typecheck, lint, format, Vitest (4084), pytest (351), build, E2E de la feature (47 de 47), críticos (2 de 2, uno nuevo), regresión completa (214 / 63 omitidas / 2 fallos: `ventana` y `letras:401` inestable); 46 criterios mapeados (43 cubiertos, 2 parciales, 1 sin cubrir: F5-B3); 17 capturas; F6-N7 y F6-N8 cubiertos.
+- **Pendiente del usuario** (guía): red real, los 5 borradores, lote sin 429, interruptor apagado con monitor de red, TV, `calibrar:encaje` y la decisión sobre los fines prudentes (pregunta 0222). La tarea 0371 (`--variantes`) sigue pendiente; el criterio de calibración no se puede cerrar sin ella.
+- Defectos y preguntas: 0240 (pruebas frágiles), 0241 (línea y diálogo sin registro, media), 0242 (toast sin revisión, progreso sin diálogo, recuento de Ajustes, notificación sin foco), 0243 (`HEAD` con el interruptor apagado), 0244 (diseño).

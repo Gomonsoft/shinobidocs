@@ -1,5 +1,5 @@
 # 0337 — Feature 11 · Verificación, calibración e informe
-- Estado: Pendiente
+- Estado: En revisión (hecha con reservas: faltan criterios del usuario)
 - Paso del pipeline: 4
 - Depende de: 0334–0336, 0370
 - ADRs: 0024
@@ -11,8 +11,8 @@
 Cerrar la feature 11.
 
 ## Criterios de aceptación
-- [ ] Calibración con `calibrar-dudosas.ts` sobre las canciones del usuario (≤ 10 % en las revisadas).
-- [ ] Informe `docs/versiones/0.2.2/informe-feature-11.md`.
+- [ ] **(Pendiente del usuario)** Calibración con `calibrar-dudosas.ts` sobre las canciones del usuario (≤ 10 % en las revisadas).
+- [x] Informe `docs/versiones/0.2.2/informe-feature-11.md`.
 
 ## Pruebas de feedback
 - Unitarias: —
@@ -22,4 +22,7 @@ Cerrar la feature 11.
 - Siempre: `npm run typecheck`, `npm run lint`, `npm run format:check` y `npm run test:cambios` (y `uv run pytest` / `ruff` si toca el worker).
 
 ## Notas de implementación
-(las rellena el programador al terminar)
+- Ejecutado por `qa` el 2026-11-22 sobre una copia limpia de `10496b8`. **Veredicto: hecha con reservas.** Informe: [informe-feature-11](../versiones/0.2.2/informe-feature-11.md); guía: [feature-11-revision-guiada](../Test-manuales/0.2.2/feature-11-revision-guiada.md).
+- Hecho: 20 criterios mapeados (18 cubiertos, E14 solo manual, E11 con defecto); F4-E10 y F11-E15 en los seis viewports (E2E nuevo); capturas del recorrido tras R1–R6, `recorrido-otra-pestana`, la Biblioteca y el diálogo; crítico nuevo con «Revisar».
+- **Pendiente del usuario**: `npm run calibrar:dudosas -- <carpeta>` (≤ 10 %).
+- Defectos: D1 (0241, media), D2 y D3 (0242).
