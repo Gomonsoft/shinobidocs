@@ -87,9 +87,13 @@ Añadidas el 2026-11-22, tras medir con 18 canciones tuyas (contexto en [0280](0
     - **A (provisional).** «No podemos comprobarla con tu audio», en gris (no como aviso), con el motivo en palabras llanas (la voz casi no tiene pausas, o la letra no marca dónde acaba cada línea), que no se ha cambiado nada y qué puedes hacer (escucharla y ajustarla a oído, o poner los fines). Con letras de LRCLIB será lo habitual.
     - B. No mostrar nada cuando no se puede comprobar.
 
+20. **Datos de cada video al añadir una lista de YouTube** (añadida el 2026-11-22, pregunta 0285).
+    - **A (provisional).** La tabla usa lo que trae la lista (título, canal, duración, nombre del álbum); los datos propios de cada video se completan al descargarlo, sin tocar lo que hayas cambiado. Así revisar la tabla es inmediato y se hacen menos peticiones a YouTube.
+    - B. Consultar cada video mientras revisas la tabla (datos algo mejores, pero tarda minutos con un álbum grande y aumenta el riesgo de que YouTube bloquee las descargas).
+
 ## Opción provisional tomada (si no bloquea)
 
-La A en los 19 puntos.
+La A en los 20 puntos.
 
 ## Respuesta
 

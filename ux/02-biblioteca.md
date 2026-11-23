@@ -1221,6 +1221,7 @@ La decisión la da main para cada canción en el momento de abrir la confirmaci�
 | `bib.acc.motivo.exportando` | Ya se está exportando |
 | `bib.acc.motivo.sinTiempos` | No tiene letra sincronizada |
 | `bib.acc.motivo.activa` | No se elimina: se está reproduciendo en la otra pantalla |
+| `bib.acc.motivo.EDICION_BLOQUEADA` | No se ha cambiado: está sonando en la otra pantalla. Edítala cuando termine. (resultado de «Editar datos…» de varias; 0292) |
 | `bib.acc.calculando` | Comprobando las canciones… |
 | `bib.acc.preparar.titulo` | Preparar {n} canciones · Preparar 1 canción |
 | `bib.acc.preparar.explicacion` | Shinobi Karaoke hará sola lo que falta en cada una: separar las pistas, buscar la letra, comprobarla con la voz y ajustar los fines. Quedarán como «Lista para revisar». |
@@ -1265,7 +1266,7 @@ La decisión la da main para cada canción en el momento de abrir la confirmaci�
 - F8-9. Con un fallo simulado al mover a la papelera una de cuatro canciones, las otras tres quedan eliminadas, el resultado muestra la fallida con `bib.acc.eliminar.fallo` y «Reintentar las que faltan» solo reintenta esa.
 - F8-10. Si una canción seleccionada cambia de estado entre abrir la confirmación y confirmar (doble), no se aplica nada y la lista se actualiza con el aviso de confirmación obsoleta.
 - F8-11. Las Dañadas con `cancion.json` ilegible no se pueden seleccionar y su tooltip es el texto nuevo de `bib.sel.noEditable`.
-- F8-12. Durante una sesión en otra pantalla, «Preparar», «A la cola», «Exportar video…», «Editar datos…» y «Eliminar…» funcionan; ninguna abre el editor.
+- F8-12. Durante una sesión en otra pantalla, «Preparar», «A la cola», «Exportar video…», «Editar datos…» y «Eliminar…» funcionan; ninguna abre el editor. La canción que **está sonando** no se edita ni se elimina: sale omitida con su motivo (`bib.acc.motivo.EDICION_BLOQUEADA` en «Editar datos…», `bib.acc.motivo.activa` en «Eliminar…») y las demás se procesan (ADR 0017 §9; 0292).
 - F8-13. Todo el flujo (entrar en el modo, seleccionar, abrir «Más acciones», confirmar, leer el resultado) es operable solo con teclado; el foco nunca queda en `body`; el resultado se anuncia una vez.
 - F8-14. Capturas en `docs/ux/revisiones/0.2.2-feature-8/` con nombre `biblioteca-{ancho}x{alto}-{escala}-{estado}.png` a 1280 × 800 al 100 % y 1280 × 720 al 125 %: `barra-acciones`, `menu-mas-acciones`, `dialogo-preparar`, `dialogo-editar-datos`, `dialogo-eliminar`, `dialogo-eliminar-diez`, `resultado-eliminar-parcial`.
 
@@ -1337,7 +1338,7 @@ Origen: [plan 0.2.2, feature 9](../versiones/0.2.2/plan-4.md) y propuesta [025](
 | Elemento | Comportamiento |
 |---|---|
 | Cabecera | Una canción: «{título}» · {artista}. Varias: «{n} canciones» con la lista revelable (título — artista · estado). |
-| **Qué incluye** | Grupo de radio. Por defecto «Completo» **(decisión provisional)**; se recuerda la última elección. A la derecha de cada opción, su tamaño estimado (`paq.tamano`; lo da main sumando los archivos; mientras se calcula, «calculando…»). |
+| **Qué incluye** | Grupo de radio. Por defecto «Completo» **(decisión provisional)**; se recuerda la última elección **mientras la app está abierta**; al reiniciar vuelve a «Completo» (revisión 2026-11-22, 0292: es lo más seguro, porque un paquete ligero no lleva el audio). A la derecha de cada opción, su tamaño estimado (`paq.tamano`; lo da main sumando los archivos; mientras se calcula, «calculando…»). |
 | Canción sin audio o a medias | Un borrador sin pistas (o sin mezcla) se exporta con lo que tenga guardado; la lista lo anota con `paq.nota.sinAudio`. Una canción con un trabajo en curso **sí entra**: su `cancion.json` y los archivos de los pasos ya completados; si se está separando, entra **sin pistas** y al importarla se comporta como la de un paquete ligero (borrador sin audio). La lista la anota con `paq.nota.enCurso`. |
 | **Guardar como** | Como en «Exportar video» (spec 10): campo de solo lectura + [Cambiar…] (diálogo «Guardar» del sistema, desde main, con el filtro de la extensión). Nombre propuesto: una canción, `{título} — {artista}.shinobi`; varias, `{n} canciones de Shinobi Karaoke {AAAA-MM-DD}.shinobi`. Carpeta: la última usada para paquetes; si no, Documentos. No se puede guardar dentro de la carpeta de datos de la app. |
 | Notas | En línea, como en spec 10: archivo existente (`paq.aviso.existe`: se sustituye solo al terminar bien), espacio insuficiente (`paq.aviso.espacio`), y **siempre** `paq.aviso.derechos` (con la variante «ligero» si se eligió sin audio). |

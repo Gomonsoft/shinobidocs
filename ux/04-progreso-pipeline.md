@@ -579,11 +579,11 @@ La vista de la spec no cambia; el texto de cola dice la posición en la tanda: `
 
 | Clave | Texto |
 |---|---|
-| `act.cola.titulo` | Cola de preparación · {i} de {n} canciones |
-| `act.cola.titulo.pausa` | Cola de preparación · en pausa · {i} de {n} |
+| `act.cola.titulo` | Cola de preparación · {t} de {n} terminadas — `{t}` = terminadas (revisión 2026-11-22, 0285: el botón cuenta la que está en curso, la cabecera las terminadas, y la palabra «terminadas» evita que parezcan dos números contradictorios) |
+| `act.cola.titulo.pausa` | Cola de preparación · en pausa · {t} de {n} terminadas |
 | `act.cola.titulo.fin` | Preparación terminada · {n} canciones — [Ver resultado] |
-| `act.cola.boton` | Preparando {i} de {n} |
-| `act.cola.boton.pausa` | En pausa · faltan {m} |
+| `act.cola.boton` | Preparando {i} de {n} — `{i}` = la que está en curso (terminadas + 1) |
+| `act.cola.boton.pausa` | En pausa · faltan {m} — `{m}` = canciones que faltan (en cola y en curso) |
 | `act.cola.boton.parada` | Cola parada · faltan {m} |
 | `act.cola.pausar` / `act.cola.reanudar` | Pausar · Reanudar |
 | `act.cola.pausa.ayuda` | La canción en curso termina su paso; las demás esperan. |

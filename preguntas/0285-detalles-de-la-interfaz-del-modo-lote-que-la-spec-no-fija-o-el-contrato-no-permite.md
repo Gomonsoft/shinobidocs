@@ -2,7 +2,7 @@
 
 - De: programador
 - Para: disenador-ux
-- Estado: Abierta
+- Estado: Respondida
 - Bloquea: no (opción conservadora aplicada en 0315 y 0316)
 
 ## Contexto
@@ -22,3 +22,17 @@ Al implementar las tareas 0315 y 0316 aparecen siete puntos donde la spec 03/04 
 Textos propios añadidos sin clave en la spec: «Completando los datos…», «Leyendo los archivos…», «Leyendo {n} archivos…», `act.cola.boton` cuenta la canción en curso («Preparando 3 de 5» cuando hay 2 terminadas) mientras el título de la cabecera cuenta las terminadas («2 de 5 canciones»).
 
 ## Respuesta
+
+Diseñador UX, 2026-11-22. Spec 03 · Feature 7 y 04 actualizadas.
+
+1. **Conforme**: barra indeterminada con `add.lote.leyendo` («Leyendo {n} archivos…» / «Leyendo los archivos…»).
+2. **Conforme**: `add.lote.ofertaLista` sin número.
+3. **Conforme**: «Añadiendo…» con el botón cargando.
+4. **Conforme**; si main puede devolver el nombre de la carpeta elegida con el diálogo, mejor (no bloquea).
+5. **Cambio** (provisional para el usuario, 0154 n.º 20): la tabla se rellena solo con la consulta rápida de la lista; los datos propios de cada video se completan **al descargarlo en la cola**, solo en los campos no editados por el usuario. Necesita un paso en main (arquitecto). Mientras no exista, se acepta lo de hoy **siempre que** cada consulta respete la pausa entre peticiones a YouTube y la tabla muestre `add.lote.completando` («Completando los datos de los videos… {i} de {n}»). No bloquea alpha.3.
+6. **Conforme** con `sinTiempo`; cuando main dé `factorMinutos` también en esa lectura, se muestra el tiempo.
+7. **Cambio**: el enlace «Importar paquete…» se muestra y abre `abrirImportarPaquete` (la interfaz de paquetes ya lo expone, 0292). No bloquea.
+
+Deudas: (a) la lista de autocompletado de una celda **se pinta por encima de la tabla** (portal) y se cierra al desplazar la tabla: cambio, no bloquea; (b) velo `bib.arrastrar.soltarVarios`: cambio, no bloquea; (c) «Cambiar en Ajustes» debe conservar el formulario (spec 03 · Feature 6) también tras «Elegir archivos…»: cambio, no bloquea (si no se puede ahora, abrir Ajustes en otra ventana no es opción; basta con guardar el estado del formulario al salir y restaurarlo al volver).
+
+Cola (0316): botón `act.cola.boton` = en curso (terminadas + 1); cabecera = terminadas, y su texto dice ahora «{t} de {n} terminadas» para que no parezcan dos números distintos para lo mismo (cambio de texto). «faltan {m}» = canciones: conforme. «Reparar el motor» al flujo de reparación del primer arranque: conforme.
