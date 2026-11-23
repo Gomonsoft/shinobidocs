@@ -94,6 +94,7 @@ flowchart LR
 | [0378 · Veredicto en d = 0 y guardas de fiabilidad](../../tareas/0378-encaje-veredicto-en-d0-y-guardas-de-fiabilidad.md) | S–M | 0297 |
 | [0381 · `calibrar:encaje` con guardas y criterio de seguridad](../../tareas/0381-calibrar-encaje-con-guardas-de-fiabilidad.md) | S | 0378 |
 | [0379 · La limitación en la interfaz](../../tareas/0379-limitacion-del-encaje-en-la-interfaz.md) | S | 0378 y la spec (05/06) |
+| [0385 · Medir el encaje por inicios (letras sin fines)](../../tareas/0385-medir-el-encaje-por-inicios-en-letras-sin-fines.md) | S | 0378, 0381 |
 | [0301 · Verificación, calibración e informe](../../tareas/0301-verificacion-e-informe-de-la-feature-4.md) | S | 0297–0300, 0367–0369, 0378, 0379, 0381 |
 
 **Hecha cuando** (revisado el 2026-11-22 tras la [medida con canciones reales](medidas-con-canciones-reales.md); preguntas 0275–0277):
@@ -102,7 +103,7 @@ flowchart LR
 2. **Seguridad**, medible ya con la copia de las 18 canciones del MVP tras 0378 y 0381: `calibrar:encaje` da 0 ajenas aceptadas, 0 desplazadas ≥ 0,8 s que salgan `coincide`, 0 propias `desfasada` y 0 correcciones con error > 200 ms («Criterio de seguridad: SÍ»), en las variantes tal cual y sin fines.
 3. **Eficacia, pendiente del usuario** (pregunta 0280): con ≥ 8 canciones revisadas a mano y con fines, las propias que salen `coincide` y los ±0,8 s corregidos en las de voz no continua. Si no llegan a lo que midió ADR 0024 (10/10 y corrección a ±0,8 s), se recalibran las constantes con nota en el ADR.
 
-**No demostrado y declarado como limitación**: con letras de LRCLIB sin fines o con voz casi continua, la comprobación **no detecta** desfases ni distingue la letra correcta. La app dice «No está claro» y no corrige ni elige sola. Las notas de la versión lo dicen.
+**No demostrado y declarado como limitación**: con letras de LRCLIB sin fines o con voz casi continua, la comprobación **no detecta** desfases ni distingue la letra correcta. La app dice «No está claro» y no corrige ni elige sola. Medido con las 18 canciones del MVP: 0/17 `coincide`, seguridad SÍ (pregunta 0295). Las notas de la versión **no** anuncian la corrección de desfases (texto en la respuesta de 0295). Vía de mejora en medida: 0385 (inicios); alternativa: la feature 10.
 
 ## Feature 6 · Datos de la canción automáticos (S–M)
 
@@ -137,7 +138,7 @@ flowchart LR
 **Hecha cuando** (revisado el 2026-11-22; preguntas 0277 y 0278):
 
 - F6-N7 y F6-N8 (álbum desde LRCLIB y aviso de búsqueda automática) pasan.
-- Un WAV y un vídeo llegan solos a «Lista para revisar» con el doble; **con red real** (permiso del usuario, pregunta 0280) se anota cuántas canciones caen en «Elige la letra» y que ninguna elección automática es de otra canción u otra versión.
+- Un WAV y un vídeo llegan solos a «Lista para revisar» con el doble, cuya letra trae fines y voz con pausas. **Con letras de LRCLIB sin fines (el caso real) la canción llega a «Elige la letra»** con las candidatas buscadas y ordenadas, y llega a «Lista para revisar» tras un clic. **Que elija sola** con ese material depende de que la 0385 cumpla su criterio o de la feature 10 (pregunta 0295), o de que el usuario acepte elegir sin comprobar (pregunta 0280, opción B). **Con red real** (permiso del usuario, pregunta 0280) se anota cuántas canciones caen en «Elige la letra» y que ninguna elección automática es de otra canción u otra versión.
 - Los borradores **sin letra** del usuario se preparan con «Preparar» (red real). Los que tienen **letra anterior a 0.2.2** reciben fines tras confirmar, sin que cambie ningún inicio, ni el desfase, ni las palabras (0380, 0382).
 - La elección y la corrección automáticas cumplen el criterio de seguridad de la feature 4 (punto 2).
 - Con el interruptor apagado no sale ninguna petición a LRCLIB al añadir.
@@ -202,7 +203,7 @@ flowchart LR
 
 | Tarea | Tamaño | Depende de |
 |---|---|---|
-| [0328 · Prueba técnica](../../tareas/0328-prueba-tecnica-de-alineacion-forzada.md) | M | — (fase 1, filtro con la copia del MVP: puede empezar ya; fase 2, decisión: canciones con fines a mano) |
+| [0328 · Prueba técnica](../../tareas/0328-prueba-tecnica-de-alineacion-forzada.md) (prioridad alta: de ella depende también la elección automática de la feature 5, pregunta 0295) | M | — (fase 1, filtro con la copia del MVP: puede empezar ya; fase 2, decisión: canciones con fines a mano) |
 | [0329 · Worker `alinear-letra`](../../tareas/0329-worker-alinear-letra.md) | L | 0328 (si sirve) |
 | [0330 · Modelos, cola y canales](../../tareas/0330-modelos-de-alineacion-y-servicio-en-main.md) | M | 0328, 0296 |
 | [0331 · `aplicarAlineacion` y palabras `auto`](../../tareas/0331-aplicar-alineacion-y-palabras-automaticas.md) | M | 0330 |

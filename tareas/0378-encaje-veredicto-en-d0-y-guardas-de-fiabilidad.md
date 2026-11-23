@@ -1,5 +1,5 @@
 # 0378 — Feature 4 · Encaje: veredicto en d = 0 sin d* espurio y guardas de fiabilidad
-- Estado: Pendiente
+- Estado: Hecha
 - Paso del pipeline: 3
 - Depende de: 0297 (hecha). Puede empezar ya.
 - ADRs: 0024 (revisión «Medida con canciones reales y guardas de prudencia»)
@@ -52,6 +52,14 @@ Que el encaje no diga «coincide» ni corrija solo cuando no puede saberlo (voz 
 
 ## Notas de implementación
 
-(las rellena el programador al terminar)
+Hecha (2026-11-22, programador).
+
+- `app/src/shared/encaje.ts`: regla del veredicto nueva (mejor de `v0`/`vMejor` con |d*| < 500; `desfasada` solo si no está en el borde de la rejilla; luego `v0 = coincide` → `coincide`; `no_coincide` por `desfaseVariable` solo si `v0` no coincide), `desfaseVariable` con ganancia real en alguna mitad, guardas (`densidadVoz`, `contrasteF`, `limitacion`, `veredictoBase`), parámetros `densidadVozMaxima`, `desfaseSensibilidadMs`, `contrasteMinimoF` y tipo `LimitacionEncaje`. Ninguna otra constante cambia. Coste: 2-3 `medir` más.
+- Con limitación, `desfaseMs` sigue siendo d*; `lineasSinVoz` y `tramosVozSinLetra` se calculan en d = 0.
+- `comprobacion.ts`, `eleccion.ts` y `corregirDesfaseDiferido` **no cambian** y confirmado: solo actúan con `desfasada` / eligen con `coincide`/`desfasada`, así que con `dudosa` (limitación) ni corrigen ni eligen. El tipo `EncajeCandidato` de `busqueda.ts` aún no lleva `limitacion` (es de la 0379).
+- Pruebas: `encaje.test.ts` (fixtures sintéticos de cada patrón: voz casi continua, letra sin fines, curva plana con d* espurio —dos fixtures fijos sacados de una búsqueda con semilla, uno daba `no_coincide` con el código viejo—, |d*| < 500 con I(d*) bajo, desfase que crece, borde con `desfaseMaxMs: 3000`, fin más allá del audio) y `dudosas.test.ts` (fin más allá del audio).
+- Tests existentes que cambiaron de expectativa: `main/preparacion/servicio.test.ts`. Su voz falsa tenía 0,6 s de pausa (densidad 88 %, al límite) y sus candidatos eran LRC sin fines (ahora `dudosa`/`sinContraste`). Se pasó a pausas de 1 s y a candidatos con fines salvo una línea (`lineasBuenas`), de modo que la cadena sigue probando «elige, anota y ajusta fines» (ahora 1 fin de la preparación, no 6); el caso `duda` pasó a ser «LRC correcto pero sin fines» y el de la letra desplazada a `noCoincide`. `comprobacion.test.ts`, `eleccion.test.ts` y `busqueda.test.ts` no necesitaron cambios.
+- E2E: no ejecutadas. Comprobado a mano con evaluarEncaje que el doble `conVoz` de LRCLIB sobre `VOZ_SINTETICA` sigue dando `coincide`, `desfasada` y `no_coincide` (densidad 44 %, contraste 0,4). Pendiente de quien ejecute Playwright: `letras.spec.ts`, `preparacion.spec.ts`, `editor.spec.ts` (comprobar) y `capturas-022.spec.ts`.
+- Medida con la copia de las 18 canciones (ver 0381): propias `coincide` 0/17 (sin guardas 12/17), ajenas 0/272, desplazadas ≥ 0,8 s que dicen `coincide` 0; es más estricto que lo previsto en el ADR («4 como mucho»): 8 por voz continua, 4 por contraste, 4 `no_coincide` y 1 `dudosa`.
 
 Aviso para quien implemente: los tests de `comprobacion.test.ts`, `eleccion.test.ts`, `servicio.test.ts` de la preparación y `busqueda.test.ts` usan picos falsos. Si alguno espera `coincide` o `desfasada` y ahora sale `dudosa`, casi seguro su voz falsa es densa (≥ 90 %) o su letra no tiene fines. Hay que darle huecos o fines al fixture para que siga probando lo que probaba. Y añadir, donde tenga sentido, el caso contrario: con la limitación, no se elige y no se corrige.

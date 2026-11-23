@@ -1,5 +1,5 @@
 # 0380 — Feature 5 · «Preparar» pone fines a las letras sin `intacta` tras confirmación (main y contrato)
-- Estado: Pendiente
+- Estado: Hecha
 - Paso del pipeline: 3
 - Depende de: 0308 (hecha). Puede empezar ya. La interfaz va en la 0382.
 - ADRs: 0025 (revisión «Elección con el veredicto prudente y "Preparar" sobre letras sin marca»), 0024 §4 (`origen_fin`)
@@ -42,4 +42,13 @@ Que «Preparar» sirva para las letras del MVP y de 0.2.1 (pregunta 0278) sin tr
 
 ## Notas de implementación
 
-(las rellena el programador al terminar)
+Hecha (2026-11-22, programador). La interfaz es la 0382.
+
+- `shared/derivados.ts`: `aplicaPreparar` devuelve `{ aplica: true, pasos: ['ajustando_fines'], confirmar: 'finesSinMarca' }` para un borrador con letra sin `intacta`, alguna línea con inicio y `fin_ms: null` y sin `preparacion.fines`. `AplicaPreparar` y `EntradaAplicaPreparar` ganan `confirmar?`. Con `intacta` no cambia.
+- IPC (cambios mínimos y aditivos): `previsualizarPreparacionSchema` gana `confirmar`; `prepararOpcionesSchema` (`strictObject`, `finesSinMarca?`); el canal `preparacion.preparar` acepta un segundo argumento opcional; preload `preparar(ids, opciones?)`; handler y `PreparacionIpc`; `resumenCancionSchema` gana `prepararFinesSinMarca?` (ausente = `false`).
+- `main/preparacion/servicio.ts`: `plan()` copia `confirmar`; `preparar(ids, { finesSinMarca })` omite con `NADA_QUE_HACER` lo que pide confirmar si falta; `iniciar(id, origen, { finesSinMarca })`; `Corrida.finesSinMarca`; `pasoFines` pasa con `intacta === true` o `finesSinMarca`. `EventoCorrida` `inicio` lleva `finesSinMarca?`. `pasoComprobar` no se toca (sin `intacta` no corrige; un test lo fija). Con el editor abierto, `preparar` omite con `EDICION_BLOQUEADA` y una corrida ya en marcha espera, como antes.
+- Diario (`main/trabajos/diario.ts`): `finesSinMarca` por entrada (`z.boolean().catch(false)`), `alta(id, tipo, { finesSinMarca })`; `cola.ts` lo anota al empezar la corrida y lo pasa a `iniciar` al reanudar (solo cuando es `true`, así no cambian las llamadas de siempre).
+- `main/biblioteca/resumen.ts`: `prepararFinesSinMarca` (con `aplicaPreparar`, `false` en dañadas).
+- Pruebas: `derivados.test.ts` (un caso existente cambió: un borrador con letra del usuario sin fines pasa de `NADA_QUE_HACER` a `aplica` + `confirmar`), `servicio.test.ts` (a-e de la tarea), `cola.test.ts`, `diario.test.ts` (nuevo), `resumen.test.ts`, `handlers.test.ts` (el segundo argumento; `preparar` se llama ahora con `(ids, undefined)`).
+- E2E escrita y **sin ejecutar**: `e2e/preparacion.spec.ts` (`letra sin marca intacta`): `previsualizar` da `confirmar`, `preparar` sin opción omite, con `{ finesSinMarca: true }` deja `origen_fin: "preparacion"` sin mover inicios.
+- Para la 0382: `previsualizar` ya dice qué canciones piden confirmar; el resumen de la tarjeta trae `prepararFinesSinMarca`; la omisión sin confirmar sale como `NADA_QUE_HACER` (no hay código propio). `DialogoPreparar.tsx` y `Biblioteca.tsx` siguen llamando `preparar(ids)` sin opciones: hasta la 0382 esas canciones se ven como «nada que hacer».

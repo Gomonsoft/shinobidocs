@@ -270,3 +270,10 @@ Donde dice «los 5 borradores actuales se rescatan con "Preparar"», se lee así
 - Los borradores **sin letra** se preparan con «Preparar»; para eso hace falta red.
 - Los borradores **con letra anterior a 0.2.2** reciben fines automáticos tras confirmar, sin mover ningún inicio. Su desfase no se corrige solo.
 - Que la elección automática acierte con LRCLIB real no está demostrado.
+
+## Revisión 2026-11-22 · La elección automática con LRC sin fines depende de una señal fiable (pregunta 0295)
+
+Con las guardas de ADR 0024, la copia de 18 canciones reales da 0/17 letras propias `coincide`. La preparación **no elige sola** letras de LRCLIB sin fines: la canción llega a «Elige la letra» con las candidatas buscadas, comprobadas y ordenadas. Que llegue sola a «Lista para revisar» con ese material depende de una de estas vías:
+- la señal por inicios, si la tarea 0385 cumple su criterio;
+- la confianza de la alineación forzada (feature 10, ADR 0028);
+- una decisión del usuario de elegir sin comprobar (pregunta 0280, opción B, no aplicada).

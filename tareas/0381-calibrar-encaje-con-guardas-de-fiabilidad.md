@@ -1,5 +1,5 @@
 # 0381 — Feature 4 · `calibrar:encaje` con las guardas de fiabilidad y el criterio de seguridad
-- Estado: Pendiente
+- Estado: Hecha
 - Paso del pipeline: 3
 - Depende de: 0378
 - ADRs: 0024 (revisión «Medida con canciones reales y guardas de prudencia»)
@@ -34,4 +34,9 @@ Que el script mida lo que importa al producto: si la app afirma algo falso (acep
 
 ## Notas de implementación
 
-(las rellena el programador al terminar)
+Hecha (2026-11-22, programador).
+
+- `app/scripts/calibrar-encaje.ts`: por propia, columnas `voz%`, `contraste`, `limitación` y `sin guardas` (`veredictoBase`); el resumen (y cada variante con `--variantes`) da propias `coincide` con y sin guardas, propias `desfasada`, ajenas aceptadas, desplazadas ≥ 0,8 s que dicen `coincide`, correcciones con error > 200 ms y recuperadas a ±50 y ±200 ms. Línea final `Criterio de seguridad (ADR 0024, revisión 2026-11-22): SÍ/NO` (tal cual, y también «sin fines» con `--variantes`). La línea de la pregunta 0222 no cambia. `--json` lleva los campos nuevos (`seguridad`, resumen ampliado, filas con `limitacion`...). Sigue de solo lectura y sin textos de letra.
+- Opción nueva solo para pruebas: `calibrarEncaje(raiz, { parametros })` (parámetros del encaje parciales; el CLI no la expone).
+- `calibrar-encaje.test.ts`: biblioteca sintética con una canción de voz casi continua (propia `dudosa`/`vozContinua`, sin guardas `coincide`; ajena no aceptada; seguridad SÍ) y un caso NO (con `densidadVozMaxima: 1.1` y `contrasteMinimoF: -1`; el contraste puede ser negativo, por eso `0` no desactiva la guarda).
+- Cifras sobre la copia de las 18 canciones: ver el informe del programador (tarea 0378).

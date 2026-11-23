@@ -300,3 +300,12 @@ Con LRC sin fines la app dirá «No está claro» casi siempre, y la preparació
 | `calibrar:encaje --variantes` y `calibrar:dudosas` con ≥ 8 canciones **revisadas a mano con fines**, mejor de varios artistas y con alguna de voz continua | el usuario (o `qa` con una copia que el usuario prepare) | Saber si las guardas rechazan demasiadas letras buenas; recalibrar `densidadVozMaxima`, `contrasteMinimoF` y los fines prudentes con nota aquí |
 
 Tareas: [0378](../tareas/0378-encaje-veredicto-en-d0-y-guardas-de-fiabilidad.md) (`encaje.ts`), [0379](../tareas/0379-limitacion-del-encaje-en-la-interfaz.md) (interfaz) y [0381](../tareas/0381-calibrar-encaje-con-guardas-de-fiabilidad.md) (script).
+
+## Revisión 2026-11-22 · Resultado con las guardas: 0/17 coincide (pregunta 0295)
+
+Medida con 0378 y 0381 sobre la copia de las 18 canciones:
+- **Seguridad: cumple.** 0/272 ajenas, 0 desplazadas ≥ 0,8 s aceptadas, 0 propias `desfasada` y 0 correcciones equivocadas, en tal cual y sin fines.
+- **Utilidad: nula con LRC sin fines.** Propias `coincide`: 0/17 (sin guardas serían 12/17). El contraste de F a 0,8 s es < 0,02 en 16 de 17 canciones (mediana 0,002), incluidas las de voz no continua. La previsión de la revisión anterior («4 como mucho») era optimista.
+- Las 4 `no_coincide` son 5, 8 y 15 (veredicto correcto: otra versión o desfase creciente) y 17 (falso, porque sus fines por palabra cortan la voz).
+
+Decisión: **no se recalibra**. Las guardas se quedan. Se mide una señal por **inicios** (arranques de voz tras una pausa, corregidos por el azar), con criterio cerrado de adopción, en la tarea [0385](../tareas/0385-medir-el-encaje-por-inicios-en-letras-sin-fines.md). La otra vía es la confianza de la alineación forzada (§1, opción D; ADR 0028). Hasta que una de las dos cumpla, la elección automática de la feature 5 no elige letras de LRCLIB sin fines (ADR 0025).
