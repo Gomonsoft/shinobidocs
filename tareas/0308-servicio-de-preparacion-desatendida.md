@@ -13,7 +13,8 @@ La máquina de estados por canción que lleva un borrador a «Lista para revisar
 ## Criterios de aceptación
 - [ ] Pasos y fallos de la tabla de ADR 0025 §2; elección automática con los cuatro criterios de §3.
 - [ ] `shared/silencios.ts`: `proponerAjusteSilencios` gana los parámetros `soloIds`, `soloFinesAutomaticos` y `activarComodin` (ADR 0018, revisión 0.2.2); la preparación la usa con `soloFinesAutomaticos: true`, `activarComodin: false` y `origen_fin: "preparacion"`.
-- [ ] Se detiene con cancelar, eliminar, edición del usuario o `EDICION_BLOQUEADA`; recuento de dudosas al terminar (si la tarea 0334 no está, 0).
+- [ ] Se detiene con cancelar, eliminar, edición del usuario o `EDICION_BLOQUEADA`.
+- [ ] Recuento de dudosas: main llama a `contarDudosasGuardadas` (`main/letras/dudosas.ts`, tarea 0334) (a) al terminar la preparación y (b) tras cada escritura de la letra de una canción que tenga `preparacion`, y guarda el número en `preparacion.dudosas` (ADR 0024 §3; pregunta 0225 §2). Test: el recuento cambia al dar una línea por buena y al mover un fin.
 - [ ] Canales `preparacion.previsualizar`, `preparar`, `cancelar` y evento `preparacion:cambio`.
 - [ ] El paso `comprobando` de una letra ya guardada reutiliza `comprobarLetraGuardada` de la tarea 0367 (no duplica la comprobación diferida) y, dentro de una tanda de varias canciones, no emite el toast por canción (ADR 0024, revisión 2026-11-22).
 

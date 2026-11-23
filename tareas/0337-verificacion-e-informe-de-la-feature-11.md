@@ -1,7 +1,7 @@
 # 0337 — Feature 11 · Verificación, calibración e informe
 - Estado: Pendiente
 - Paso del pipeline: 4
-- Depende de: 0334–0336
+- Depende de: 0334–0336, 0370
 - ADRs: 0024
 - Spec UX: docs/ux/06 y 02 (0.2.2 · Feature 11)
 - Tamaño: S

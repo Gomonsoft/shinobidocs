@@ -3354,17 +3354,20 @@ Orden = prioridad: una línea con varios muestra el primero como principal y los
 | Motivo | Se señala cuando (provisional) | Texto (`edi.revision.motivo.*`) | Arreglo rápido | Necesita |
 |---|---|---|---|---|
 | `sinInicio` | La línea no tiene inicio | Aún no tiene inicio. | [Fijar inicio aquí (I)] | — |
-| `sinVoz` | No hay voz en ningún momento entre su inicio y su fin (o la feature 4 la listó entre las que «caen donde no hay voz») | No se oye voz mientras dura esta línea. | — | Voz |
+| `sinVoz` | Hay voz en menos del 10 % de la línea (o la feature 4 la listó entre las que «caen donde no hay voz») | Casi no se oye voz mientras dura esta línea. | — | Voz |
 | `reconocimiento` | La sincronización automática la dejó con confianza Baja | La sincronía automática no la reconoció bien. | [Sincronizar esta línea con la voz] | Feature 10 |
-| `vozTarde` | La voz empieza 1 s o más después del inicio | La voz empieza {d} s después del inicio. | — | Voz |
-| `finCorta` | El fin cae con la voz sonando y la voz sigue 0,4 s o más antes del siguiente inicio | El fin corta la voz: sigue {d} s más. | [Fin al final de la voz] | Voz |
-| `finTarde` | La voz termina 1 s o más antes del fin (con fin fijado o automático) | El fin llega {d} s después de la voz. · (fin automático) El fin es automático y llega {d} s después de la voz. | [Fin al final de la voz] | Voz |
-| `muyCorta` | Dura menos de 0,5 s, o va a más de 25 caracteres por segundo | Dura muy poco para su texto ({d} s). | — | — |
-| `muyLarga` | Dura más de 12 s y va a menos de 2 caracteres por segundo | Dura mucho para su texto ({d} s). | — | — |
+| `vozTarde` | No hay voz en los 500 ms siguientes al inicio | La voz empieza {d} s después del inicio. | — | Voz |
+| `finCorta` | Hay voz en al menos el 90 % del segundo siguiente al fin y la línea siguiente empieza 1 s o más después | El fin corta la voz: sigue {d} s más. | [Fin al final de la voz] | Voz |
+| `finTarde` | La voz termina 1,2 s o más antes del fin (con fin fijado o automático) | El fin llega {d} s después de la voz. · (fin automático) El fin es automático y llega {d} s después de la voz. | [Fin al final de la voz] | Voz |
+| `muyCorta` | Dura menos de 0,25 s, o va a más de 25 caracteres por segundo | Dura muy poco para su texto ({d} s). | — | — |
+| `muyLarga` | Dura más de 6 s y va a menos de 2 caracteres por segundo | Dura mucho para su texto ({d} s). | — | — |
+
+Umbrales: los de [ADR 0024](../adr/0024-encaje-de-la-letra-con-la-voz-y-lineas-dudosas.md) §3 (`PARAMETROS_DUDOSAS`, calibrados con la biblioteca real; respuesta a 0225), que mandan sobre cualquier cifra de esta spec. En `vozTarde`, `{d}` es el tiempo desde el inicio hasta la primera voz dentro de la línea (≥ 0,5 s).
 
 - «Necesita voz»: esos motivos solo se calculan con la forma de onda de la voz lista. Sin separación (o mientras se prepara), la sección lo dice con `edi.revision.sinVoz` y solo actúan los demás.
 - `sinInicio` **no se puede dar por buena**: hay que fijar el inicio (o borrar la línea en «Corregir la letra»). Las demás, sí.
-- Las líneas con tiempos por palabra hechos a mano se evalúan igual (el usuario puede haberse equivocado en los límites), pero «Fin al final de la voz» les avisa antes con `edi.preciso.aviso.tirador`.
+- Las líneas con tiempos por palabra hechos a mano se evalúan igual (el usuario puede haberse equivocado en los límites), pero «Fin al final de la voz» les avisa antes con `edi.preciso.aviso.tirador`. Sin diálogo de confirmación: al aplicarlo se cumple la regla de [8.2](#82--regla-editar-el-inicio-o-el-fin-descarta-los-tiempos-por-palabra): la línea pierde sus palabras y sale el toast `edi.toast.palabras` con [Deshacer], que devuelve fin y palabras en un paso (igual que Ctrl/Cmd + Z) **(decisión provisional, 0158 n.º 20)**.
+- **⚑ en la lista** (0226 n.º 2): ocupa la columna de 14 px de la izquierda de la fila; mientras esa fila suena, la columna muestra ▶ (el estado de reproducción manda) y el motivo sigue en el nombre accesible. Al dejar de sonar vuelve la ⚑.
 - **Canción sin dudas**: es un resultado válido y se dice (`edi.revision.nada`).
 
 ### Marcas fuera del recorrido
@@ -3420,7 +3423,7 @@ Al empezar, el panel pasa a la pestaña **Sincronía** y muestra, **encima** de 
 | **Siguiente › / ‹ Anterior** | Van a la pendiente siguiente o anterior en el orden de la letra **sin** marcar nada. También **Ctrl/Cmd + ↓ / ↑** (funcionan igual fuera del recorrido). En los extremos dan la vuelta, con el anuncio `edi.revision.vuelta`. |
 | **Corregir la línea** | Con los controles de siempre (campos, tiradores, I/O, flechas con modificador) o el **editor preciso (P)**, que se abre sobre la línea y convive con la tarjeta. Tras cada cambio el motivo se recalcula: si la línea ya no tiene motivos, la tarjeta muestra `edi.revision.corregida` («✓ Ya no vemos nada raro en esta línea») y el botón principal pasa a **[Siguiente (N)]**. Si aún tiene alguno, se queda pendiente y el usuario decide. |
 | **Elegir otra línea a mano** (lista, línea de tiempo, ↑/↓) | El recorrido no termina. Si la línea elegida está pendiente, la tarjeta la muestra. Si no, la tarjeta se reduce a `edi.revision.fuera` con [Volver a la revisión], que selecciona la siguiente pendiente. |
-| **Cambiar de pestaña** | «Estilo» y «Funciones» funcionan; el recorrido sigue y la pestaña «Sincronía» lleva una ⚑ (con texto para lectores de pantalla). |
+| **Cambiar de pestaña** | «Estilo» y «Funciones» funcionan; el recorrido sigue y la pestaña «Sincronía» lleva una ⚑ (con texto para lectores de pantalla). **Forma** (precisión de [0226](../preguntas/0226-ajustes-de-ux-de-la-revision-guiada-sin-especificar.md) n.º 1): icono `flag` de 12 px en `texto-2` a la derecha del texto «Sincronía», **no** el punto `aviso`: el punto ya significa «hay un problema de contraste» en «Estilo», y una revisión en curso no es un problema. Nombre accesible de la pestaña: «Sincronía, hay una revisión en curso». |
 | **Escuchar cada línea al llegar** | Casilla, marcada por defecto; se recuerda con las preferencias del editor. |
 | **Salir** | [✕] de la tarjeta, **R** o **Esc** (después de cerrar popovers, diálogos y el editor preciso, y antes de «volver a la Biblioteca»). La tarjeta desaparece; las marcas guardadas se conservan. El foco vuelve a la fila seleccionada. |
 | **Otras acciones** | «Sincronizar al ritmo» termina el recorrido. «Ajustar los silencios», «Sincronizar con la voz», «Corregir el desfase» y «Corregir la letra» se pueden usar: al volver, las pendientes se recalculan y el recorrido sigue. «Probar a pantalla completa (F)» y exportar no lo interrumpen. |
@@ -3513,7 +3516,7 @@ Ninguno actúa en campos de texto ni con el foco en el editor preciso. N fuera d
 | `edi.revision.titulo` | Revisión · quedan {p} de {t} |
 | `edi.revision.salir` | Salir de la revisión (Esc) |
 | `edi.revision.motivo.sinInicio` | Aún no tiene inicio. |
-| `edi.revision.motivo.sinVoz` | No se oye voz mientras dura esta línea. |
+| `edi.revision.motivo.sinVoz` | Casi no se oye voz mientras dura esta línea. |
 | `edi.revision.motivo.reconocimiento` | La sincronía automática no la reconoció bien. |
 | `edi.revision.motivo.vozTarde` | La voz empieza {d} s después del inicio. |
 | `edi.revision.motivo.finCorta` | El fin corta la voz: sigue {d} s más. |

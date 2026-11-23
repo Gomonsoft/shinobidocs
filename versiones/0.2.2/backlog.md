@@ -15,7 +15,7 @@ Ver el [plan](plan-4.md) y el [flujo de Git](../../workflow.md). **Una feature =
 | 3 | **4** · Comprobar la letra contra la voz | 0297–0301, 0367–0369 | M | 0296 | alpha.1 |
 | 4 | **6** · Datos automáticos | 0302–0305 | S–M | 0339 | alpha.2 |
 | 5 | **5** · Preparación desatendida | 0306–0312 | L | 4, 6 (0302) | alpha.2 |
-| 6 | **11** · Revisión guiada | 0334–0337 | M | 0296; UI tras 4 y 5 | alpha.2 |
+| 6 | **11** · Revisión guiada | 0334–0337, 0370 | M | 0296; UI tras 4 y 5 | alpha.2 |
 | 7 | **7** · Importación por lotes | 0313–0317 | L | 5 (0309), 6 | alpha.3 |
 | 8 | **8** · Acciones por lotes | 0318–0322 | M | 5; la exportación por lotes no depende de nada | alpha.3 |
 | 8 | **9** · Copia, paquete y `.lrc` | 0323–0327 | M–L | 0296 | alpha.3 |
@@ -127,7 +127,8 @@ flowchart LR
 | [0334 · Detección, recuento y calibración](../../tareas/0334-deteccion-de-lineas-dudosas.md) | S | 0296 |
 | [0335 · Modo «Revisar»](../../tareas/0335-modo-revisar-en-el-editor.md) | M | 0334 (y 0300 terminada: mismo panel Funciones) |
 | [0336 · Desde la Biblioteca](../../tareas/0336-revision-guiada-desde-la-biblioteca.md) | S | 0334, 0335, 0310 |
-| [0337 · Verificación e informe](../../tareas/0337-verificacion-e-informe-de-la-feature-11.md) | S | 0334–0336 |
+| [0370 · Retirar `origen_fin` al fijar un fin a mano](../../tareas/0370-retirar-origen-fin-al-editar-un-fin-a-mano.md) | S | 0335 (antes de 0308 y 0332) |
+| [0337 · Verificación e informe](../../tareas/0337-verificacion-e-informe-de-la-feature-11.md) | S | 0334–0336, 0370 |
 
 **Hecha cuando**: en las canciones ya revisadas del usuario se señala ≤ 10 % de líneas, una línea dada por buena no vuelve salvo que cambie, y «Fin al final de la voz» es un paso de deshacer.
 

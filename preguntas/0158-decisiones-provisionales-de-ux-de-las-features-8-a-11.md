@@ -82,11 +82,15 @@ Specs: [02 · Features 8, 9 y 11](../ux/02-biblioteca.md#022--feature-8--accione
 19. **Teclas nuevas en el editor.**
     - **A (provisional).** R empieza o termina la revisión, N da la línea por buena y pasa a la siguiente, y Ctrl/Cmd + ↓ / ↑ saltan entre líneas dudosas.
     - B. Sin atajos de una tecla: solo botones.
+20. **«Fin al final de la voz» en una línea con tiempos por palabra hechos a mano** (añadida el 2026-11-22, pregunta [0226](0226-ajustes-de-ux-de-la-revision-guiada-sin-especificar.md)).
+    - **A (provisional).** Se aplica sin confirmación. Junto al botón ya se avisa de que se perderán las palabras; al aplicarlo, la línea vuelve al barrido progresivo y sale un aviso con [Deshacer], que lo devuelve todo de una vez.
+    - B. Pedir confirmación antes.
+    - C. No ofrecer el botón en esas líneas.
 
-Sin pregunta, por si quieres otros valores: una línea se señala si el fin llega 1 s o más después de la voz, si corta la voz 0,4 s o más, si la voz empieza 1 s o más después del inicio, si dura menos de 0,5 s o más de 12 s para su texto, o si la sincronía automática no la reconoce. El objetivo es que una canción bien sincronizada no tenga más de una de cada diez líneas señaladas; los valores se ajustan con tus 12 canciones.
+Sin pregunta, por si quieres otros valores: una línea se señala si casi no se oye voz mientras dura (menos del 10 %), si el fin llega 1,2 s o más después de la voz, si el fin corta la voz (sigue habiendo voz durante el segundo siguiente y la línea siguiente tarda 1 s o más en empezar), si no hay voz en los 500 ms siguientes al inicio, si dura menos de 0,25 s o más de 6 s para su texto, o si la sincronía automática no la reconoce. Son los valores del ADR 0024 §3 (revisión del 2026-11-22, pregunta 0225). El objetivo es que una canción bien sincronizada no tenga más de una de cada diez líneas señaladas; los valores se ajustan con tus 12 canciones.
 
 ## Opción provisional tomada (si no bloquea)
 
-La A en las 19.
+La A en las 20.
 
 ## Respuesta

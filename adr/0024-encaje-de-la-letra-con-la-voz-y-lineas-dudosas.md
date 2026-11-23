@@ -188,3 +188,23 @@ detectarDudosas(letra, voz | null, { duracionMs, p })
 - `intacta` no cambia: solo la retiran los cambios de tiempos de línea, y la preparación la necesita para seguir con los fines (ADR 0025).
 - Una letra nueva (`letras.guardar`) nace sin la marca.
 
+## Revisión 2026-11-22 · Líneas dudosas tal como se implementaron (pregunta 0225)
+
+- **Umbrales**: mandan los de §3 (`PARAMETROS_DUDOSAS`, calibrados). **Motivos** con los nombres y la prioridad de la spec 06 · Feature 11:
+
+  | Motivo | Regla |
+  |---|---|
+  | `sinInicio` | La línea no tiene inicio |
+  | `sinVoz` | Menos del 10 % de la línea con voz (`SIN_VOZ`) |
+  | `reconocimiento` | Confianza de alineación < 0,5 (`ALINEACION_BAJA`) |
+  | `vozTarde` | Sin voz en los 500 ms siguientes al inicio (`INICIO_EN_SILENCIO`) |
+  | `finCorta` | ≥ 90 % de voz en el segundo siguiente al fin y la siguiente empieza ≥ 1 s después (`FIN_EN_VOZ`) |
+  | `finTarde` | La última voz de la línea acaba más de 1,2 s antes del fin (`FIN_TARDIO`) |
+  | `muyCorta` | Dura menos de 250 ms o va a más de 25 caracteres/s |
+  | `muyLarga` | Dura más de 6 s y va a menos de 2 caracteres/s |
+
+- **Recuento** `preparacion.dudosas`: lo calcula `contarDudosasGuardadas` (`main/letras/dudosas.ts`). Lo guarda el servicio de la preparación al terminar y tras cada escritura de la letra de una canción con `preparacion` (tarea 0308).
+- **Preferencia** `config.editor.revision_autoescucha: boolean` (por defecto `true`, lectura tolerante, escribible por el renderer): «Escuchar cada línea al llegar» del modo «Revisar».
+- **`origen_fin`** (§4, complemento): toda acción del usuario que fija o mueve un fin a mano lo quita en el reducer del editor, en el mismo paso de deshacer. Main no puede distinguirlo (tarea 0370). Las acciones automáticas lo ponen. `proponerAjusteSilencios` admite `soloIds` y pone `origen_fin: "silencios"` en los fines que cambia.
+- `revisada` en memoria del editor puede quedar no vigente tras editar la línea: es aceptable (el detector solo usa marcas vigentes y main la retira al escribir).
+
