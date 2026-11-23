@@ -2900,6 +2900,18 @@ Origen: [propuesta 020](../propuestas/020-preparacion-desatendida.md). Cadena y 
 
 En un borrador preparado por la app y aún **sin revisar** (0153 §4), el sitio de `edi.banner.yasync` muestra `edi.banner.preparada` (`info`) con [Ver qué hicimos] (abre la pestaña «Funciones» con el foco en el título del bloque) y [×]. Tiene prioridad sobre `edi.banner.yasync`; `edi.banner.desfase` y `edi.banner.noCoincide` (feature 4) tienen prioridad sobre él. La canción cuenta como revisada, y el banner deja de salir, al cerrarlo, al cambiar cualquier tiempo o texto, o al marcarla como lista.
 
+**Qué banner se ve y cuándo** (revisión 2026-11-22, respuesta a [0270](../preguntas/0270-el-banner-de-la-preparacion-solo-se-ve-un-instante-al-entrar-con-revisar.md); manda sobre lo anterior cuando la feature 11 existe):
+
+| Entrada | Banner de la lista |
+|---|---|
+| «Revisar» (tarjeta, progreso, toast) con líneas dudosas: recorrido activo | **Ninguno** de preparación ni `yaSync`: la tarjeta de revisión ya cuenta qué hacer. Solo pueden salir `edi.banner.desfase` o `edi.banner.noCoincide` (feature 4), si tocan. |
+| «Revisar» con 0 dudosas: tarjeta de fin («No vemos nada raro…») | Igual: ninguno, salvo los de la feature 4. |
+| Otro camino («Continuar», «Editar», portada de un borrador) a una canción preparada y sin revisar | `edi.banner.revision` (con dudosas) o `edi.banner.revision.nada` (feature 11), con [Ver qué hicimos]. Sin la feature 11, `edi.banner.preparada`. |
+| Al salir del recorrido | No aparece ningún banner nuevo en esa visita. En la siguiente visita, si sigue sin revisar, el de la fila anterior. |
+| `edi.banner.yasync` | **Nunca** en una canción con registro de preparación (lo sustituyen estos banners y el bloque de Funciones). Solo en canciones sin preparación con letra ya sincronizada, como hasta ahora. |
+
+**Sin parpadeo**: el banner se decide **una vez al entrar**, con los datos que ya trae la canción (registro de preparación, si se entra con «Revisar», recuento de dudosas). Hasta tenerlo decidido, el sitio del banner queda vacío; si hace falta el resultado de la comprobación de la feature 4, se espera hasta 500 ms y, pasado ese tiempo, se decide sin él (un banner de la feature 4 que llegue después ocupa el sitio solo si estaba vacío). Durante la visita, un banner solo desaparece por una acción del usuario ([×], [Ahora no], editar un tiempo o un texto, marcar como lista) y nunca se sustituye por otro.
+
 ### Bloque «Preparación automática» en «Funciones»
 
 Primera sección de la pestaña, solo si la canción tiene registro de preparación:
@@ -2945,7 +2957,8 @@ Primera sección de la pestaña, solo si la canción tiene registro de preparaci
 - F5-E2. El bloque lista solo lo que la preparación hizo y sigue en pie; cada acción es un paso del historial con su toast y [Deshacer].
 - F5-E3. [Quitar esos fines] deja en automático exactamente los fines fijados por la preparación que no se han cambiado después (test con una línea tocada a mano: conserva su fin).
 - F5-E4. Una canción añadida sin preparación automática (interruptor desactivado y letra elegida a mano) no muestra ni el banner ni el bloque.
-- F5-E5. Captura `docs/ux/revisiones/0.2.2-feature-5/editor-1280x720-100-preparacion-automatica.png`.
+- F5-E5. Captura `docs/ux/revisiones/0.2.2-feature-5/editor-1280x720-100-preparacion-automatica.png`, entrando con «Editar» (no con «Revisar»): lista con `edi.banner.revision` y «Funciones» con el bloque.
+- F5-E6. En una canción preparada y sin revisar: entrando con «Revisar» (con y sin dudosas) no se muestra en ningún momento banner de preparación ni `yaSync` (comprobado en fotogramas cada 50 ms durante el primer segundo); entrando con «Editar», el banner de la tabla aparece una vez y sigue a los 2 s; salir del recorrido no añade ningún banner; `yaSync` no aparece nunca en una canción con registro de preparación.
 
 ## 0.2.2 · Feature 9 — Exportar la letra desde el editor
 
@@ -3389,7 +3402,7 @@ Visibles siempre, también sin entrar en el modo:
 | **Tecla R** | Empieza el recorrido (o lo termina si está activo). Fuera de campos de texto. |
 | **«Revisar» de la tarjeta «Lista para revisar»**, de la vista de progreso (R1), del toast `prog.toast.revisar` y del resultado de la preparación | El editor se abre **con el recorrido ya empezado** en la primera línea pendiente. Con 0 pendientes, se abre con el panel de fin. |
 | **[Revisar {n} líneas]** del toast de «Sincronizar con la voz» (feature 10) | Empieza el recorrido. |
-| **Banner al entrar** (borrador preparado por la app y aún sin revisar, abierto por otra vía: «Continuar», «Editar») | En lugar de `edi.banner.preparada`: `edi.banner.revision` (`info`) con [Empezar la revisión] y [Ver qué hicimos] (el de la feature 5). Con 0 pendientes, `edi.banner.revision.nada` con [Probar a pantalla completa] y [Ver qué hicimos]. Mismas reglas de prioridad y de cierre que el banner de la feature 5. |
+| **Banner al entrar** (borrador preparado por la app y aún sin revisar, abierto por otra vía: «Continuar», «Editar») | En lugar de `edi.banner.preparada`: `edi.banner.revision` (`info`) con [Empezar la revisión] y [Ver qué hicimos] (el de la feature 5). Con 0 pendientes, `edi.banner.revision.nada` con [Probar a pantalla completa] y [Ver qué hicimos]. Mismas reglas de prioridad y de cierre que el banner de la feature 5. **Con «Revisar» (recorrido activo o tarjeta de fin) no hay banner** de preparación ni `yaSync`; al salir del recorrido tampoco aparece; sin parpadeo (tabla «Qué banner se ve y cuándo» de la [feature 5](#022--feature-5--preparación-desatendida-lo-que-el-editor-cuenta), respuesta a 0270; criterio F5-E6). |
 
 No disponible: en el modo «Sincronizar al ritmo» (pestaña inactiva y R sin efecto) y con «Error de audio».
 

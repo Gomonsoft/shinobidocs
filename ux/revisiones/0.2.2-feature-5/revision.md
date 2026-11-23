@@ -30,6 +30,19 @@
 
 El «✓ Terminado» de la barra superior en varias capturas es el indicador de actividad (4 s): conforme (0244 n.º 5).
 
+## Segunda revisión (2026-11-22)
+
+Revisadas las capturas regeneradas: `progreso-…-lista-para-revisar`, `-elige-la-letra`, `-no-encontrada`, `-letra-pendiente`, `-preparando`, `letra-…-elige-la-letra` y `editor-…-preparacion-automatica`.
+
+| N.º | Resultado | Evidencia |
+|---|---|---|
+| **P1** | **Corregida** | En las cuatro de resultado, el título es `prog.prep.titulo.fin` («Tu canción está lista para revisar», «Falta que elijas la letra», «No encontramos la letra», «Falta la letra»), sin subtítulo; el bloque R está justo bajo el título, entero y sin desplazar, con su primario y [Volver a la biblioteca] secundario en la misma fila; subpasos y escucha debajo. |
+| **P2** | **Corregida** | `progreso-…-preparando`: «Empezará al terminar la separación.» bajo «Comprobar la letra con la voz». |
+| **P3** | **Pasa a la regla de 0270** | La captura enseña `yaSync`, que en una canción preparada no debe salir nunca. La nueva regla (06 · Feature 5, «Qué banner se ve y cuándo», F5-E6) pide repetirla entrando con «Editar»: lista con `edi.banner.revision` y el bloque de Funciones. Se corrige después. |
+| **P4** | **Corregida** | `progreso-…-elige-la-letra` y `letra-…-elige-la-letra`: motivo `sinArtista` con el artista vacío. |
+
+**Veredicto: aprobada con correcciones menores** (solo queda P3, ligado a la corrección de 0270; no bloquea alpha.2).
+
 ## No conformidades
 
 | N.º | Criterio | Qué se ve | Qué debería verse | Gravedad |

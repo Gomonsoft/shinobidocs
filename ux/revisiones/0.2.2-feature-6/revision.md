@@ -42,3 +42,9 @@ Revisadas las dos capturas repetidas: `anadir-1280x800-100-unificar.png` y `bibl
 D2–D5 no se ven en capturas: se cierran con sus pruebas (F6-N12 y F6-N3).
 
 **Veredicto: aprobada con correcciones menores** (V1 en «Añadir canción»; no bloquea alpha.2).
+
+## Tercera revisión (2026-11-22)
+
+`anadir-1280x800-100-unificar.png` regenerada: **V1 corregida**. Campo con el foco → sugerencia → botones → «Opcional, ayuda a encontrar la letra exacta», separada. Nota menor sin gravedad: en el aviso de LRCLIB de abajo, el icono ⓘ queda en un renglón aparte encima del texto (el mismo patrón de C2 de la feature 4); conviene ponerlo a la izquierda del texto en la misma línea cuando se toque ese componente.
+
+**Veredicto: aprobada.**
