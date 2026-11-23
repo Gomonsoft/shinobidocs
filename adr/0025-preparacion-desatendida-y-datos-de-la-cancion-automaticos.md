@@ -210,3 +210,11 @@ En cualquier otro caso: `elige_letra` con los candidatos ordenados como en la vi
 - **Diario** `trabajos/pendientes.json`: cada entrada lleva además `enCurso: boolean` (lectura tolerante, `false`). Solo las entradas en curso al cerrar suman `interrupciones`.
 - **Pruebas**: ninguna prueba automática sale a lrclib.net (ni a otro servicio real). Van al doble (`SHINOBI_LRCLIB_URL`) o a `http://lrclib.invalid`. Defensa en el producto: sin empaquetar y con `SHINOBI_E2E=1`, la URL base de LRCLIB, que usan la búsqueda y la comprobación de conexión, nunca es la real (tarea 0372).
 
+## Revisión 2026-11-22 · Motivo de la no elección (pregunta 0235)
+
+- `preparacion.busqueda` gana **`no_elige`**: `"varias" | "sinExacta" | "duda" | "noCoincide" | "soloTexto" | "sinComprobar" | null` (tolerante), el motivo por el que la elección automática (§3) no eligió. Es el mismo catálogo que los textos `let.prep.motivo.*`.
+- `busqueda.motivo` es solo el código de ADR 0005 de un fallo de búsqueda (`SIN_CONEXION`, `SERVICIO_NO_DISPONIBLE`…).
+- El resumen (`ResumenPreparacionIpc.busqueda`) expone `motivo` y `noElige`. La interfaz los lee y no deduce nada.
+- `aplicaPreparar(cancion)` en `shared/derivados.ts` es la regla común de §7 para `preparacion.previsualizar` y para «Preparar» de una tarjeta.
+- Canal `biblioteca.marcarPreparacionRevisada(id)` → resumen o `null`, rol principal: pone `preparacion.revisada = true`. Es un metadato, así que se admite durante una sesión en vivo.
+

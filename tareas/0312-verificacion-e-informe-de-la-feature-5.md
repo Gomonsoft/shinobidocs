@@ -1,7 +1,7 @@
 # 0312 — Feature 5 · Verificación e informe
 - Estado: Pendiente
 - Paso del pipeline: 3
-- Depende de: 0306–0311, 0371, 0372
+- Depende de: 0306–0311, 0371–0373
 - ADRs: 0025
 - Spec UX: docs/ux/02, 04, 05, 06 y 08 (0.2.2 · Feature 5)
 - Tamaño: S
