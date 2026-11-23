@@ -1,5 +1,5 @@
 # 0386 — Feature 5 · «Ajustar los fines…» también en Lista y Letra lista, sin cambiar su estado
-- Estado: Pendiente
+- Estado: Hecha
 - Paso del pipeline: 3 y 4
 - Depende de: 0380 y 0382 (hechas)
 - ADRs: 0025 (revisión «"Ajustar los fines" en canciones Lista (pregunta 0296)»)
@@ -47,4 +47,12 @@ Que las canciones Lista o Letra lista del usuario (14 de 18 en su biblioteca, ma
 
 ## Notas de implementación
 
-(las rellena el programador al terminar)
+Hecha (2026-11-22, programador).
+
+- `shared/derivados.ts`: una Lista/Letra lista aplica con `confirmar: 'finesSinMarca'` solo si la letra no es `intacta`, hay líneas con inicio y sin fin, ninguna línea lleva `origen_fin: 'preparacion'` y no hay `preparacion.fines`; si no, `YA_LISTA`. El resumen (`prepararFinesSinMarca`) sale de la misma regla.
+- `main/preparacion/servicio.ts`: `preparar` pasa a ser asíncrona (devuelve una promesa) y, para una Lista, hace el camino «solo fines» (`soloFinesLista`): lee el nivel base (sin picos, omitida con `NADA_QUE_HACER`, sin encolar nada), variante prudente, `aplicarFinesPreparacion`; sin registro `preparacion`, sin cambiar el estado, sin red. Con sesión en vivo se omite al momento (`EDICION_BLOQUEADA`, el mismo del plan) y con el editor abierto (`ServicioLetras.enEdicion`) también. El resultado trae `fines: { id: k }` (IPC `resultadoPrepararSchema.fines`, opcional). El handler y `PreparacionIpc` admiten promesa.
+- Interfaz: `useAjustarFines` avisa al momento con `fines[id]` (k = 0: «No encontramos pausas claras…»); el editor (`bloquePreparacion`) muestra el renglón de fines y «Quitar esos fines» por las líneas `origen_fin: 'preparacion'`, con o sin registro (intro sin fecha si no lo hay), sin banner.
+- Tests existentes que cambiaron: `derivados.test.ts` y `resumen.test.ts` (una Lista sin `intacta` y sin fin ahora se ofrece; los casos «YA_LISTA» usan `intacta`), `servicio.test.ts` (`preparar` con `await`), `Editor.preparacion.test.tsx` (F5-E4: sin registro y sin fines suyos).
+- No hace falta tocar `cancion.preparacion` ni `marcarLista`: la prueba comprueba que el estado `lista` y la ausencia de registro se conservan.
+- E2E escrita sin ejecutar: `e2e/preparacion.spec.ts` (Lista sembrada, ⋯, confirmar, estado `lista` y sin `preparacion`, no se ofrece otra vez). Falta el caso «Quitar esos fines» desde el editor en E2E (cubierto por `Editor.preparacion.test.tsx`).
+- Medida con la copia real (script de solo lectura, sin escribir): 16 de 18 reciben la oferta.
