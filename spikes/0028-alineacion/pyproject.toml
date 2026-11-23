@@ -1,0 +1,6 @@
+[project]
+name = "spike-0028-alineacion"
+version = "0.0.0"
+description = "Prueba tecnica 0328 (ADR 0028): alineacion forzada CTC. Desechable."
+requires-python = ">=3.12,<3.13"
+dependencies = ["torch", "torchaudio", "transformers", "soundfile", "numpy", "psutil"]
