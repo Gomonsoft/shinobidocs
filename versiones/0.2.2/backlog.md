@@ -19,7 +19,7 @@ Ver el [plan](plan-4.md) y el [flujo de Git](../../workflow.md). **Una feature =
 | 7 | **7** · Importación por lotes | 0313–0317, 0375, 0384 | L | 5 (0309), 6 | alpha.3 |
 | 8 | **8** · Acciones por lotes | 0318–0322, 0388 | M | 5; la exportación por lotes no depende de nada | alpha.3 |
 | 8 | **9** · Copia, paquete y `.lrc` | 0323–0327, 0376, 0383 | M–L | 0296 | alpha.3 |
-| 9 | **10 (etapa 1)** · Sincronizar con la voz | 0329–0333 (si la prueba sirve) | L | 0328, 0296, 5 | alpha.4 |
+| 9 | **10 (etapa 1)** · Sincronizar con la voz | 0329–0333 (si la prueba sirve) | L | 0328, 0296, 5 | **0.2.3** (recomendado; pregunta 0280) |
 | — | Cierre de cada entrega | [0338](../../tareas/0338-cierre-de-una-entrega-0-2-2-alpha.md) | S | las features de la entrega | — |
 
 Orden del flujo de entrada que proponen los diseñadores: 4 → 6 → 5 → 7. Se respeta. La feature 3 va primero porque es pequeña, independiente y **hace que las entregas siguientes se anuncien solas** a quien tenga alpha.1.
@@ -139,7 +139,7 @@ flowchart LR
 **Hecha cuando** (revisado el 2026-11-22; preguntas 0277 y 0278):
 
 - F6-N7 y F6-N8 (álbum desde LRCLIB y aviso de búsqueda automática) pasan.
-- Un WAV y un vídeo llegan solos a «Lista para revisar» con el doble, cuya letra trae fines y voz con pausas. **Con letras de LRCLIB sin fines (el caso real) la canción llega a «Elige la letra»** con las candidatas buscadas y ordenadas, y llega a «Lista para revisar» tras un clic. **Que elija sola** con ese material queda **pendiente de la feature 10** (prueba 0328, fase 1 en marcha) **o de una medida con canciones revisadas a mano** (preguntas 0295, 0305 y 0280), salvo que el usuario acepte elegir sin comprobar (pregunta 0280, opción B). La vía de los inicios (0385) se cerró. **Con red real** (permiso del usuario, pregunta 0280) se anota cuántas canciones caen en «Elige la letra» y que ninguna elección automática es de otra canción u otra versión.
+- Un WAV y un vídeo llegan solos a «Lista para revisar» con el doble, cuya letra trae fines y voz con pausas. **Con letras de LRCLIB sin fines (el caso real) la canción llega a «Elige la letra»** con las candidatas buscadas y ordenadas, y llega a «Lista para revisar» tras un clic. **Que elija sola** con ese material **no entra en 0.2.2**: las tres medidas (encaje 0/17, inicios 1/12, señal D) dieron no (preguntas 0295, 0305 y 0311). Solo se reabre con canciones revisadas a mano u otro modelo, o si el usuario acepta elegir sin comprobar (pregunta 0280, punto 2). **Con red real** (permiso del usuario, pregunta 0280) se anota cuántas canciones caen en «Elige la letra» y que ninguna elección automática es de otra canción u otra versión.
 - Los borradores **sin letra** del usuario se preparan con «Preparar» (red real). Los que tienen **letra anterior a 0.2.2** reciben fines tras confirmar, sin que cambie ningún inicio, ni el desfase, ni las palabras (0380, 0382). Lo mismo para las **Lista y Letra lista**, sin cambiar su estado y con «Quitar esos fines» disponible (0386).
 - La elección y la corrección automáticas cumplen el criterio de seguridad de la feature 4 (punto 2).
 - Con el interruptor apagado no sale ninguna petición a LRCLIB al añadir.
@@ -206,14 +206,14 @@ flowchart LR
 | Tarea | Tamaño | Depende de |
 |---|---|---|
 | [0328 · Prueba técnica](../../tareas/0328-prueba-tecnica-de-alineacion-forzada.md) (prioridad alta: de ella depende también la elección automática de la feature 5, pregunta 0295) | M | — (fase 1, filtro con la copia del MVP: puede empezar ya; fase 2, decisión: canciones con fines a mano) |
-| [0387 · Medir la confianza de la alineación como comprobación del encaje («señal D»)](../../tareas/0387-medir-la-confianza-de-la-alineacion-como-comprobacion-del-encaje.md) | S–M | 0328 fase 1 (hecha) |
+| [0387 · Medir la confianza de la alineación como comprobación del encaje («señal D»)](../../tareas/0387-medir-la-confianza-de-la-alineacion-como-comprobacion-del-encaje.md) — hecha: **no cumple, vía cerrada** (pregunta 0311) | S–M | 0328 fase 1 (hecha) |
 | [0329 · Worker `alinear-letra`](../../tareas/0329-worker-alinear-letra.md) | L | 0328 fase 2 «sirve», o 0387 «SÍ» |
 | [0330 · Modelos, cola y canales](../../tareas/0330-modelos-de-alineacion-y-servicio-en-main.md) | M | 0328 fase 2 «sirve», o 0387 «SÍ»; 0296 |
 | [0331 · `aplicarAlineacion` y palabras `auto`](../../tareas/0331-aplicar-alineacion-y-palabras-automaticas.md) | M | 0330 y 0328 fase 2 «sirve» |
 | [0332 · Interfaz y preparación](../../tareas/0332-sincronizar-con-la-voz-en-la-interfaz.md) | L | 0331, 0308 (y 0335 terminada: mismo panel Funciones) |
 | [0333 · Verificación e informe (o plan B)](../../tareas/0333-verificacion-e-informe-de-la-feature-10.md) | S | 0328 y, si sirve, 0329–0332 |
 
-**Estado de la prueba (2026-11-23)**: la fase 1 **pasa el filtro** con el criterio revisado (alineación de toda la letra; criterio 6 reformulado). Con el criterio escrito daba «no sirve» por un defecto de la ventana del filtro (ADR 0028, «Resultado de la prueba técnica»; pregunta 0310). No demuestra fines ni palabras. **La etapa 1 espera a la fase 2** (V1, pregunta 0280). 0329 y 0330 pueden adelantarse solo si la 0387 cumple su criterio.
+**Estado de la prueba (2026-11-23)**: la fase 1 **pasa el filtro** con el criterio revisado (alineación de toda la letra; criterio 6 reformulado). Con el criterio escrito daba «no sirve» por un defecto de la ventana del filtro (ADR 0028, «Resultado de la prueba técnica»; pregunta 0310). No demuestra fines ni palabras. **La etapa 1 espera a la fase 2** (V1, pregunta 0280). La 0387 no cumplió (pregunta 0311): 0329–0333 esperan a la fase 2 y la etapa 1 pasa a 0.2.3 (recomendación, pregunta 0280).
 
 **Hecha cuando**: (a) la prueba técnica tiene su resultado escrito en el ADR 0028 con el criterio de §2.4; y (b) si sirve, «Sincronizar con la voz» cumple los criterios de 06 · Feature 10 en una canción lenta y en la rápida del usuario; si no sirve, la propuesta 027 queda lista para su spec (feature 10-B) y la 016 ya está cubierta por la feature 11.
 
@@ -245,7 +245,16 @@ Reglas de convivencia:
 | **alpha.1** | 3, 1, 2, 4 (+ resultado de la prueba técnica de la 10) | Lo más visible para quien canta y el aviso de versión, que hace que las siguientes entregas se anuncien solas. La 4 es la base de la 5 y ya ayuda en la vista Letra |
 | **alpha.2** | 6, 5, 11 | El núcleo de la automatización: la canción llega sola a «Lista para revisar» y se revisa en minutos |
 | **alpha.3** | 7, 8, 9 | Trabajo con muchas canciones: lotes, acciones por lotes y copias |
-| **alpha.4** | 10 (etapa 1) o 10-B (propuesta 027) | Depende de la **fase 2** de la prueba técnica (V1 del usuario). La fase 1 pasó el filtro (2026-11-23). Sin V1 a tiempo, la feature 10 pasa a 0.2.3 (decisión del usuario, pregunta 0280). |
+| ~~alpha.4~~ | — | **Sin alpha.4** (recomendación aplicada por defecto, pendiente del usuario en la pregunta 0280, punto 4): la etapa 1 de la feature 10 pasa a **0.2.3**. La fase 2 de la prueba técnica (V1) queda como spike sin fecha que no bloquea. |
+
+### Estado final de 0.2.2 (2026-11-23, tras las medidas con canciones reales)
+
+| Entrega | Entra | Con qué alcance |
+|---|---|---|
+| alpha.1 | 3, 1, 2, **4** | La 4 con la opción **prudente**: con letras de LRCLIB sin fines o voz continua dice «No está claro» y no corrige ni elige. Las notas de la versión no prometen corregir desfases (preguntas 0275, 0295) |
+| alpha.2 | 6, **5**, 11 | La 5 **sin elección automática con letras sin fines**: busca, separa, ordena las candidatas y llega a «Elige la letra». Con una letra elegida, pone fines prudentes (también en letras anteriores y en Listas, con confirmación: 0380, 0382, 0386) y llega a «Lista para revisar» (preguntas 0305, 0311) |
+| alpha.3 | 7, 8, 9 | Sin cambios de alcance (remates 0383, 0384, 0388) |
+| — | 10 | Etapa 1 → 0.2.3 (ADR 0028, revisión del 2026-11-23; pregunta 0280). En 0.2.2 queda el resultado de la fase 1 de la prueba técnica |
 
 Cada entrega cierra con [0338](../../tareas/0338-cierre-de-una-entrega-0-2-2-alpha.md). Si hay que recortar, lo que menos duele aplazar a 0.2.3 es la 9 y la exportación por lotes de la 8; la 7 sin la 5 pierde casi todo su valor (es lo que ya pasó con los 5 borradores abandonados).
 

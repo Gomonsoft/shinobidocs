@@ -47,3 +47,4 @@ Ideas de mejora **todavía sin definir ni autorizar**. No forman parte del alcan
 | [034](034-cantantes-en-la-cola-y-mando-desde-el-movil.md) | Cantantes en la cola y mando desde el móvil | Exploración 0.2.2 (referentes) | Idea |
 | [035](035-ajustes-almacenamiento-y-estado-del-motor.md) | Ajustes: almacenamiento y estado del motor | Exploración 0.2.2; feedback de alpha.1 §1.6 | Idea |
 | [036](036-varios-cantantes-y-coros.md) | Varios cantantes y coros (dúos a cuartetos, «Todos», coros con voz guía) | Usuario (2026-11-22) | Aceptada para 0.2.3 |
+| [038](038-sincronizar-con-la-voz-solo-a-peticion.md) | «Sincronizar con la voz» solo a petición, sin automatismos | Arquitecto, medidas de las features 4, 5 y 10 (2026-11-23) | Idea (condicionada a la fase 2 de ADR 0028) |

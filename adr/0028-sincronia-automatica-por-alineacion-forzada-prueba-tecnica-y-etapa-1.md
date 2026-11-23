@@ -235,3 +235,12 @@ El único material con voz separada disponible ahora en el equipo de trabajo es 
 - **Umbrales del filtro**: cobertura ≥ 80 %, mediana de `|Δ|` ≤ 300 ms y p90 de `|Δ − sesgo de la canción|` ≤ 600 ms. Doblan los del fin de §2.4 porque la referencia tiene su propio error.
 - Si el filtro falla, **no sirve** y se aplica §4 sin esperar a V1. Si pasa, solo se anota «pasa el filtro»: ni los fines ni las palabras se dan por buenos sin V1.
 - Se excluyen las canciones cuya letra no corresponde al audio según la medida (5, 8, 12 y 15) y las de idiomas sin modelo del candidato.
+
+## Revisión 2026-11-23 · Señal D descartada y etapa 1 fuera de 0.2.2 (preguntas 0311 y 0280)
+
+- La confianza de la alineación **no sirve como comprobación del encaje** (tarea 0387): no separa la letra de otra versión y la voz densa la infla. Se descarta el uso de §1 de ADR 0024, opción D.
+- **Recomendación, aplicada por defecto** (regla del plan) **y pendiente del usuario** (pregunta 0280, punto 4): la etapa 1 pasa a **0.2.3**.
+  - La fase 2 de la prueba (V1) se puede hacer en cualquier momento: es un spike y no bloquea ninguna entrega.
+  - Si da «todo» o «solo fines», la etapa 1 de 0.2.3 empieza por la acción explícita del editor (propuesta [038](../propuestas/038-sincronizar-con-la-voz-solo-a-peticion.md)).
+  - Si da «nada», se aplica §4 (plan B, propuesta 027) en 0.2.3.
+  - 0.2.2 se cierra sin alpha.4.

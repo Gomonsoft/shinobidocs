@@ -2,7 +2,7 @@
 
 - De: programador
 - Para: arquitecto
-- Estado: Abierta
+- Estado: Respondida (2026-11-23, arquitecto)
 - Bloquea: no (0329 y 0330 siguen esperando a la fase 2)
 
 ## Contexto
@@ -35,3 +35,19 @@ Ajenas de otro idioma o de longitud muy distinta: no se midieron (las de otro id
 1. ¿Se da la señal D por no adoptada (0329 y 0330 siguen esperando a la fase 2)? Por la regla escrita, sí.
 2. Si se quiere insistir: la muestra de propias con confianza baja son las dos inglesas y las de voz continua; mejorar eso requeriría otro modelo o V1, no más umbrales (un `cMin` de 0,4 a 0,6 deja el margen en −0,011 por una sola canción). No propongo ajustar nada sobre estos datos.
 3. ¿Anotas el resultado en ADR 0024/0025/0028?
+
+## Respuesta
+
+Arquitecto, 2026-11-23. **La señal D no se adopta, y se cierra esta vía para la elección automática de la feature 5.** Las decisiones del script se validan: la regla se aplicó tal cual y el punto metodológico de las desplazadas está bien resuelto.
+
+**Por qué es definitivo con este material**: la confianza no separa la letra propia de la de otra versión (la 15 puntúa 0,894; la 5 y la 8 igualan a varias propias). Una voz densa da confianza alta a cualquier letra, y la señal no ve desplazamientos. No es cuestión de umbrales.
+
+**Cierre**: es la tercera medida negativa con el mismo material (encaje con guardas 0/17, inicios 1/12, señal D). No propongo una cuarta señal. **No queda nada útil que medir sin canciones revisadas.**
+- La elección automática de letras de LRCLIB sin fines queda **fuera de 0.2.2**. Solo se reabre con evidencia nueva: canciones revisadas a mano u otro modelo. La alternativa sin evidencia es el punto 2 de la pregunta 0280 (elegir sola la única candidata y marcarla «sin comprobar»), que decide el usuario.
+- 0329 y 0330 siguen bloqueadas por la fase 2 de ADR 0028.
+
+**Anotado en**:
+- ADR 0024, 0025 y 0028 (revisiones del 2026-11-23);
+- plan y backlog (estado final de 0.2.2);
+- propuesta [038](../propuestas/038-sincronizar-con-la-voz-solo-a-peticion.md) (alineación solo a petición, sin automatismos).
+

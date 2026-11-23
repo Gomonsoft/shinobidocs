@@ -276,7 +276,7 @@ Donde dice «los 5 borradores actuales se rescatan con "Preparar"», se lee así
 Con las guardas de ADR 0024, la copia de 18 canciones reales da 0/17 letras propias `coincide`. La preparación **no elige sola** letras de LRCLIB sin fines: la canción llega a «Elige la letra» con las candidatas buscadas, comprobadas y ordenadas. Que llegue sola a «Lista para revisar» con ese material depende de una de estas vías:
 - la señal por inicios, si la tarea 0385 cumple su criterio;
 - la confianza de la alineación forzada (feature 10, ADR 0028);
-- una decisión del usuario de elegir sin comprobar (pregunta 0280, opción B, no aplicada).
+- una decisión del usuario de elegir sin comprobar (pregunta 0280, punto 2, no aplicada).
 
 ## Revisión 2026-11-22 · Vía de los inicios cerrada y «Ajustar los fines» en canciones Lista (preguntas 0305 y 0296)
 
@@ -287,3 +287,7 @@ Con las guardas de ADR 0024, la copia de 18 canciones reales da 0/17 letras prop
   - Con una sesión en vivo se omite al momento (`EDICION_BLOQUEADA`).
   - «Quitar esos fines» del editor se muestra por las líneas `origen_fin: "preparacion"` y no depende del registro.
   - Tarea [0386](../tareas/0386-ajustar-los-fines-en-canciones-lista-sin-cambiar-su-estado.md).
+
+## Revisión 2026-11-23 · Elección automática con LRC sin fines: fuera de 0.2.2 (pregunta 0311)
+
+La señal D tampoco sirve (ADR 0024, revisión del 2026-11-23). En 0.2.2, la preparación **no elige sola** letras de LRCLIB sin fines: llegan a «Elige la letra», ya buscadas y ordenadas. Solo se reabre con evidencia nueva (canciones revisadas u otro modelo) o si el usuario elige la opción del punto 2 de la pregunta 0280.

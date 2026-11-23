@@ -317,3 +317,12 @@ Decisión: **no se recalibra**. Las guardas se quedan. Se mide una señal por **
 - **Utilidad**: ninguna útil (como mucho 1 de las 12 propias plausibles). Los LRC de LRCLIB no marcan el arranque de la voz y hay pocas pausas.
 
 **Se descarta** y `encaje.ts` no cambia. El script se conserva para medir con canciones revisadas. Afirmar «coincide» con letras sin fines queda pendiente de la confianza de la alineación forzada (§1, opción D; ADR 0028) o de una medida con canciones revisadas a mano (pregunta 0280).
+
+## Revisión 2026-11-23 · Señal D medida y descartada; cierre (pregunta 0311)
+
+Con la confianza de alinear la letra entera (tarea 0387) el criterio de adopción da NO:
+- la letra de otra versión puntúa como las propias;
+- una voz densa favorece a cualquier letra;
+- no ve desplazamientos.
+
+Con tres medidas negativas sobre el mismo material, **el encaje se queda como está** (0378, prudente). No se mide nada más sin canciones revisadas a mano (pregunta 0280).
