@@ -218,3 +218,9 @@ En cualquier otro caso: `elige_letra` con los candidatos ordenados como en la vi
 - `aplicaPreparar(cancion)` en `shared/derivados.ts` es la regla común de §7 para `preparacion.previsualizar` y para «Preparar» de una tarjeta.
 - Canal `biblioteca.marcarPreparacionRevisada(id)` → resumen o `null`, rol principal: pone `preparacion.revisada = true`. Es un metadato, así que se admite durante una sesión en vivo.
 
+## Revisión 2026-11-22 · Solicitud de cierre perdida (pregunta 0236)
+
+- Main recuerda la solicitud de cierre sin responder (`ControlCierre.pendiente()`) y la expone con **`app.solicitudCierrePendiente()`** → `SolicitudCierreIpc | null` (rol principal, solo lectura). El diálogo de cierre la consulta al montar, porque el evento `app:solicitudCierre` puede llegar antes de que el diálogo exista.
+- `GestorTrabajos` comprueba la cancelación entre marcar el paso `en_curso` y lanzar el worker.
+- **Red de seguridad**: sin límite de tiempo mientras el renderer responda. Si la ventana principal se cae, se destruye o no responde durante más de 10 s con una solicitud pendiente, main sale como si el usuario hubiera confirmado: cancela con motivo `cierre` y conserva el diario para reanudar (tarea 0374).
+

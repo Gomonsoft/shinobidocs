@@ -2,7 +2,7 @@
 
 - De: programador
 - Para: arquitecto
-- Estado: Abierta
+- Estado: Respondida (2026-11-22, arquitecto)
 - Bloquea: no (resuelta con la opción mínima en la tarea [0309](../tareas/0309-tanda-pausa-paradas-y-reanudar-al-abrir.md))
 
 ## Contexto
@@ -23,4 +23,10 @@ La anterior (canal nuevo, aditivo y tolerante: un renderer sin el método simple
 
 ## Respuesta
 
-(pendiente)
+Arquitecto, 2026-11-22. **Contrato confirmado, sin cambios de código en lo aplicado.**
+- **El canal `app.solicitudCierrePendiente()` → `SolicitudCierreIpc | null`**, rol principal, de solo lectura: main recuerda la solicitud sin responder (`ControlCierre.pendiente()`) y el diálogo la consulta al montar. Es el patrón correcto. Preguntar el estado al montar en lugar de fiarse de un evento único, sin temporizadores que tapen el problema.
+- **La comprobación de la cancelación en el gestor antes de lanzar el worker**: confirmada. También la normalización al arrancar: paso `en_curso` huérfano → `interrumpido`; preparación `en_curso` → `detenida` por cierre.
+
+Queda fijado en ADR [0025](../adr/0025-preparacion-desatendida-y-datos-de-la-cancion-automaticos.md) §5, «Revisión 2026-11-22 (pregunta 0236)».
+
+**Red de seguridad: sí, pero no un límite al diálogo.** Esperar a que el usuario decida es correcto, aunque tarde. Lo que no debe pasar es esperar a un renderer que ya no puede responder: se ha caído (`render-process-gone`), se ha destruido su `webContents` o no responde (`unresponsive`) durante más de 10 s. En esos casos main sigue como si el usuario hubiera confirmado «Salir»: cancela los trabajos con motivo `cierre`, conserva el diario `trabajos/pendientes.json` para reanudar y cierra. Queda como criterio en la tarea nueva [0374](../tareas/0374-red-de-seguridad-del-cierre-con-trabajos.md).

@@ -1,7 +1,7 @@
 # 0371 — Feature 5 · `calibrar:encaje` con letras sin fines (LRC de LRCLIB) y con fines prudentes
 - Estado: Pendiente
 - Paso del pipeline: 3
-- Depende de: 0368
+- Depende de: 0368 (hecha). Puede empezar ya.
 - ADRs: 0024 §1, 0025 §3 (revisión de la pregunta 0222)
 - Spec UX: —
 - Tamaño: S
@@ -15,7 +15,12 @@ Medir si un LRC sin fines cae en «dudosa» en canciones con huecos instrumental
   - **tal cual**;
   - **sin fines**: todos los `fin_ms` a `null`, como un LRC de LRCLIB;
   - **sin fines + prudentes**: los fines de `proponerAjusteSilencios` con `soloFinesAutomaticos: true, activarComodin: false` sobre el nivel base, aplicados en memoria.
-- [ ] El resumen da, por variante, propias aceptadas (x/N) y ajenas aceptadas (x/pares), y dice si se cumple el criterio de adopción de la respuesta a 0222.
+- [ ] El resumen da, por variante, propias aceptadas (x/N) y ajenas aceptadas (x/pares), e imprime en una línea si se cumple el **criterio de adopción** (pregunta 0222), expresado en proporción para cualquier N. Se cumple si se dan las tres condiciones:
+  - con «sin fines», propias aceptadas < 90 %;
+  - con «sin fines + prudentes», propias aceptadas ≥ 90 %;
+  - ajenas aceptadas = 0 en las tres variantes.
+- [ ] `--variantes` se combina con `--ids` y `--json`; sin `--variantes`, la salida es la de siempre (los tests de 0368 siguen pasando).
+- [ ] El README de los scripts (o la cabecera del CLI) explica en dos líneas cómo ejecutarlo, para la guía de la verificación 0312.
 - [ ] Sigue siendo solo lectura y sin textos de letra.
 
 ## Pruebas de feedback
