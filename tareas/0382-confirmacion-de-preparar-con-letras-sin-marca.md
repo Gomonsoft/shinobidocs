@@ -1,5 +1,5 @@
 # 0382 — Feature 5 · Confirmación de «Preparar» con letras sin marca en la Biblioteca
-- Estado: Pendiente (espera la spec)
+- Estado: Hecha
 - Paso del pipeline: 3
 - Depende de: 0380; **cambio de spec del diseñador** en `docs/ux/02-biblioteca.md` (ver la pregunta 0278, «Cambios de spec»)
 - ADRs: 0025 (revisión «Elección con el veredicto prudente y "Preparar" sobre letras sin marca»)
@@ -29,4 +29,11 @@ Que el usuario confirme antes de que «Preparar» ponga fines en una letra que p
 
 ## Notas de implementación
 
-(las rellena el programador al terminar)
+Hecha (2026-11-22, programador), con una reserva (pregunta 0296).
+
+- Nuevos: `vistas/biblioteca/useAjustarFines.tsx` (hook, diálogo con foco inicial en [Cancelar], toasts de inicio y de resultado, sin red y sin abrir la vista de progreso) y `textosAjustarFines.ts`. Cambios mínimos en `TarjetaCancion.tsx` (ítem «Ajustar los fines…» tras «Preparar») y `Biblioteca.tsx` (hook y diálogo).
+- Contrato: el resumen gana `lineasSinFin` (para el número del diálogo) además de `prepararFinesSinMarca`.
+- Selección múltiple (`vistas/biblioteca/acciones/`, dir. nueva de otro programador): `modelo.ts` admite en «Preparar» las canciones con `prepararFinesSinMarca`; `DialogoPreparar.tsx` usa `confirmar` para la nota `bib.acc.preparar.nota.finesSinMarca`, muestra `bib.acc.preparar.aviso.finesSinMarca` y llama `preparar(ids, { finesSinMarca: true })` solo si hay alguna (sin segundo diálogo).
+- Editor: el bloque «Preparación automática» muestra solo el renglón de fines con `edi.prep.intro.fines` (sin búsqueda ni elección), y sin banner al entrar. Progreso: `prog.prep.omitido.sinMarca` en «Comprobar» mientras corre.
+- Pendiente: en Lista y Letra lista el ítem no aparece (main las omite con YA_LISTA; pregunta 0296).
+- Pruebas: `useAjustarFines.test.tsx`, `DialogoPreparar.sinMarca.test.tsx`, `progreso/preparacion.test.ts`, `editor/preparacion/modelo.test.ts`. E2E escrita sin ejecutar en `e2e/preparacion.spec.ts` (menú ⋯, diálogo, Cancelar sin cambios, confirmar). Capturas por tomar: ⋯ con «Ajustar los fines…», `bib.prep.fines.dialogo`, ambos toasts, diálogo de «Preparar» por lotes con el aviso, bloque del editor con `edi.prep.intro.fines`.

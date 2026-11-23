@@ -1,5 +1,5 @@
 # 0379 — Feature 4 · La limitación del encaje llega a la vista Letra, al editor y a la preparación
-- Estado: Pendiente (espera la spec)
+- Estado: Hecha
 - Paso del pipeline: 3 y 4
 - Depende de: 0378; **cambio de spec del diseñador** en `docs/ux/05-letra.md` y `06-editor.md` (textos de `dudosa` con limitación; ver la pregunta 0275, «Cambios de spec»)
 - ADRs: 0024 (revisión «Medida con canciones reales y guardas de prudencia»)
@@ -30,4 +30,9 @@ Que «No está claro» diga **por qué** cuando la causa es un límite del méto
 
 ## Notas de implementación
 
-(las rellena el programador al terminar)
+Hecha (2026-11-22, programador).
+
+- `shared/letrasBusqueda.ts`: `encajeCandidatoSchema.limitacion` (lectura tolerante). `main/letras/busqueda.ts` y `encajeDe` (`main/preparacion/servicio.ts`) la copian; el evento `letras:encaje` la lleva por el mismo esquema. El orden de candidatos y el motivo `duda` no cambian.
+- Vista Letra: `Comprobacion` `dudosa` lleva `limitacion` (`vistas/letra/comprobacion.ts`); candidato `let.comp.dudosa.limitada`, vista previa `let.comp.limitacion.*` (`BusquedaLetra.tsx`), C `let.comp.actual.limitada` en gris (`LetraElegida.tsx`); la corrección guardada sigue ganando (`let.comp.actual.corregida`). Motivo de «Elige la letra» `let.prep.motivo.limitada` cuando el mejor candidato es `dudosa` con limitación y el motivo guardado es `duda`. No hay [Corregir el desfase] ni [Buscar otra letra] con limitación; `desfaseMs` no se presenta.
+- Editor: diálogo con `edi.comprobar.limitada.*`, icono `circle-help`, solo [Cerrar].
+- Pruebas: `letrasBusqueda.test.ts`, `comprobacion.test.ts`, `preparacion.test.ts`, `Dialogos.test.tsx`. E2E: no escritas (F4-E2 y la voz densa piden un escenario nuevo del doble de LRCLIB; no se ha añadido). Capturas por tomar: `candidato-limitado` (candidato LRCLIB sin fines con `sinContraste` seleccionado) y `actual-limitada` (F4-L12). Con la biblioteca real, casi todo saldrá «No podemos comprobarla» (pregunta 0295).
