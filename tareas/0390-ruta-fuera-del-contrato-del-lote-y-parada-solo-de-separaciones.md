@@ -1,5 +1,5 @@
 # 0390 — Feature 7 · Remates: sin rutas en la lectura del lote y parada solo de las separaciones con `RUNTIME_NO_DISPONIBLE`
-- Estado: Pendiente
+- Estado: Hecha
 - Paso del pipeline: 1 y 2
 - Depende de: 0315, 0384 (hechas)
 - ADRs: 0026 (revisión «Origen sin consulta, `musica` nula y sin rutas en la lectura (pregunta 0317)»), 0025 (revisión «Parada por `RUNTIME_NO_DISPONIBLE` según el trabajo (pregunta 0317)»), 0008
@@ -34,4 +34,9 @@ Quitar la única ruta que main entregaba al renderer en la lectura del lote, y e
 - Siempre: `npm run typecheck`, `npm run lint`, `npm run format:check` y `npm run test:cambios`.
 
 ## Notas de implementación
-(las rellena el programador al terminar)
+Hecho (2026-11-23):
+- **Sin `ruta`**: `filaLoteSchema` ya no la lleva; `ServicioLote.rutaDeRef(ref)` (main/fuente/lote.ts) resuelve la ruta de una fila de la lectura (30 min; caducada o desconocida = `ARGUMENTOS_NO_VALIDOS`). `fuente.importarArchivo` admite `string` o `{ ref }` (shared/ipc.ts, preload, handlers). `PanelArchivo.tsx` importa la fila única por `ref` (el borrador de «Cambiar en Ajustes» guarda la `ref`, no una ruta).
+- **Parada**: `main/preparacion/cola.ts`: `registrarFallo(codigo, origen)`; `RUNTIME_NO_DISPONIBLE` de una separación solo pone `separacionesParadas` (el freno retiene la cola `pesada`, `TrabajoRetenible` lleva ahora `cola`); de una descarga/importación o de una corrida sin separación previa, parada total como antes; `SIN_ESPACIO` y 3 seguidos, parada total. «Reanudar», «Reintentar las fallidas» y `motorReparado()` (cableado en `main/index.ts` al pasar `instalacion.estado` a `completa`) la liberan. La corrida que repite el fallo de la separación no lo convierte en parada total.
+- **Interfaz**: `PanelCola.tsx` muestra `separacionesParadas` con `COLA.motor` + «Reparar el motor de audio». La spec 04 aún no tiene texto propio (dice «La cola está parada hasta entonces», que ya no es cierto aquí): pendiente del diseñador.
+- **Pruebas**: `cola.test.ts` (4 casos + SIN_ESPACIO), `lote.test.ts` (`rutaDeRef`, lectura sin rutas), `handlers.lote.test.ts` (`{ ref }`), `IndicadorActividad.cola.test.tsx`, E2E `importar-lote.spec.ts` (lectura sin `ruta`; dos casos sin motor: con separador falso que falla y sin separador falso).
+- Deuda: el caso «sin separador falso» es indiferente al motor del equipo (en CI falla el motor y ejercita la parada; en un equipo con motor solo comprueba que las descargas terminan).

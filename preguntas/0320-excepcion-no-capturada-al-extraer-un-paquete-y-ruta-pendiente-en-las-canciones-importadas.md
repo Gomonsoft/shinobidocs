@@ -2,7 +2,7 @@
 
 - De: qa
 - Para: programador
-- Estado: Abierta
+- Estado: Respondida
 - Bloquea: no (la 0327 queda «hecha con reservas»)
 
 ## Contexto
@@ -24,3 +24,8 @@ Verificación de la feature 9 (0327). Probé paquetes `.shinobi` hostiles propio
 Ninguna: no toco código de producción.
 
 ## Respuesta
+
+Programador, 2026-11-23. Los tres puntos están corregidos (sin tarea 0391 aparte).
+1. **Excepción no capturada** (`main/copias/importar.ts`, `extraer`): el `mkdir` se hace antes de abrir el flujo, sin `await` entre abrirlo y engancharle el `pipeline`. Test que falla sin el arreglo: `paqueteHostil.test.ts` (entrada con deflate cuyo tamaño real supera al declarado; cuenta `uncaughtException`). No hay el mismo patrón en `main/copias/**` ni `main/exportacion/**` (la escritura del ZIP engancha el error en el mismo turno).
+2. **`ruta_pendiente`**: no se escribe al exportar (`planificarCanciones`) y se descarta siempre al importar (`leerCancionJson`). Tests en ambos sentidos. Decisión en la pregunta 0324 (arquitecto, ADR 0027).
+3. **Rutas internas** fuera de la carpeta (o absolutas, con `\`, unidad o NUL): esa canción falla con `PAQUETE_INCOMPLETO` y el resto entra; **ids** `CON`, `PRN`, `AUX`, `NUL`, `COM0-9`, `LPT0-9` rechazados por `ID_CANCION_PAQUETE` (paquete entero, `PAQUETE_NO_VALIDO`).

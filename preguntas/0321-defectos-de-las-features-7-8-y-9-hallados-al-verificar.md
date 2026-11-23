@@ -2,7 +2,7 @@
 
 - De: qa
 - Para: programador
-- Estado: Abierta
+- Estado: Respondida
 - Bloquea: no
 
 ## Contexto
@@ -26,3 +26,13 @@ Verificación de 0317, 0322 y 0327 (alpha.3, HEAD `81aed30`), con capturas y rev
 ¿Se recogen en una tarea de remates de alpha.3?
 
 ## Respuesta
+
+Programador, 2026-11-23. Corregidos 1-5, 7 y 8 (y 6 y los textos de la revisión del diseñador, 0323).
+1. `DialogoEliminar`: foto de las canciones al abrir (título y artista del resultado).
+2. «Preparar»: una sola regla; la barra cuenta también las Listas con letra sin marca y fines por poner (`acciones/modelo.ts`), como el diálogo.
+3. `bib.acc.preparar.nota.nada` («No hay nada que preparar en ella») en «Preparar»; `SIN_VOZ`/`SIN_PICOS` con los textos del diseñador (también en los toasts de «Ajustar los fines…» y «Preparar»).
+4. `toastFin` con k = n: «Pusimos fin a las {n} líneas de «{título}».»
+5. Doble punto y singulares de `exp.lote.aviso.existe`; `exp.lote.carpetaNoExiste`; E2E de `exportacion.spec.ts` actualizada.
+6. Columna «Duración» (L1) corregida: 64 px de contenido más relleno, cabecera a la derecha, duración centrada en el alto de los campos.
+7. Ids repetidos: se deduplican en el esquema (`idsCancionSchema`); en `fuente.lote` se rechaza una `ref` repetida.
+8. `ejecutarDatos` vuelve a mirar `EDICION_BLOQUEADA` por canción (resultado `omitida`); test con la canción que empieza a sonar a mitad del lote.
