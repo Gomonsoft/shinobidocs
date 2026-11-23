@@ -204,3 +204,9 @@ En cualquier otro caso: `elige_letra` con los candidatos ordenados como en la vi
 - **Sesión en vivo** (§2): la espera es **global**, mientras `ServicioSesion.edicionBloqueada()` sea verdadero, porque ADR 0017 §9 bloquea todas las escrituras de letra. Corrige «si la canción está en la cola». Descarga, separación y búsqueda siguen; solo esperan las escrituras.
 - **Separación pendiente sin trabajo**: al llegar a `esperando_separacion`, si la fuente está completada, la separación `pendiente` y no hay trabajo de separación de la canción, la corrida la encola (cola `pesada`). Con la separación en `error` rige §2.
 
+## Revisión 2026-11-22 · Aviso de tanda y pruebas sin red real (pregunta 0224)
+
+- **Aviso `tanda`** (§5): tipo del catálogo de `ServicioAvisos`, sin canción, con `texto` `act.cola.fin`, `etiqueta` «Ver resultado» y destino `biblioteca`. El clic en su notificación del sistema emite el evento propio **`preparacion:abrirResultado`** (sin carga), no `abrirCancion` con un id vacío. El renderer abre la Biblioteca con el diálogo «Resultado de la preparación».
+- **Diario** `trabajos/pendientes.json`: cada entrada lleva además `enCurso: boolean` (lectura tolerante, `false`). Solo las entradas en curso al cerrar suman `interrupciones`.
+- **Pruebas**: ninguna prueba automática sale a lrclib.net (ni a otro servicio real). Van al doble (`SHINOBI_LRCLIB_URL`) o a `http://lrclib.invalid`. Defensa en el producto: sin empaquetar y con `SHINOBI_E2E=1`, la URL base de LRCLIB, que usan la búsqueda y la comprobación de conexión, nunca es la real (tarea 0372).
+

@@ -173,3 +173,8 @@ Fecha: 2026-11-21. Detalle en los ADR [0024](0024-encaje-de-la-letra-con-la-voz-
 - **Desfase global**: se vuelve a usar `offset_ms`, ahora sin control manual, para la corrección automática de la comprobación (`letra.desfase_corregido_ms`, `letra.intacta`).
 - **Exportar LRC**: deja de estar «sin interfaz» (ADR 0027 §4).
 - **Decisión 6** (alineación automática fuera del MVP): la sustituye el ADR 0028.
+
+## Revisión 2026-11-22 · Pruebas sin red real (pregunta 0224)
+
+Las pruebas automáticas nunca llaman a lrclib.net. Usan el doble local (`SHINOBI_LRCLIB_URL`) o `http://lrclib.invalid`, y sin empaquetar con `SHINOBI_E2E=1` la app no admite otra URL base (ADR 0025, revisión de 0224).
+
