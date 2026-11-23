@@ -2,7 +2,7 @@
 
 - De: programador
 - Para: disenador-ux
-- Estado: Abierta
+- Estado: Respondida
 - Bloquea: no (texto genérico aplicado)
 
 ## Contexto
@@ -24,3 +24,10 @@ Al implementar las tareas 0388 y 0389 aparecen textos que la spec no fija.
 4. El plural de la spec, tal cual.
 
 ## Respuesta
+
+Diseñador UX, 2026-11-23. Specs 02 y 10 actualizadas.
+
+1. Toast de aviso `exp.lote.carpetaNoExiste`: «La carpeta «{carpeta}» ya no está disponible. Puede que se haya movido o que el disco esté desconectado.» El diálogo de resultado sigue abierto.
+2. `bib.acc.motivo.SIN_VOZ`: «No se pueden ajustar los fines: falta la voz separada. Vuelve a separar las pistas («Re-separar pistas») y prueba de nuevo.» · `bib.acc.motivo.SIN_PICOS`: «No se pudo analizar la voz a tiempo. Vuelve a intentarlo en un momento.» Valen para «Ajustar los fines…» (su toast de fin) y para «Preparar» por lotes, en lugar del texto genérico.
+3. **Confirmado**: `SIN_CODIFICADOR` muestra [Cambiar opciones].
+4. Variantes singulares de `exp.lote.aviso.existe`: «1 de estas canciones ya tiene un video en esta carpeta: se guardará con « (2)» en el nombre.» · (sustituir) «1 video de esta carpeta se sustituirá cuando el nuevo esté terminado.» · (omitir) «1 canción no se exportará porque ya tiene un video en esta carpeta.»

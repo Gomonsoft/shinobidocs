@@ -1222,6 +1222,8 @@ La decisión la da main para cada canción en el momento de abrir la confirmaci�
 | `bib.acc.motivo.exportando` | Ya se está exportando |
 | `bib.acc.motivo.sinTiempos` | No tiene letra sincronizada |
 | `bib.acc.motivo.activa` | No se elimina: se está reproduciendo en la otra pantalla |
+| `bib.acc.motivo.SIN_VOZ` | No se pueden ajustar los fines: falta la voz separada. Vuelve a separar las pistas («Re-separar pistas») y prueba de nuevo. (en «Ajustar los fines…», en su toast de fin y en «Preparar» por lotes; 0316) |
+| `bib.acc.motivo.SIN_PICOS` | No se pudo analizar la voz a tiempo. Vuelve a intentarlo en un momento. (ídem; 0316) |
 | `bib.acc.motivo.SIN_FUENTE` | No se prepara: falta el audio. Ábrela con «Continuar» para elegir el archivo o descargarlo. (0300) |
 | `bib.acc.preparar.nota.soloFines` | Ya tiene letra: ajustará los fines (cuando main solo propone ese paso; 0300) |
 | `bib.acc.eliminar.nota.trabajo` | Se cancelará su trabajo en curso (genérica: main da el recuento, no el tipo; 0300) |

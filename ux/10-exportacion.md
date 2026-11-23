@@ -760,7 +760,8 @@ Mismo diálogo de 720 px y mismas reglas que A; cambian la cabecera, el destino 
 - Con el diálogo abierto, H pasa a I al terminar el último video. Foco en «Mostrar la carpeta» (primario) si hubo algún video; si no, en «Reintentar las fallidas» o «Cerrar».
 - Con el diálogo cerrado: toast `exp.lote.toast` con [Ver resultado] (abre I) y, con la ventana sin foco, notificación como en spec 04 §3. **Un solo toast por lote**: los videos de un lote no muestran `exp.toast.ok` ni `exp.toast.error` uno a uno.
 - **Reintentar las fallidas**: vuelve a encolar las ✕ y las no intentadas con las mismas opciones y carpeta, con una instantánea nueva; el diálogo vuelve a H solo con ellas. Si todas fallaron con un código que no se arregla repitiendo (tabla de la fase 7), el botón es **[Cambiar opciones]** (vuelve a G con las fallidas).
-- «Mostrar la carpeta» abre la carpeta del lote (sin seleccionar ningún archivo). Mientras main no tenga esa operación (0301), se acepta revelar el primer video terminado de la carpeta.
+- «Mostrar la carpeta» abre la carpeta del lote (sin seleccionar ningún archivo). Mientras main no tenga esa operación (0301), se acepta revelar el primer video terminado de la carpeta. Si la carpeta ya no existe (`DESTINO_NO_DISPONIBLE`), toast de aviso `exp.lote.carpetaNoExiste` y el diálogo sigue abierto.
+- [Cambiar opciones] sustituye a «Reintentar las fallidas» cuando todas fallaron con `SIN_ESPACIO`, `DESTINO_NO_DISPONIBLE`, perfil no soportado, captura o `SIN_CODIFICADOR` (0316).
 - «Copiar detalles» de una fila copia lo mismo que en D, con la línea de versión común.
 
 ### Estados (lote)
@@ -799,7 +800,8 @@ Mismo diálogo de 720 px y mismas reglas que A; cambian la cabecera, el destino 
 | `exp.lote.carpeta` | Guardar en la carpeta — [Cambiar…] |
 | `exp.lote.existe` | Si ya existe un video con el mismo nombre · Conservar los dos · Sustituir · Omitir esa canción |
 | `exp.lote.estimacion` | Ocuparán unos {tamaño} · tardarán unos {n} minutos |
-| `exp.lote.aviso.existe` | {k} de estas canciones ya tienen un video en esta carpeta: se guardarán con « (2)» en el nombre. · (sustituir) {k} videos de esta carpeta se sustituirán cuando los nuevos estén terminados. · (omitir) {k} canciones no se exportarán porque ya tienen un video en esta carpeta. |
+| `exp.lote.carpetaNoExiste` | La carpeta «{carpeta}» ya no está disponible. Puede que se haya movido o que el disco esté desconectado. |
+| `exp.lote.aviso.existe` | (k = 1) 1 de estas canciones ya tiene un video en esta carpeta: se guardará con « (2)» en el nombre. · (sustituir, k = 1) 1 video de esta carpeta se sustituirá cuando el nuevo esté terminado. · (omitir, k = 1) 1 canción no se exportará porque ya tiene un video en esta carpeta. · {k} de estas canciones ya tienen un video en esta carpeta: se guardarán con « (2)» en el nombre. · (sustituir) {k} videos de esta carpeta se sustituirán cuando los nuevos estén terminados. · (omitir) {k} canciones no se exportarán porque ya tienen un video en esta carpeta. |
 | `exp.lote.aviso.espacio` | Puede que no quepan: ocuparán unos {tamaño} y quedan {libre} libres en ese disco. |
 | `exp.lote.muestra` | Cada video usa el estilo de su canción. |
 | `exp.lote.boton` | Exportar {n} videos · Exportar 1 video |
