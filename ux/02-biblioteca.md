@@ -1504,6 +1504,7 @@ Mismo diálogo para un paquete de canciones y para una copia de seguridad; la co
 | `paq.menu.exportar` | Exportar paquete… |
 | `paq.vacio.enlace` | Restaurar una copia o importar un paquete… |
 | `paq.arrastrar.soltar` | Suelta para importar el paquete |
+| `bib.arrastrar.soltarNeutro` | Suelta para añadir |
 | `paq.arrastrar.varios` | Los paquetes se importan de uno en uno. Se abrirá el primero. |
 | `paq.exp.titulo` | Exportar paquete |
 | `paq.exp.cabecera` | {n} canciones · «{título}» · {artista} — [Ver cuáles] |
@@ -1865,7 +1866,7 @@ Origen: [plan 0.2.2, feature 7](../versiones/0.2.2/plan-4.md) y [propuesta 021](
 | **Arrastrar sobre la ventana** | Un archivo: como hoy (abre la vista 03 con él). **Varios archivos o una carpeta**: abre la vista 03 en modo lote con todos (ya no se usa solo el primero ni se muestra «Añade las canciones de una en una»). Los archivos de paquete (`.shinobi`, feature 9) no entran en el lote: si se sueltan solos, los atiende la feature 9; mezclados con audio, se ignoran con el aviso `add.lote.paqueteIgnorado` (spec 03). |
 | **Zona de soltar** | Al arrastrar varios elementos, el velo de la ventana dice `bib.arrastrar.soltarVarios`. |
 | **Al confirmar un lote** (spec 03) | Se vuelve a la Biblioteca: filtro en «Todas», agrupación como estuviera, las canciones nuevas ya en su sitio (en «Fecha de añadido», en «Hoy»). La primera tarjeta nueva recibe el foco y se desplaza a la vista. `bib.import.anadidas` con [Ver actividad] (abre el panel de actividad) sale como **toast** (`info`, 10 s), no como aviso en línea: al desplazarse a las tarjetas nuevas, un aviso en la cabecera quedaba fuera de la vista (revisión de capturas 2026-11-23, 0323 n.º 2). Se anuncia una vez. |
-| **Arrastrar un `.shinobi` suelto** | El velo de la ventana dice `paq.arrastrar.soltar` («Suelta para importar el paquete»), igual que con varios archivos (0323). |
+| **Arrastrar un `.shinobi` suelto** | El velo de la ventana dice `paq.arrastrar.soltar` («Suelta para importar el paquete»), igual que con varios archivos (0323). **Si al entrar no se sabe qué se arrastra** (sin nombre ni tipo): el velo usa el texto neutro `bib.arrastrar.soltarNeutro` («Suelta para añadir»), nunca uno que pueda ser falso; al soltar, la app decide por la extensión real (audio → vista 03, `.shinobi` → importar, varios → lote). No se supone «paquete» para un tipo desconocido (revisión 2026-11-23). |
 | **Tarjetas del lote** | Las líneas de paso de siempre («En cola para descargar», «En cola para separar», ⟳ …) y las de la feature 5. Sin marca propia de «lote». |
 | **Seguimiento** | La bandeja de pendientes (feature 5) es el resumen permanente del lote: listas para revisar, esperan letra, con error. El resumen de la tanda está en el panel de actividad (spec 04). |
 | **Estado vacío** | `bib.vacia.cuerpo` menciona que se pueden añadir varias a la vez. |

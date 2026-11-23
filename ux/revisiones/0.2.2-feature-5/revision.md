@@ -63,6 +63,8 @@ Revisadas las 7 capturas nuevas y la regenerada `editor-1280x720-100-preparacion
 
 **Veredicto: aprobada con correcciones menores** (P5).
 
+**Segunda revisión (2026-11-23)**: `toast-fines-puestos` regenerada: «Pusimos fin a las 6 líneas de «Reproductor: lista».» con [Ver la letra]. **P5 corregida. Veredicto: aprobada.**
+
 ## No conformidades
 
 | N.º | Criterio | Qué se ve | Qué debería verse | Gravedad |

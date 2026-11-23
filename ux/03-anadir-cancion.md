@@ -631,7 +631,7 @@ En las filas con ✕ los campos son de solo lectura (texto en `texto-2`), no se 
 | `add.lote.despues.sinLetra` | Cada canción se separará. La búsqueda automática de letra está desactivada: quedarán como borradores sin letra. — Activar en Ajustes |
 | `add.lote.legal` | Recuerda: descarga solo contenido que tengas derecho a descargar. — Leer el aviso |
 | `add.lote.sinEspacio` | **No hay espacio para todas.** Caben unas {k}. Desmarca algunas o libera espacio en el disco. · (k = 0) **No hay espacio para ninguna.** Libera espacio en el disco o desmarca canciones. |
-| `add.lote.sinArtista` | {k} canciones no tienen artista: con él es más fácil encontrar su letra. — [Artista para todas…] · (k = 1) 1 canción no tiene artista: … — aviso `info` único sobre la tabla, junto a `add.lote.comunes`; no se marca cada fila (revisión 2026-11-23, 0323 n.º 3) |
+| `add.lote.sinArtista` | {k} canciones no tienen artista: con él es más fácil encontrar su letra. Puedes ponerlo con «Artista para todas…». · (k = 1) 1 canción no tiene artista: … — aviso `info` único sobre la tabla, junto a `add.lote.comunes`, **sin botón propio** (el de la barra está justo debajo; dos controles iguales confunden y duplican el nombre accesible); `{k}` cuenta solo las filas **marcadas** sin artista y se recalcula al marcar, desmarcar o rellenar; con 0 no se muestra (revisión 2026-11-23) |
 | `add.lote.nada` | No hay ninguna canción que añadir. |
 | `add.lote.boton` | Añadir {n} canciones · Descargar y añadir {n} canciones · (n = 1) Añadir 1 canción · Descargar y añadir 1 canción |
 | `add.lote.anadiendo` | Añadiendo… (botón en estado de carga; sin «{i} de {n}»: es una sola operación, 0285) |

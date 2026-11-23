@@ -32,3 +32,18 @@
 | **K4** | 02, «Para las que ya tienes» (precisada) | Control sin etiqueta. | «Para las que ya tienes:» visible a la izquierda del control. | Se corrige después |
 | **K5** | 02 (0292 n.º 3), captura | No se ve resalte en la captura. | Repetir la captura dentro de los 2 s, con las importadas visibles y con borde `info`. | Se corrige después (QA) |
 | **K6** | Sistema visual (patrón C2 de la feature 4) | ⓘ en un renglón aparte. | Icono a la izquierda del texto, en la misma línea. | Se corrige después |
+
+## Segunda revisión (2026-11-23)
+
+Revisadas `restaurar-revisar`, `restaurar-revisar-inicio`, `paquete-creado`, `importar-conflictos`, `copia-creando`, `copia-cancelada`, `copia-nunca`, `copia-ultima-recordatorio` e `importadas-resaltadas`.
+
+| N.º | Resultado | Evidencia |
+|---|---|---|
+| **K1** | **Corregida** | `-inicio`: cuerpo con difuminado inferior que indica que sigue. `restaurar-revisar`: desplazado, la casilla «Restaurar también mis ajustes» se ve entera sobre el pie, con barra de scroll. El tooltip del botón inactivo es de *hover*: conforme. |
+| **K2** | **Corregida en el texto; por confirmar el toast** | «la copia se sigue creando» y el toast «Copia cancelada…». Pero en las dos capturas aparece además «Paquete cancelado. No se ha guardado nada.»: si es un resto de un paso anterior de la captura, conforme (QA: cerrar los toasts entre capturas); **si cancelar una copia emite los dos toasts, es un defecto**: solo debe salir «Copia cancelada». Se corrige después. |
+| **K3** | **Corregida** | Tamaño sin partir y ruta recortada por el centro. Que un nombre muy largo ocupe dos renglones **vale**: el nombre no se recorta (es lo que el usuario buscará en la carpeta); lo que no se debe partir es «1 MB». |
+| **K4** | **Corregida** | «Para las que ya tienes:» visible. |
+| **K5** | **Corregida** | Las dos importadas con borde `info`. |
+| **K6** | **Corregida** | ⓘ en la misma línea en `copia-nunca` y `copia-ultima-recordatorio`. |
+
+**Veredicto: aprobada con correcciones menores** (solo la confirmación del doble toast de K2; nada bloquea alpha.3).

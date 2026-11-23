@@ -28,3 +28,20 @@
 | **L3** | 03 (0323 n.º 3) | Filas sin artista y ningún aviso. | Aviso único `add.lote.sinArtista` sobre la tabla («{k} canciones no tienen artista: con él es más fácil encontrar su letra.» con [Artista para todas…]). Falta de la spec, ya añadido. | Se corrige después |
 | **L4** | `add.lote.sinEspacio` | «Caben unas 0». | Variante k = 0: «No hay espacio para ninguna. Libera espacio en el disco o desmarca canciones.» | Se corrige después |
 | **L5** | 02 · Feature 7 | No hay velo al arrastrar un `.shinobi` suelto. | Velo con `paq.arrastrar.soltar` («Suelta para importar el paquete»). | Se corrige después |
+
+## Segunda revisión (2026-11-23)
+
+Revisadas las tablas regeneradas: `tabla-lista`, `-lista-sin-completando`, `-carpeta`, `-duplicados`, `-enlaces-sueltos`, `-limite`, `-sin-espacio` y `anadir-1024x640-100-tabla`.
+
+| N.º | Resultado | Evidencia |
+|---|---|---|
+| **L1** | **Corregida** | «Duración» entera y alineada a la derecha en todas; cada duración en la línea de su fila; «24:00:00» cabe. |
+| **L2** | Sin captura nueva | Pasa a toast (cambio de spec); se comprueba en la próxima tanda. |
+| **L3** | **Corregida, con un cambio (L6)** | Aviso `add.lote.sinArtista` sobre la tabla. |
+| **L4** | **Corregida** | «No hay espacio para ninguna.» |
+| **L5** | Regla nueva | Sin captura posible. **No vale** tratar un tipo desconocido como paquete: el velo diría algo falso al arrastrar un audio. Si no se sabe qué se arrastra, texto neutro `bib.arrastrar.soltarNeutro` («Suelta para añadir»); la app decide al soltar. Spec 02 actualizada. |
+| **L6 (nueva)** | No conforme | [Artista para todas…] sale dos veces (aviso y barra), y en `tabla-limite` el aviso dice «80 canciones» con 50 marcadas. **Decisión**: el aviso va sin botón y termina en «Puedes ponerlo con «Artista para todas…».»; `{k}` cuenta solo las filas marcadas sin artista. Spec 03 actualizada. Se corrige después. |
+
+**Spec 04 · Feature 7**: texto nuevo `act.cola.motor.separaciones` para cuando el motor para solo las separaciones.
+
+**Veredicto: aprobada con correcciones menores** (L2 por comprobar, L5 y L6; nada bloquea alpha.3).

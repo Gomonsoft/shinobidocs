@@ -28,3 +28,16 @@
 | **E2** | `exp.lote.aviso.existe` (0316) | «1 de estas canciones ya tienen…», «1 canciones no se exportarán…», «1 videos … se sustituirán». | Variantes singulares de la spec 10. | Se corrige después |
 | **E3** | `exp.lote.detenido` (precisada) | «El lote se detuvo: No se puede guardar en esa carpeta.. Puede que…» | «El lote se detuvo: no se puede guardar en esa carpeta. Puede que…» (minúscula tras los dos puntos y un solo punto). | Se corrige después |
 | **E4** | `bib.acc.preparar.nota.nada` | «Ya tiene esos datos» en «Preparar». | «No hay nada que preparar en ella». | Se corrige después |
+
+## Segunda revisión (2026-11-23)
+
+Revisadas `lote-formulario`, `-omitir`, `-sustituir`, `lote-detenido` y `dialogo-preparar`.
+
+| N.º | Resultado | Evidencia |
+|---|---|---|
+| **E1** | **Corregida** | Las notas están dentro del cuerpo con scroll (se ve el difuminado del borde y la carpeta asoma debajo); no tapan nada. |
+| **E2** | **Corregida** | «1 canción no se exportará…», «1 video de esta carpeta se sustituirá…». |
+| **E3** | **Corregida** | «El lote se detuvo: no se puede guardar en esa carpeta. Puede que…» |
+| **E4** | **Corregida** | «No hay nada que preparar en ella». |
+
+**Veredicto: aprobada.**

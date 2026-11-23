@@ -518,6 +518,7 @@ La cola se protege sola de fallos que se repetirían en todas las canciones. En 
 | `SIN_CONEXION` en una descarga | Solo las descargas. | `act.cola.sinConexion`. Se comprueba la conexión cada 60 s y **se reanudan solas** al volver; también con [Reintentar ahora]. |
 | `SIN_ESPACIO` | Toda la cola. | `act.cola.espacio` + [Reanudar] (vuelve a comprobar el espacio). |
 | `RUNTIME_NO_DISPONIBLE` | Toda la cola. | `act.cola.motor` + [Reparar el motor de audio] (flujo de la spec 01; ya no pide confirmación por los trabajos, porque están parados). |
+| `RUNTIME_NO_DISPONIBLE` solo para las separaciones (`separacionesParadas`; revisión 2026-11-23) | Solo las separaciones (y lo que va detrás de ellas en cada canción). Descargas, importaciones de archivos y búsquedas de letra **siguen**. | `act.cola.motor.separaciones` (`aviso`) + [Reparar el motor de audio]. El botón de la barra usa `act.cola.boton.parada` solo si no queda nada en marcha; mientras algo sigue, «Preparando {i} de {n}» con el icono ⚠. |
 | Tres canciones seguidas fallan con el mismo error | Toda la cola. | `act.cola.repetido` con el título del error + [Reanudar] y [Ver la primera]. |
 
 Una parada automática no es una pausa del usuario: al resolverse la causa, la cola sigue. «Cancelar lo que falta…» sigue disponible.
@@ -602,6 +603,7 @@ La vista de la spec no cambia; el texto de cola dice la posición en la tanda: `
 | `act.cola.sinConexion` | **Sin conexión a internet.** Las {k} descargas que faltan seguirán solas cuando vuelva. — [Reintentar ahora] |
 | `act.cola.espacio` | **No queda espacio en el disco.** La cola está parada. Libera espacio y reanúdala. — [Reanudar] |
 | `act.cola.motor` | **Hay que reparar el motor de audio.** La cola está parada hasta entonces. — [Reparar el motor de audio] |
+| `act.cola.motor.separaciones` | **Hay que reparar el motor de audio para separar las pistas.** Hemos parado las {k} separaciones que faltan. Las descargas y la búsqueda de letras siguen. — [Reparar el motor de audio] · (k = 1) … Hemos parado la separación que falta. … |
 | `act.cola.repetido` | **Tres canciones seguidas han fallado: {título del error}.** Hemos parado la cola. — [Reanudar] [Ver la primera] |
 | `act.cola.sesion` | El reproductor está abierto en otra pantalla. Si notas cortes en el sonido, pausa la cola. |
 | `act.cola.fin` | {n} canciones preparadas: {a} listas para revisar · {b} esperan letra · {c} con error. — [Ver resultado] (se omiten las partes con 0; si todo son listas: «{n} canciones listas para revisar.») |

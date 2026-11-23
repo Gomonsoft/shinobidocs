@@ -78,3 +78,12 @@ Revisadas las 6 capturas nuevas: `letra-…-candidato-limitado` y `-voz-continua
 | **C7** | C2 (icono y texto en la misma línea) | El ✓ de la línea de duración del candidato va solo, encima de «Duración igual que tu audio». | Icono a la izquierda del texto, en la misma línea (como la línea de comprobación debajo). | Se corrige después |
 
 **Veredicto de la opción prudente: aprobada con correcciones menores** (C7; C6 sigue pendiente).
+
+## Segunda revisión de la opción prudente (2026-11-23)
+
+| N.º | Resultado | Evidencia |
+|---|---|---|
+| **C6** | **Corregida** | `aviso-llegada` regenerada: iconos ⚠ y ⟷ a la izquierda del texto, en candidatos y en el título de la vista previa; motivos con viñetas y «1 de 6 líneas cae». |
+| **C7** | **Corregida** | `candidato-limitado`: ✓ en la misma línea que «Duración igual que tu audio». |
+
+**Veredicto: aprobada.**
