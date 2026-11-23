@@ -3402,8 +3402,9 @@ Al empezar, el panel pasa a la pestaña **Sincronía** y muestra, **encima** de 
 │ ┌ Revisión · quedan 4 de 5 ──────────────────── [✕] ┐ │  h3 + «Salir de la revisión»
 │ │ ⚑ El fin llega 1,2 s después de la voz.            │ │  motivo principal (t-cuerpo)
 │ │   También: dura mucho para su texto (9,4 s).       │ │  otros motivos (t-pequeno, texto-2)
-│ │ [▶ Escuchar otra vez]      [Fin al final de la voz]│ │  secundarios
-│ │ [‹ Anterior]  [Siguiente ›]      [✓ Está bien (N)] │ │
+│ │ [✓ Está bien                                   N ] │ │  acción principal, ancho completo
+│ │ [‹ Anterior]  [Siguiente ›]                        │ │  navegación
+│ │ [▶ Escuchar otra vez]  [Fin al final de la voz]    │ │  secundarios (se parten en filas si no caben)
 │ │ [☑] Escuchar cada línea al llegar                  │ │
 │ └────────────────────────────────────────────────────┘ │
 │ Línea 14 de 52                                         │  panel C de siempre
@@ -3419,7 +3420,9 @@ Al empezar, el panel pasa a la pestaña **Sincronía** y muestra, **encima** de 
 | **Motivo** | Texto del motivo principal con sus cifras; debajo, los demás. Se recalcula en vivo al cambiar los tiempos. |
 | **▶ Escuchar otra vez** | Repite el tramo. Equivale a **Mayús + L**. |
 | **Arreglo rápido** | El de la tabla de motivos, si lo hay. **Fin al final de la voz** lleva el fin de esa línea al último momento con voz antes del primer silencio (la regla de «Ajustar los silencios» para una sola línea; propuesta 016): un paso del historial, y la línea vuelve a sonar. Si no encuentra silencio: `edi.revision.sinSilencio` 2 s junto al botón. **Sincronizar esta línea con la voz**: la acción por línea de la feature 10. **Fijar inicio aquí (I)**: la de siempre. |
-| **✓ Está bien (N)** | Da la línea por buena (un paso del historial, se guarda) y pasa a la siguiente pendiente. Es el botón más destacado de la tarjeta (secundario con `t-cuerpo-fuerte`; el primario rojo sigue siendo el del dock). Inactivo con `sinInicio` (`edi.revision.noSinInicio`). |
+| **✓ Está bien (N)** | Da la línea por buena (un paso del historial, se guarda) y pasa a la siguiente pendiente. Es el botón más destacado de la tarjeta (secundario con `t-cuerpo-fuerte` y borde `acento-texto`; el primario rojo sigue siendo el del dock). Inactivo con `sinInicio` (`edi.revision.noSinInicio`). **«(N)» es la tecla del atajo, no un número**: el botón muestra «Está bien» y, alineada a la derecha, la tecla «N» en `t-pequeno` `texto-3` (como los atajos de «Funciones»). |
+| **Orden y tamaño de la tarjeta** (revisión de capturas, 2026-11-22) | De arriba abajo: título y [✕] · motivo y otros motivos · **[✓ Está bien] a todo el ancho** · [‹ Anterior] [Siguiente ›] · [▶ Escuchar otra vez] [arreglo rápido] (en una fila si caben; si no, uno por fila) · casilla. La acción principal va **justo después del motivo** para que se vea sin desplazar el panel a 1280 × 720 (al 100 % y al 125 %) y a 300 px de ancho; lo de debajo puede requerir el scroll propio del panel. Botones de la tarjeta de 32 px de alto, separados 8 px. |
+| **Línea ya corregida** | El botón principal pasa a **[Siguiente]** (con la tecla «N» a la derecha), en el mismo sitio, y el «Siguiente ›» de la fila de navegación **se oculta** (harían lo mismo); queda solo [‹ Anterior] en esa fila. |
 | **Siguiente › / ‹ Anterior** | Van a la pendiente siguiente o anterior en el orden de la letra **sin** marcar nada. También **Ctrl/Cmd + ↓ / ↑** (funcionan igual fuera del recorrido). En los extremos dan la vuelta, con el anuncio `edi.revision.vuelta`. |
 | **Corregir la línea** | Con los controles de siempre (campos, tiradores, I/O, flechas con modificador) o el **editor preciso (P)**, que se abre sobre la línea y convive con la tarjeta. Tras cada cambio el motivo se recalcula: si la línea ya no tiene motivos, la tarjeta muestra `edi.revision.corregida` («✓ Ya no vemos nada raro en esta línea») y el botón principal pasa a **[Siguiente (N)]**. Si aún tiene alguno, se queda pendiente y el usuario decide. |
 | **Elegir otra línea a mano** (lista, línea de tiempo, ↑/↓) | El recorrido no termina. Si la línea elegida está pendiente, la tarjeta la muestra. Si no, la tarjeta se reduce a `edi.revision.fuera` con [Volver a la revisión], que selecciona la siguiente pendiente. |
@@ -3528,7 +3531,7 @@ Ninguno actúa en campos de texto ni con el foco en el editor preciso. N fuera d
 | `edi.revision.escuchar` | Escuchar otra vez — nombre accesible: Escuchar la línea otra vez (Mayús + L) |
 | `edi.revision.finVoz` | Fin al final de la voz |
 | `edi.revision.sinSilencio` | No encontramos un silencio después de esta línea. |
-| `edi.revision.bien` | Está bien (N) · (corregida) Siguiente (N) |
+| `edi.revision.bien` | Está bien · (corregida) Siguiente — con la tecla «N» a la derecha del botón; nombre accesible «Está bien» / «Siguiente» con `aria-keyshortcuts="N"` |
 | `edi.revision.noSinInicio` | Fija primero su inicio. |
 | `edi.revision.anterior` / `edi.revision.siguiente` | Anterior (Ctrl + ↑ / ⌘↑) · Siguiente (Ctrl + ↓ / ⌘↓) |
 | `edi.revision.siguienteDudosa` | Línea dudosa siguiente (Ctrl + ↓ / ⌘↓) |
@@ -3576,7 +3579,7 @@ Ninguno actúa en campos de texto ni con el foco en el editor preciso. N fuera d
 
 **Accesibilidad y capturas**
 - F11-E14. Todo el recorrido se hace solo con teclado (R, N, Ctrl/Cmd + ↓ / ↑, Mayús + L, P, I, O, Esc); cada línea se anuncia una vez con su texto y su motivo; el foco nunca queda en `body`.
-- F11-E15. En los seis viewports de la subfase 2.1 la tarjeta no produce scroll de página (el panel usa su propio scroll) y a 300 px de ancho del panel sus botones no se parten.
+- F11-E15. En los seis viewports de la subfase 2.1 la tarjeta no produce scroll de página (el panel usa su propio scroll) y a 300 px de ancho del panel sus botones no se parten. A 1280 × 720 (100 % y 125 %) y con el panel a 300 px, [✓ Está bien] (o [Siguiente] en una línea corregida) se ve entero sin desplazar el panel, justo bajo el motivo; su texto no contiene ningún número y muestra la tecla «N»; en una línea corregida no hay dos botones «Siguiente».
 - F11-E16. Capturas en `docs/ux/revisiones/0.2.2-feature-11/`, nombre `editor-1280x720-100-{estado}.png` (y `-125`): `funciones-revisar`, `lista-con-marcas`, `recorrido`, `recorrido-corregida`, `recorrido-fuera`, `recorrido-fin`, `popover-pendientes`, `banner-revision`, `sin-dudas`.
 
 **Verificación manual** (guía de `docs/Test-manuales/0.2.2/`): revisar Semestre de Otoño y Cursiva la Letra tras prepararlas solas y anotar cuántas líneas señala, cuántas eran errores de verdad y cuántos errores no señaló (cantándolas enteras después); cronometrar la revisión frente a repasar la canción entera; comprobar con una canción ya terminada a mano que casi no señala nada; hacer un recorrido completo sin ratón.
