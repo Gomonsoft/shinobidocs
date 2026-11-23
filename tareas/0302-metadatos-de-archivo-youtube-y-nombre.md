@@ -1,5 +1,5 @@
 # 0302 — Feature 6 · Metadatos ampliados en el worker y heurística del nombre
-- Estado: Pendiente
+- Estado: Hecha
 - Paso del pipeline: 1
 - Depende de: 0339
 - ADRs: 0025 §6, 0003
@@ -23,4 +23,8 @@ Leer más etiquetas y campos de música y proponer datos desde el nombre del arc
 - Siempre: `npm run typecheck`, `npm run lint`, `npm run format:check` y `npm run test:cambios` (y `uv run pytest` / `ruff` si toca el worker).
 
 ## Notas de implementación
-(las rellena el programador al terminar)
+- **Worker** (`worker/shinobi_worker/importar_archivo.py`, `metadatos_youtube.py`, `youtube.py`): `importar-archivo` lee además `album_artist`, `track` (sin «/total») y `date` y devuelve `etiquetas` crudas junto a `metadatos` (que sigue igual salvo que `artist` vacío cae a `album_artist`). `info-youtube` devuelve `musica` con `track`, `artist` (de `artists`), `album`, `album_artist`, `track_number`, `release_year`, `titulo_limpio` y `canal_limpio`. El doble de yt-dlp ya lee cualquier clave del JSON de la fixture.
+- **TS**: `shared/metadatosNombre.ts` (`metadatosDeNombre`, `metadatosDeCarpeta`, `partirPorSeparador`, `tituloConRestos`), `claveFlexible` en `shared/identidad.ts`, `metadatos.origen` tolerante en `shared/cancion.ts` (`ORIGENES_DATO`), esquemas `etiquetasArchivoSchema` y `musicaYoutubeSchema` en `shared/protocolo.ts`.
+- **Pruebas**: pytest con un FLAC y un MP3 etiquetados (`test_importar_archivo.py`) y `campos_musica` (`test_youtube_metadatos.py`); `metadatosNombre.test.ts` (17 nombres anonimizados), `identidad.test.ts` (`claveFlexible`), lectura tolerante del origen en `servicio.test.ts`.
+- **Deuda**: el patrón `NN Título` (p. ej. «21 Guns») descarta el número como pista; es la regla de la spec. La heurística `metadatos_desde_nombre` del worker sigue existiendo (compatibilidad) pero ya no manda: main usa la suya.
+- Contratos añadidos: pregunta [0220](../preguntas/0220-contratos-de-los-datos-propuestos-y-lo-que-queda-para-la-feature-5.md).
