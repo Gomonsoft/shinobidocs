@@ -18,7 +18,7 @@ Ver el [plan](plan-4.md) y el [flujo de Git](../../workflow.md). **Una feature =
 | 6 | **11** · Revisión guiada | 0334–0337, 0370 | M | 0296; UI tras 4 y 5 | alpha.2 |
 | 7 | **7** · Importación por lotes | 0313–0317, 0375 | L | 5 (0309), 6 | alpha.3 |
 | 8 | **8** · Acciones por lotes | 0318–0322 | M | 5; la exportación por lotes no depende de nada | alpha.3 |
-| 8 | **9** · Copia, paquete y `.lrc` | 0323–0327, 0376 | M–L | 0296 | alpha.3 |
+| 8 | **9** · Copia, paquete y `.lrc` | 0323–0327, 0376, 0383 | M–L | 0296 | alpha.3 |
 | 9 | **10 (etapa 1)** · Sincronizar con la voz | 0329–0333 (si la prueba sirve) | L | 0328, 0296, 5 | alpha.4 |
 | — | Cierre de cada entrega | [0338](../../tareas/0338-cierre-de-una-entrega-0-2-2-alpha.md) | S | las features de la entrega | — |
 
@@ -181,7 +181,7 @@ flowchart LR
 | [0321 · Exportar varias](../../tareas/0321-dialogo-de-exportar-varias-canciones.md) | M | 0319, 0320 |
 | [0322 · Verificación e informe](../../tareas/0322-verificacion-e-informe-de-la-feature-8.md) | S | 0318–0321 |
 
-**Hecha cuando**: las cinco acciones funcionan con resultado por canción y `CONFIRMACION_OBSOLETA`, y tres canciones reales se exportan a una carpeta en un lote.
+**Hecha cuando**: las cinco acciones («Preparar», «A la cola», «Exportar video…», «Editar datos…» y «Eliminar…»; «Marcar como lista» por lotes no está en el alcance, ADR 0026, revisión de la pregunta 0290) funcionan con resultado por canción y `CONFIRMACION_OBSOLETA`, y tres canciones reales se exportan a una carpeta en un lote.
 
 ## Feature 9 · Copia de seguridad, paquete y `.lrc` (M–L)
 
@@ -192,7 +192,8 @@ flowchart LR
 | [0325 · Importar y restaurar](../../tareas/0325-importar-paquetes-y-restaurar.md) | L | 0324 |
 | [0376 · Remates de copias y paquetes](../../tareas/0376-remates-de-copias-y-paquetes.md) | S–M | 0324, 0325 |
 | [0326 · Interfaz](../../tareas/0326-paquete-y-copia-en-la-interfaz.md) | M | 0325, 0323, 0376 |
-| [0327 · Verificación e informe](../../tareas/0327-verificacion-e-informe-de-la-feature-9.md) | S | 0323–0326 |
+| [0383 · Remates de interfaz: letra desde el editor, paquetes en actividad y cierre, enlace en Añadir, carpeta del toast](../../tareas/0383-remates-de-interfaz-de-la-feature-9.md) | S–M | 0323, 0326 (punto 4 tras 0315) |
+| [0327 · Verificación e informe](../../tareas/0327-verificacion-e-informe-de-la-feature-9.md) | S | 0323–0326, 0376, 0383 |
 
 **Hecha cuando**: la biblioteca real se copia y se restaura en otro usuario del sistema sin perder nada, un paquete ligero de una canción de YouTube recupera solo su audio, un `.lrc` exportado se vuelve a importar con los mismos inicios, y la decisión legal del paquete con audio está confirmada o anotada.
 

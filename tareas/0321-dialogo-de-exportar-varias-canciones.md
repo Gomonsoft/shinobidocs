@@ -12,6 +12,8 @@ Diálogo con carpeta, fila única en actividad y resultado.
 
 ## Criterios de aceptación
 - [ ] Criterios de la spec 10 · Feature 8.
+- [ ] Al abrir el diálogo, la carpeta viene ya rellena con `exportacion.destinoCarpeta()` (sin diálogo del sistema). [Cambiar…] llama a `destinoCarpeta({ desdeCarpetaId })`; si devuelve `null`, se conserva la anterior. Con `libreBytes: null` no se muestra el aviso de espacio previo (ADR 0026, revisión de la pregunta 0290).
+- [ ] Una canción del lote con `resultado: 'cancelada'` **y** `error` se pinta como «no intentada» (`exp.lote.fila.noIntentada`) con su motivo, y entra en [Reintentar]. Una `cancelada` sin `error` (la canceló el usuario) no entra.
 
 ## Pruebas de feedback
 - Unitarias: Componentes.

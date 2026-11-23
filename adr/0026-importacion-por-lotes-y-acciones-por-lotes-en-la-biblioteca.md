@@ -139,3 +139,12 @@ Todas siguen el patrón de «Aplicar tema…» (ADR 0016 §7; 0157 §1): **previ
 - **Álbum de una lista**: main recuerda `listaId → { titulo, tipo }` durante 30 min; `fuente.infoYoutube` con `list=` en la URL lo propone como álbum (origen `lista`).
 - **Sustituir la fuente** de una canción con otro archivo (`fuente.confirmarArchivo` con `cancionId`): encadena la separación, los picos y la preparación como en una canción nueva. Es correcto, porque el audio es otro. La preparación **no sustituye** la letra que ya tenga: solo la comprueba y, si sigue `intacta` y sin `desfase_descartado`, corrige el desfase o pone fines (ADR 0024, 0025). Así una letra que ya no cuadra con el audio nuevo se señala sola (ADR 0006).
 
+
+## Revisión 2026-11-22 · Carpeta propuesta y canciones no intentadas (pregunta 0290)
+
+Corrige §5:
+- **`exportacion.destinoCarpeta()`** sin argumento devuelve la carpeta **propuesta** `{ carpetaId, ruta, libreBytes }` sin abrir ningún diálogo: la última usada para vídeo, luego Vídeos, luego la carpeta personal, y nunca dentro de los datos. **`destinoCarpeta({ desdeCarpetaId })`** abre `dialog.showOpenDialog({ properties: ['openDirectory', 'createDirectory'] })` en esa carpeta y devuelve la nueva, o `null` si se cancela (el `carpetaId` anterior sigue vigente). Un solo uso y 30 min de vida; `iniciarLote` lo valida y lo gasta.
+- `carpetaIpcSchema.libreBytes` es `number | null`. Con `null` no hay comprobación previa de espacio.
+- **Lote detenido** por `SIN_ESPACIO` o `DESTINO_NO_DISPONIBLE`: las canciones que faltan quedan con `estado: 'terminada'`, `resultado: 'cancelada'` y `error: { codigo }`. Una cancelación del usuario va sin `error`. `reintentarLote` reencola las fallidas y estas «no intentadas»; nunca las canceladas por el usuario ni las omitidas al iniciar.
+- `ExportacionIpc.loteId?: string`, solo en las exportaciones de un lote.
+- **Acciones por lotes (§4)**: son cinco, «Preparar», «A la cola», «Exportar video…», «Editar datos…» y «Eliminar…», más «Aplicar tema…», que ya existía. «Marcar como lista» por lotes **no** está en el alcance: la spec 02 no la incluye (F8-1) y marcar varias a la vez se saltaría el aviso de líneas dudosas por canción (feature 11). Si se quiere, va como propuesta.
