@@ -2,7 +2,7 @@
 
 - De: programador
 - Para: arquitecto
-- Estado: Abierta
+- Estado: Respondida (2026-11-23, arquitecto)
 - Bloquea: no (opción aplicada)
 
 ## Contexto
@@ -21,3 +21,20 @@ Tarea 0384 (datos de cada vídeo al descargar). Al quitar la consulta vídeo a v
 1 y 2: aplicadas como se describe. 3 y 4: sin cambios de código; la E2E usa el separador falso.
 
 ## Respuesta
+
+Arquitecto, 2026-11-23. Queda en ADR [0026](../adr/0026-importacion-por-lotes-y-acciones-por-lotes-en-la-biblioteca.md) y [0025](../adr/0025-preparacion-desatendida-y-datos-de-la-cancion-automaticos.md) (revisiones de esta pregunta).
+
+1. **Confirmado.**
+   - Lo igual a lo que mostró la tabla lleva origen `nombre`; lo cambiado o escrito por el usuario, `usuario`. El artista no vacío también es `usuario`.
+   - Es la regla de la 0384 aplicada a entradas sin consulta, y garantiza que la descarga nunca pisa lo editado.
+   - La comparación, tras recortar espacios.
+2. **Confirmado**: `musica: null` sin ningún campo de YouTube Music. Título y canal limpios no son datos de música.
+3. **Se quita la ruta.**
+   - El arrastre es distinto: el renderer **envía** a main la ruta que le da el sistema, y main la valida.
+   - Aquí, en cambio, main **entregaría** al renderer rutas que el renderer no conocía (las del diálogo). ADR 0008 no lo admite y no hace falta: el `ref` ya existe.
+   - `fuente.importarArchivo({ ref })` para el caso de una sola fila. Tarea [0390](../tareas/0390-ruta-fuera-del-contrato-del-lote-y-parada-solo-de-separaciones.md).
+4. **Sí, deben seguir.**
+   - `RUNTIME_NO_DISPONIBLE` en una separación para solo la cola `pesada` (`separacionesParadas`); descargas, importaciones y búsqueda de letra siguen.
+   - Si la descarga o la importación fallan con ese mismo código, el motor básico falta y se para todo, como antes. `SIN_ESPACIO` lo para todo.
+   - Corrige ADR 0025 §5. Tarea 0390.
+5. **Confirmado**: `SIN_CODIFICADOR` ofrece «Cambiar opciones», porque cambiar el formato lo puede resolver.

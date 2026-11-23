@@ -16,7 +16,7 @@ Ver el [plan](plan-4.md) y el [flujo de Git](../../workflow.md). **Una feature =
 | 4 | **6** · Datos automáticos | 0302–0305 | S–M | 0339 | alpha.2 |
 | 5 | **5** · Preparación desatendida | 0306–0312, 0371–0374, 0377, 0380, 0382, 0386, 0389 | L | 4, 6 (0302) | alpha.2 (letras sin marca: siguiente alpha) |
 | 6 | **11** · Revisión guiada | 0334–0337, 0370 | M | 0296; UI tras 4 y 5 | alpha.2 |
-| 7 | **7** · Importación por lotes | 0313–0317, 0375, 0384 | L | 5 (0309), 6 | alpha.3 |
+| 7 | **7** · Importación por lotes | 0313–0317, 0375, 0384, 0390 | L | 5 (0309), 6 | alpha.3 |
 | 8 | **8** · Acciones por lotes | 0318–0322, 0388 | M | 5; la exportación por lotes no depende de nada | alpha.3 |
 | 8 | **9** · Copia, paquete y `.lrc` | 0323–0327, 0376, 0383 | M–L | 0296 | alpha.3 |
 | 9 | **10 (etapa 1)** · Sincronizar con la voz | 0329–0333 (si la prueba sirve) | L | 0328, 0296, 5 | **0.2.3** (recomendado; pregunta 0280) |
@@ -171,7 +171,8 @@ flowchart LR
 | [0315 · Modo lote en «Añadir canción»](../../tareas/0315-modo-lote-en-anadir-cancion.md) | L | 0314, 0304, 0375 |
 | [0316 · Cola del lote en la interfaz](../../tareas/0316-cola-de-lote-en-progreso-y-biblioteca.md) | M | 0309, 0315 |
 | [0384 · Datos de cada vídeo al descargar, nombre de la carpeta y tiempo de enlaces sueltos](../../tareas/0384-datos-de-cada-video-al-descargar-y-remates-de-la-lectura-del-lote.md) | S–M | 0316 (alpha.3 si cabe; si no, alpha.4) |
-| [0317 · Verificación e informe](../../tareas/0317-verificacion-e-informe-de-la-feature-7.md) | S | 0313–0316 |
+| [0390 · Sin rutas en la lectura del lote y parada solo de las separaciones](../../tareas/0390-ruta-fuera-del-contrato-del-lote-y-parada-solo-de-separaciones.md) | S | 0315, 0384 (remate de alpha.3) |
+| [0317 · Verificación e informe](../../tareas/0317-verificacion-e-informe-de-la-feature-7.md) | S | 0313–0316, 0384, 0390 |
 
 **Hecha cuando**: un álbum real de YouTube y una carpeta real entran en una acción, los duplicados vienen desmarcados, el resumen avisa de espacio y tiempo, y la decisión legal sobre listas está confirmada o anotada.
 
@@ -254,7 +255,7 @@ Reglas de convivencia:
 |---|---|---|
 | alpha.1 | 3, 1, 2, **4** | La 4 con la opción **prudente**: con letras de LRCLIB sin fines o voz continua dice «No está claro» y no corrige ni elige. Las notas de la versión no prometen corregir desfases (preguntas 0275, 0295) |
 | alpha.2 | 6, **5**, 11 | La 5 **sin elección automática con letras sin fines**: busca, separa, ordena las candidatas y llega a «Elige la letra». Con una letra elegida, pone fines prudentes (también en letras anteriores y en Listas, con confirmación: 0380, 0382, 0386) y llega a «Lista para revisar» (preguntas 0305, 0311) |
-| alpha.3 | 7, 8, 9 | Sin cambios de alcance (remates 0383, 0384, 0388) |
+| alpha.3 | 7, 8, 9 | Sin cambios de alcance (remates 0383, 0384, 0388, 0390) |
 | — | 10 | Etapa 1 → 0.2.3 (ADR 0028, revisión del 2026-11-23; pregunta 0280). En 0.2.2 queda el resultado de la fase 1 de la prueba técnica |
 
 Cada entrega cierra con [0338](../../tareas/0338-cierre-de-una-entrega-0-2-2-alpha.md). Si hay que recortar, lo que menos duele aplazar a 0.2.3 es la 9 y la exportación por lotes de la 8; la 7 sin la 5 pierde casi todo su valor (es lo que ya pasó con los 5 borradores abandonados).

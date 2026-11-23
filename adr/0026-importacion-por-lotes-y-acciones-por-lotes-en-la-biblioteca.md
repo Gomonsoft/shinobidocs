@@ -171,3 +171,13 @@ Amplía §5. El renderer sigue sin manejar rutas (ADR 0008): trabaja con `carpet
   - Es orientativa: `iniciarLote` vuelve a calcular al confirmar y manda.
 - **`exportacion.mostrarCarpetaLote({ loteId })`**: main abre la carpeta del lote sin seleccionar un archivo (`shell.openPath`). Recuerda `loteId → carpeta` mientras vive el proceso. Un lote desconocido o una carpeta que ya no existe da `DESTINO_NO_DISPONIBLE`.
 - Tarea [0388](../tareas/0388-consultas-de-carpeta-del-lote-de-exportacion.md).
+
+## Revisión 2026-11-23 · Origen sin consulta, `musica` nula y sin rutas en la lectura (pregunta 0317)
+
+- **Origen de una entrada de lista sin consulta previa** (revisión de la pregunta 0285): main recuerda, por vídeo, el título y el álbum que mostró la tabla.
+  - Al crear la canción, el campo igual a lo mostrado lleva origen `nombre`, y la descarga lo puede completar.
+  - Lo que el usuario cambió o escribió lleva `usuario`. El artista no vacío también es `usuario`, porque la lista no lo trae.
+  - La comparación es tras recortar espacios. Así la descarga nunca pisa lo editado.
+- **`musica: null`** en `descargar-youtube` cuando no hay ningún campo de YouTube Music (`track`, `artist`, `album`, `album_artist`, `track_number`, `release_year`). Título y canal limpios no cuentan.
+- **Sin rutas hacia el renderer en la lectura del lote** (ADR 0008): se quita `filaLoteSchema.ruta`. Con una sola fila añadible, la interfaz importa con `fuente.importarArchivo({ ref })`. El renderer solo envía rutas que le da el sistema al arrastrar, como hasta ahora, y main nunca se las devuelve. Tarea [0390](../tareas/0390-ruta-fuera-del-contrato-del-lote-y-parada-solo-de-separaciones.md).
+- **Exportar varias**: `SIN_CODIFICADOR` se suma a los códigos que ofrecen «Cambiar opciones» en el lote; cambiar el formato lo puede resolver.

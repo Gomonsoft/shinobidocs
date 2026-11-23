@@ -297,3 +297,12 @@ La señal D tampoco sirve (ADR 0024, revisión del 2026-11-23). En 0.2.2, la pre
 - En una Lista (camino de solo fines de la revisión de la pregunta 0296), si falta la caché de picos, main la **genera bajo demanda** (`picos.solicitar`) y espera con el mismo límite que la corrida de un borrador. La caché es un dato derivado (ADR 0015): generarla no cambia `cancion.json` ni la letra.
 - Motivos nuevos de omisión: `SIN_VOZ` (falta `pistas/voz.flac`) y `SIN_PICOS` (la generación falla o tarda demasiado). `prepararFinesSinMarca` es `false` sin pista de voz.
 - Tarea [0389](../tareas/0389-ajustar-los-fines-genera-los-picos-si-faltan.md).
+
+## Revisión 2026-11-23 · Parada por `RUNTIME_NO_DISPONIBLE` según el trabajo (pregunta 0317)
+
+Corrige §5:
+- `RUNTIME_NO_DISPONIBLE` en una **separación** (cola `pesada`) para **solo las separaciones**, con `separacionesParadas` en la tanda. Las descargas, las importaciones y la búsqueda de letra siguen, y las canciones esperan su separación.
+- El mismo código en una descarga o una importación (el motor básico no está) para toda la cola, como antes.
+- `SIN_ESPACIO` y tres fallos seguidos siguen parando todo.
+- Se libera con «Reanudar» o al reparar el motor.
+- Tarea [0390](../tareas/0390-ruta-fuera-del-contrato-del-lote-y-parada-solo-de-separaciones.md).
