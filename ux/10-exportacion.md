@@ -707,6 +707,8 @@ Mismo diálogo de 720 px y mismas reglas que A; cambian la cabecera, el destino 
 | Recordar opciones | Se recuerdan las mismas que en A, más la respuesta a «si ya existe». |
 | Teclado | Como A. Orden: … Formato → [Cambiar…] → «si ya existe» → Cancelar → Exportar. Esc = Cancelar. |
 
+**Mientras main no diga qué nombres existen ya en la carpeta** (pregunta 0301; revisión 2026-11-23, respuesta a 0300): no se muestra `exp.lote.aviso.existe` antes de confirmar y el botón cuenta todas las canciones aplicables («Exportar 7 videos»), aunque «si ya existe» sea «Omitir»; las omitidas por nombre aparecen en H y en I con su fila «Omitida: ya había un video con ese nombre». En cuanto main lo dé, el aviso y el número real del botón (F8-V3) son obligatorios. La lista de «Ver cuáles» omite «→ {nombre del archivo}» mientras main no proponga el nombre por canción.
+
 ### H — Exportando el lote
 
 ```
@@ -758,7 +760,7 @@ Mismo diálogo de 720 px y mismas reglas que A; cambian la cabecera, el destino 
 - Con el diálogo abierto, H pasa a I al terminar el último video. Foco en «Mostrar la carpeta» (primario) si hubo algún video; si no, en «Reintentar las fallidas» o «Cerrar».
 - Con el diálogo cerrado: toast `exp.lote.toast` con [Ver resultado] (abre I) y, con la ventana sin foco, notificación como en spec 04 §3. **Un solo toast por lote**: los videos de un lote no muestran `exp.toast.ok` ni `exp.toast.error` uno a uno.
 - **Reintentar las fallidas**: vuelve a encolar las ✕ y las no intentadas con las mismas opciones y carpeta, con una instantánea nueva; el diálogo vuelve a H solo con ellas. Si todas fallaron con un código que no se arregla repitiendo (tabla de la fase 7), el botón es **[Cambiar opciones]** (vuelve a G con las fallidas).
-- «Mostrar la carpeta» abre la carpeta del lote (sin seleccionar ningún archivo).
+- «Mostrar la carpeta» abre la carpeta del lote (sin seleccionar ningún archivo). Mientras main no tenga esa operación (0301), se acepta revelar el primer video terminado de la carpeta.
 - «Copiar detalles» de una fila copia lo mismo que en D, con la línea de versión común.
 
 ### Estados (lote)

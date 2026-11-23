@@ -1095,6 +1095,7 @@ La decisión la da main para cada canción en el momento de abrir la confirmaci�
 |---|---|
 | Qué hace | Lo mismo que «Preparar» de una sola canción (feature 5), una tras otra, en las colas de trabajos que ya existen. **No** sustituye una letra ya elegida ni tiempos ya puestos: cada canción continúa desde su primer paso pendiente. |
 | Nota por canción | La calcula main: `bib.acc.preparar.nota.*` según lo que le falte (descargar, separar, letra, fines). |
+| Omitidas que no son un problema (revisión 2026-11-23, 0300) | En «Editar datos…» y «Eliminar…», una canción `NADA_QUE_HACER` (ya tenía ese dato) ya se ve en la confirmación; si todas las omitidas son de ese tipo, el diálogo se cierra con su toast, sin resultado por canción. Cualquier otra omisión abre el resultado. Las filas cuyo motivo ya empieza por «No se…» (p. ej. `EDICION_BLOQUEADA`) van sin el prefijo «Omitida:». |
 | **Canciones con letra sin marca** (`prepararFinesSinMarca`, revisión 2026-11-22) | Entran en el lote con la nota `bib.acc.preparar.nota.finesSinMarca` y solo recibirán los fines que faltan. Si hay alguna, el diálogo añade bajo la lista el aviso `bib.acc.preparar.aviso.finesSinMarca` (`info`) y **ese mismo diálogo es la confirmación**: no hay un segundo diálogo. Main recibe `preparar(ids, { finesSinMarca: true })`. Si el usuario no quiere tocarlas, las desmarca de la selección antes. |
 | Privacidad | La nota `bib.acc.preparar.privacidad` aparece siempre que alguna canción vaya a buscar letra. Pulsar «Preparar» es una búsqueda iniciada por el usuario: funciona aunque el interruptor «Buscar la letra automáticamente» de la feature 5 esté apagado. |
 | Motor de sincronía (feature 10) | Si alguna canción usará «Ajustar los silencios» porque falta el modelo de su idioma, no se avisa aquí: lo dice el resultado de cada canción (spec 04, feature 10). |
@@ -1221,6 +1222,9 @@ La decisión la da main para cada canción en el momento de abrir la confirmaci�
 | `bib.acc.motivo.exportando` | Ya se está exportando |
 | `bib.acc.motivo.sinTiempos` | No tiene letra sincronizada |
 | `bib.acc.motivo.activa` | No se elimina: se está reproduciendo en la otra pantalla |
+| `bib.acc.motivo.SIN_FUENTE` | No se prepara: falta el audio. Ábrela con «Continuar» para elegir el archivo o descargarlo. (0300) |
+| `bib.acc.preparar.nota.soloFines` | Ya tiene letra: ajustará los fines (cuando main solo propone ese paso; 0300) |
+| `bib.acc.eliminar.nota.trabajo` | Se cancelará su trabajo en curso (genérica: main da el recuento, no el tipo; 0300) |
 | `bib.acc.motivo.EDICION_BLOQUEADA` | No se ha cambiado: está sonando en la otra pantalla. Edítala cuando termine. (resultado de «Editar datos…» de varias; 0292) |
 | `bib.acc.calculando` | Comprobando las canciones… |
 | `bib.acc.preparar.titulo` | Preparar {n} canciones · Preparar 1 canción |

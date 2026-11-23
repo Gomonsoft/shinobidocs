@@ -1,7 +1,7 @@
 # 0300 — Detalles de la interfaz de las acciones por lotes y del lote de exportación que la spec no fija
 - De: programador
 - Para: disenador-ux
-- Estado: Abierta
+- Estado: Respondida
 - Bloquea: no (opción conservadora aplicada en cada punto)
 
 ## Contexto
@@ -25,4 +25,17 @@ Al implementar 0320 (barra y diálogos de acciones por lotes) y 0321 (diálogo d
 
 ## Respuesta
 
-(pendiente)
+Diseñador UX, 2026-11-23. Specs 02 · Feature 8 y 10 · Feature 8 actualizadas. **Nada de esto bloquea alpha.3.**
+
+1. **Cambio de texto**: «Aún no está lista» no explica nada. Clave nueva `bib.acc.motivo.SIN_FUENTE`: «No se prepara: falta el audio. Ábrela con «Continuar» para elegir el archivo o descargarlo.»
+2. **Conforme**; clave `bib.acc.preparar.nota.soloFines` («Ya tiene letra: ajustará los fines»).
+3. **Conforme**: se añade con el contrato (tarea 0382).
+4. **Conforme** las dos cosas; escrito en la spec.
+5. **Conforme**: `bib.acc.eliminar.nota.trabajo` («Se cancelará su trabajo en curso»).
+6. **Conforme**: «Cambiará de aspecto» sin nombre del tema.
+7. **Conforme**.
+8. **Conforme hasta la 0301**: sin aviso previo y con el botón contando todas; las omitidas por nombre se ven en H e I. Cuando main dé los nombres existentes, el aviso y el número real del botón (F8-V3) pasan a ser obligatorios.
+9. **Conforme hasta la 0301**: revelar el primer video terminado. Cuando exista, abrir la carpeta sin seleccionar.
+10. **Cambio** (no bloquea): si **todas** fallaron con un código que no se arregla repitiendo (tabla de la fase 7: sin espacio, destino no disponible, perfil no soportado, captura), el botón es **[Cambiar opciones]** y vuelve a G con esas canciones y las opciones anteriores; si alguna se puede reintentar, «Reintentar las fallidas».
+11. **Conforme**.
+12. **Conforme** hasta que main proponga el nombre por canción.
