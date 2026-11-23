@@ -1,5 +1,5 @@
 # 0384 — Feature 7 · Datos de cada vídeo al descargarlo, nombre de la carpeta leída y tiempo estimado de los enlaces sueltos
-- Estado: Pendiente
+- Estado: Hecha
 - Paso del pipeline: 1
 - Depende de: 0316 (en curso: mismo lote). La interfaz de la tabla es de la 0315.
 - ADRs: 0026 (revisión «Datos de cada vídeo al descargar y remates de la lectura (pregunta 0285)»), 0025 §6
@@ -37,5 +37,9 @@ Que la tabla de una lista de YouTube se rellene solo con lo que trae la lista, s
 - Siempre: `npm run typecheck`, `npm run lint`, `npm run format:check`, `npm run test:cambios`, `uv run pytest` y `ruff`.
 
 ## Notas de implementación
-
-(las rellena el programador al terminar)
+- **Worker:** `descargar_youtube` añade `musica` (`campos_musica` del `info` de la descarga, sin otra petición; `null` sin campos de YouTube Music). Las fuentes guardan `info_descarga`. El doble apunta cada `info()` en `llamadas-info.log` si la prueba creó ese archivo. pytest 379, ruff limpio.
+- **Main:** `cambioPorMusica` (`propuestaDatos.ts`) aplica la regla por campo; se escribe en el mismo cambio que marca `pasos.fuente` completado (antes de la preparación). Título/artista solo si el origen falta o es `nombre` y el vídeo trae el dato de música; álbum solo si está vacío y su origen no es `usuario`/`fuente`/`lrclib`. Origen escrito: `fuente`. `leerCarpeta` devuelve `carpeta` (solo el nombre); `espacioLibre()` devuelve `{ libreBytes, factorMinutos }`.
+- **Defecto hallado y corregido:** sin consulta previa del vídeo, `crearDeLote` no guardaba origen y la descarga pisaba el título editado en la tabla. `ServicioYoutube.origenSinConsulta` marca `nombre` lo igual a lo que mostró la tabla y `usuario` lo cambiado (pregunta 0317).
+- **Interfaz:** la tabla ya no llama a `fuente.infoYoutube` por vídeo; se retiró `add.lote.completando`, el efecto con pausa, `completarConInfo`, `pendienteDatos` y `urlInfo`. El origen de una carpeta usa `lectura.carpeta`. Los enlaces sueltos toman `factorMinutos` de `espacioLibre()` y muestran el tiempo.
+- **Pruebas:** pytest (2 nuevas), Vitest (`propuestaDatos`, `youtube.test` con worker real, `youtube.lista.test`, `lote.test`, `AnadirCancion.lote.test`), E2E `importar-lote.spec.ts` ampliada (0 consultas por vídeo con el contador del doble; título de música tras descargar salvo el editado). La E2E arranca ahora con el separador falso y vuelca un diagnóstico solo al fallar (el CI de Linux paró la cola por `RUNTIME_NO_DISPONIBLE` de la separación real: pregunta 0317 n.º 4).
+- **Manual:** lista real pequeña de YouTube Music: tiempo de lectura de la tabla y datos tras descargar.

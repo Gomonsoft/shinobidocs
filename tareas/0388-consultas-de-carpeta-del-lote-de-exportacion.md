@@ -1,5 +1,5 @@
 # 0388 — Feature 8 · Remates: previsualizar los nombres del lote de exportación y abrir su carpeta
-- Estado: Pendiente
+- Estado: Hecha
 - Paso del pipeline: 6
 - Depende de: 0319 (hecha); la interfaz, de 0321
 - ADRs: 0026 (revisión «Consultas de carpeta del lote de exportación (pregunta 0301)»), 0019 §6, 0008
@@ -44,4 +44,9 @@ Que el diálogo de exportar varias sepa, antes de confirmar, qué vídeos ya exi
 - Siempre: `npm run typecheck`, `npm run lint`, `npm run format:check` y `npm run test:cambios`.
 
 ## Notas de implementación
-(las rellena el programador al terminar)
+- **Hecho.** `main/exportacion/nombresLote.ts` (`elegirNombre`, `nombreNumerado`): regla de nombres compartida por `iniciarLote` y la previsualización. `ServicioExportacion.previsualizarLote` (no escribe, no encola, no gasta el `carpetaId`; `DESTINO_NO_DISPONIBLE` si caducó) y `mostrarCarpetaLote` (`loteId → carpeta` en un mapa que vive con el proceso; `abrirCarpeta` = `shell.openPath`). Canales en `shared/{ipc,canales}.ts`, `preload`, `handlers`, fixtures y `apiNuevaFalsa`.
+- **Interfaz** (`renderer/src/exportacion/lote/`): `useFormularioLote` pide la previsualización al cambiar carpeta, formato, selección o «si ya existe» (la respuesta atrasada no pisa a la nueva); `DialogoFormularioLote` muestra `exp.lote.aviso.existe` (tres variantes), `→ archivo` en «Ver cuáles», el número real en el botón (inactivo con 0); `SeguimientoLote` usa `mostrarCarpetaLote`.
+- **Correcciones del diseñador (pregunta 0300):** `bib.acc.motivo.SIN_FUENTE` con el texto nuevo; `soloFines` y `eliminar.nota.trabajo` ya tenían el texto; resultado del lote con [Cambiar opciones] si todas las reintentables fallaron con `SIN_ESPACIO`, `DESTINO_NO_DISPONIBLE`, `PERFIL_NO_SOPORTADO` o `SIN_CODIFICADOR` (vuelve a G con esas canciones y las opciones anteriores).
+- **Pruebas:** `servicio.test.ts` (5 nuevas: numeración, tres `siExiste`, `carpetaId` reutilizable, omitidas, `mostrarCarpetaLote`), `lote.test.tsx` (aviso, Ver cuáles, botón con «omitir», nueva petición al cambiar carpeta, Cambiar opciones, Mostrar la carpeta), `acciones/textos.test.ts`; E2E nueva en `exportacion.spec.ts` (video ya presente + «omitir»: el botón dice uno menos y se exporta uno menos).
+- **Preguntas:** 0316 (textos sin clave y `SIN_CODIFICADOR`). **Probar:** `npx vitest run src/main/exportacion src/renderer/src/exportacion` y `npx playwright test e2e/exportacion.spec.ts -g varias`.
+- **Manual:** «Mostrar la carpeta» abre de verdad la carpeta en el sistema (los E2E no la abren); exportar a una carpeta de un USB y retirarlo.

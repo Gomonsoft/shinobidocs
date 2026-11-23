@@ -1,5 +1,5 @@
 # 0389 — Feature 5 · «Ajustar los fines…» genera los picos de la voz si faltan
-- Estado: Pendiente
+- Estado: Hecha
 - Paso del pipeline: 3
 - Depende de: 0386 (hecha)
 - ADRs: 0025 (revisión «Picos bajo demanda en "Ajustar los fines" (pregunta 0315)»), 0015 (caché de picos)
@@ -39,4 +39,7 @@ Que «Ajustar los fines…» funcione en las Listas del MVP y de 0.2.1, que tien
 - Siempre: `npm run typecheck`, `npm run lint`, `npm run format:check` y `npm run test:cambios`.
 
 ## Notas de implementación
-(las rellena el programador al terminar)
+- **Hecho.** `esperarPicos` es ahora una función de módulo (`main/preparacion/servicio.ts`) con el mismo sondeo y `ESPERA_PICOS_MAXIMA_MS`; la corrida de un borrador la usa por una envoltura. `soloFinesLista` pide `picos.solicitar` si falta la caché y espera; devuelve `{ puestos }` o `{ motivo }` con los nuevos `SIN_VOZ` (`no_disponible`) y `SIN_PICOS` (error, límite o excepción). Un fallo no detiene el lote. `resumen.ts`: `prepararFinesSinMarca` es `false` en una Lista sin separación completada o sin `pistas.voz` (las pistas dañadas ya lo apagaban por `danada`).
+- **Pruebas:** `preparacion/servicio.test.ts` (sin caché espera y pone fines y solo cambian los fines; `SIN_VOZ`; error y límite → `SIN_PICOS`; lote con una sin voz), `resumen.test.ts`; la E2E de la 0386 en `preparacion.spec.ts` ya no genera los picos antes y comprueba que la caché aparece.
+- **Interfaz:** el toast existente cubre la espera; `SIN_VOZ`/`SIN_PICOS` usan el texto genérico hasta que el diseñador fije los suyos (pregunta 0316).
+- **Manual:** guía de la feature 5 con una Lista del MVP recién copiada (sin caché de picos).
