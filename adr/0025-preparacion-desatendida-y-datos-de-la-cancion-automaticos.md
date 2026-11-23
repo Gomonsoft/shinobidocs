@@ -195,3 +195,12 @@ En cualquier otro caso: `elige_letra` con los candidatos ordenados como en la vi
 - **Almacén**: al confirmar, `metadatos.origen` guarda `fuente`, `nombre` o `usuario` (si el valor confirmado difiere del propuesto); `biblioteca.actualizarMetadatos` pone `usuario` en cada campo que cambia, también al vaciarlo.
 - **`biblioteca.valoresDatos`**: cada álbum lleva `artistas?: string[]` (claves de identidad) para ordenar; el álbum se agrupa solo por su clave.
 - **Álbum desde LRCLIB**: `rellenarAlbumDesdeLrclib` (`main/biblioteca/origen.ts`) se aplica al guardar **cualquier** letra de LRCLIB, de la preparación o elegida por el usuario. Así se cumple la spec 03 F6-N7, que es más amplia que §6. La letra guarda `datos_lrclib: { titulo, artista, album }` (opcional, tolerante; metadatos del registro, no texto de la letra) para la sugerencia «Usar estos datos». Se implementa en la feature 5 (tareas 0308 y 0311).
+
+## Revisión 2026-11-22 · Reintento, LRC sin fines y edición durante la corrida (preguntas 0221–0223)
+
+- **Reintento de la búsqueda** (§2, `buscando_letra`): sin red o con el servicio caído se reintenta **una vez a los 60 s**. Si vuelve a fallar, el registro queda en `error` con el código de ADR 0005 y `busqueda.resultado: "pendiente"`, que la interfaz muestra como «Letra pendiente». Se reintenta solo en el siguiente arranque, con [Reintentar] o al entrar en Letra (spec 04, F5-P5). Sustituye a «10 min, como mucho 3 veces».
+- **LRC sin fines** (§3, criterio 3): por ahora se evalúa el candidato tal como viene. Si la medida de la tarea 0371 cumple el criterio de la pregunta 0222, la elección y el encaje de la vista Letra evaluarán con fines prudentes en memoria, y se anotará aquí.
+- **Letra elegida por el usuario durante la corrida**: la corrida continúa sin buscar ni sustituir; solo comprueba y pone fines si la letra sigue `intacta`. **Cambio de tiempos o texto de una letra que ya existía**: la corrida se detiene (retira el registro si no había hecho nada; si no, `detenida`).
+- **Sesión en vivo** (§2): la espera es **global**, mientras `ServicioSesion.edicionBloqueada()` sea verdadero, porque ADR 0017 §9 bloquea todas las escrituras de letra. Corrige «si la canción está en la cola». Descarga, separación y búsqueda siguen; solo esperan las escrituras.
+- **Separación pendiente sin trabajo**: al llegar a `esperando_separacion`, si la fuente está completada, la separación `pendiente` y no hay trabajo de separación de la canción, la corrida la encola (cola `pesada`). Con la separación en `error` rige §2.
+
