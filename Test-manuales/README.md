@@ -39,3 +39,4 @@ Test-manuales/
 | 0.2.2 | [Feature 2 · Subrayado y aviso de daltonismo](0.2.2/feature-2-subrayado-y-daltonismo.md) | Lista (3 grupos). No ejecutada |
 | 0.2.2 | [Feature 3 · Aviso de versión nueva](0.2.2/feature-3-aviso-de-version-nueva.md) | Lista (10 casos). No ejecutada |
 | 0.2.2 | [Feature 4 · Comprobar la letra con la voz](0.2.2/feature-4-comprobar-la-letra-con-la-voz.md) | Lista (4 grupos). **El caso 1 (calibración con tu biblioteca) es el criterio de «hecha» y está pendiente de ti.** No ejecutada |
+| 0.2.2 | [Feature 6 · Datos de la canción automáticos](0.2.2/feature-6-datos-automaticos.md) | Lista (7 casos; el 1 son las «10 + 10» de la spec). No ejecutada |
