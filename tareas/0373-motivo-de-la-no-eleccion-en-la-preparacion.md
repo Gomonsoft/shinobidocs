@@ -1,5 +1,5 @@
 # 0373 — Feature 5 · Motivo de la no elección y código del error de búsqueda en `preparacion`
-- Estado: Pendiente
+- Estado: Hecha
 - Paso del pipeline: 3
 - Depende de: 0310, 0311
 - ADRs: 0025 §1 y §3 (revisión de la pregunta 0235)
@@ -11,14 +11,14 @@
 Que la interfaz diga por qué la app no eligió la letra y por qué la búsqueda quedó pendiente con lo que decidió main, no con una deducción.
 
 ## Criterios de aceptación
-- [ ] `shared/cancion.ts`: `busqueda.no_elige: z.enum(['varias','sinExacta','duda','noCoincide','soloTexto','sinComprobar']).nullable().catch(null)` (opcional, tolerante).
-- [ ] `main/preparacion/eleccion.ts`: `MotivoNoElige` gana `dudosa` (un único candidato sincronizado `dudosa`). Al pasar a `elige_letra`, el servicio guarda `busqueda.no_elige` con la correspondencia de la respuesta a 0235. Con un fallo de búsqueda, guarda el código de ADR 0005 en `busqueda.motivo` y deja `no_elige: null`.
-- [ ] `shared/ipc.ts`: `resumenPreparacionSchema.busqueda` gana `motivo: z.string().nullable()` y `noElige` (mismo catálogo, `null`); `main/biblioteca/resumen.ts` los rellena.
-- [ ] Renderer:
+- [x] `shared/cancion.ts`: `busqueda.no_elige: z.enum(['varias','sinExacta','duda','noCoincide','soloTexto','sinComprobar']).nullable().catch(null)` (opcional, tolerante).
+- [x] `main/preparacion/eleccion.ts`: `MotivoNoElige` gana `dudosa` (un único candidato sincronizado `dudosa`). Al pasar a `elige_letra`, el servicio guarda `busqueda.no_elige` con la correspondencia de la respuesta a 0235. Con un fallo de búsqueda, guarda el código de ADR 0005 en `busqueda.motivo` y deja `no_elige: null`.
+- [x] `shared/ipc.ts`: `resumenPreparacionSchema.busqueda` gana `motivo: z.string().nullable()` y `noElige` (mismo catálogo, `null`); `main/biblioteca/resumen.ts` los rellena.
+- [x] Renderer:
   - R2 de la vista de progreso usa `let.prep.motivo.{noElige}`;
   - la vista Letra lee `noElige` y se retira `motivoElige` de `letra/preparacion.ts`;
   - «Letra pendiente» distingue `SIN_CONEXION` de `SERVICIO_NO_DISPONIBLE`.
-- [ ] `shared/derivados.ts`: `aplicaPreparar(cancion)` (pura), usada por `preparacion.previsualizar` en main y por «Preparar» de la tarjeta.
+- [x] `shared/derivados.ts`: `aplicaPreparar(cancion)` (pura), usada por `preparacion.previsualizar` en main y por «Preparar» de la tarjeta.
 
 ## Pruebas de feedback
 - Unitarias:
@@ -31,4 +31,7 @@ Que la interfaz diga por qué la app no eligió la letra y por qué la búsqueda
 - Siempre: `npm run typecheck`, `npm run lint`, `npm run format:check` y `npm run test:cambios`.
 
 ## Notas de implementación
-(las rellena el programador al terminar)
+- `shared/cancion.ts` (`MOTIVOS_NO_ELIGE`, `busqueda.no_elige`), `ipc.ts` y `main/biblioteca/resumen.ts` (`busqueda.motivo` y `noElige`). `eleccion.ts`: `dudosa` y `NO_ELIGE_GUARDADO`; `servicio.ts` guarda `no_elige` al pasar a `elige_letra` (y `sinComprobar` si la separación falla); un fallo de búsqueda deja el código en `motivo`.
+- `shared/derivados.ts`: `aplicaPrepararEntrada` y `aplicaPreparar`; `plan()` del servicio la usa y la tarjeta (`TarjetaCancion`) usa la entrada mínima (con letra, lo pendiente lo decide main). Consecuencia: «Preparar» ya no sale con la fuente sin descargar (regla `SIN_FUENTE`).
+- Renderer: R2 y Letra leen `noElige` (sin dato, «duda»); se retiró `motivoElige`; la tarjeta distingue «el servicio no responde».
+- Pruebas: servicio (motivos y sinComprobar), `eleccion`, `derivados`, Progreso R2, Letra, tarjeta.

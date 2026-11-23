@@ -90,11 +90,14 @@ Specs: [02 · Features 8, 9 y 11](../ux/02-biblioteca.md#022--feature-8--accione
     - **A (provisional).** Solo si hay líneas con problemas importantes: sin voz o con la voz tarde respecto al inicio, no reconocidas por la sincronía automática, o con un fin **que fijaste** (tú o una herramienta) que corta la voz o llega tarde. No pregunta por los fines automáticos (los calcula la app; se arreglan con «Ajustar los silencios») ni por líneas muy cortas o muy largas para su texto. Esas siguen marcadas con ⚑ y en la revisión, pero no frenan el marcado. Así, sincronizar al ritmo y marcar como lista no añade un paso en cada canción.
     - B. Preguntar siempre que haya alguna línea dudosa (lo de antes).
     - C. Preguntar solo a partir de un número de líneas dudosas.
+22. **Marcar como lista desde la tarjeta de la Biblioteca** (añadida el 2026-11-22).
+    - **A (provisional).** Misma regla que en el editor (n.º 21): solo pregunta si hay líneas con problemas importantes, para que una canción no pregunte en un sitio y no en el otro. La tarjeta sigue mostrando el total («⚑ 3 líneas por revisar»), que es lo que recorre «Revisar».
+    - B. Desde la tarjeta, preguntar siempre que haya alguna línea por revisar.
 
 Sin pregunta, por si quieres otros valores: una línea se señala si casi no se oye voz mientras dura (menos del 10 %), si el fin llega 1,2 s o más después de la voz, si el fin corta la voz (sigue habiendo voz durante el segundo siguiente y la línea siguiente tarda 1 s o más en empezar), si no hay voz en los 500 ms siguientes al inicio, si dura menos de 0,25 s o más de 6 s para su texto, o si la sincronía automática no la reconoce. Son los valores del ADR 0024 §3 (revisión del 2026-11-22, pregunta 0225). El objetivo es que una canción bien sincronizada no tenga más de una de cada diez líneas señaladas; los valores se ajustan con tus 12 canciones.
 
 ## Opción provisional tomada (si no bloquea)
 
-La A en las 21.
+La A en las 22.
 
 ## Respuesta
