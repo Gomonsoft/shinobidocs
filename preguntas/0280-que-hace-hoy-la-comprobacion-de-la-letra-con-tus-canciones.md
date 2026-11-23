@@ -32,6 +32,12 @@ Hasta hoy, la comprobación de la letra (feature 4) y la preparación automátic
 - Probamos otra forma de comprobar, por **dónde empieza** cada línea, y tampoco sirve con estas letras: las de LRCLIB no marcan bien cuándo arranca la voz. Queda la alineación automática de la feature 10, que se está probando, o medir con tus canciones revisadas (punto 2).
 - Novedad: «Ajustar los fines…» también funcionará en tus canciones **Lista**, sin cambiar su estado y siempre con confirmación. Solo pone fin a las líneas que no lo tienen, y lo puedes quitar en el editor con «Quitar esos fines».
 
+**Actualización del 2026-11-23 · la sincronía automática con la voz (feature 10)**
+- Probamos el modelo que escucha la voz y busca dónde se canta cada palabra con 13 de tus canciones (en una copia). **Encuentra la letra en la voz** a unas dos décimas de segundo de donde la pone LRCLIB, sin ayudarle con esos tiempos. Es rápido incluso sin tarjeta gráfica y da siempre el mismo resultado.
+- Lo que **todavía no sabemos** es lo que más te importa: si pone bien **dónde acaba cada línea** y cada palabra. Para eso hace falta compararlo con fines que hayas puesto tú a mano (las canciones del otro equipo con las que se calibró todo). Hasta tenerlo, la función no entra en la app.
+- También probaremos si este modelo sirve para saber si una letra es la de tu canción. Si sirve, la preparación podría volver a elegir la letra sola.
+- **Lo que costaría**: es opcional. Se descarga solo si la pides, unos 1,2 GB por idioma (español e inglés), y usa unos 3 GB de memoria mientras trabaja. Conviene un equipo con 8 GB de RAM.
+
 ## Pregunta
 
 1. **¿Te parece bien la opción prudente** (más «No está claro» y más «Elige la letra», a cambio de no equivocarse en silencio)? La alternativa es automatizar más con más riesgo de error. No la recomiendo hasta tener las medidas del punto 2.
@@ -39,6 +45,8 @@ Hasta hoy, la comprobación de la letra (feature 4) y la preparación automátic
 3. **Elegir sola sin poder comprobar (opción B, no aplicada)**: si una canción tiene **una sola** letra con tiempos en LRCLIB y su duración coincide con la de tu audio, ¿quieres que la preparación la elija sola y la marque «sin comprobar con tu audio»? La canción quedaría «Lista para revisar», nunca «Lista», así que la escucharías antes de cantarla. Es más automático, pero alguna vez podría elegir la letra de otra versión. Por defecto, no.
 4. **Permiso para probar con red real**: falta probar «Preparar» de verdad, buscando la letra en LRCLIB, sobre algunos borradores sin letra y un álbum pequeño, para ver cuántas canciones caen en «Elige la letra» y si alguna elección automática se equivoca. Se envían título, artista, álbum y duración a LRCLIB. ¿Lo autorizas, y con qué canciones?
 
+5. **Fines hechos a mano para la feature 10**: ¿puedes ejecutar (o dejarnos ejecutar) la prueba en el equipo donde están tus canciones con fines puestos a mano? Basta con una copia de su carpeta. Si no puede ser pronto, ¿prefieres que la sincronía automática con la voz pase a la versión 0.2.3 en lugar de retrasar la 0.2.2?
+
 ## Opción provisional tomada
 
-La 1 (prudente), ya decidida en ADR 0024 y 0025 (revisiones del 2026-11-22). Los puntos 2, 3 y 4 esperan tu respuesta; en el 3, mientras no digas otra cosa, la app no elige sola. Sin ellos, las features 4 y 5 se publican «hechas con reservas», y las notas de la versión dicen que con letras de LRCLIB sin fines la app no detecta desfases.
+La 1 (prudente), ya decidida en ADR 0024 y 0025 (revisiones del 2026-11-22). Los puntos 2 a 5 esperan tu respuesta; en el 3, mientras no digas otra cosa, la app no elige sola. Sin ellos, las features 4 y 5 se publican «hechas con reservas», y las notas de la versión dicen que con letras de LRCLIB sin fines la app no detecta desfases.

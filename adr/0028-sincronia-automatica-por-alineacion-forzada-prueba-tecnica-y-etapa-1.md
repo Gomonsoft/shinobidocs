@@ -1,6 +1,6 @@
 # 0028 — Sincronía automática por alineación forzada sobre la voz separada: prueba técnica y etapa 1
 
-- Estado: **Propuesto**. La prueba técnica (§2) está decidida y es una tarea; la etapa 1 (§3) pasa a «Aceptado» solo si la prueba cumple el criterio de §2.4. Si no lo cumple, se aplica el plan B (§4) y este ADR se revisa con el resultado.
+- Estado: **Propuesto** (fase 1 de la prueba: pasa el filtro con el criterio revisado el 2026-11-23; fase 2, la que decide, pendiente; ver «Resultado de la prueba técnica»). La prueba técnica (§2) está decidida y es una tarea; la etapa 1 (§3) pasa a «Aceptado» solo si la prueba cumple el criterio de §2.4. Si no lo cumple, se aplica el plan B (§4) y este ADR se revisa con el resultado.
 - Fecha: 2026-11-21
 - Paso del pipeline: 4 (sincronía) y 3 (letra)
 - Versión: 0.2.2, feature 10 ([propuesta 019](../propuestas/019-sincronia-automatica-por-alineacion-forzada.md)). Spec: [06 · Feature 10](../ux/06-editor.md). Responde a [0157](../preguntas/0157-contratos-de-las-features-8-a-11-para-las-specs.md) en lo que toca a esta feature. Sustituye la decisión 6 de ADR 0005 («alineación automática fuera del MVP; candidata post-MVP en un ADR propio»).
@@ -140,7 +140,63 @@ Siguen: son el respaldo sin modelo (idioma no soportado, sin descarga, confianza
 
 ## Resultado de la prueba técnica
 
-(lo rellena la tarea de la prueba)
+### Fase 1 · filtro (2026-11-23; pregunta [0310](../preguntas/0310-resultado-de-la-fase-1-de-la-alineacion-forzada-no-sirve-con-la-ventana-del-filtro.md))
+
+Candidato A (español y la variante inglesa, ambas Apache-2.0, revisiones fijadas), 13 canciones de la copia del MVP (11 `es`, 2 `en`), 748 líneas. Cifras completas en [`docs/spikes/0028-alineacion/README.md`](../spikes/0028-alineacion/README.md).
+
+**1. Veredicto con el criterio tal como se escribió (revisión «Fase de filtro»): NO SIRVE.**
+
+| Condición | Umbral | Medido |
+|---|---|---|
+| Cobertura | ≥ 80 % | 99,9 % (cumple) |
+| Mediana de \|Δ\| (ventana por línea `[inicio_LRC − 1000 ms, …)`) | ≤ 300 ms | **390 ms (falla)** |
+| p90 de \|Δ − sesgo\| | ≤ 600 ms | **910 ms (falla)** |
+| Criterio 5 con CPU | ≤ 1,5 × duración, ≤ 4 GB | 0,21–0,63 ×, 2,7 GB (cumple) |
+| Criterio 6 | \|Δ logits\| < 1e-3 | 0,8–4,0e-3 en `float32` **(falla la letra)** |
+| Determinismo | iguales | 13/13 (cumple) |
+
+**2. Por qué se revisa el criterio y por qué no es «mover la portería».**
+- **El filtro tenía un defecto de diseño, del arquitecto.** Alinear **una línea sola** en una ventana que empieza 1 s antes del LRC deja al alineador sin el texto de la línea anterior. Cualquier voz que haya en ese segundo (casi siempre el final de la línea anterior) se la queda la primera palabra: el 40 % de las líneas sale con Δ < −500 ms. Eso mide una configuración que nadie usaría (la etapa 1 parte de inicios dados, §2.1, y no los cambia). Es un artefacto del método de medida, no del modelo.
+- **Qué se cambia**: solo la configuración de la medida. Se pasa a alinear **toda la letra de una vez sobre la pista entera**, sin ventanas por línea.
+  - Es la única variante medida que **no es circular**: no usa los tiempos del LRC para alinear, así que no puede acertar «por construcción».
+  - Es la más exigente de las variantes válidas: el alineador tiene que encontrar cada línea él solo.
+  - Las variantes más favorables (ventana 0: 130/245 ms; −250 ms: 170/350 ms) se **descartan** justo por estar ancladas al LRC.
+- **Qué no se cambia**: los umbrales. Siguen en 300 y 600 ms, el doble de los del fin de §2.4 porque la referencia (LRC sin revisar) tiene su propio error. Nada en el cambio de método justifica moverlos.
+- **Resultado ya medido** (mismas emisiones, sin volver a ejecutar nada): mediana de \|Δ\| **220 ms** (≤ 300) y p90 de \|Δ − sesgo\| **403 ms** (≤ 600). Con Δ < −500 ms en el 1,7 %.
+- **Reserva**: dos canciones tienen un sesgo grande (+430 ms y +830 ms; en la segunda, el 81 % de las líneas pasa de 500 ms). Sin fines hechos a mano no se sabe si el LRC va adelantado o el modelo va tarde.
+
+**3. Criterio 6 reformulado.** El umbral de 1e-3 en `float32` estaba por debajo del ruido de la propia referencia: `transformers` en `float32` difiere de su `float64` en 1,3e-3. El fin del criterio era comprobar que la implementación propia es la misma. Queda así:
+- (a) en `float64`, máx. \|Δ logits\| < 1e-6 entre el codificador propio y `transformers`;
+- (b) en `float32`, las **mismas etiquetas** de Viterbi por fotograma y los mismos inicios de palabra que `forced_align`.
+
+Medido: (a) 2,6e-12; (b) idénticas en las 147 líneas probadas, con 0 ms de diferencia. **Cumple.**
+
+**4. Veredicto de la fase 1 con el criterio revisado: PASA EL FILTRO.**
+
+Qué **demuestra**:
+- el modelo encuentra el texto cantado en la voz separada sin ayuda del LRC, a unos 220 ms de mediana;
+- coste con CPU y memoria dentro de §2.4, criterio 5 (con el equipo cargado);
+- determinismo;
+- la implementación propia (§3.2) es equivalente.
+
+Qué **no demuestra**:
+- la precisión del **fin** (criterios 1–4 de §2.4: no hay V1). El dato informativo es una **señal de alerta**: en las 91 líneas donde «Ajustar los silencios» encuentra un silencio claro, el fin alineado deja ≥ 300 ms de voz detrás en el 59 %, frente al 25 % de los fines prudentes, y cae 300 ms antes de mediana;
+- la de las **palabras**: en V2, la canción 10 cumpliría (40 ms, 91 % a ≤ 200 ms) y la 17 no (191 ms, 53 %);
+- el coste con GPU;
+- la calibración de la confianza;
+- el sesgo de las dos canciones de la reserva.
+
+### Decisión tras la fase 1
+
+- **Estado**: sigue **Propuesto**. La decisión (§2.4: todo, solo fines o nada) espera a la **fase 2 con V1** (los fines hechos a mano de §2.2, en el equipo del usuario que los tiene; pregunta 0280). La medida de la fase 2 usa también la **alineación de toda la letra** como base de los inicios de palabra, para que las dos fases midan lo mismo.
+- **Etapa 1**: no se adelanta, ni siquiera como función explícita del editor. Lo que entrega la etapa 1 (fines y palabras) es justo lo que la fase 1 no demuestra, y el dato de fines es desfavorable. Además pediría al usuario descargar 1,2 GB por idioma por una función cuyo resultado puede ser peor que «Ajustar los silencios». **0329–0333 quedan bloqueadas por la fase 2**, con una excepción: 0329 (worker) y 0330 (modelos, cola y canales) pueden empezar si la medida de la «señal D» (tarea [0387](../tareas/0387-medir-la-confianza-de-la-alineacion-como-comprobacion-del-encaje.md)) cumple su criterio, porque también la usarían. Sin una de las dos cosas, nada de producto.
+- **Coste para el usuario final** (§3.2, ADR 0009): aceptable como **opcional**.
+  - 1,26 GB por idioma, que se descargan solo si el usuario lo pide, desde Ajustes o desde la propia acción, nunca en el primer arranque ni en la preparación.
+  - Unos 2,7 GB de RAM mientras alinea, y mientras el worker residente siga vivo (5 min sin uso).
+  - Menos tiempo que la canción con CPU.
+  - Se recomiendan 8 GB de RAM; con menos puede fallar con `MEMORIA_INSUFICIENTE`.
+  - La spec 08 debe decir tamaño, memoria y que es opcional antes de descargar.
+- **Plan B** (§4): no se aplica, porque la fase 1 no da «no sirve» con el criterio revisado. Si la fase 2 no llega en 0.2.2, la feature 10 pasa a 0.2.3 con la propuesta 027 a la espera. Esa decisión es del usuario (pregunta 0280).
 
 ## Fuentes
 

@@ -1,5 +1,5 @@
 # 0328 — Feature 10 · Prueba técnica de alineación forzada sobre la voz separada
-- Estado: En curso (fase 1 hecha: no sirve con el criterio cerrado; a la espera de la decisión del arquitecto, pregunta 0310)
+- Estado: En curso (fase 1 hecha: pasa el filtro con el criterio revisado, pregunta 0310; fase 2 pendiente de V1)
 - Paso del pipeline: 4
 - Depende de: — (fase 1: puede empezar ya; fase 2: canciones con fines a mano, pregunta 0280)
 - ADRs: 0028 §2
@@ -41,7 +41,7 @@ La verdad de §2.4 (V1: fines hechos a mano) **no existe** en la copia de las 18
   - Si pasa, **pasa el filtro**: se anota en ADR 0028 y la decisión espera a la fase 2.
   - Los umbrales doblan los de §2.4 para el fin (150/450 ms), porque la referencia (LRC sin revisar) tiene su propio error.
 
-### Fase 2 · decisión (§2.4 sin cambios)
+### Fase 2 · decisión (§2.4 sin cambios en umbrales; inicios de palabra con la alineación de toda la letra y el criterio 6 reformulado del ADR 0028)
 
 - [ ] Scripts en `docs/spikes/0028-alineacion/` con entorno `uv` propio; ejecución en el equipo del usuario en solo lectura; **ninguna letra ni audio en el repositorio**.
 - [ ] Conjuntos V1 y V2 (y V3 si el usuario la prepara) y línea base de «Ajustar los silencios» calculada por el mismo script.
@@ -69,3 +69,5 @@ La verdad de §2.4 (V1: fines hechos a mano) **no existe** en la copia de las 18
 - **Diagnóstico no vinculante** (no se usó para decidir): con la ventana de −250 ms de ADR 0028 §2.1 el filtro pasaría (mediana 170, p90 350) y alineando toda la letra de una vez también (220 / 403).
 - **Cómo probarlo**: ver «Cómo ejecutarlo» del README del spike (necesita la copia de la biblioteca y descargar ~2,4 GB de pesos).
 - **Deuda técnica / pendiente**: fase 2 sin empezar (necesita V1). El Viterbi propio y el codificador propio son de prueba (el codificador solo cubre inferencia, sin máscara de relleno). Los JSON de resultados y los pesos están fuera del repositorio (carpeta temporal de la sesión).
+
+Arquitecto, 2026-11-23: fase 1 cerrada como «pasa el filtro» con el criterio revisado (pregunta 0310). La fase 2 necesita V1 en el equipo del usuario (pregunta 0280). Medida aparte de la «señal D»: tarea 0387.

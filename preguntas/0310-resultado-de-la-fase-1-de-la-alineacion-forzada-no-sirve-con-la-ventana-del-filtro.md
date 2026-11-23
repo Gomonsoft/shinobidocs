@@ -2,7 +2,7 @@
 
 - De: programador
 - Para: arquitecto
-- Estado: Abierta
+- Estado: Respondida (2026-11-23, arquitecto)
 - Bloquea: no (la fase 2 y el plan B esperan tu decisión)
 
 ## Contexto
@@ -41,3 +41,16 @@ Veredicto aplicando lo escrito: **no sirve**. Descargado: 2 524 044 643 B de pes
 ## Opción conservadora tomada
 
 No se ha cambiado ninguna ventana ni se ha excluido ninguna canción para que «pase»; el veredicto formal es «no sirve». La tarea 0328 queda `En curso` (fase 1 hecha; fase 2 sin empezar) hasta tu respuesta.
+
+## Respuesta
+
+Arquitecto, 2026-11-23. Todo queda en ADR [0028](../adr/0028-sincronia-automatica-por-alineacion-forzada-prueba-tecnica-y-etapa-1.md), «Resultado de la prueba técnica · Fase 1», con el veredicto original escrito.
+
+1. **Con el criterio tal como lo escribí: «no sirve».** Consta en el ADR. Pero el filtro tenía un **defecto de diseño mío**: una línea sola en una ventana que empieza 1 s antes deja que su primera palabra se quede con la voz de la línea anterior. Mide un artefacto del método, no del modelo, y una configuración que la etapa 1 no usa. **No se aplica el plan B por eso.**
+2. **Criterio revisado**: solo cambia la configuración de la medida. Pasa a la alineación de **toda la letra de una vez**, que es la única no circular (no usa los tiempos del LRC) y la más exigente de las válidas. Se descartan, por estar ancladas al LRC, las ventanas de 0 y −250 ms, que darían mejores cifras. Los **umbrales no cambian** (300/600 ms). Con lo ya medido (220/403 ms), **pasa el filtro**, con la reserva de las dos canciones con sesgo grande.
+3. **Criterio 6 reformulado**: (a) en `float64`, < 1e-6, y (b) en `float32`, las mismas etiquetas de Viterbi y los mismos inicios. Medido: 2,6e-12 y alineaciones idénticas. **Cumple.** El 1e-3 en `float32` quedaba por debajo del ruido de la propia referencia.
+4. **La fase 2 sigue haciendo falta**: ninguna cifra de aquí sustituye a V1. Fines y palabras no están demostrados, y el dato de fines es desfavorable (deja voz detrás en el 59 % de las líneas donde «Ajustar los silencios» encuentra silencio, frente al 25 %).
+   - La etapa 1 (0329–0333) **espera a la fase 2**; tampoco se adelanta como función explícita del editor.
+   - Excepción: 0329 y 0330 pueden empezar si la medida nueva [0387](../tareas/0387-medir-la-confianza-de-la-alineacion-como-comprobacion-del-encaje.md) cumple su criterio. Esa medida comprueba si la confianza de alinear toda la letra separa la propia de las ajenas: es la «señal D», que podría desbloquear la elección automática de la feature 5.
+5. Lo del inglés en `safetensors` y el español en `pytorch_model.bin` con `weights_only=True` es lo que prevé §3.2. Sin cambios.
+

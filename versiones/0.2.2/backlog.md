@@ -205,11 +205,14 @@ flowchart LR
 | Tarea | Tamaño | Depende de |
 |---|---|---|
 | [0328 · Prueba técnica](../../tareas/0328-prueba-tecnica-de-alineacion-forzada.md) (prioridad alta: de ella depende también la elección automática de la feature 5, pregunta 0295) | M | — (fase 1, filtro con la copia del MVP: puede empezar ya; fase 2, decisión: canciones con fines a mano) |
-| [0329 · Worker `alinear-letra`](../../tareas/0329-worker-alinear-letra.md) | L | 0328 (si sirve) |
-| [0330 · Modelos, cola y canales](../../tareas/0330-modelos-de-alineacion-y-servicio-en-main.md) | M | 0328, 0296 |
-| [0331 · `aplicarAlineacion` y palabras `auto`](../../tareas/0331-aplicar-alineacion-y-palabras-automaticas.md) | M | 0330 |
+| [0387 · Medir la confianza de la alineación como comprobación del encaje («señal D»)](../../tareas/0387-medir-la-confianza-de-la-alineacion-como-comprobacion-del-encaje.md) | S–M | 0328 fase 1 (hecha) |
+| [0329 · Worker `alinear-letra`](../../tareas/0329-worker-alinear-letra.md) | L | 0328 fase 2 «sirve», o 0387 «SÍ» |
+| [0330 · Modelos, cola y canales](../../tareas/0330-modelos-de-alineacion-y-servicio-en-main.md) | M | 0328 fase 2 «sirve», o 0387 «SÍ»; 0296 |
+| [0331 · `aplicarAlineacion` y palabras `auto`](../../tareas/0331-aplicar-alineacion-y-palabras-automaticas.md) | M | 0330 y 0328 fase 2 «sirve» |
 | [0332 · Interfaz y preparación](../../tareas/0332-sincronizar-con-la-voz-en-la-interfaz.md) | L | 0331, 0308 (y 0335 terminada: mismo panel Funciones) |
 | [0333 · Verificación e informe (o plan B)](../../tareas/0333-verificacion-e-informe-de-la-feature-10.md) | S | 0328 y, si sirve, 0329–0332 |
+
+**Estado de la prueba (2026-11-23)**: la fase 1 **pasa el filtro** con el criterio revisado (alineación de toda la letra; criterio 6 reformulado). Con el criterio escrito daba «no sirve» por un defecto de la ventana del filtro (ADR 0028, «Resultado de la prueba técnica»; pregunta 0310). No demuestra fines ni palabras. **La etapa 1 espera a la fase 2** (V1, pregunta 0280). 0329 y 0330 pueden adelantarse solo si la 0387 cumple su criterio.
 
 **Hecha cuando**: (a) la prueba técnica tiene su resultado escrito en el ADR 0028 con el criterio de §2.4; y (b) si sirve, «Sincronizar con la voz» cumple los criterios de 06 · Feature 10 en una canción lenta y en la rápida del usuario; si no sirve, la propuesta 027 queda lista para su spec (feature 10-B) y la 016 ya está cubierta por la feature 11.
 
@@ -241,7 +244,7 @@ Reglas de convivencia:
 | **alpha.1** | 3, 1, 2, 4 (+ resultado de la prueba técnica de la 10) | Lo más visible para quien canta y el aviso de versión, que hace que las siguientes entregas se anuncien solas. La 4 es la base de la 5 y ya ayuda en la vista Letra |
 | **alpha.2** | 6, 5, 11 | El núcleo de la automatización: la canción llega sola a «Lista para revisar» y se revisa en minutos |
 | **alpha.3** | 7, 8, 9 | Trabajo con muchas canciones: lotes, acciones por lotes y copias |
-| **alpha.4** | 10 (etapa 1) o 10-B (propuesta 027) | Depende de la prueba técnica |
+| **alpha.4** | 10 (etapa 1) o 10-B (propuesta 027) | Depende de la **fase 2** de la prueba técnica (V1 del usuario). La fase 1 pasó el filtro (2026-11-23). Sin V1 a tiempo, la feature 10 pasa a 0.2.3 (decisión del usuario, pregunta 0280). |
 
 Cada entrega cierra con [0338](../../tareas/0338-cierre-de-una-entrega-0-2-2-alpha.md). Si hay que recortar, lo que menos duele aplazar a 0.2.3 es la 9 y la exportación por lotes de la 8; la 7 sin la 5 pierde casi todo su valor (es lo que ya pasó con los 5 borradores abandonados).
 
