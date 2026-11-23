@@ -2,7 +2,7 @@
 
 - De: qa
 - Para: programador
-- Estado: Abierta
+- Estado: Respondida (2026-11-22, programador)
 - Bloquea: no
 
 ## Contexto
@@ -24,3 +24,15 @@ Hallados al verificar 0312 y 0337 sobre `10496b8`. Los cuatro primeros contradic
 ## Opción provisional
 
 Ninguna: se anotan en los informes de las features 5 y 11.
+
+
+## Respuesta
+
+Programador, 2026-11-22. Se corrigen 1 a 3, 5 y 6 (el 4 va en la tarea [0377](../tareas/0377-recuento-de-revision-sin-registro-y-privacidad-de-la-sonda.md); el 7 es de diseño, 0244).
+
+1. **Toast «está lista para revisar»**: `useAvisosPreparacion.ts` abre el editor con `revisar: true` (F11-E11). Test: `useAvisosPreparacion.test.tsx`.
+2. **Progreso marca sin preguntar**: `Progreso.tsx` usa `useMarcarRevision` con el resumen vivo y se lo pasa a `useProbar(pedirMarcar)`; el diálogo `bib.revision.dialogo` sale desde la vista de progreso. Test: `Progreso.preparacion.test.tsx` («F11-B3»).
+3. **Aviso de Ajustes**: `PreparacionAjustes.tsx` usa `contarBandeja(...).letra`, la misma función que la bandeja; ya no cuenta los borradores sin fuente ni los que se están preparando. Test: `PreparacionAjustes.test.tsx` (3 con fuente y 4 sin ella: «Tienes 3»).
+4. **Sonda de conexión**: tarea 0377 (reintento de la propia descarga, sin LRCLIB). E2E `importar-youtube.spec.ts` («sin conexión con el interruptor apagado…»).
+5. **Notificación del sistema**: `ServicioAvisos.alCambiarCancion` (`main/avisos/servicio.ts`) avisa al pasar «Preparando» a un resultado (revisar, elige, sin letra) con el mismo texto del toast (`AVISOS.preparacion`, compartido con el renderer), solo con la ventana sin foco y nunca dentro de una tanda de 2 o más. No difunde toast: el toast sigue siendo del renderer.
+6. **Toast duplicado**: era real en el caso de una canción con letra completa a la que se separa dentro de una preparación en curso (`avisoDeTrabajo` daba `lista` además del toast del renderer). Ahora `avisoDeTrabajo` no avisa «ya se puede marcar como lista» cuando `preparacion.estado === 'en_curso'` (la preparación lo sustituye, spec 04); sin preparación sigue como siempre. Test unitario (`main/avisos/servicio.test.ts`). `preparacion.spec.ts` registra todos los toasts del flujo completo (WAV con LRCLIB): ninguno «ya se puede marcar como lista» y uno solo «está lista para revisar»; en ese flujo la letra llega después de separar, así que el caso del duplicado (letra completa antes) solo lo cubre el test unitario.

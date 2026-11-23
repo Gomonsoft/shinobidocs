@@ -1,5 +1,5 @@
 # 0376 — Feature 9 · Remates de copias y paquetes (canciones en curso, `importar` con `trabajoId`, arrastrar un `.shinobi`)
-- Estado: Pendiente
+- Estado: Hecha
 - Paso del pipeline: 5
 - Depende de: 0324, 0325
 - ADRs: 0027 (revisión de las preguntas 0255–0258)
@@ -25,4 +25,12 @@ Los cambios de contrato y comportamiento que salieron de las preguntas 0255 y 02
 - Siempre: `npm run typecheck`, `npm run lint`, `npm run format:check` y `npm run test:cambios`.
 
 ## Notas de implementación
-(las rellena el programador al terminar)
+- **Canción en curso al exportar** (`main/copias/exportar.ts`): ya no se omite. Entra `cancion.json` con los pasos en curso vueltos a `pendiente` y, si se separaba, `pistas: null` y `estado: borrador`; solo entran los archivos de pasos **completados** (mezcla y miniatura con la fuente completada, pistas con la separación completada). `resultado.enCurso` cuenta cuántas entraron así (`aj.copia.nota.enCurso`). Al importarla, la sustitución usa el camino ligero cuando el paquete no trae pistas (conserva el audio local, sin papelera).
+- **`copias.importar`** devuelve `{ trabajoId }`; el resultado va en `copias:cambio` `terminada` (o `cancelada`, con el parcial) → `resultado`, con `tipo`. `copias.cancelar` lo cancela. `CambioCopiaIpc.resultado` es ahora `ResultadoExportacionCopiaIpc | ResultadoImportacionIpc`.
+- **`copias.origenDesdeRuta({ ruta })`** (canal nuevo, rol principal): archivo existente, extensión `.shinobi` y fuera de los datos de la app, si no `null`. Preload: solo `copias.origenDeArchivo(file)` con `webUtils.getPathForFile`.
+- **Sustitución con paquete ligero**: el resultado lleva `ligera: true` en esa canción (`resultado: 'sustituida'`), no hay que deducirlo del contexto.
+- **Ajustes**: `exportacion.factor_corrector` ya no viaja; la geometría del editor preciso tampoco (queda su `margen_ms`).
+- **Rutas hostiles**: entradas repetidas y cifradas se rechazan con `PAQUETE_NO_VALIDO` (casos nuevos en `paqueteHostil.test.ts`).
+- **Temas**: mismo nombre y estilo con otro `id` → se reutiliza el local, el más antiguo si hay varios y nunca uno en borrado (`temas.test.ts`).
+- **Archivos**: `main/copias/*`, `main/ipc/handlers.ts`, `shared/ipc.ts`, `shared/canales.ts`, `preload/index.ts`, `renderer/src/vistas/apiNuevaFalsa.ts`.
+- **Para la 0326**: `importar` → `{ trabajoId }` y esperar `copias:cambio` terminada/cancelada/error con ese id; `window.shinobi.copias.origenDeArchivo(file)` para lo arrastrado; leer `ligera` y `enCurso` del resultado.

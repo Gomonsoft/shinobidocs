@@ -1,5 +1,5 @@
 # 0377 — Features 5 y 11 · Recuento de revisión sin registro, sonda de conexión sin LRCLIB y notificación de una preparación
-- Estado: Pendiente
+- Estado: Hecha
 - Paso del pipeline: 3 (transversal)
 - Depende de: 0309, 0310, 0334, 0336
 - ADRs: 0024 (revisión de la pregunta 0241), 0025 §5 (revisión de la pregunta 0243), 0005, 0007/0011 (avisos y notificaciones)
@@ -40,4 +40,13 @@ Corregir los defectos D1 (media), D5 (baja, privacidad) y D6 (baja) de las verif
 - Siempre: `npm run typecheck`, `npm run lint`, `npm run format:check` y `npm run test:cambios`.
 
 ## Notas de implementación
-(las rellena el programador al terminar)
+
+**D1 · Recuento en memoria.** `main/biblioteca/recuentoRevision.ts` (`RecuentoRevision`): calcula en serie y en segundo plano, con `contarDudosasGuardadas`, el recuento de toda canción que deriva «Lista para revisar» (con o sin `preparacion`); se invalida con `modificada` (cada escritura de la letra, por el evento de la biblioteca) y con los picos (`recalcular` desde `alListos` de `ServicioPicos`); nunca escribe en disco. Arranca en `main/index.ts` justo tras crear el servicio de preparación (después de la comprobación del runtime). Cuando un cálculo cambia lo conocido, `registrarIpc` emite un evento `cancion` con el resumen nuevo. `ResumenCancionIpc.revision` (`shared/ipc.ts`, opcional y anulable): `revisionDeResumen` (`main/biblioteca/resumen.ts`) usa el valor en memoria o, si no lo hay, `preparacion.dudosas`. Canal `biblioteca.recuentoRevision(id)` (`shared/canales.ts`, `preload`, `handlers.ts`) que calcula al momento. Renderer: `TarjetaCancion`, `tarjeta.ts` (nombre accesible) y `useMarcarRevision` usan `resumen.revision`; con `null` piden `recuentoRevision` antes de decidir; el diálogo pregunta por las «importantes» como el editor. `useMarcarRevision` también lo usa ahora la vista de progreso (pregunta 0242 D3).
+
+**D5 · Sonda sin LRCLIB.** `main/preparacion/cola.ts`: cada 60 s `vigilarConexion` reintenta solo la primera descarga parada por `SIN_CONEXION` (`reintentarDescarga`); el freno deja pasar solo a esa; si termina bien o la cancelan o falla por otro motivo, se liberan las demás; si vuelve a fallar con `SIN_CONEXION`, se reprograma; si ya no se puede reintentar (canción eliminada), pasa a la siguiente. Se retiran `hayConexion` y su `HEAD` en `main/index.ts`. Prueba de aceptación: `e2e/importar-youtube.spec.ts` («sin conexión con el interruptor apagado…», 2,3 min porque incluye los 3 reintentos propios de la descarga, 5 + 15 + 45 s, antes de la parada): 0 peticiones al doble de LRCLIB y la descarga termina tras el reintento. Fixture nueva `e2e/fixtures/youtube/Red_Siem_01.json`.
+
+**D6 · Notificación.** `ServicioAvisos.alCambiarCancion` (`main/avisos/servicio.ts`), alimentado por la suscripción a la biblioteca en `main/index.ts`: al pasar «Preparando» a revisar / elige / sin letra, notificación del sistema con la ventana sin foco (mismo texto que el toast, `AVISOS.preparacion` en `shared/avisos.ts`, compartido con el renderer); nada dentro de una tanda de 2 o más.
+
+**Pruebas.** `recuentoRevision.test.ts`, `cola.test.ts` (reloj falso, 2 pruebas), `servicio.test.ts` de avisos, `Biblioteca.preparacion.test.tsx` (sin registro, `revision` nulo y lleno), `e2e/biblioteca.spec.ts` (sin registro: línea ⚑ y `cancion.json` intacto).
+
+**Deuda / a mano.** La notificación del sistema real (macOS Dock, Windows/Linux) solo se verifica a mano: terminar una preparación individual con la ventana en segundo plano.

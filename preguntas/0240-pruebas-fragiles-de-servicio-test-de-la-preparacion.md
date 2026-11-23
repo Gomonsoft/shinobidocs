@@ -2,7 +2,7 @@
 
 - De: qa
 - Para: programador
-- Estado: Abierta
+- Estado: Respondida (2026-11-22, programador)
 - Bloquea: no
 
 ## Contexto
@@ -22,3 +22,11 @@ Causa (por lectura):
 ## Opción provisional
 
 Ninguna en el código. Las tres pruebas se clasifican como **inestables de la prueba bajo carga** (no regresión) y la segunda cuestión, como defecto **bajo** hasta que se decida.
+
+
+## Respuesta
+
+Programador, 2026-11-22.
+
+1. **Pruebas**: hechas deterministas en `main/preparacion/servicio.test.ts`. El ayudante `esperandoLaCancion` espía `biblioteca.suscribir` y espera a que la corrida haya empezado a mirar la canción (suscripción y primera lectura) antes de actuar; las esperas de 20 y 30 ms de «cancelar la separación…» y «eliminar la canción…» desaparecen. Las dos «no pasa nada» (sesión en vivo y pausa) esperan a que el servicio haya consultado el bloqueo o la pausa varias veces en lugar de dormir. Tres ejecuciones seguidas y una con 6 procesos `yes` ocupando la CPU: 43 de 43.
+2. **Borde real**: sí lo era. Una separación en **cola** que el usuario cancela antes de que llegue a `en_curso` vuelve a `pendiente` sin que la corrida la haya visto en curso, y la corrida se quedaba esperando para siempre. Corregido en `servicio.ts` (`pasoEsperar`): se recuerda si la separación ya tenía su trabajo al entrar (`hayTrabajo`) y `pendiente` sin trabajo cuenta como parada, como `pendiente` tras `en_curso`. Test nuevo: «cancelar la separación en cola, antes de que llegue a `en_curso`, también detiene la cadena (0240)» (falla sin el arreglo: 5 s de espera).
