@@ -256,9 +256,11 @@ Para cada campo se usa la **primera** fuente que da un valor. La heurística viv
 
 Patrones de nombre de archivo reconocidos (con guiones bajos tratados como espacios): `Artista - Título`, `NN - Título`, `NN. Título`, `NN Artista - Título`, `Artista - Álbum - NN - Título`. El número de pista se descarta.
 
+**Qué cuenta como número de pista** (respuesta a [0231](../preguntas/0231-numero-inicial-del-nombre-que-es-parte-del-artista.md)): un número inicial solo se descarta si **va seguido de puntuación** («03 -», «3.», «3)», «03_») **o tiene dos o más cifras con cero a la izquierda** («03 Artista - Título»). Un número sin cero a la izquierda y separado solo por un espacio **forma parte del nombre**: «3 Doors Down - Kryptonite» da artista «3 Doors Down»; «50 Cent - …», «50 Cent»; «21 Guns», título «21 Guns». Si alguna vez se descarta un número separado solo por espacio (caso «03 Artista - Título»), el campo que empieza tras él es **dudoso**.
+
 Después, sobre el valor propuesto:
 
-1. **Como en tu biblioteca.** Si el artista o el álbum propuestos coinciden con uno que ya existe sin contar mayúsculas, tildes, puntuación ni espacios («Querido...» y «Querido…»), se propone **la grafía de la biblioteca**, para no partir el grupo ni perder el tema heredado.
+1. **Como en tu biblioteca.** Si el artista o el álbum propuestos coinciden con uno que ya existe sin contar mayúsculas, tildes, puntuación ni espacios («Querido...» y «Querido…»), se propone **la grafía de la biblioteca**, para no partir el grupo ni perder el tema heredado. **Incluye la diferencia solo de mayúsculas** («grupo uno» → «Grupo Uno», con `add.dato.origen.biblioteca`): el grupo no se parte, pero así no cambia el nombre que la Biblioteca muestra del grupo (que es el de la canción más reciente, ADR 0016) por una grafía que nadie eligió (respuesta a [0232](../preguntas/0232-grafia-de-la-biblioteca-cuando-solo-difieren-las-mayusculas.md)). Esta regla es para **propuestas de la app**; lo que escribe el usuario solo recibe la sugerencia de «Unificar» (abajo), que no salta por mayúsculas.
 2. **Título y artista al revés.** Si al partir por « - » la parte derecha coincide con un artista de la biblioteca o con el canal, y la izquierda no, se proponen ya intercambiados.
 3. **Nunca se sobrescribe lo que el usuario escribió.** Todo son propuestas en campos editables.
 
@@ -291,7 +293,7 @@ Después, sobre el valor propuesto:
 │              ⓘ Sin artista es más difícil encontrar la letra.            │
 ```
 
-**Sugerencia de unificar** (al salir del campo)
+**Sugerencia de unificar** (mientras se escribe, al dejar de teclear)
 ```
 │   Álbum      [ Querido...                                         ▾ ]    │
 │              ¿Te refieres a «Querido…», que ya está en tu biblioteca?    │
@@ -313,8 +315,9 @@ Después, sobre el valor propuesto:
 | **Datos dudosos** | Artista sacado del nombre del canal; título que es el nombre del archivo tal cual (sin etiqueta ni patrón); título que todavía contiene paréntesis, corchetes, « - » o «\|» después de limpiarlo; título y artista intercambiados automáticamente (regla 2). |
 | **Dato que falta** | Título: no puede faltar (se usa el nombre del archivo o el título del video); vacío sigue mostrando «Escribe un título.». Artista vacío: `add.dato.sinArtista` (informativo, no bloquea). Álbum vacío: la ayuda de siempre (`add.campo.album.ayuda`). |
 | **Autocompletado de Artista y Álbum** | Campo con lista (`role="combobox"`): al escribir 1 o más caracteres, o con ↓ o el botón ▾, muestra hasta 8 valores de la biblioteca que contienen lo escrito (sin distinguir mayúsculas ni tildes), con su número de canciones, ordenados por número de canciones. En Álbum, primero los álbumes del artista escrito. Intro o clic elige; Esc cierra la lista (un segundo Esc cancela la vista, como hoy); seguir escribiendo un valor nuevo es siempre válido. Sin canciones en la biblioteca no hay lista ni botón ▾. |
-| **Unificar** | Al salir del campo Artista o Álbum con un valor que solo se diferencia de uno existente en tildes, puntuación, comillas, guiones o espacios, aparece `add.dato.unificar` bajo el campo con [Usar «…»] (sustituye el valor y deja el foco en el campo) y [Dejarlo así] (oculta la sugerencia para ese valor). No bloquea «Continuar». Una diferencia solo de mayúsculas no la provoca (ya es el mismo grupo, ADR 0016). |
-| **⇄ Intercambiar título y artista** | Botón fantasma junto al campo Artista, visible cuando los dos campos tienen valor. Intercambia los dos valores, quita sus líneas de procedencia y deja el foco en el botón. Se anuncia con `add.dato.intercambiado`. |
+| **Unificar** | **Cuándo se calcula** (respuesta a [0230](../preguntas/0230-sugerencia-de-unificar-aparece-despues-de-salir-del-campo.md)): mientras el foco sigue en el campo, 400 ms después de la última tecla, al elegir de la lista y al cerrarla; **no** al salir del campo. Así, cuando el usuario pulsa Tab la sugerencia ya está y Tab lleva a [Usar «…»]. Al salir del campo no aparece nada nuevo ni se mueve el foco. Si el valor tiene una diferencia con uno existente solo en tildes, puntuación, comillas, guiones o espacios, aparece `add.dato.unificar` bajo el campo y **encima de su línea de ayuda** con [Usar «…»] (sustituye el valor y deja el foco en el campo) y [Dejarlo así] (oculta la sugerencia para ese valor). No bloquea «Continuar». Una diferencia solo de mayúsculas no la provoca (ya es el mismo grupo, ADR 0016). |
+| **⇄ Intercambiar título y artista** | Botón fantasma junto al campo Artista, visible cuando los dos campos tienen valor. Intercambia los dos valores, quita sus líneas de procedencia y deja el foco en el botón. Se anuncia con `add.dato.intercambiado`. Solo recalcula la sugerencia de unificar del **Artista** (su valor cambió); la del **Álbum** se conserva. |
+| **Lista abierta y otros controles** | Mientras la lista de autocompletado está abierta tapa lo que hay debajo (p. ej. «Intercambiar…»); es lo esperado de una lista flotante. Se cierra con Esc, Tab, Intro, al elegir, al hacer clic fuera, y **sola cuando el valor escrito coincide exactamente con la única opción**. |
 | **Aviso de búsqueda** | `add.dato.lrclib` con el enlace «Cambiar en Ajustes» (abre Ajustes en «Letras y preparación automática», spec 08; al volver, el formulario conserva lo escrito). Solo con la feature 5 y su interruptor activado; desactivado, no se muestra. |
 | **Foco inicial** | Sin cambios: Título con el texto seleccionado. |
 
@@ -348,7 +351,8 @@ El diálogo «Editar datos» ([02](02-biblioteca.md)) y el formulario del resume
 
 ### Teclado y accesibilidad
 
-- Los campos con lista siguen el patrón de *combobox* editable: `aria-expanded`, `aria-controls`, `aria-activedescendant`; ↑/↓ recorren, Intro elige, Esc cierra la lista sin salir de la vista, Tab acepta lo escrito y sigue.
+- Los campos con lista siguen el patrón de *combobox* editable: `aria-expanded`, `aria-controls`, `aria-activedescendant`; ↑/↓ recorren, Intro elige, Esc cierra la lista sin salir de la vista, Tab acepta lo escrito y sigue. Con la lista abierta y ninguna opción activa, ↓ activa la primera y ↑ **la última**.
+- La región `role="status"` de la sugerencia de unificar existe vacía desde que se pinta el campo; al aparecer la sugerencia se rellena (así se anuncia).
 - Cada opción se lee «{nombre}, {n} canciones».
 - La sugerencia de unificar aparece en una región `role="status"` enlazada al campo; sus botones son las dos paradas de tabulación siguientes al campo.
 - Los avisos de dato dudoso llevan icono y texto; no dependen del color.
@@ -382,13 +386,14 @@ El diálogo «Editar datos» ([02](02-biblioteca.md)) y el formulario del resume
 
 - F6-N1. Un MP3 con etiquetas de título, artista y álbum prerrellena los tres campos con `add.dato.origen.etiquetas`. Sin etiquetas y con el nombre `Queen - Bohemian Rhapsody.mp3`: título «Bohemian Rhapsody», artista «Queen», `add.dato.origen.nombre`. Con `03 - Bohemian Rhapsody.flac`: título «Bohemian Rhapsody» y artista vacío con `add.dato.sinArtista`. Con `audio_final2.wav`: título «audio final2» marcado como dudoso (tests unitarios de la heurística con estos y con `Artista - Álbum - 03 - Título.mp3`).
 - F6-N2. Un video con campos de pista, artista y álbum (doble de YouTube) prerrellena los tres con `add.dato.origen.pista`. Un video titulado «Queen – Bohemian Rhapsody (Official Video)» del canal «Queen Official» da título «Bohemian Rhapsody» y artista «Queen». Un video titulado «Bohemian Rhapsody» del canal «QueenVEVO» da artista «Queen» marcado como dudoso con `add.dato.origen.canal`.
-- F6-N3. Con «Querido…» ya en la biblioteca como álbum, una propuesta «Querido...» se prerrellena como «Querido…» con `add.dato.origen.biblioteca`; escrita a mano por el usuario, al salir del campo muestra `add.dato.unificar`; [Usar «Querido…»] sustituye el valor; [Dejarlo así] oculta la sugerencia y permite continuar con «Querido...».
+- F6-N3. Con «Querido…» ya en la biblioteca como álbum, una propuesta «Querido...» se prerrellena como «Querido…» con `add.dato.origen.biblioteca`; con «Grupo Uno» en la biblioteca, una propuesta «grupo uno» se prerrellena como «Grupo Uno» con la misma procedencia. Escrita a mano por el usuario, «Querido...» muestra `add.dato.unificar` 400 ms después de la última tecla, con el foco aún en el campo, y el Tab siguiente lleva a [Usar «Querido…»] (con «grupo uno» escrito a mano no aparece); [Usar «Querido…»] sustituye el valor; [Dejarlo así] oculta la sugerencia y permite continuar con «Querido...».
 - F6-N4. Los campos Artista y Álbum muestran al escribir hasta 8 valores de la biblioteca que contienen el texto, con su número de canciones; en Álbum salen primero los del artista escrito; con la biblioteca vacía no hay lista. Se manejan con teclado según el patrón de *combobox* y Esc cierra la lista sin salir de la vista.
 - F6-N5. «Intercambiar título y artista» intercambia los valores, quita sus líneas de procedencia y se anuncia; solo es visible con los dos campos rellenos.
 - F6-N6. Al cambiar el usuario un campo, su línea de procedencia desaparece; nada de lo que escribe se sustituye después sin su acción (test: tras aplicar una letra de LRCLIB con otro título, el título de la canción no cambia).
 - F6-N7. Al aplicar una letra de LRCLIB a una canción sin álbum, el álbum queda con el del registro; el resumen del paso 1 y «Editar datos» muestran `add.dato.origen.lrclib` con [Quitar]; tras quitarlo no se vuelve a rellenar. Con álbum previo, no cambia. Si el título o el artista difieren, aparece `add.dato.lrclib.sugerencia` y [Usar estos datos] los aplica.
 - F6-N8. Con «Buscar la letra automáticamente» activado, el formulario muestra `add.dato.lrclib` con el enlace a Ajustes; desactivado, no lo muestra. Volver de Ajustes conserva lo escrito.
 - F6-N9. «Editar datos» de la Biblioteca ofrece el mismo autocompletado, la sugerencia de unificar y el intercambio.
+- F6-N12. Nombres de archivo (test de la función): «3 Doors Down - Kryptonite» → artista «3 Doors Down», título «Kryptonite»; «50 Cent - In Da Club» → artista «50 Cent»; «21 Guns» → título «21 Guns»; «03 - Título», «3. Título», «03_Título» → título «Título»; «03 Artista - Título» → artista «Artista» marcado como dudoso. «Intercambiar» no borra la sugerencia de unificar del Álbum. Con la lista abierta por escribir y ninguna opción activa, ↑ activa la última.
 - F6-N10. Sin conexión, todo lo anterior salvo F6-N7 funciona igual.
 - F6-N11. Capturas en `docs/ux/revisiones/0.2.2-feature-6/`, nombre `anadir-1280x800-100-{estado}.png`: `datos-con-procedencia`, `dato-dudoso`, `autocompletado`, `unificar`, `editar-datos-lrclib`.
 
