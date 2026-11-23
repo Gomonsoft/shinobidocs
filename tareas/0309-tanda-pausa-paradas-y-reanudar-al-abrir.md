@@ -43,3 +43,5 @@ La cola de preparación como conjunto: tanda, pausa persistida, paradas y reanud
 - La estimación suma solo la separación (`separacion.estimar`); no incluye la descarga.
 - `cancelar` desde el panel de actividad («Cancelar lo que falta…») usa los canales de siempre; no hay canal nuevo.
 - `act.cola.sesion`, `prog.cola.*` y el resto de textos son de la interfaz (0311/0316).
+
+**Defecto del cierre justo tras reanudar (pregunta 0236)**: la solicitud `app:solicitudCierre` se enviaba una sola vez y se perdía si `DialogoCierre` aún no estaba montado; `app.close()` esperaba para siempre. Corregido con el canal `app.solicitudCierrePendiente` (main recuerda la solicitud, el renderer la pregunta al montar el diálogo; `main/cierre.ts` `pendiente()`, `navegacion/DialogoCierre.tsx`) y, en el gestor, comprobación de cancelación antes de lanzar el worker. Tests: `gestor.cola.test.ts` (cerrar un trabajo recién lanzado), `cierre.test.ts`, `DialogoCierre.test.tsx`; la E2E de «cierre con trabajos» cierra ahora sin esperar al progreso (3 de 3).
