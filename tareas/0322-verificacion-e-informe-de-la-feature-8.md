@@ -1,7 +1,7 @@
 # 0322 — Feature 8 · Verificación e informe
 - Estado: Pendiente
 - Paso del pipeline: 6
-- Depende de: 0318–0321
+- Depende de: 0318–0321, 0388
 - ADRs: 0026
 - Spec UX: docs/ux/02 y 10 (0.2.2 · Feature 8)
 - Tamaño: S

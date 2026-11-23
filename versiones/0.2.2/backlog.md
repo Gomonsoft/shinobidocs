@@ -17,7 +17,7 @@ Ver el [plan](plan-4.md) y el [flujo de Git](../../workflow.md). **Una feature =
 | 5 | **5** · Preparación desatendida | 0306–0312, 0371–0374, 0377, 0380, 0382, 0386 | L | 4, 6 (0302) | alpha.2 (letras sin marca: siguiente alpha) |
 | 6 | **11** · Revisión guiada | 0334–0337, 0370 | M | 0296; UI tras 4 y 5 | alpha.2 |
 | 7 | **7** · Importación por lotes | 0313–0317, 0375, 0384 | L | 5 (0309), 6 | alpha.3 |
-| 8 | **8** · Acciones por lotes | 0318–0322 | M | 5; la exportación por lotes no depende de nada | alpha.3 |
+| 8 | **8** · Acciones por lotes | 0318–0322, 0388 | M | 5; la exportación por lotes no depende de nada | alpha.3 |
 | 8 | **9** · Copia, paquete y `.lrc` | 0323–0327, 0376, 0383 | M–L | 0296 | alpha.3 |
 | 9 | **10 (etapa 1)** · Sincronizar con la voz | 0329–0333 (si la prueba sirve) | L | 0328, 0296, 5 | alpha.4 |
 | — | Cierre de cada entrega | [0338](../../tareas/0338-cierre-de-una-entrega-0-2-2-alpha.md) | S | las features de la entrega | — |
@@ -182,7 +182,8 @@ flowchart LR
 | [0319 · Exportación por lotes en main](../../tareas/0319-exportacion-por-lotes-en-main.md) | M | 0339 |
 | [0320 · Barra de selección](../../tareas/0320-barra-de-seleccion-y-acciones-por-lotes.md) | M | 0318 |
 | [0321 · Exportar varias](../../tareas/0321-dialogo-de-exportar-varias-canciones.md) | M | 0319, 0320 |
-| [0322 · Verificación e informe](../../tareas/0322-verificacion-e-informe-de-la-feature-8.md) | S | 0318–0321 |
+| [0388 · Previsualizar los nombres del lote y abrir su carpeta](../../tareas/0388-consultas-de-carpeta-del-lote-de-exportacion.md) | S | 0319; interfaz en 0321 |
+| [0322 · Verificación e informe](../../tareas/0322-verificacion-e-informe-de-la-feature-8.md) | S | 0318–0321, 0388 |
 
 **Hecha cuando**: las cinco acciones («Preparar», «A la cola», «Exportar video…», «Editar datos…» y «Eliminar…»; «Marcar como lista» por lotes no está en el alcance, ADR 0026, revisión de la pregunta 0290) funcionan con resultado por canción y `CONFIRMACION_OBSOLETA`, y tres canciones reales se exportan a una carpeta en un lote.
 

@@ -159,3 +159,15 @@ Corrige §5:
   - Tarea [0384](../tareas/0384-datos-de-cada-video-al-descargar-y-remates-de-la-lectura-del-lote.md): alpha.3 si cabe, si no alpha.4.
 - **`fuente.leerCarpeta`** devuelve además `carpeta?: string`: solo el nombre de la carpeta, nunca la ruta.
 - **`fuente.espacioLibre()`** → `{ libreBytes, factorMinutos }`, para estimar el tiempo de un lote de enlaces sueltos.
+
+## Revisión 2026-11-23 · Consultas de carpeta del lote de exportación (pregunta 0301)
+
+Amplía §5. El renderer sigue sin manejar rutas (ADR 0008): trabaja con `carpetaId` y `loteId`, y main solo devuelve nombres de archivo y recuentos.
+- **`exportacion.previsualizarLote({ cancionIds, formato, carpetaId, siExiste })`** → `{ filas: [{ cancionId, archivo, existe, accion, motivo? }], exportables }`.
+  - `archivo`: solo el nombre.
+  - `accion`: `nuevo | numerar | sustituir | omitir`.
+  - Usa la misma función pura de nombres que `iniciarLote`.
+  - No escribe ni encola nada y **no gasta** el `carpetaId`.
+  - Es orientativa: `iniciarLote` vuelve a calcular al confirmar y manda.
+- **`exportacion.mostrarCarpetaLote({ loteId })`**: main abre la carpeta del lote sin seleccionar un archivo (`shell.openPath`). Recuerda `loteId → carpeta` mientras vive el proceso. Un lote desconocido o una carpeta que ya no existe da `DESTINO_NO_DISPONIBLE`.
+- Tarea [0388](../tareas/0388-consultas-de-carpeta-del-lote-de-exportacion.md).

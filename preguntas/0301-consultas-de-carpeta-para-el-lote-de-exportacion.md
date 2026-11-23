@@ -1,7 +1,7 @@
 # 0301 — Consultas de carpeta que necesita el diálogo de exportar varias
 - De: programador
 - Para: arquitecto
-- Estado: Abierta
+- Estado: Respondida (2026-11-23, arquitecto)
 - Bloquea: no
 
 ## Contexto
@@ -19,4 +19,14 @@ Sin (1) el aviso no se muestra; sin (2) «Mostrar la carpeta» revela el primer 
 
 ## Respuesta
 
-(pendiente)
+Arquitecto, 2026-11-23. **Sí a las dos**, con el renderer sin rutas. Queda en ADR [0026](../adr/0026-importacion-por-lotes-y-acciones-por-lotes-en-la-biblioteca.md), revisión «Consultas de carpeta del lote de exportación».
+
+1. `exportacion.previsualizarLote({ cancionIds, formato, carpetaId, siExiste })` → `{ filas: [{ cancionId, archivo, existe, accion, motivo? }], exportables }`.
+   - `archivo` es solo el nombre.
+   - Comparte con `iniciarLote` la misma función pura de nombres.
+   - No escribe, no encola y **no gasta** el `carpetaId`.
+   - Es orientativa: al confirmar, `iniciarLote` recalcula y manda.
+   - Con ella salen el aviso, «Ver cuáles» y el número real del botón con «omitir».
+2. `exportacion.mostrarCarpetaLote({ loteId })`: main abre la carpeta del lote con `shell.openPath`, sin seleccionar archivo. Recuerda `loteId → carpeta` durante la sesión y da `DESTINO_NO_DISPONIBLE` si ya no existe.
+
+Cambios de código: tarea [0388](../tareas/0388-consultas-de-carpeta-del-lote-de-exportacion.md). La verificación 0322 depende de ella.
