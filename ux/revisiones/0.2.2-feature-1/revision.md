@@ -43,3 +43,19 @@
 | **N3** | F1-R19, puntos de espera | Los puntos quedan a ≈ 18 px de las mayúsculas de la +1 (unos 50 px entre centros a 1080p). Es lo que decía la spec («sobre la línea +1»), pero se ven pegados, como señaló QA. | El centro de los puntos a **mitad del hueco** entre la caja de la activa (o de la cuenta) y la de la +1: unos 8 px más arriba a 1080p. Spec precisada (sistema visual y 07, «Convivencia»). | Se corrige después (cosmético). |
 | **N4** | F1-R17 y F1-R18 (renglones) | En 4:3, una línea larga que no cabe en 2 renglones al 75 % sale en 3. | La spec no lo cubría. **Acepto lo que hace el código** y lo escribo: 3 renglones equilibrados al 75 %, sin cortar texto ni reducir más. Sin cambio de código. | Ninguna. |
 | **N5** | F1-E16 (capturas) | `pantalla-no-disponible` enseña el tooltip y no el motivo en texto; en `pantalla-reducido` la nota queda fuera de la vista; en `previa-pausa-siete` la línea seleccionada es la primera. | Repetir con la sección desplazada para que se vea el motivo `edi.pantalla.pasadas.minimo1` bajo el control (sin tooltip) y la nota `edi.pantalla.reducido`. En `previa-pausa-siete`, seleccionar la 4.ª línea para que se vean 2 ya cantadas y 4 futuras. | Se corrige después (QA, al repetir las capturas tras N1). |
+
+## Segunda revisión (2026-11-22)
+
+Revisadas **las 33 capturas**, una a una: las 17 del reproductor (1920 × 1080, 1280 × 720 y 1440 × 1080) y las 16 del editor (100 % y 125 %). No quedó ninguna sin mirar.
+
+| N.º | Resultado | Evidencia |
+|---|---|---|
+| **N1** | **Corregida** | La vista previa es el fotograma reducido del reproductor en todas las capturas del editor. `100-pantalla-d2`: activa con el centro al ≈ 39 % del lienzo y 3 futuras, igual que `reproductor-…-cinco-lineas`. `100-pantalla-d1-propia` y `125-pantalla-d1-propia` (7 líneas): 4 futuras. `100-` y `125-previa-pausa-siete`: 2 ya cantadas, activa y 4 futuras. `125-pantalla-d2` y `125-pantalla-ejemplo`: el bloque completo, ya no solo la activa. Al 125 % las futuras lejanas salen muy pequeñas: es lo esperado en un lienzo de unos 225 px de alto («Probar a pantalla completa» sigue a un clic). |
+| **N2** | **Corregida** | `100-` y `125-pantalla-ejemplo`: la píldora va arriba a la izquierda y no toca la letra. |
+| **N3** | **Corregida** | `reproductor-1920x1080-` y `1280x720-pausa-larga-indicadores`: los puntos quedan a mitad del hueco entre la cuenta y la +1. Barra, cuenta y puntos, sin solaparse con nada. |
+| **N4** | Sin cambios (aceptado) | `cuatro-tercios-siete-lineas`: la +1 en 3 renglones y la +4 termina por encima del 86 %. |
+| **N5** | **Corregida** | `100-pantalla-no-disponible`: el motivo en texto bajo el control. En `125-pantalla-no-disponible` se ve además el tooltip, que no estorba. `100-` y `125-pantalla-reducido`: la nota `edi.pantalla.reducido` a la vista. `previa-pausa-siete`: con la 4.ª línea seleccionada. |
+
+Resto de capturas: conformes, como en la primera revisión (`cinco-lineas`, `siete-lineas-dos-cantadas`, `dos-lineas`, `cambio-desplazamiento-mitad`, `cambio-fundido-mitad`, `dos-renglones` y `letra-lista` a los dos tamaños; `pantalla-d1` y `pantalla-300px` a 100 % y 125 %). Sin no conformidades nuevas.
+
+**Veredicto: aprobada.**

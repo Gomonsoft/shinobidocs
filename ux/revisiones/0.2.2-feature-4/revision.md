@@ -38,3 +38,27 @@
 | **C3** | F4-L1 y F4-L10; «ningún veredicto sin icono» (05, «Teclado y accesibilidad») | Las líneas de C («Letra ya elegida») van sin icono, y la de `no_coincide` sin el color `aviso`. | Como en el wireframe C de 05: «✓ Coincide…», «ⓘ Movimos toda la letra…», «⟷ Toda la letra va…», «⚠ La letra no coincide…» (en `aviso`) y «🕒 La comprobaremos…», cada una con su icono. | Se corrige después. |
 | **C4** | Diálogo «La letra no encaja con la voz» (0209) | «El desfase cambia…: no se arregla moviendo toda la letra.» seguido de «No se puede arreglar moviendo toda la letra.»; además «1 de 6 líneas caen». | Motivos con viñetas. Sin el pie cuando está el motivo de desfase variable. Singular «1 de 6 líneas cae donde no hay voz». Spec actualizada (06 · Feature 4, bajo el diálogo). | Se corrige después. |
 | **C5** | F4-L12 (capturas) | `candidatos-comprobados` repite `candidato-desfasado`, y `candidato-no-coincide` repite `aviso-llegada`. | `candidatos-comprobados`: la lista **recargada** con los encajes ya hechos, ordenada (coincide y desfasada primero; no coincide al final) y con un candidato de cada veredicto a la vista. `candidato-no-coincide`: sin el aviso de llegada, con el candidato `no_coincide` seleccionado. | Se corrige después (QA). |
+
+## Segunda revisión (2026-11-22)
+
+Revisadas **las 13 capturas**, una a una (7 de la vista Letra y 6 del editor). `comprobacion-pendiente` sigue sin captura: solo en la guía manual, como dijo QA.
+
+| N.º | Resultado | Evidencia |
+|---|---|---|
+| **C1** | **Corregida** | `editor-…-banner-desfase`: el texto en dos renglones y, debajo, [Corregir el desfase] y [Ahora no], completos y dentro de la lista. El banner ocupa casi todo el alto de la lista a 1280 × 720 (queda una fila visible); se acepta porque se desplaza con las filas, como dice la spec. |
+| **C2** | **Corregida, salvo en una captura (nueva C6)** | Icono y texto en la misma línea en `candidatos-comprobados`, `candidato-desfasado`, `candidato-no-coincide` (candidatos y título del bloque de vista previa) y en `editor-…-desfase-corregido` y `banner-desfase`. |
+| **C3** | **Corregida** | `actual-corregida` (ⓘ), `actual-propuesta` (⟷) y `actual-no-coincide` (⚠ y color `aviso`). |
+| **C4** | **Corregida** | `editor-…-dialogo-no-encaja`: motivos con viñetas, «1 de 6 líneas cae» y sin el pie repetido. |
+| **C5** | **Corregida** | `candidatos-comprobados`: lista recargada y ordenada (desfasada, coincide y no coincide al final), un candidato de cada veredicto. Que sea igual que `candidato-desfasado` es correcto: el primero de la lista ordenada es el desfasado y queda seleccionado. `candidato-no-coincide`: sin el aviso de llegada y con el `no_coincide` seleccionado (la lista desplazada). |
+| **C6 (nueva)** | **No conforme** | `letra-…-aviso-llegada`: es **idéntica a la de la primera pasada**. Los iconos ⚠ y ⟷ de los candidatos, y el ⚠ del título del bloque de vista previa, siguen solos en un renglón (lo que corregía C2). O la captura no se rehízo, o el estado «la comprobación llega después» se pinta con otro componente sin la corrección. Hay que regenerarla; si sigue igual, aplicar ahí la corrección de C2. Se corrige después (no bloquea alpha.1). |
+
+**Capturas que solo había generado el programador**:
+- `candidato-desfasado`: conforme.
+- `actual-propuesta`: conforme.
+- `aviso-llegada`: el aviso de llegada (texto, [Seleccionarla] y [×]) es conforme; los iconos tienen el defecto C6.
+
+**Tercer candidato cortado por abajo en `candidatos-comprobados`**: **conforme**. La lista de resultados tiene altura limitada y su propio scroll (spec 05: la vista no hace crecer la página con los resultados). Se ve que hay más: el tercero asoma cortado y la barra de scroll aparece al desplazar (`candidato-no-coincide`). No es una no conformidad.
+
+Resto: conformes (`funciones-comprobar`, `funciones-comprobar-no-disponible`, `dialogo-desfase`, `desfase-corregido`, `actual-*`).
+
+**Veredicto: aprobada con correcciones menores** (C6).
