@@ -61,6 +61,33 @@ Capturas del editor revisadas: `solape-carriles`, `solape-carriles-juntos`, `sol
 7. **Menor.** Falta la captura de C1S-E7. Cambio: añadir `editor-1280x720-100-bloque-solapes.png` en esta carpeta, con «Todas en un bloque» elegido y la nota `edi.pantalla.bloqueSolapes` con «Ver en zonas» a la vista.
 8. **Menor.** Repetir las cinco capturas del reproductor de esta feature en una sola ejecución con un perfil de color fijo (por ejemplo, Chromium con `--force-color-profile=srgb`), para que los colores de las partes coincidan entre capturas y con las de la feature 1.
 
+## Tercera vuelta (2026-11-23): veredicto final
+
+**Editor: aprobado** (provisional). Las correcciones 4 a 7 están aplicadas:
+
+| N.º | Comprobado en |
+|---|---|
+| 4 | `solape-menu-inactivo`: el motivo se lee entero en dos renglones («…se solapa con su línea 1.»). `solape-arrastre-prohibido`: el carril de Ana tiene borde discontinuo y el motivo centrado, así que se distingue de la franja permitida sin depender del color. |
+| 5 | `juntos-solapes`: las regiones van centradas en sus sub-filas y el texto se lee sin recortes. |
+| 6 | Las capturas ya no tienen el tooltip encima. |
+| 7 | `bloque-solapes`: con «Todas en un bloque» elegido se ve la nota `edi.pantalla.bloqueSolapes` con «Ver en zonas». |
+
+C1S-E2, C1S-E3, C1S-E4, C1S-E6 y C1S-E7 quedan aprobados; C1S-E1 y C1S-E5, cubiertos por los tests.
+
+**Reproductor: aprobado con una comprobación menor (9).** Con el perfil sRGB fijo, los colores **siguen sin ser coherentes** entre `dos-voces` y las otras dos capturas:
+
+- En `dos-voces`, el oro y el cian salen saturados.
+- En `tres-voces-con-coro` y `dos-voces-final`, el oro, el cian, el naranja y los bordes de sus insignias salen más pálidos.
+- La interfaz de alrededor (barra de progreso, deslizadores, título) es idéntica en las tres.
+
+Así que no es el perfil de color. La palidez afecta a líneas enteras, insignia incluida, y no al resto del fotograma: tiene la forma de una **opacidad menor que 100 %**, no la de una mezcla de colores. Puede ser la subida de 55 % a 100 % al empezar una línea, o el paso a gris al acabar, que duran `D`. En los tres casos pálidos hay una línea que acaba de entrar o está a punto de salir.
+
+9. **Menor.** Comprobar si es la transición:
+   - En los instantes de `tres-voces-con-coro` (00:08) y `dos-voces-final` (00:17), anotar la opacidad que da el modelo a cada zona que suena.
+   - Si es la transición `D`, es el comportamiento diseñado. Basta con mover esas dos capturas a un instante en que haya pasado al menos `D` desde el último inicio y falte al menos `D` para el siguiente fin.
+   - Si una zona que suena se queda por debajo del 100 % pasado `D`, es un fallo de C1S-R1 («las dos zonas están al 100 %») y **bloquea**.
+   - El color exacto de lo ya cantado (C1S-R4) queda aprobado por el test del programador.
+
 ## Observación sin cambio
 
 La lectura funciona: cada voz en su franja, quien canta ahora al 100 % y quien espera al 55 %, y las insignias se leen a 1280 × 720. Con tres barridos a la vez la pantalla está cargada pero se puede seguir. Se anota en la guía manual para probarlo a 5 m.

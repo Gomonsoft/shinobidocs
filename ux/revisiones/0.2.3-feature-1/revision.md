@@ -106,6 +106,17 @@ Los criterios de comportamiento (deshacer, teclas, datos) no se ven en una captu
 
 12. **Menor.** `estilo-voces` muestra «Varias voces» con sus dos opciones, pero se corta en «Líneas a la vez» y no deja ver la nota `edi.pantalla.zonas`, que C1-E24 pide. Cambio: repetir la captura a los tres tamaños desplazando el panel hasta que se vea la nota (bajo «Líneas ya cantadas»).
 
+### Tercera vuelta (2026-11-23): veredicto final del editor
+
+**Aprobada.**
+
+- La corrección 12 está aplicada: `estilo-voces` muestra «Varias voces» y la nota `edi.pantalla.zonas` entera.
+- Fallos que solo se veían en Linux, corregidos por el programador:
+  - **El hueco del chip cede hasta 30 px** (`minmax(30px, …)`) para que el texto conserve 96 px a 256 px. **Es aceptable**: 30 px es el ancho del chip más ancho («A·L»), así que ningún chip se recorta, y en `lista-256` a 1024 × 576 el chip y el texto no se tocan. La spec 06 · «Ancho» lo recoge: el hueco cede antes que el texto, nunca por debajo del chip más ancho ni de 30 px, y con al menos 4 px de separación con el tiempo y con el texto. Si un día hubiera un chip más ancho de 30 px, manda su ancho.
+  - **El relleno de 12 px del panel solo se aplica con barras de desplazamiento superpuestas.** Es correcto: con barras clásicas el navegador ya reserva su hueco, y lo que pedía la corrección 7 era que ningún texto quedara debajo de la barra.
+
+Todos los criterios C1-E y C1-R quedan aprobados o cubiertos por los tests de la tarea.
+
 Las capturas `solape-*` que se guardaron en esta carpeta son de la feature 3 y se revisan en [su revisión](../0.2.3-feature-3/revision.md).
 
 ## Reproductor (segunda parte, 2026-11-23)
