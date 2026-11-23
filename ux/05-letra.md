@@ -246,14 +246,18 @@ La comprobación da un **veredicto** por letra:
 
 | Veredicto | Qué significa para el usuario | Icono y color | Texto en el candidato |
 |---|---|---|---|
-| `coincide` | Las líneas empiezan donde empieza la voz. | `check` · `exito` | `let.comp.coincide` |
+| `coincide` | Las líneas empiezan donde empieza la voz **y** la comprobación habría notado si la letra fuera movida (revisión 2026-11-22, ADR 0024: contraste suficiente y voz con pausas). | `check` · `exito` | `let.comp.coincide` |
 | `desfasada` | Toda la letra va adelantada o atrasada la misma cantidad `d` (entre 0,5 s y 5 s); movida esa cantidad, coincide. | `move-horizontal` · `info` | `let.comp.adelantada` / `let.comp.atrasada` |
-| `dudosa` | Ni encaja con claridad ni falla con claridad (mucha voz sin letra por coros, pocas líneas, voz muy tenue). | `circle-help` · `texto-2` | `let.comp.dudosa` |
+| `dudosa` | Ni encaja con claridad ni falla con claridad (mucha voz sin letra por coros, pocas líneas, voz muy tenue), **o la comprobación no puede saberlo con esta voz o esta letra** (`limitacion`, abajo). | `circle-help` · `texto-2` | `let.comp.dudosa` (sin limitación) · `let.comp.dudosa.limitada` (con limitación) |
 | `no_coincide` | Muchas líneas caen en silencio o hay tramos largos de voz sin letra, también después de probar a moverla. Un desfase que no es constante entra aquí: no se arregla moviendo. | `triangle-alert` · `aviso` | `let.comp.noCoincide` |
 | `pendiente` | Aún no hay voz separada o su forma de onda se está preparando. | `clock` · `texto-3` | `let.comp.pendiente` |
 | `no_disponible` | No se pudo leer la voz (pistas que faltan, error de la forma de onda). | — · `texto-3` | `let.comp.noDisponible` |
 | (sin tiempos) | Letra «Solo texto». | — | No se muestra línea de comprobación. |
 
+- **Limitación de la comprobación** (revisión 2026-11-22, [ADR 0024](../adr/0024-encaje-de-la-letra-con-la-voz-y-lineas-dudosas.md) «Medida con canciones reales», respuesta a [0275](../preguntas/0275-la-correccion-de-desfase-no-funciona-con-letras-sin-fines-y-las-constantes-no-aguantan.md); provisional, [0280](../preguntas/0280-que-hace-hoy-la-comprobacion-de-la-letra-con-tus-canciones.md)). Un veredicto `dudosa` puede traer `limitacion`:
+  - `vozContinua`: la voz suena casi sin pausas; con ella no se puede saber si la letra es la correcta ni si va adelantada.
+  - `sinContraste`: mover la letra un poco casi no cambia el resultado (típico de las letras de LRCLIB que solo traen el inicio de cada línea), así que no se puede saber si va adelantada o atrasada.
+  Con una limitación **no es un aviso ni un error**: es información. Se pinta igual que `dudosa` (icono `circle-help`, `texto-2`, nunca `aviso`), **nunca se propone corregir el desfase** ni se ofrece «Buscar otra letra» como acción destacada, y los textos dicen qué no se pudo comprobar y qué puede hacer la persona (escucharla y ajustarla a oído en el editor; con `sinContraste`, poner el fin de las líneas ayuda). Todos acaban dejando claro que no se ha cambiado nada. Con letras de LRCLIB sin fines, «No está claro» será lo habitual (provisional, 0154 n.º 19).
 - **«Adelantada»** = la letra sale antes que la voz; se corrige moviéndola **más tarde**. «Atrasada», al revés.
 - El desfase se muestra con un decimal («0,8 s») y se aplica con precisión de milisegundo. Por debajo de 0,5 s no se propone nada: es `coincide` (valor del [ADR 0024](../adr/0024-encaje-de-la-letra-con-la-voz-y-lineas-dudosas.md) §1, medido con la biblioteca del usuario: por debajo, la medida no distingue una letra correcta; pregunta [0159](../preguntas/0159-decisiones-provisionales-del-arquitecto-de-0-2-2.md) n.º 7).
 - Los umbrales entre veredictos los fija el arquitecto y los calibra QA con las 12 canciones Lista del usuario (ADR de la feature 4). La spec fija el comportamiento: ante la duda, `dudosa`, nunca una corrección.
@@ -380,7 +384,11 @@ La comprobación da un **veredicto** por letra:
 | `let.comp.pendiente` | Se comprobará con tu audio al terminar la separación |
 | `let.comp.noDisponible` | No se pudo comprobar con tu audio |
 | `let.comp.desfase.ayuda` | Toda la letra sale {d} s antes que la voz. Al usarla la moveremos {d} s más tarde. Los tiempos de abajo ya están corregidos. · (atrasada) Toda la letra sale {d} s después que la voz. Al usarla la moveremos {d} s antes. Los tiempos de abajo ya están corregidos. |
-| `let.comp.dudosa.ayuda` | Parte de la letra coincide con la voz y parte no. Puede deberse a coros o a partes sin letra. Escúchala en el editor antes de darla por buena. |
+| `let.comp.dudosa.ayuda` | Parte de la letra coincide con la voz y parte no. Puede deberse a coros o a partes sin letra. Escúchala en el editor antes de darla por buena. (Solo sin `limitacion`.) |
+| `let.comp.dudosa.limitada` | No podemos comprobarla con tu audio |
+| `let.comp.limitacion.vozContinua` | En esta canción la voz suena casi sin pausas, así que no podemos comprobar con ella si la letra es la correcta ni si va adelantada o atrasada. No hemos cambiado nada. Escúchala en el editor y, si hace falta, ajústala a oído. |
+| `let.comp.limitacion.sinContraste` | Esta letra solo marca dónde empieza cada línea, no dónde acaba, así que no podemos saber si va adelantada o atrasada. No hemos cambiado nada. Escúchala en el editor; si pones el fin de las líneas, la comprobación podrá ayudarte. |
+| `let.comp.actual.limitada` | No podemos comprobar esta letra con tu audio: {motivo corto}. No hemos cambiado nada. — `{motivo corto}`: (vozContinua) la voz casi no tiene pausas · (sinContraste) la letra no marca dónde acaba cada línea |
 | `let.comp.noCoincide.ayuda` | Puede ser otra versión de la canción. Prueba con otra letra o revísala en el editor. |
 | `let.comp.detalle.silencio` | {n} de {total} líneas caen donde no hay voz (de {a} a {b}). · (varios tramos) {n} de {total} líneas caen donde no hay voz. · (n = 1) 1 de {total} líneas cae donde no hay voz ({a}). |
 | `let.comp.detalle.vozSinLetra` | Hay voz sin letra de {a} a {b}. · (varios) Hay voz sin letra en {k} tramos; el más largo, de {a} a {b}. |
@@ -390,7 +398,7 @@ La comprobación da un **veredicto** por letra:
 | `let.comp.actual.corregida` | Movimos toda la letra {d} s más tarde para que coincida con la voz. — [Quitar la corrección] · (atrasada) Movimos toda la letra {d} s antes para que coincida con la voz. — [Quitar la corrección] |
 | `let.comp.actual.adelantada` | Toda la letra va {d} s adelantada respecto a la voz. — [Corregir el desfase] |
 | `let.comp.actual.atrasada` | Toda la letra va {d} s atrasada respecto a la voz. — [Corregir el desfase] |
-| `let.comp.actual.dudosa` | No está claro si la letra coincide con la voz. Escúchala en el editor. |
+| `let.comp.actual.dudosa` | No está claro si la letra coincide con la voz. Escúchala en el editor. (Solo sin `limitacion`; con ella, `let.comp.actual.limitada`.) |
 | `let.comp.actual.noCoincide` | La letra no coincide con la voz de tu audio: puede ser otra versión. — [Ver por qué] [Buscar otra letra] |
 | `let.comp.actual.pendiente` | La comprobaremos con tu audio al terminar la separación. |
 | `let.comp.boton.corregir` | Corregir el desfase |
@@ -406,7 +414,7 @@ La comprobación da un **veredicto** por letra:
 ### Criterios de aceptación (0.2.2 · feature 4, Letra)
 
 - F4-L1. Con la voz separada, cada candidato con tiempos muestra su línea de comprobación con icono y texto según la tabla de veredictos; un candidato «Solo texto» no la muestra. Con veredicto concluyente no se muestra la línea de duración; con `dudosa`, `pendiente` o `no_disponible`, sí.
-- F4-L2. Con fixtures de picos y letra (test de la función pura): una letra con los inicios sobre los arranques de voz da `coincide`; la misma movida −800 ms da `desfasada` con `d = 800 ms` ± 50 ms («adelantada»); movida +1500 ms, «atrasada»; la letra de otra canción da `no_coincide`; una letra con un desfase que crece de 0 a 3 s da `no_coincide` con `let.comp.detalle.variable`; una letra con 2 líneas da «sin comprobar».
+- F4-L2. Con fixtures de picos y letra (test de la función pura): una letra con los inicios sobre los arranques de voz da `coincide`; la misma movida −800 ms da `desfasada` con `d = 800 ms` ± 50 ms («adelantada»); movida +1500 ms, «atrasada»; la letra de otra canción da `no_coincide`; una letra con un desfase que crece de 0 a 3 s da `no_coincide` con `let.comp.detalle.variable`; una letra con 2 líneas da «sin comprobar». Además (revisión 2026-11-22): con voz casi continua (≥ 90 % de bloques con voz), la letra correcta da `dudosa` con `limitacion: "vozContinua"` y nunca propone corrección; una letra **sin fines** desplazada 800 ms **nunca** da `coincide` (da `dudosa` con `sinContraste`, o `desfasada` si la curva tiene pico). En la interfaz, cada limitación muestra `let.comp.dudosa.limitada` en el candidato, su texto `let.comp.limitacion.*` en la vista previa y `let.comp.actual.limitada` en C, con icono `circle-help` en `texto-2` y sin [Corregir el desfase].
 - F4-L3. La lista sale ordenada por los cuatro grupos de «Orden» y, dentro de cada uno, como en el criterio 3 original; el primero queda seleccionado con su vista previa.
 - F4-L4. Al seleccionar un candidato `desfasada`, la vista previa muestra `let.comp.desfase.ayuda` y los tiempos ya corregidos; al seleccionar uno `no_coincide`, los motivos con sus tramos en m:ss.
 - F4-L5. «Usar esta letra» sobre un candidato `desfasada` guarda en `cancion.json` los `inicio_ms`, `fin_ms` y palabras **idénticos** a los del candidato (comparación exacta en ms), `letra.offset_ms = d` redondeado a 10 ms y `letra.desfase_corregido_ms = d`; C muestra `let.comp.actual.corregida`. [Quitar la corrección] deja `offset_ms` en el valor previo (0) y sin `desfase_corregido_ms`, sin tocar ningún tiempo de línea, y muestra la propuesta con [Corregir el desfase], que vuelve a corregir.
@@ -416,7 +424,9 @@ La comprobación da un **veredicto** por letra:
 - F4-L9. Pegar o importar un LRC muestra en C su veredicto; una letra sin tiempos no muestra línea de comprobación.
 - F4-L10. El nombre accesible de cada opción incluye su comprobación; `let.comp.llegada` se anuncia una vez sin mover el foco; corregir y quitar se anuncian con `let.comp.anuncio.*`. Todo es operable con teclado.
 - F4-L11. Un fallo de escritura al corregir o quitar deja los tiempos como estaban y muestra `let.comp.error.guardar`.
-- F4-L12. Capturas en `docs/ux/revisiones/0.2.2-feature-4/`, nombre `letra-1280x800-100-{estado}.png`: `candidatos-comprobados`, `candidato-desfasado`, `candidato-no-coincide`, `comprobacion-pendiente`, `aviso-llegada`, `actual-corregida`, `actual-propuesta`, `actual-no-coincide`.
+- F4-L12. Capturas en `docs/ux/revisiones/0.2.2-feature-4/`, nombre `letra-1280x800-100-{estado}.png`: `candidatos-comprobados`, `candidato-desfasado`, `candidato-no-coincide`, `comprobacion-pendiente`, `aviso-llegada`, `actual-corregida`, `actual-propuesta`, `actual-no-coincide`, y (revisión 2026-11-22) `candidato-limitado` (un candidato de LRCLIB sin fines con `sinContraste` seleccionado) y `actual-limitada`.
+
+**Verificación manual** (guía de `docs/Test-manuales/0.2.2/`, revisión 2026-11-22): con una letra correcta, el veredicto debe ser «Coincide» **o** «No está claro» **con su motivo**, y **nunca** «No coincide». Con una letra de LRCLIB que solo trae el inicio de cada línea, lo esperado es «No está claro». Comprobar que el texto no suena a error y no ofrece corregir nada. La corrección de ±0,8 s se prueba con una canción con pausas y con fines puestos.
 
 **Verificación manual** (guía de `docs/Test-manuales/0.2.2/`): con tres canciones reales ya Listas, abrir Letra › «Buscar otra letra» y comprobar que la letra correcta sale como «Coincide»; con un LRC de esas mismas canciones movido a mano 1 s (editando las marcas), importarlo y comprobar que sale «atrasada 1,0 s» y que al corregir coincide al cantarla; con la letra de una versión en directo, comprobar que sale «No coincide» o «No está claro», nunca una corrección; anotar cualquier canción con coros largos que salga como «No está claro» para calibrar.
 
@@ -478,6 +488,7 @@ Origen: [plan 0.2.2, feature 5](../versiones/0.2.2/plan-4.md) y [propuesta 020](
 | `let.prep.motivo.sinArtista` | falta el artista de la canción: escríbelo arriba y vuelve a buscar, o elige tú (tiene prioridad sobre los demás motivos cuando el artista está vacío; respuesta a 0244 n.º 3) |
 | `let.prep.motivo.sinExacta` | aunque alguna encaja con tu audio, ninguna coincide a la vez en título, artista y duración con tu canción · (ninguna encaja con el audio) ninguna coincide a la vez en título, artista y duración con tu canción |
 | `let.prep.motivo.duda` | no está claro que coincida con tu audio |
+| `let.prep.motivo.limitada` | no podemos comprobarlas con tu audio: la voz casi no tiene pausas o las letras no marcan dónde acaba cada línea (cuando el mejor candidato es `dudosa` con limitación; revisión 2026-11-22) |
 | `let.prep.motivo.noCoincide` | ninguna coincide con tu audio |
 | `let.prep.motivo.soloTexto` | solo hay letras sin sincronizar |
 | `let.prep.motivo.sinComprobar` | no pudimos comprobarla con tu audio |

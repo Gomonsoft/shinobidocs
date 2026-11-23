@@ -77,9 +77,19 @@ Siguiendo tu regla («por defecto se aplica la opción recomendada por el agente
     - **A (provisional).** La cola sigue; una nota sugiere pausarla si hay cortes de sonido.
     - B. La cola se pausa sola al abrir el reproductor en otra pantalla y se reanuda al cerrarlo.
 
+Añadidas el 2026-11-22, tras medir con 18 canciones tuyas (contexto en [0280](0280-que-hace-hoy-la-comprobacion-de-la-letra-con-tus-canciones.md)):
+
+18. **Canciones con letra de una versión anterior** (MVP o 0.2.1).
+    - **A (provisional).** No se les ofrece «Preparar» sino «Ajustar los fines…», que pide confirmación y solo pone fin a las líneas que no lo tienen, donde la voz se para claramente. Nunca mueve inicios ni la letra entera, y esos fines se pueden quitar. También en canciones ya «Lista».
+    - B. No ofrecer nada para esas canciones.
+    - C. Hacerlo sin preguntar.
+19. **Cómo se dice que la comprobación no puede saberlo.**
+    - **A (provisional).** «No podemos comprobarla con tu audio», en gris (no como aviso), con el motivo en palabras llanas (la voz casi no tiene pausas, o la letra no marca dónde acaba cada línea), que no se ha cambiado nada y qué puedes hacer (escucharla y ajustarla a oído, o poner los fines). Con letras de LRCLIB será lo habitual.
+    - B. No mostrar nada cuando no se puede comprobar.
+
 ## Opción provisional tomada (si no bloquea)
 
-La A en los 17 puntos.
+La A en los 19 puntos.
 
 ## Respuesta
 

@@ -2767,7 +2767,7 @@ Origen: [plan 0.2.2, feature 4](../versiones/0.2.2/plan-4.md) y [propuesta 022](
 | **Resultado `coincide`** | Sin diálogo: toast `edi.comprobar.toast.coincide` (`exito`, se cierra solo) y anuncio. Foco en el botón. |
 | **Resultado `desfasada`** | Diálogo «¿Corregir el desfase?» (abajo). |
 | **Resultado `no_coincide`** | Diálogo informativo «La letra no encaja con la voz» (abajo). |
-| **Resultado `dudosa`** | Diálogo informativo `edi.comprobar.dudosa` con [Cerrar]. No propone nada. |
+| **Resultado `dudosa`** | Diálogo informativo `edi.comprobar.dudosa` con [Cerrar]. No propone nada. **Con `limitacion`** (revisión 2026-11-22, [05 · Feature 4](05-letra.md#022--feature-4--comprobar-la-letra-contra-el-audio-y-corregir-el-desfase)): el mismo diálogo con el título `edi.comprobar.limitada.titulo` y el cuerpo `edi.comprobar.limitada.vozContinua` o `.sinContraste`; sin icono de aviso (icono `circle-help`, `texto-2`), sin [Corregir el desfase] ni [Buscar otra letra]; solo [Cerrar]. El banner al entrar no sale con `dudosa` (como hasta ahora). |
 | **Línea «Desfase corregido»** | Visible mientras exista `letra.desfase_corregido_ms` (corrección hecha aquí, en Letra o por la preparación automática). [Quitar la corrección] resta `desfase_corregido_ms` de `offset_ms` y borra el campo (ADR 0024 §1): la letra vuelve a sonar donde sonaba antes de corregir, en **un paso** del historial, con el toast `edi.desfase.toast.quitada` y [Deshacer]. |
 
 ### Diálogo «¿Corregir el desfase?» (480 px)
@@ -2856,7 +2856,10 @@ Al abrir el editor de un **borrador** con ≥ 5 líneas con inicio y los picos l
 | `edi.comprobar.calculando` | Comprobando… |
 | `edi.comprobar.falta.lineas` | Para comprobar la letra hacen falta al menos 5 líneas sincronizadas. |
 | `edi.comprobar.toast.coincide` | La letra coincide con la voz. |
-| `edi.comprobar.dudosa` | **No está claro si la letra coincide con la voz.** Parte coincide y parte no; puede deberse a coros o a partes sin letra. No hemos cambiado nada. — [Cerrar] |
+| `edi.comprobar.dudosa` | **No está claro si la letra coincide con la voz.** Parte coincide y parte no; puede deberse a coros o a partes sin letra. No hemos cambiado nada. — [Cerrar] (solo sin `limitacion`) |
+| `edi.comprobar.limitada.titulo` | No podemos comprobar esta letra con la voz |
+| `edi.comprobar.limitada.vozContinua` | En esta canción la voz suena casi sin pausas, así que no podemos saber si la letra va adelantada o atrasada. No hemos cambiado nada. Escúchala y, si notas que va antes o después de la voz, ajusta las líneas a oído. — [Cerrar] |
+| `edi.comprobar.limitada.sinContraste` | Esta letra solo marca dónde empieza cada línea, no dónde acaba, así que mover la letra apenas cambia nada y no podemos saber si va adelantada o atrasada. No hemos cambiado nada. Escúchala; si pones el fin de las líneas (por ejemplo con «Ajustar los silencios»), podrás volver a comprobarla. — [Cerrar] |
 | `edi.comprobar.noCoincide.titulo` | La letra no encaja con la voz |
 | `edi.comprobar.noCoincide` | Puede ser la letra de otra versión de la canción. |
 | `edi.comprobar.noCoincide.pie` | No se puede arreglar moviendo toda la letra. |
@@ -2877,7 +2880,7 @@ Al abrir el editor de un **borrador** con ≥ 5 líneas con inicio y los picos l
 ### Criterios de aceptación (0.2.2 · feature 4, editor)
 
 - F4-E1. La pestaña «Funciones» tiene la sección «Comprobar la letra con la voz» justo antes de «Ajustar los silencios» y en el orden común de la pestaña (Preparación automática · Revisar la sincronía · Sincronizar con la voz · Comprobar la letra con la voz · Ajustar los silencios · Exportar video · Exportar la letra · Modo de reproducción · Estado de la canción, omitiendo las que no existan), con su botón secundario; con menos de 5 líneas con inicio, la separación sin terminar o los picos sin preparar, el botón es `aria-disabled` y muestra su motivo debajo, que se actualiza en vivo.
-- F4-E2. Con una letra que coincide, pulsar el botón muestra `edi.comprobar.toast.coincide` y no cambia `cancion.json`.
+- F4-E2. Con una letra que coincide, pulsar el botón muestra `edi.comprobar.toast.coincide` y no cambia `cancion.json`. Con voz casi continua (fixture) muestra el diálogo con `edi.comprobar.limitada.vozContinua`; con una letra sin fines desplazada 800 ms, nunca el toast de «coincide» (diálogo con `.sinContraste`, o el de corregir si la curva tiene pico). En los dos diálogos de limitación solo hay [Cerrar] y `cancion.json` no cambia.
 - F4-E3. Con una letra movida −800 ms respecto a la voz y `offset_ms: 0` (fixture), el diálogo dice «0,8 s adelantada» y el número de líneas; «Corregir el desfase», en una sola operación del historial, deja en `cancion.json` `letra.offset_ms` = 800 ± 50 ms (múltiplo de 10) y `letra.desfase_corregido_ms` igual a ese valor, con **todos** los `inicio_ms`, `fin_ms`, textos y palabras idénticos a los previos (comparación exacta en ms). La lista, las regiones y la vista previa muestran cada línea 0,8 s más tarde. Un Ctrl/Cmd + Z deja `offset_ms` en 0, sin `desfase_corregido_ms`, y quita la línea «Desfase corregido»; con un `offset_ms` previo distinto de 0, la corrección se **suma** a él.
 - F4-E4. Una línea con tiempos por palabra hechos a mano conserva sus `palabras` idénticas en el archivo tras la corrección (comparación exacta) y se muestran movidas `d` con la letra (tiempo mostrado = tiempo guardado + `offset_ms`); no aparece `edi.toast.palabras`; el diálogo mostró `edi.desfase.palabras`.
 - F4-E5. Tras corregir, la sección muestra `edi.desfase.corregido` con [Quitar la corrección], que en un paso del historial resta `desfase_corregido_ms` de `offset_ms` (vuelve al valor previo exacto), borra `desfase_corregido_ms` y no cambia ningún tiempo de línea; la línea «Desfase corregido» también aparece si `desfase_corregido_ms` lo escribió la vista Letra o la preparación automática.
@@ -2888,7 +2891,7 @@ Al abrir el editor de un **borrador** con ≥ 5 líneas con inicio y los picos l
 - F4-E10. En los seis viewports de la subfase 2.1, la sección y los dos diálogos no producen scroll de página; a 300 px de ancho del panel el botón no se parte.
 - F4-E11. Capturas en `docs/ux/revisiones/0.2.2-feature-4/`, nombre `editor-1280x720-100-{estado}.png`: `funciones-comprobar`, `funciones-comprobar-no-disponible`, `dialogo-desfase`, `dialogo-no-encaja`, `banner-desfase`, `desfase-corregido`.
 
-**Verificación manual** (guía de `docs/Test-manuales/0.2.2/`): en una canción real, mover a mano toda la letra con un LRC editado (1 s y 3 s) y comprobar que la corrección deja el barrido sobre la voz a oído; comprobar una canción con una intro hablada o coros largos y anotar si sale «No está claro»; comprobar que el diálogo de «no encaja» lleva a tramos donde de verdad falta o sobra letra.
+**Verificación manual** (guía de `docs/Test-manuales/0.2.2/`): en una canción real, mover a mano toda la letra con un LRC editado (1 s y 3 s) y comprobar que la corrección deja el barrido sobre la voz a oído; comprobar una canción con una intro hablada o coros largos y anotar si sale «No está claro»; con una letra correcta, el resultado es «Coincide» o «No está claro» con su motivo, nunca «No coincide» (con una letra de LRCLIB sin fines, lo esperado es «No está claro»); comprobar que el diálogo de «no encaja» lleva a tramos donde de verdad falta o sobra letra.
 
 ## 0.2.2 · Feature 5 — Preparación desatendida: lo que el editor cuenta
 
@@ -2933,6 +2936,7 @@ Primera sección de la pestaña, solo si la canción tiene registro de preparaci
 | Desfase | Hay una corrección recordada. | [Quitar la corrección]: la misma acción de la feature 4 (no se repite en su sección mientras este bloque exista). |
 | Fines | La preparación fijó fines (paso «Ajustar los fines», spec 04). | [Quitar esos fines]: vuelve a **automático** el fin de las líneas que la preparación fijó **y que siguen con ese mismo valor** (las que el usuario tocó después no cambian). Un paso del historial; toast `edi.prep.toast.fines` con [Deshacer]. |
 
+- Tras «Ajustar los fines…» sobre una letra sin marca (spec 02, revisión 2026-11-22), el bloque aparece solo con el renglón de fines y su [Quitar esos fines]; la intro dice `edi.prep.intro.fines`. No hay banner al entrar por esto (la canción no fue «preparada»: el usuario lo pidió y confirmó).
 - Un renglón desaparece cuando deja de ser cierto (letra sustituida, corrección quitada, ningún fin de la preparación en pie). Sin renglones, el bloque no se muestra.
 - Los botones son fantasma; ninguno pide confirmación porque todos se deshacen con Ctrl/Cmd + Z.
 - Si la feature 10 (alineación) hizo el paso de fines, el renglón y su acción los define su sección; este bloque solo le reserva el sitio.
@@ -2944,6 +2948,7 @@ Primera sección de la pestaña, solo si la canción tiene registro de preparaci
 | `edi.banner.preparada` | Shinobi Karaoke preparó esta canción sola. Escúchala, corrige lo que no coincida y márcala como lista. — [Ver qué hicimos] |
 | `edi.prep.titulo` | Preparación automática |
 | `edi.prep.intro` | Shinobi Karaoke preparó esta canción el {fecha}: |
+| `edi.prep.intro.fines` | El {fecha} pediste ajustar los fines que faltaban: |
 | `edi.prep.letra` | Letra de LRCLIB, coincidencia exacta. · (elegida por el usuario entre candidatas) Letra de LRCLIB, elegida por ti. |
 | `edi.prep.letra.boton` | Ver otras candidatas |
 | `edi.prep.desfase` | (= `edi.desfase.corregido`) |

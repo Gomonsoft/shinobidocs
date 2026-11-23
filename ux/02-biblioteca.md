@@ -1095,6 +1095,7 @@ La decisión la da main para cada canción en el momento de abrir la confirmaci�
 |---|---|
 | Qué hace | Lo mismo que «Preparar» de una sola canción (feature 5), una tras otra, en las colas de trabajos que ya existen. **No** sustituye una letra ya elegida ni tiempos ya puestos: cada canción continúa desde su primer paso pendiente. |
 | Nota por canción | La calcula main: `bib.acc.preparar.nota.*` según lo que le falte (descargar, separar, letra, fines). |
+| **Canciones con letra sin marca** (`prepararFinesSinMarca`, revisión 2026-11-22) | Entran en el lote con la nota `bib.acc.preparar.nota.finesSinMarca` y solo recibirán los fines que faltan. Si hay alguna, el diálogo añade bajo la lista el aviso `bib.acc.preparar.aviso.finesSinMarca` (`info`) y **ese mismo diálogo es la confirmación**: no hay un segundo diálogo. Main recibe `preparar(ids, { finesSinMarca: true })`. Si el usuario no quiere tocarlas, las desmarca de la selección antes. |
 | Privacidad | La nota `bib.acc.preparar.privacidad` aparece siempre que alguna canción vaya a buscar letra. Pulsar «Preparar» es una búsqueda iniciada por el usuario: funciona aunque el interruptor «Buscar la letra automáticamente» de la feature 5 esté apagado. |
 | Motor de sincronía (feature 10) | Si alguna canción usará «Ajustar los silencios» porque falta el modelo de su idioma, no se avisa aquí: lo dice el resultado de cada canción (spec 04, feature 10). |
 | Al confirmar | El diálogo se cierra, se sale del modo selección y aparece el toast `bib.acc.preparar.toast` con [Ver actividad] (abre el panel de actividad). Las canciones entran **al final de la cola de preparación**, en el orden de la lista; si ya había una tanda en marcha, se suman a ella (feature 7). Las tarjetas muestran las líneas de paso de la feature 5. |
@@ -1224,6 +1225,8 @@ La decisión la da main para cada canción en el momento de abrir la confirmaci�
 | `bib.acc.preparar.titulo` | Preparar {n} canciones · Preparar 1 canción |
 | `bib.acc.preparar.explicacion` | Shinobi Karaoke hará sola lo que falta en cada una: separar las pistas, buscar la letra, comprobarla con la voz y ajustar los fines. Quedarán como «Lista para revisar». |
 | `bib.acc.preparar.nota` | Buscará la letra · Separará las pistas y buscará la letra · Descargará el audio, separará las pistas y buscará la letra · Ya tiene letra: comprobará la letra y ajustará los fines · Separará las pistas |
+| `bib.acc.preparar.nota.finesSinMarca` | Ya tiene letra (puede tener cambios tuyos): solo pondrá los fines que faltan |
+| `bib.acc.preparar.aviso.finesSinMarca` | {k} de estas canciones tienen una letra de una versión anterior, que puede tener cambios tuyos. En ellas solo pondremos fin a las líneas que no lo tienen, donde la voz se para claramente. No moveremos ningún inicio ni la letra entera, y podrás quitar esos fines desde el editor. · (k = 1) 1 de estas canciones tiene … |
 | `bib.acc.preparar.privacidad` | Para buscar la letra se envían el título y el artista de cada canción a LRCLIB. |
 | `bib.acc.preparar.boton` | Preparar {n} canciones · Preparar 1 canción |
 | `bib.acc.preparar.toast` | {n} canciones en cola para preparar. Puedes seguir usando Shinobi Karaoke. — [Ver actividad] · (n = 1) «{título}» está en cola para preparar. — [Ver actividad] |
@@ -1718,7 +1721,24 @@ Se añaden a la tabla de la spec base (misma prioridad: trabajo activo, luego pr
 | **Cuándo aparece** | En borradores a los que les falta algún paso que la app puede hacer sola. No aparece en «Lista para revisar», Listas, Letra lista ni Dañadas, ni en una canción que ya se está preparando. |
 | **Privacidad** | Es una búsqueda **iniciada por el usuario**: funciona aunque «Buscar la letra automáticamente» esté desactivado. El ítem lleva la descripción `bib.prep.menu.ayuda` (segunda línea del ítem, `texto-3`) cuando va a buscar letra. |
 | **Al pulsar** | Sin diálogo. Toast `bib.prep.toast.preparando`; la tarjeta muestra su línea de paso. Con una sola canción, el resultado llega con el toast de la spec 04. |
-| **Canciones de antes de 0.2.2** | Los borradores que ya existen no se preparan solos al actualizar: se preparan con este ítem o con «Preparar» de la selección múltiple **(decisión provisional)**. |
+| **Canciones de antes de 0.2.2** | Los borradores que ya existen no se preparan solos al actualizar: se preparan con este ítem o con «Preparar» de la selección múltiple **(decisión provisional)**. Los que **no tienen letra** siguen la cadena completa. Los que **ya tienen letra** de una versión anterior (sin la marca de letra intacta; main lo dice con `prepararFinesSinMarca`) no reciben «Preparar»: reciben **«Ajustar los fines…»** (fila siguiente), que **solo** pone fin a las líneas que no lo tienen, donde la voz se para claramente, y **solo tras confirmar**. Nunca mueve inicios ni fines ya puestos, nunca toca las palabras ni corrige el desfase, y no busca letra ni usa la red (revisión 2026-11-22, [ADR 0025](../adr/0025-preparacion-desatendida-y-datos-de-la-cancion-automaticos.md), respuesta a [0278](../preguntas/0278-las-letras-del-mvp-y-de-0-2-1-no-tienen-intacta-y-preparar-no-hace-nada.md); provisional, 0154 n.º 18). |
+| **«Ajustar los fines…»** (tarjetas con `prepararFinesSinMarca`) | Ítem del menú ⋯ (`bib.prep.fines.menu`, icono `wand-sparkles`) en el sitio de «Preparar», en borradores, «Lista para revisar» y **también en Lista y Letra lista** con letra sin marca y alguna línea sin fin (la canción no cambia de estado). El nombre es otro porque hace otra cosa: no prepara la canción, solo pone fines. Abre siempre el diálogo de confirmación `bib.prep.fines.dialogo` (abajo; foco inicial en [Cancelar]). Al confirmar: `preparar([id], { finesSinMarca: true })`, toast `bib.prep.fines.toast` con [Ver la letra] (abre el editor) y, al terminar, `bib.prep.fines.toast.fin` con el número de fines puestos. Sin líneas sin fin, el ítem no aparece. Durante una sesión en otra pantalla, como «Preparar» (disponible: no toca lo que suena). |
+
+**Diálogo `bib.prep.fines.dialogo`** (480 px)
+```
+┌ ¿Ajustar los fines de «Semestre de Otoño»? ──────────────────┐
+│ Esta letra viene de una versión anterior de Shinobi Karaoke  │
+│ y puede tener cambios tuyos.                                 │
+│ · Solo pondremos fin a las 31 líneas que no lo tienen, donde │
+│   la voz se para claramente.                                 │
+│ · No moveremos ningún inicio, ni los fines que ya tienes, ni │
+│   la letra entera.                                           │
+│ · Podrás quitar esos fines desde el editor («Quitar esos     │
+│   fines»).                                                   │
+│                              [Cancelar] [Ajustar los fines]  │
+└──────────────────────────────────────────────────────────────┘
+```
+Foco inicial en [Cancelar]; Esc = Cancelar (no cambia nada).
 
 **Lo que esta sección ofrece a las features 8 y 11** (respuesta a sus notas de coordinación): (1) «Preparar» es una operación de main que se pide para una o varias canciones y que, sin ejecutarse, dice para cada una si aplica y qué hará (0153 §7); (2) continúa desde el primer paso pendiente sin sustituir letra ni tiempos; (3) el resultado por canción es uno de: lista para revisar, elige la letra, no encontramos la letra (o instrumental), letra pendiente, error o cancelada; (4) al cerrar y reabrir, las preparaciones en cola se retoman solas (spec 04); (5) «Revisar» navega al editor y la feature 11 decide el modo; (6) hay sitio para una línea bajo la insignia; (7) «Lista para revisar» es siempre `estado: borrador`.
 
@@ -1795,6 +1815,10 @@ Encima de la bandeja, como aviso en línea (`info`) que se puede cerrar:
 | `bib.prep.menu` | Preparar |
 | `bib.prep.menu.ayuda` | Busca la letra en LRCLIB con el título y el artista |
 | `bib.prep.toast.preparando` | Preparando «{título}». Te avisaremos al terminar. |
+| `bib.prep.fines.menu` | Ajustar los fines… |
+| `bib.prep.fines.dialogo` | Título: ¿Ajustar los fines de «{título}»? · Cuerpo: Esta letra viene de una versión anterior de Shinobi Karaoke y puede tener cambios tuyos. · Solo pondremos fin a las {n} líneas que no lo tienen, donde la voz se para claramente. · No moveremos ningún inicio, ni los fines que ya tienes, ni la letra entera. · Podrás quitar esos fines desde el editor («Quitar esos fines»). — [Cancelar] [Ajustar los fines] · (n = 1) … a la línea que no lo tiene … |
+| `bib.prep.fines.toast` | Ajustando los fines de «{título}»… — [Ver la letra] |
+| `bib.prep.fines.toast.fin` | Pusimos fin a {k} de {n} líneas de «{título}». Las demás no tenían una pausa clara. — [Ver la letra] · (k = 0) No encontramos pausas claras en «{título}»: no hemos cambiado nada. |
 | `bib.bandeja.titulo` | Pendientes de ti: |
 | `bib.bandeja.revisar` | {n} listas para revisar · (n = 1) 1 lista para revisar |
 | `bib.bandeja.letra` | {n} esperan letra · (n = 1) 1 espera letra |
@@ -1811,6 +1835,8 @@ Encima de la bandeja, como aviso en línea (`info`) que se puede cerrar:
 - F5-B4. Cada resultado de la preparación muestra su línea de paso y su botón según la tabla: «Elige la letra · {n} candidatas» → Letra en A con las candidatas; «No encontramos la letra» → Letra con su banner; «Letra pendiente…» → [Reintentar] repite la búsqueda sin salir de la Biblioteca.
 - F5-B5. Con la letra elegida por la app, la tarjeta muestra `bib.prep.origen.auto` (o `.autoCorregida`) hasta que la canción se revisa; con la letra elegida por el usuario, no la muestra.
 - F5-B6. «Preparar» del ⋯ de un borrador sin letra lanza la búsqueda aunque el interruptor de Ajustes esté desactivado, muestra `bib.prep.toast.preparando` y la tarjeta pasa por las líneas ⟳; no aparece en «Lista para revisar», Listas ni Dañadas. En un borrador con letra del usuario, no la sustituye.
+- F5-B12. Una canción con letra anterior a 0.2.2 sin marca y líneas sin fin (fixture con `prepararFinesSinMarca`) muestra en el ⋯ «Ajustar los fines…» y no «Preparar»; también si es Lista. Pulsarlo abre `bib.prep.fines.dialogo` con el número de líneas sin fin y el foco en [Cancelar]; Cancelar o Esc no llaman a main. Confirmar llama a `preparar([id], { finesSinMarca: true })` y, al terminar, solo cambian los `fin_ms` que eran `null` (ahora con `origen_fin: "preparacion"`); todos los `inicio_ms`, los fines ya fijados, las palabras y `offset_ms` son idénticos (comparación del archivo), no hubo ninguna petición de red y el estado de la canción no cambia. «Quitar esos fines» del editor los devuelve a `null`.
+- F5-B13. En «Preparar» de la selección múltiple, una canción así sale con `bib.acc.preparar.nota.finesSinMarca` y el diálogo muestra `bib.acc.preparar.aviso.finesSinMarca`; confirmar ese diálogo vale como confirmación (no aparece otro) y main recibe `finesSinMarca: true`.
 - F5-B7. Con 9 listas para revisar, 3 que esperan letra y 1 con error, la bandeja muestra las tres casillas con sus números; pulsar una filtra la rejilla a esas canciones con el filtro en *Borradores*; pulsarla de nuevo o elegir otro filtro la quita; con todo a 0 la fila no existe.
 - F5-B8. Al cambiar de estado una canción con la Biblioteca abierta, su tarjeta y los números de la bandeja se actualizan sin mover el foco ni reordenar.
 - F5-B9. Tras reabrir la app con preparaciones a medias aparece `bib.prep.retomando`; [Detener] pausa la cola y muestra `bib.prep.enPausa`; [Reanudar] la retoma.

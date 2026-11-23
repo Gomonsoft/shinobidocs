@@ -361,6 +361,7 @@ R4 · Letra pendiente
 | **Elegir la letra** (R2) · **Añadir la letra** (R3, R4) | Abren la vista Letra en el estado de la spec 05, feature 5. |
 | **Reintentar** (R4) | Repite la búsqueda ahora; el subpaso vuelve a ⟳. |
 | **Stepper** | El paso 3 (Letra) muestra ⟳ mientras se busca o se comprueba y **!** (icono `circle-alert`, `aviso`, nombre accesible «necesita tu atención») en R2, R3 y R4. Sigue siendo navegable con las reglas de siempre. |
+| **«Ajustar los fines…» sobre una letra sin marca** (revisión 2026-11-22, spec 02) | No abre esta vista: se sigue desde la tarjeta y el panel de actividad. Si se abre la vista de la canción mientras corre, «Buscar la letra» y «Comprobar la letra con la voz» muestran «—» con `prog.prep.omitido.yaTieneLetra` y `prog.prep.omitido.sinMarca`, y solo «Ajustar los fines de línea» avanza. No hay bloque R al terminar: la canción conserva su estado. |
 | **Cancelar separación / descarga** | Sin cambios. Cancelar no borra las candidatas ya encontradas; la cadena se detiene y la tarjeta dice lo que falta. |
 | **Lector de pantalla** | Se anuncian el inicio y el resultado de cada subpaso nuevo, y el resultado final. |
 
@@ -413,6 +414,7 @@ R4 · Letra pendiente
 | `prog.prep.omitido.yaTieneLetra` | Ya tiene letra |
 | `prog.prep.omitido.sinLetra` | Falta la letra |
 | `prog.prep.omitido.desactivada` | Búsqueda automática desactivada |
+| `prog.prep.omitido.sinMarca` | Letra de una versión anterior: no se comprueba |
 | `prog.boton.verLetra` | Ver la letra |
 | `prog.prep.r1.titulo` | Lista para revisar |
 | `prog.prep.r1.letra` | Letra de LRCLIB, coincidencia exacta. |
