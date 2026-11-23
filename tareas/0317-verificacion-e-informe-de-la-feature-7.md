@@ -1,7 +1,7 @@
 # 0317 — Feature 7 · Verificación e informe
 - Estado: Pendiente
 - Paso del pipeline: 1
-- Depende de: 0313–0316
+- Depende de: 0313–0316, 0375
 - ADRs: 0026
 - Spec UX: docs/ux/03, 04 y 02 (0.2.2 · Feature 7)
 - Tamaño: S

@@ -125,3 +125,17 @@ Todas siguen el patrón de «Aplicar tema…» (ADR 0016 §7; 0157 §1): **previ
 - `exportacion.iniciarLote` / `reintentarLote` → `{ loteId, encoladas: [{ cancionId, trabajoId }], omitidas: [{ id, motivo }] }`.
 - Previsualizar de las acciones por lotes → `{ version, canciones: [{ id, aplica, motivo?, trabajos, entradasCola, cambiaTema }] }`; evento `biblioteca:progresoLote` `{ hechas, total }` (una acción por lotes a la vez).
 - Códigos: `ARCHIVO_NO_ENCONTRADO` solo de main (lo comprueba antes de lanzar `importar-archivo-cola`); `LISTA_NO_DISPONIBLE` lo emite el worker (`info-lista-youtube`) y se comparte con `worker/errores.py`.
+
+## Revisión 2026-11-22 · Aviso de listas y contrato final de la lectura del lote (preguntas 0260 y 0261)
+
+- **Aviso legal de listas** (§3): se mantiene el aviso **propio**, que se acepta una vez y queda en `config.aviso_youtube_listas_aceptado`. `fuente.infoLista` responde `ARGUMENTOS_NO_VALIDOS` si falta este aviso o el de YouTube. Es la opción prudente, provisional para el usuario (0159, fila 4); la spec 03 se ajusta.
+- **Lectura del lote** (§1), campos aditivos:
+  - `leerArchivos` y `leerCarpeta` → `{ filas, rechazadas, libreBytes, factorMinutos, truncada }`;
+  - cada fila lleva `problema: null | "ilegible" | "corta"` (un audio ilegible es una fila);
+  - `infoLista` → `{ titulo, tipo, entradas, recortada, libreBytes, factorMinutos }`, con `problema: null | "no_disponible" | "directo"` por entrada y `disponible = problema === null`;
+  - `rechazadas` = lo no mostrado (no audio, dentro de la carpeta de datos o más allá de 500).
+- **Límites**: las lecturas dan hasta **500** filas o entradas; `fuente.lote` impone `MAX_LOTE = 50`. Una carpeta cuenta archivos de audio (como mucho 500) y deja de listar tras 5 000 entradas; `truncada` o `recortada` lo dicen.
+- **Espacio y tiempo**: `estimarEspacioLote` y `estimarTiempoLote` en `shared/lote.ts` (puras, comunes a renderer y main). Canal `fuente.espacioLibre()` → `{ libreBytes }` para volver a comprobar. `fuente.lote` mantiene `SIN_ESPACIO` (con `caben`) como última defensa.
+- **Álbum de una lista**: main recuerda `listaId → { titulo, tipo }` durante 30 min; `fuente.infoYoutube` con `list=` en la URL lo propone como álbum (origen `lista`).
+- **Sustituir la fuente** de una canción con otro archivo (`fuente.confirmarArchivo` con `cancionId`): encadena la separación, los picos y la preparación como en una canción nueva. Es correcto, porque el audio es otro. La preparación **no sustituye** la letra que ya tenga: solo la comprueba y, si sigue `intacta` y sin `desfase_descartado`, corrige el desfase o pone fines (ADR 0024, 0025). Así una letra que ya no cuadra con el audio nuevo se señala sola (ADR 0006).
+

@@ -32,3 +32,6 @@ Además, para la prueba técnica de la feature 10 ayudaría (opcional) que marca
 La columna «Opción aplicada» de cada fila.
 
 ## Respuesta
+
+**Nota del arquitecto (2026-11-22, pregunta 0260)**: fila 4: se mantiene el aviso legal **propio** de las listas, que se acepta una vez y se guarda aparte. Es la opción más prudente; la spec 03 se ajusta a ella. Sigue siendo provisional: puedes preferir que valga el aviso de YouTube ya aceptado, o no permitir listas.
+
