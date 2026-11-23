@@ -1225,6 +1225,7 @@ La decisión la da main para cada canción en el momento de abrir la confirmaci�
 | `bib.acc.motivo.SIN_VOZ` | No se pueden ajustar los fines: falta la voz separada. Vuelve a separar las pistas («Re-separar pistas») y prueba de nuevo. (en «Ajustar los fines…», en su toast de fin y en «Preparar» por lotes; 0316) |
 | `bib.acc.motivo.SIN_PICOS` | No se pudo analizar la voz a tiempo. Vuelve a intentarlo en un momento. (ídem; 0316) |
 | `bib.acc.motivo.SIN_FUENTE` | No se prepara: falta el audio. Ábrela con «Continuar» para elegir el archivo o descargarlo. (0300) |
+| `bib.acc.preparar.nota.nada` | No hay nada que preparar en ella (en «Preparar», para `NADA_QUE_HACER`; no usar «Ya tiene esos datos», que es de «Editar datos…») |
 | `bib.acc.preparar.nota.soloFines` | Ya tiene letra: ajustará los fines (cuando main solo propone ese paso; 0300) |
 | `bib.acc.eliminar.nota.trabajo` | Se cancelará su trabajo en curso (genérica: main da el recuento, no el tipo; 0300) |
 | `bib.acc.motivo.EDICION_BLOQUEADA` | No se ha cambiado: está sonando en la otra pantalla. Edítala cuando termine. (resultado de «Editar datos…» de varias; 0292) |
@@ -1363,7 +1364,7 @@ Origen: [plan 0.2.2, feature 9](../versiones/0.2.2/plan-4.md) y propuesta [025](
 ```
 - Se escribe en un temporal en la carpeta de destino y solo al terminar pasa a ser el archivo (como los videos). Cancelar o fallar borra el temporal; un archivo previo con ese nombre queda intacto.
 - Aparece en el panel de actividad como un trabajo (`act.paq`), con [Ir] y [✕]. Cuenta en el diálogo de cierre de la app.
-- **Fin**: con el diálogo abierto, estado «Paquete creado» con el nombre, el tamaño real, la carpeta y [Mostrar en la carpeta] (primario, foco) [Cerrar]. Con el diálogo cerrado, toast `paq.toast.ok` con [Mostrar en la carpeta].
+- **Fin**: con el diálogo abierto, estado «Paquete creado» con el nombre, el tamaño real, la carpeta y [Mostrar en la carpeta] (primario, foco) [Cerrar]. Nombre y tamaño en un renglón (cifra y unidad nunca se separan: espacio no separable); la carpeta en otro, en una línea con recorte por el centro y la ruta completa en `title` (como «Ruta de destino», sistema visual · fase 6; revisión 2026-11-23). Con el diálogo cerrado, toast `paq.toast.ok` con [Mostrar en la carpeta].
 - **Canciones que no se pudieron leer** (una pista borrada a mitad, `cancion.json` ilegible): el paquete se crea con las demás y el final lista las omitidas con su motivo (resultado por canción de la feature 8).
 - **Fallo**: `SIN_ESPACIO`, `DESTINO_NO_DISPONIBLE` o `ERROR_INTERNO` con los textos de spec 10 adaptados (`paq.error.*`), [Reintentar] y [Copiar detalles].
 
@@ -1400,7 +1401,7 @@ Mismo diálogo para un paquete de canciones y para una copia de seguridad; la co
 |---|---|
 | Resumen | Nombre del archivo, fecha y versión con que se creó, si es completo o ligero, número de canciones y temas y tamaño. Una copia de seguridad lo dice en el título («Restaurar copia de seguridad»). |
 | Lista | Una fila por canción con icono + texto: **Nueva** (✚) · **Ya la tienes** (⟲), con cuál es más reciente por su fecha de modificación · **Ya la tienes igual** (=): mismo identificador y misma fecha de modificación; se omite siempre. `role="list"`, scroll propio hasta 280 px. |
-| **Para las que ya tienes** | Control segmentado que fija la respuesta de todas las «Ya la tienes»: **Omitir** (por defecto; no toca la tuya) · **Sustituir** (la del paquete ocupa el lugar de la tuya; **la tuya va a la papelera del sistema**, recuperable) · **Conservar las dos** (la del paquete entra como una canción nueva con el título `paq.imp.tituloCopia`). Cada fila «Ya la tienes» tiene además su propio selector para cambiar solo esa; al usarlo, el control general muestra «Mixto». |
+| **Para las que ya tienes** | Con la etiqueta visible «Para las que ya tienes:» a la izquierda del control (`paq.imp.paraExistentes`; no solo como nombre accesible). Control segmentado que fija la respuesta de todas las «Ya la tienes»: **Omitir** (por defecto; no toca la tuya) · **Sustituir** (la del paquete ocupa el lugar de la tuya; **la tuya va a la papelera del sistema**, recuperable) · **Conservar las dos** (la del paquete entra como una canción nueva con el título `paq.imp.tituloCopia`). Cada fila «Ya la tienes» tiene además su propio selector para cambiar solo esa; al usarlo, el control general muestra «Mixto». |
 | Sustituir con un paquete ligero | Solo se sustituyen la letra, los tiempos, el estilo, los datos y el estado; **el audio que ya tienes se conserva**. Es el caso «recuperar mi sincronía». **No va nada a la papelera** (la canción sigue siendo la misma carpeta): la versión anterior de sus datos queda como copia de seguridad de la canción (su `.bak`), igual que tras cualquier guardado **(decisión provisional, 0158 n.º 23)**. La fila lo dice con `paq.imp.nota.ligeroSustituir` y el resultado con `paq.imp.fila.sustituidaLigera`. |
 | Nueva desde un paquete ligero | Entra como **borrador sin audio**, con su letra y sus tiempos. Su tarjeta muestra «Falta descargar el audio» (origen YouTube; «Continuar» la descarga y la separa) o «Falta preparar el audio» (origen archivo; «Continuar» pide el archivo). Una Lista o Letra lista entra como borrador (no se puede cantar sin pistas); al volver a tener pistas, el usuario la marca otra vez. La fila lo avisa con `paq.imp.nota.ligeroNueva`. |
 | Canción parecida | Si una «Nueva» coincide en título, artista y duración (± 2 s) con una de la biblioteca, la fila añade `paq.imp.nota.parecida` (informativo; se importa igual). |
@@ -1502,6 +1503,7 @@ Mismo diálogo para un paquete de canciones y para una copia de seguridad; la co
 |---|---|
 | `paq.menu.exportar` | Exportar paquete… |
 | `paq.vacio.enlace` | Restaurar una copia o importar un paquete… |
+| `paq.arrastrar.soltar` | Suelta para importar el paquete |
 | `paq.arrastrar.varios` | Los paquetes se importan de uno en uno. Se abrirá el primero. |
 | `paq.exp.titulo` | Exportar paquete |
 | `paq.exp.cabecera` | {n} canciones · «{título}» · {artista} — [Ver cuáles] |
@@ -1825,7 +1827,7 @@ Encima de la bandeja, como aviso en línea (`info`) que se puede cerrar:
 | `bib.prep.fines.menu` | Ajustar los fines… |
 | `bib.prep.fines.dialogo` | Título: ¿Ajustar los fines de «{título}»? · Cuerpo: Esta letra viene de una versión anterior de Shinobi Karaoke y puede tener cambios tuyos. · Solo pondremos fin a las {n} líneas que no lo tienen, donde la voz se para claramente. · No moveremos ningún inicio, ni los fines que ya tienes, ni la letra entera. · Podrás quitar esos fines desde el editor («Quitar esos fines»). — [Cancelar] [Ajustar los fines] · (n = 1) … a la línea que no lo tiene … |
 | `bib.prep.fines.toast` | Ajustando los fines de «{título}»… — [Ver la letra] |
-| `bib.prep.fines.toast.fin` | Pusimos fin a {k} de {n} líneas de «{título}». Las demás no tenían una pausa clara. — [Ver la letra] · (k = 0) No encontramos pausas claras en «{título}»: no hemos cambiado nada. |
+| `bib.prep.fines.toast.fin` | (k = n) Pusimos fin a las {n} líneas de «{título}». — [Ver la letra] · Pusimos fin a {k} de {n} líneas de «{título}». Las demás no tenían una pausa clara. — [Ver la letra] · (k = 0) No encontramos pausas claras en «{título}»: no hemos cambiado nada. |
 | `bib.bandeja.titulo` | Pendientes de ti: |
 | `bib.bandeja.revisar` | {n} listas para revisar · (n = 1) 1 lista para revisar |
 | `bib.bandeja.letra` | {n} esperan letra · (n = 1) 1 espera letra |
@@ -1862,7 +1864,8 @@ Origen: [plan 0.2.2, feature 7](../versiones/0.2.2/plan-4.md) y [propuesta 021](
 |---|---|
 | **Arrastrar sobre la ventana** | Un archivo: como hoy (abre la vista 03 con él). **Varios archivos o una carpeta**: abre la vista 03 en modo lote con todos (ya no se usa solo el primero ni se muestra «Añade las canciones de una en una»). Los archivos de paquete (`.shinobi`, feature 9) no entran en el lote: si se sueltan solos, los atiende la feature 9; mezclados con audio, se ignoran con el aviso `add.lote.paqueteIgnorado` (spec 03). |
 | **Zona de soltar** | Al arrastrar varios elementos, el velo de la ventana dice `bib.arrastrar.soltarVarios`. |
-| **Al confirmar un lote** (spec 03) | Se vuelve a la Biblioteca: filtro en «Todas», agrupación como estuviera, las canciones nuevas ya en su sitio (en «Fecha de añadido», en «Hoy»). La primera tarjeta nueva recibe el foco y se desplaza a la vista. Aviso en línea `bib.import.anadidas` con [Ver actividad] (abre el panel de actividad); se cierra solo al terminar la tanda o con [×]. Se anuncia una vez. |
+| **Al confirmar un lote** (spec 03) | Se vuelve a la Biblioteca: filtro en «Todas», agrupación como estuviera, las canciones nuevas ya en su sitio (en «Fecha de añadido», en «Hoy»). La primera tarjeta nueva recibe el foco y se desplaza a la vista. `bib.import.anadidas` con [Ver actividad] (abre el panel de actividad) sale como **toast** (`info`, 10 s), no como aviso en línea: al desplazarse a las tarjetas nuevas, un aviso en la cabecera quedaba fuera de la vista (revisión de capturas 2026-11-23, 0323 n.º 2). Se anuncia una vez. |
+| **Arrastrar un `.shinobi` suelto** | El velo de la ventana dice `paq.arrastrar.soltar` («Suelta para importar el paquete»), igual que con varios archivos (0323). |
 | **Tarjetas del lote** | Las líneas de paso de siempre («En cola para descargar», «En cola para separar», ⟳ …) y las de la feature 5. Sin marca propia de «lote». |
 | **Seguimiento** | La bandeja de pendientes (feature 5) es el resumen permanente del lote: listas para revisar, esperan letra, con error. El resumen de la tanda está en el panel de actividad (spec 04). |
 | **Estado vacío** | `bib.vacia.cuerpo` menciona que se pueden añadir varias a la vez. |

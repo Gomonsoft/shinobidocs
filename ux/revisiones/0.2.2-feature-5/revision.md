@@ -43,6 +43,26 @@ Revisadas las capturas regeneradas: `progreso-…-lista-para-revisar`, `-elige-l
 
 **Veredicto: aprobada con correcciones menores** (solo queda P3, ligado a la corrección de 0270; no bloquea alpha.2).
 
+## Revisión de «Ajustar los fines…» y cierre de P3 (2026-11-23)
+
+Revisadas las 7 capturas nuevas y la regenerada `editor-1280x720-100-preparacion-automatica`.
+
+| Captura | Resultado | Notas |
+|---|---|---|
+| `menu-ajustar-fines` | Conforme | «Ajustar los fines…» en el ⋯ de una Lista, en el sitio de «Preparar». |
+| `dialogo-ajustar-fines` | Conforme | Título, cuerpo con las tres viñetas y el número de líneas, [Cancelar] y [Ajustar los fines]. |
+| `toast-fines-ajustando`, `toast-fines-sin-pausas` | Conforme | |
+| `toast-fines-puestos` | **No conforme: P5** | «Pusimos fin a 6 de 6 líneas… Las demás no tenían una pausa clara.» |
+| `preparar-lote-aviso-fines` | Conforme | Notas `finesSinMarca` y aviso del lote; un solo diálogo. |
+| `editor-…-preparacion-fines` | Conforme | Bloque con `edi.prep.intro.fines`, el renglón de fines y [Quitar esos fines]. Los tres toasts apilados son de tres acciones de la captura: conforme. |
+| `editor-…-preparacion-automatica` | **P3 corregida** | Entrando con «Editar»: `edi.banner.revision.nada` con [Probar a pantalla completa], [Ver qué hicimos] y [×], y el bloque en Funciones; sin `yaSync`. |
+
+| N.º | Criterio | Qué se ve | Qué debería verse | Gravedad |
+|---|---|---|---|---|
+| **P5** | `bib.prep.fines.toast.fin` (variante nueva) | «6 de 6 … Las demás no tenían una pausa clara». | Con k = n: «Pusimos fin a las {n} líneas de «{título}».» con [Ver la letra]. | Se corrige después |
+
+**Veredicto: aprobada con correcciones menores** (P5).
+
 ## No conformidades
 
 | N.º | Criterio | Qué se ve | Qué debería verse | Gravedad |

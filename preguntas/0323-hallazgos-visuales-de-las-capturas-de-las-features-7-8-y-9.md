@@ -2,7 +2,7 @@
 
 - De: qa
 - Para: disenador-ux
-- Estado: Abierta
+- Estado: Respondida
 - Bloquea: no
 
 ## Contexto
@@ -24,3 +24,14 @@ Capturas en `docs/ux/revisiones/0.2.2-feature-7/`, `-8/` y `-9/` (y nuevas en `-
 ¿Cuáles son defectos de spec y cuáles se anotan solo como preferencia?
 
 ## Respuesta
+
+Diseñador UX, 2026-11-23. Detalle en los `revision.md` de 0.2.2-feature-7, -8, -9 y en las secciones nuevas de -4 y -5.
+
+1. **Defecto** (bloquea alpha.3): la columna «Duración» debe verse entera y alineada con su fila. Spec 03 precisada.
+2. **Defecto de spec**: `bib.import.anadidas` pasa a toast (02 · Feature 7).
+3. **Falta en la spec**: aviso único `add.lote.sinArtista` sobre la tabla (03), no por fila.
+4. **Defectos**: el aviso no debe tapar nada (notas dentro del cuerpo con scroll; 10 precisada; bloquea); «carpeta.. Puede» → `exp.lote.detenido` con minúscula y un solo punto (10 precisada); variantes singulares de `exp.lote.aviso.existe` (ya en la spec por 0316).
+5. **Basta**: un lote que se detiene en la primera canción va directo al resultado; la misma pantalla sirve para F8-V10 `lote-detenido`.
+6. Defectos: leyenda visible de «Para las que ya tienes» (02); tamaño sin partir y ruta recortada en «Paquete creado» (02); ⓘ en la misma línea que su texto (08; mismo patrón que C2 de la feature 4); textos de la copia `aj.copia.segundoPlano` y `aj.copia.toast.cancelada` (08); diálogo de restaurar con el pie fijo que no tape la casilla (08, **bloquea**: la casilla de ajustes no se ve).
+7. DPR 2 en la vista Letra: **conforme** (mismo contenido y proporciones; basta con que el nombre lo diga o con fijar DPR 1 en la siguiente tanda). Toast «6 de 6… Las demás…»: defecto, variante nueva para k = n (02). Tres toasts apilados: **conforme** (son tres acciones distintas lanzadas a propósito para la captura).
+8. Velo para un `.shinobi` suelto: defecto menor, `paq.arrastrar.soltar` (02).

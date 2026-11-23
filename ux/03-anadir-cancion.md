@@ -572,7 +572,7 @@ En las filas con ✕ los campos son de solo lectura (texto en `texto-2`), no se 
 - Foco inicial en L2: el título de la tabla (`h1`, `tabindex="-1"`), que se lee con el recuento; el primer Tab va a «Artista para todas…».
 - L1 anuncia el progreso cada 10 elementos y el final («Leídos 34 archivos; 2 no se pueden añadir»). Los cambios del resumen se anuncian con 500 ms de espera.
 - Las filas que no se pueden marcar conservan su texto legible y su motivo; la casilla es `aria-disabled`.
-- A 1024 px la tabla no produce scroll horizontal: Título flexible (mínimo 240 px), Artista y Álbum 180 px, Duración 56 px. Hasta 12 filas visibles con scroll propio y cabecera fija; el resumen y los botones quedan siempre a la vista.
+- A 1024 px la tabla no produce scroll horizontal: Título flexible (mínimo 240 px), Artista y Álbum 180 px, Duración 56 px (más el relleno de la celda: la cabecera «Duración» se ve entera, alineada a la derecha, y cada duración en la misma línea base que los campos de su fila; revisión de capturas 2026-11-23). Una duración de más de una hora usa «h:mm:ss» y cabe en la columna. Hasta 12 filas visibles con scroll propio y cabecera fija; el resumen y los botones quedan siempre a la vista.
 
 ### Microcopy (0.2.2 · feature 7)
 
@@ -630,7 +630,8 @@ En las filas con ✕ los campos son de solo lectura (texto en `texto-2`), no se 
 | `add.lote.despues` | Cada canción se separará, buscará su letra y quedará lista para revisar. |
 | `add.lote.despues.sinLetra` | Cada canción se separará. La búsqueda automática de letra está desactivada: quedarán como borradores sin letra. — Activar en Ajustes |
 | `add.lote.legal` | Recuerda: descarga solo contenido que tengas derecho a descargar. — Leer el aviso |
-| `add.lote.sinEspacio` | **No hay espacio para todas.** Caben unas {k}. Desmarca algunas o libera espacio en el disco. |
+| `add.lote.sinEspacio` | **No hay espacio para todas.** Caben unas {k}. Desmarca algunas o libera espacio en el disco. · (k = 0) **No hay espacio para ninguna.** Libera espacio en el disco o desmarca canciones. |
+| `add.lote.sinArtista` | {k} canciones no tienen artista: con él es más fácil encontrar su letra. — [Artista para todas…] · (k = 1) 1 canción no tiene artista: … — aviso `info` único sobre la tabla, junto a `add.lote.comunes`; no se marca cada fila (revisión 2026-11-23, 0323 n.º 3) |
 | `add.lote.nada` | No hay ninguna canción que añadir. |
 | `add.lote.boton` | Añadir {n} canciones · Descargar y añadir {n} canciones · (n = 1) Añadir 1 canción · Descargar y añadir 1 canción |
 | `add.lote.anadiendo` | Añadiendo… (botón en estado de carga; sin «{i} de {n}»: es una sola operación, 0285) |

@@ -701,7 +701,7 @@ Mismo diálogo de 720 px y mismas reglas que A; cambian la cabecera, el destino 
 | **Guardar en la carpeta** | Campo de solo lectura + [Cambiar…], que abre el diálogo **«Elegir carpeta»** del sistema desde main. Propuesta: la última carpeta usada para exportar (la misma preferencia que A); si no existe, la de vídeos del sistema. No se puede elegir la carpeta de datos de la app. |
 | **Si ya existe un video con el mismo nombre** | Control segmentado, se recuerda: **Conservar los dos** (por defecto **(decisión provisional)**: el nuevo se guarda con « (2)», « (3)»…) · **Sustituir** (como en A: el anterior se conserva hasta que el nuevo termina bien) · **Omitir esa canción**. Solo cuenta para archivos que ya están en la carpeta. Dos canciones **del mismo lote** con el mismo nombre propuesto se numeran siempre (nunca se pisan entre sí). |
 | Estimación | `exp.lote.estimacion`: suma de las estimaciones de cada canción. Mismas reglas de formato de cifras que A. |
-| Notas | Las de A que apliquen, en plural (`exp.lote.aviso.*`): archivos existentes (según la opción elegida), espacio insuficiente para el total, sesión en otra pantalla, perfil costoso, canciones «Letra lista» (sin barrido), canciones incompletas. Ninguna bloquea. |
+| Notas | Van **dentro del cuerpo con scroll**, debajo de la estimación, nunca encima de otro contenido; el pie (botones) es lo único fijo (revisión de capturas 2026-11-23: el aviso tapaba la ayuda del formato). Las de A que apliquen, en plural (`exp.lote.aviso.*`, con sus variantes singulares): archivos existentes (según la opción elegida), espacio insuficiente para el total, sesión en otra pantalla, perfil costoso, canciones «Letra lista» (sin barrido), canciones incompletas. Ninguna bloquea. |
 | Muestra | El fotograma de la **primera** canción del lote, con `exp.lote.muestra`. |
 | **Exportar {n} videos** | Primario; {n} = canciones que se exportarán (sin las omitidas por nombre). Main valida la carpeta **una vez** antes de empezar (sin permiso: error bajo el campo, como V35) y toma la **instantánea de cada canción en ese momento**, como en una exportación en cola. El diálogo pasa a H. |
 | Recordar opciones | Se recuerdan las mismas que en A, más la respuesta a «si ya existe». |
@@ -814,7 +814,7 @@ Mismo diálogo de 720 px y mismas reglas que A; cambian la cabecera, el destino 
 | `exp.lote.cancelar` | ¿Cancelar las {k} que faltan? Los {i} videos ya terminados se conservan. — [Seguir exportando] [Cancelar las que faltan] |
 | `exp.lote.resultado.titulo` | Videos exportados · (ninguno) No se pudo exportar ningún video |
 | `exp.lote.resultado` | Se exportaron {a} de {n} videos · {tamaño} · tardó {tiempo} · (todos) Se exportaron {n} videos · {tamaño} · tardó {tiempo} — En {carpeta} |
-| `exp.lote.detenido` | El lote se detuvo: {título del error}. {explicación del error} |
+| `exp.lote.detenido` | El lote se detuvo: {título del error, con la inicial en minúscula y sin su punto final}. {explicación del error} — p. ej. «El lote se detuvo: no se puede guardar en esa carpeta. Puede que…» |
 | `exp.lote.reintentar` | Reintentar las fallidas |
 | `exp.lote.mostrar` | Mostrar la carpeta |
 | `exp.lote.toast` | Se exportaron {a} de {n} videos. — [Ver resultado] · (todos) {n} videos exportados. — [Ver resultado] · (ninguno) No se pudo exportar ningún video. — [Ver resultado] |

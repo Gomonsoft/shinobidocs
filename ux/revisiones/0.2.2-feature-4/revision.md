@@ -62,3 +62,19 @@ Revisadas **las 13 capturas**, una a una (7 de la vista Letra y 6 del editor). `
 Resto: conformes (`funciones-comprobar`, `funciones-comprobar-no-disponible`, `dialogo-desfase`, `desfase-corregido`, `actual-*`).
 
 **Veredicto: aprobada con correcciones menores** (C6).
+
+## Revisión de la opción prudente (2026-11-23)
+
+Revisadas las 6 capturas nuevas: `letra-…-candidato-limitado` y `-voz-continua`, `letra-…-actual-limitada` y `-voz-continua`, `editor-…-dialogo-limitada-sinContraste` y `-vozContinua`. Las de la vista Letra están a DPR 2 (2560 × 1600): mismo contenido y proporciones, conforme (0323 n.º 7).
+
+| Captura | Resultado | Notas |
+|---|---|---|
+| `candidato-limitado`, `-voz-continua` | Conforme, con **C7** | «No podemos comprobarla con tu audio» en gris con `circle-help`, sin [Corregir el desfase]; vista previa con el texto de cada limitación y «No hemos cambiado nada». El ✓ de «Duración igual que tu audio» queda en un renglón aparte, encima del texto. |
+| `actual-limitada`, `-voz-continua` | Conforme | `let.comp.actual.limitada` con su motivo corto, gris, sin acciones. |
+| `dialogo-limitada-sinContraste`, `-vozContinua` | Conforme | Título, cuerpo de cada limitación, solo [Cerrar], sin icono de aviso. |
+
+| N.º | Criterio | Qué se ve | Qué debería verse | Gravedad |
+|---|---|---|---|---|
+| **C7** | C2 (icono y texto en la misma línea) | El ✓ de la línea de duración del candidato va solo, encima de «Duración igual que tu audio». | Icono a la izquierda del texto, en la misma línea (como la línea de comprobación debajo). | Se corrige después |
+
+**Veredicto de la opción prudente: aprobada con correcciones menores** (C7; C6 sigue pendiente).
