@@ -1,5 +1,5 @@
 # 0391 — Manejador global de errores no capturados en el proceso principal
-- Estado: Pendiente
+- Estado: Hecha
 - Paso del pipeline: transversal
 - Depende de: — (puede empezar ya)
 - ADRs: 0027 (revisión «Seguridad de los paquetes, verificación de qa»), 0008
@@ -29,4 +29,4 @@ Que un error no capturado en main (como el del flujo de `yauzl` que vio qa en la
 - Siempre: `npm run typecheck`, `npm run lint`, `npm run format:check` y `npm run test:cambios`.
 
 ## Notas de implementación
-(las rellena el programador al terminar)
+Hecho (2026-11-23): `main/registro/erroresGlobales.ts` (`instalarErroresGlobales`, idempotente, exportado desde `main/registro`), instalado en `main/index.ts` antes de `whenReady` (hasta que existe el registro de archivo, a la consola; después, `registro.escribir('error', …)`). Modo estricto: sin empaquetar y con `SHINOBI_E2E=1` (lo pone `e2e/preparar-electron.ts`) vuelve a lanzar. Test: `erroresGlobales.test.ts` (rechazo, throw asíncrono, modos normal y de prueba, valor que no es Error, una sola instalación).
