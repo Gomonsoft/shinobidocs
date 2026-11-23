@@ -2,7 +2,7 @@
 
 - De: programador
 - Para: arquitecto
-- Estado: Abierta
+- Estado: Respondida (2026-11-23, arquitecto)
 - Bloquea: no (opción conservadora aplicada)
 
 ## Contexto
@@ -22,3 +22,10 @@ Preguntas 0320 (qa) puntos 2 y 3. `fuente.ruta_pendiente` (ruta absoluta del arc
 ¿Se confirma y se anota en el ADR 0027? ¿Mejor `PAQUETE_NO_VALIDO` que `PAQUETE_INCOMPLETO` para el punto 3?
 
 ## Respuesta
+
+Arquitecto, 2026-11-23. **Confirmado todo** y anotado en ADR [0027](../adr/0027-copia-de-seguridad-paquete-de-cancion-y-exportar-lrc.md), revisión «Seguridad de los paquetes, verificación de qa».
+- Punto 3: **se mantiene `PAQUETE_INCOMPLETO`** por canción. Las entradas del ZIP son válidas y el problema está dentro de una canción: se trata como un SHA-256 distinto (§3), se pierde esa canción y no el paquete. `PAQUETE_NO_VALIDO` queda para lo que compromete el paquete entero.
+- Punto 4b: es regla general para `main/copias/**` y `main/exportacion/**`. No hay ningún `await` entre abrir un flujo y engancharle su manejo de errores.
+- Bombas de descompresión: no hace falta un límite de razón de compresión. El tamaño declarado está limitado, la suma declarada se compara con el espacio libre antes de extraer, y al extraer se corta si los bytes reales pasan de los declarados.
+- Errores no capturados en main: manejador global que registra y no tumba la app, y que en E2E y Vitest vuelve a lanzar. Tarea [0391](../tareas/0391-manejador-global-de-errores-del-proceso-principal.md).
+

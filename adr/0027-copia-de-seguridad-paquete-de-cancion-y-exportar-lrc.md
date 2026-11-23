@@ -171,3 +171,30 @@ La spec no tiene diálogo propio para exportar la letra: abre directamente el de
 - **Dependencias** (§7): `@types/yazl` y `@types/yauzl` como `devDependencies` (MIT, no se distribuyen). La lista de dependencias permitidas en el `app.asar` (`scripts/verificar-paquete.mjs`) es `yaml, zod, yazl, yauzl, buffer-crc32, pend` (todas MIT, sin nativas), con sus notas en `THIRD_PARTY_NOTICES.md` (ADR 0012).
 - `ServicioBiblioteca.incorporar(id, cancion)`: método interno de main para materializar una canción importada por la vía del único escritor (ADR 0006). Confirmado.
 
+
+## Revisión 2026-11-23 · Seguridad de los paquetes, verificación de qa (preguntas 0320 y 0324)
+
+Se confirma lo aplicado por el programador:
+1. **`fuente.ruta_pendiente` nunca viaja.**
+   - No se escribe en paquetes ni copias (`planificarCanciones`).
+   - Al importar se descarta siempre, antes de escribir (`leerCancionJson`).
+   - Una canción de lote aún sin importar entra como borrador con la fuente pendiente, sin ruta, y en el otro equipo ofrece «Elegir archivo». La canción local no cambia.
+   - Motivo: privacidad (la ruta lleva el nombre de usuario) y que el autor de un paquete no elija qué archivo local intenta leer la app.
+2. **Rutas internas de `cancion.json`** (`fuente.mezcla`, `fuente.miniatura`, `pistas.voz`, `pistas.instrumental`): deben ser relativas a la carpeta de la canción, sin `..`, `\`, unidad ni NUL. Si no, **solo esa canción** falla con `PAQUETE_INCOMPLETO` y el resto entra.
+   - Se mantiene `PAQUETE_INCOMPLETO` y no `PAQUETE_NO_VALIDO`. Las entradas del ZIP son válidas y el problema está dentro de una canción, así que se trata igual que un archivo con SHA-256 distinto (§3, integridad): se pierde la canción, no el paquete.
+   - `PAQUETE_NO_VALIDO` queda para lo que compromete el paquete entero (entradas hostiles y manifiesto).
+3. **Ids de canción con nombres reservados de Windows** (`CON`, `PRN`, `AUX`, `NUL`, `COM0-9`, `LPT0-9`, sin distinguir mayúsculas): el paquete entero es `PAQUETE_NO_VALIDO`, en cualquier sistema. Un id así no lo genera nunca la app, así que el paquete está manipulado.
+4. **Extracción**: la carpeta de destino se crea **antes** de abrir el flujo de lectura, y el `pipeline` se engancha en el mismo turno. Ningún error de extracción queda sin oyente. Regla general para `main/copias/**` y `main/exportacion/**`: no hay ningún `await` entre abrir un flujo y engancharle su manejo de errores.
+
+**Bombas de descompresión: basta con lo que hay; no se añade límite de razón de compresión.**
+- La defensa no son los límites por archivo (16 GB de audio, altos a propósito para mezclas largas), sino tres comprobaciones en cadena:
+  - el tamaño declarado de cada entrada no puede pasar su límite;
+  - la suma declarada se compara con el espacio libre **antes** de extraer;
+  - al extraer, `yauzl` corta en cuanto los bytes reales superan los declarados.
+- Una bomba no puede escribir más de lo declarado, y lo declarado ya cabe en el disco.
+- Un límite de razón rechazaría audio legítimo muy compresible (silencios largos en FLAC) sin añadir protección.
+
+**Errores no capturados en main**: se añade un manejador global.
+- `uncaughtException` y `unhandledRejection` se registran y la app no se tumba.
+- En modo estricto (E2E, Vitest) se vuelven a lanzar para que las pruebas fallen.
+- Tarea [0391](../tareas/0391-manejador-global-de-errores-del-proceso-principal.md).

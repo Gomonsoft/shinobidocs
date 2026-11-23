@@ -1,7 +1,7 @@
 # 0327 — Feature 9 · Verificación e informe
 - Estado: Hecha con reservas (defecto de seguridad medio en la pregunta 0320; guía manual y decisión legal del paquete con audio pendientes del usuario)
 - Paso del pipeline: 5
-- Depende de: 0323–0326, 0376, 0383
+- Depende de: 0323–0326, 0376, 0383, 0391
 - ADRs: 0027
 - Spec UX: docs/ux/02, 06 y 08 (0.2.2 · Feature 9)
 - Tamaño: S

@@ -18,7 +18,7 @@ Ver el [plan](plan-4.md) y el [flujo de Git](../../workflow.md). **Una feature =
 | 6 | **11** · Revisión guiada | 0334–0337, 0370 | M | 0296; UI tras 4 y 5 | alpha.2 |
 | 7 | **7** · Importación por lotes | 0313–0317, 0375, 0384, 0390 | L | 5 (0309), 6 | alpha.3 |
 | 8 | **8** · Acciones por lotes | 0318–0322, 0388 | M | 5; la exportación por lotes no depende de nada | alpha.3 |
-| 8 | **9** · Copia, paquete y `.lrc` | 0323–0327, 0376, 0383 | M–L | 0296 | alpha.3 |
+| 8 | **9** · Copia, paquete y `.lrc` | 0323–0327, 0376, 0383, 0391 | M–L | 0296 | alpha.3 |
 | 9 | **10 (etapa 1)** · Sincronizar con la voz | 0329–0333 (si la prueba sirve) | L | 0328, 0296, 5 | **0.2.3** (recomendado; pregunta 0280) |
 | — | Cierre de cada entrega | [0338](../../tareas/0338-cierre-de-una-entrega-0-2-2-alpha.md) | S | las features de la entrega | — |
 
@@ -199,7 +199,8 @@ flowchart LR
 | [0376 · Remates de copias y paquetes](../../tareas/0376-remates-de-copias-y-paquetes.md) | S–M | 0324, 0325 |
 | [0326 · Interfaz](../../tareas/0326-paquete-y-copia-en-la-interfaz.md) | M | 0325, 0323, 0376 |
 | [0383 · Remates de interfaz: letra desde el editor, paquetes en actividad y cierre, enlace en Añadir, carpeta del toast](../../tareas/0383-remates-de-interfaz-de-la-feature-9.md) | S–M | 0323, 0326 (punto 4 tras 0315) |
-| [0327 · Verificación e informe](../../tareas/0327-verificacion-e-informe-de-la-feature-9.md) | S | 0323–0326, 0376, 0383 |
+| [0391 · Manejador global de errores no capturados en main](../../tareas/0391-manejador-global-de-errores-del-proceso-principal.md) | S | — (remate de alpha.3; preguntas 0320 y 0324) |
+| [0327 · Verificación e informe](../../tareas/0327-verificacion-e-informe-de-la-feature-9.md) | S | 0323–0326, 0376, 0383, 0391 |
 
 **Hecha cuando**: la biblioteca real se copia y se restaura en otro usuario del sistema sin perder nada, un paquete ligero de una canción de YouTube recupera solo su audio, un `.lrc` exportado se vuelve a importar con los mismos inicios, y la decisión legal del paquete con audio está confirmada o anotada.
 
@@ -255,7 +256,7 @@ Reglas de convivencia:
 |---|---|---|
 | alpha.1 | 3, 1, 2, **4** | La 4 con la opción **prudente**: con letras de LRCLIB sin fines o voz continua dice «No está claro» y no corrige ni elige. Las notas de la versión no prometen corregir desfases (preguntas 0275, 0295) |
 | alpha.2 | 6, **5**, 11 | La 5 **sin elección automática con letras sin fines**: busca, separa, ordena las candidatas y llega a «Elige la letra». Con una letra elegida, pone fines prudentes (también en letras anteriores y en Listas, con confirmación: 0380, 0382, 0386) y llega a «Lista para revisar» (preguntas 0305, 0311) |
-| alpha.3 | 7, 8, 9 | Sin cambios de alcance (remates 0383, 0384, 0388, 0390) |
+| alpha.3 | 7, 8, 9 | Sin cambios de alcance (remates 0383, 0384, 0388, 0390, 0391) |
 | — | 10 | Etapa 1 → 0.2.3 (ADR 0028, revisión del 2026-11-23; pregunta 0280). En 0.2.2 queda el resultado de la fase 1 de la prueba técnica |
 
 Cada entrega cierra con [0338](../../tareas/0338-cierre-de-una-entrega-0-2-2-alpha.md). Si hay que recortar, lo que menos duele aplazar a 0.2.3 es la 9 y la exportación por lotes de la 8; la 7 sin la 5 pierde casi todo su valor (es lo que ya pasó con los 5 borradores abandonados).
