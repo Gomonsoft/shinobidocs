@@ -104,7 +104,7 @@ flowchart LR
 | [0304 · «Añadir canción»](../../tareas/0304-datos-automaticos-en-anadir-cancion.md) | M | 0303 |
 | [0305 · Verificación e informe](../../tareas/0305-verificacion-e-informe-de-la-feature-6.md) | S | 0302–0304 |
 
-**Hecha cuando**: los criterios de 03 · Feature 6 pasan y un archivo etiquetado y un vídeo de YouTube Music llegan con título, artista y álbum sin teclear.
+**Hecha cuando**: los criterios de 03 · Feature 6 pasan, salvo F6-N7 y F6-N8, que dependen de la elección de letra y de los Ajustes de la feature 5 y se cierran con ella (0308, 0311 y 0312; pregunta 0220); y un archivo etiquetado y un vídeo de YouTube Music llegan con título, artista y álbum sin teclear.
 
 ## Feature 5 · Preparación desatendida (L)
 
@@ -118,7 +118,7 @@ flowchart LR
 | [0311 · Progreso, Letra, editor y Ajustes](../../tareas/0311-preparacion-en-progreso-letra-editor-y-ajustes.md) | M | 0308, 0307 |
 | [0312 · Verificación e informe](../../tareas/0312-verificacion-e-informe-de-la-feature-5.md) | S | 0306–0311 |
 
-**Hecha cuando**: un WAV y un vídeo llegan solos a «Lista para revisar» con el doble y con red real; los 5 borradores del usuario se rescatan con «Preparar»; con el interruptor apagado no sale ninguna petición a LRCLIB al añadir; cerrar con trabajos en cola y volver a abrir los reanuda.
+**Hecha cuando**: F6-N7 y F6-N8 (álbum desde LRCLIB y aviso de búsqueda automática) pasan; un WAV y un vídeo llegan solos a «Lista para revisar» con el doble y con red real; los 5 borradores del usuario se rescatan con «Preparar»; con el interruptor apagado no sale ninguna petición a LRCLIB al añadir; cerrar con trabajos en cola y volver a abrir los reanuda.
 
 ## Feature 11 · Revisión guiada de líneas dudosas (M)
 

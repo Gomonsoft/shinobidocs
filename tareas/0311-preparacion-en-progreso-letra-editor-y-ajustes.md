@@ -12,6 +12,8 @@ Lo que cuentan la vista de progreso, la vista Letra, el banner y el bloque «Pre
 
 ## Criterios de aceptación
 - [ ] Criterios de esas secciones; «Quitar esos fines» y «Quitar la corrección».
+- [ ] **F6-N7, parte de interfaz** (spec 03 · Feature 6): `add.dato.origen.lrclib` con [Quitar] en el resumen del paso 1 y en «Editar datos» (`CamposDatos`). [Quitar] vacía el álbum con origen `usuario`. Si el título o el artista de `letra.datos_lrclib` difieren de los de la canción, se muestra `add.dato.lrclib.sugerencia` y [Usar estos datos] los aplica con origen `usuario`.
+- [ ] **F6-N8**: con «Buscar la letra automáticamente» activado, el formulario de «Añadir canción» muestra `add.dato.lrclib` con el enlace «Cambiar en Ajustes»; desactivado, no. Ir a Ajustes y volver conserva lo escrito en el formulario.
 
 ## Pruebas de feedback
 - Unitarias: Componentes con dobles.

@@ -11,7 +11,7 @@
 Cerrar la feature 6.
 
 ## Criterios de aceptación
-- [ ] Informe `docs/versiones/0.2.2/informe-feature-6.md`.
+- [ ] Informe `docs/versiones/0.2.2/informe-feature-6.md`. F6-N7 y F6-N8 no se verifican aquí: pasan a la feature 5 (tareas 0308 y 0311, pregunta 0220) y los verifica la 0312.
 
 ## Pruebas de feedback
 - Unitarias: —

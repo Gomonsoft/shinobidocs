@@ -11,6 +11,7 @@
 Cerrar la feature 5.
 
 ## Criterios de aceptación
+- [ ] Incluye F6-N7 y F6-N8 de la spec 03 (álbum desde LRCLIB y aviso de búsqueda automática en «Añadir canción»), que pasaron de la feature 6 (pregunta 0220).
 - [ ] Preparar los 5 borradores reales del usuario (guía).
 - [ ] Informe `docs/versiones/0.2.2/informe-feature-5.md`.
 

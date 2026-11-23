@@ -185,3 +185,13 @@ En cualquier otro caso: `elige_letra` con los candidatos ordenados como en la vi
   - `descargasParadas: "YOUTUBE_BLOQUEADO" | "SIN_CONEXION" | null`: parada solo de las descargas (§5).
   - `estimacionMin`: minutos restantes; `null` mientras se calcula.
   - `canciones: [{ id, resultado, motivo?, dudosas? }]` en el orden de la cola, con `resultado` `null` (sin resultado aún), `lista_para_revisar`, `elige_letra`, `sin_letra`, `letra_pendiente`, `error` o `cancelada`; de ahí sale el diálogo «Resultado de la preparación» (spec 04).
+
+## Revisión 2026-11-22 · Contratos de los datos propuestos (pregunta 0220)
+
+- **Propuesta por campo** (§6): viaja en un campo opcional `datos: { titulo, artista, album }` de `fuente.importarArchivo` y `fuente.infoYoutube`, junto a `metadatos`, que no cambia. Cada campo es `{ valor, origen, dudoso, invertido?, alternativa? }`.
+  - `origen` es el detalle de la spec (`etiquetas | nombre | carpeta | video | pista | canal | lista | biblioteca`, o `null`).
+  - Si `claveFlexible` coincide con un valor existente, `valor` lleva la grafía de la biblioteca (origen `biblioteca`) y `alternativa` la propuesta original. Corrige §6, que decía lo contrario; manda la spec, F6-N3.
+- **Worker**: `importar-archivo` devuelve `etiquetas` crudas e `info-youtube` devuelve `musica` (campos de YouTube Music y título y canal limpios). La limpieza es del worker; el origen, la inversión y el «dudoso» los decide main (`main/fuente/propuestaDatos.ts`).
+- **Almacén**: al confirmar, `metadatos.origen` guarda `fuente`, `nombre` o `usuario` (si el valor confirmado difiere del propuesto); `biblioteca.actualizarMetadatos` pone `usuario` en cada campo que cambia, también al vaciarlo.
+- **`biblioteca.valoresDatos`**: cada álbum lleva `artistas?: string[]` (claves de identidad) para ordenar; el álbum se agrupa solo por su clave.
+- **Álbum desde LRCLIB**: `rellenarAlbumDesdeLrclib` (`main/biblioteca/origen.ts`) se aplica al guardar **cualquier** letra de LRCLIB, de la preparación o elegida por el usuario. Así se cumple la spec 03 F6-N7, que es más amplia que §6. La letra guarda `datos_lrclib: { titulo, artista, album }` (opcional, tolerante; metadatos del registro, no texto de la letra) para la sugerencia «Usar estos datos». Se implementa en la feature 5 (tareas 0308 y 0311).

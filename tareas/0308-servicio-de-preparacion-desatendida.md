@@ -16,6 +16,11 @@ La máquina de estados por canción que lleva un borrador a «Lista para revisar
 - [ ] Se detiene con cancelar, eliminar, edición del usuario o `EDICION_BLOQUEADA`.
 - [ ] Recuento de dudosas: main llama a `contarDudosasGuardadas` (`main/letras/dudosas.ts`, tarea 0334) (a) al terminar la preparación y (b) tras cada escritura de la letra de una canción que tenga `preparacion`, y guarda el número en `preparacion.dudosas` (ADR 0024 §3; pregunta 0225 §2). Test: el recuento cambia al dar una línea por buena y al mover un fin.
 - [ ] Canales `preparacion.previsualizar`, `preparar`, `cancelar` y evento `preparacion:cambio`.
+- [ ] **Álbum desde LRCLIB, parte de main** (spec 03, F6-N7; ADR 0025 §6 y revisión de la pregunta 0220): función `rellenarAlbumDesdeLrclib(cancionId, registro)` en `main/biblioteca/origen.ts`. Se llama cuando se guarda una letra que viene de LRCLIB, tanto si la elige la preparación como si la elige el usuario en la vista Letra (este enganche en `main/letras/` se acuerda con el lote C).
+  - Solo rellena si el álbum está vacío, con `metadatos.origen.album = "lrclib"`. Nunca sobrescribe un campo con origen `usuario` y nunca cambia título ni artista.
+  - Guarda en la letra `datos_lrclib: { titulo, artista, album }` (opcional y tolerante; son metadatos del registro, no la letra) para la sugerencia «Usar estos datos».
+  - «Quitar» = álbum vacío con origen `usuario`, así que no se vuelve a rellenar.
+  - Test: álbum vacío se rellena; álbum previo o con origen `usuario` no; tras «Quitar» no vuelve.
 - [ ] El paso `comprobando` de una letra ya guardada reutiliza `comprobarLetraGuardada` de la tarea 0367 (no duplica la comprobación diferida) y, dentro de una tanda de varias canciones, no emite el toast por canción (ADR 0024, revisión 2026-11-22).
 
 ## Pruebas de feedback
