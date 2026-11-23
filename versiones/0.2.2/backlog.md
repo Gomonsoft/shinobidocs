@@ -16,7 +16,7 @@ Ver el [plan](plan-4.md) y el [flujo de Git](../../workflow.md). **Una feature =
 | 4 | **6** · Datos automáticos | 0302–0305 | S–M | 0339 | alpha.2 |
 | 5 | **5** · Preparación desatendida | 0306–0312, 0371–0374, 0377, 0380, 0382 | L | 4, 6 (0302) | alpha.2 (letras sin marca: siguiente alpha) |
 | 6 | **11** · Revisión guiada | 0334–0337, 0370 | M | 0296; UI tras 4 y 5 | alpha.2 |
-| 7 | **7** · Importación por lotes | 0313–0317, 0375 | L | 5 (0309), 6 | alpha.3 |
+| 7 | **7** · Importación por lotes | 0313–0317, 0375, 0384 | L | 5 (0309), 6 | alpha.3 |
 | 8 | **8** · Acciones por lotes | 0318–0322 | M | 5; la exportación por lotes no depende de nada | alpha.3 |
 | 8 | **9** · Copia, paquete y `.lrc` | 0323–0327, 0376, 0383 | M–L | 0296 | alpha.3 |
 | 9 | **10 (etapa 1)** · Sincronizar con la voz | 0329–0333 (si la prueba sirve) | L | 0328, 0296, 5 | alpha.4 |
@@ -167,6 +167,7 @@ flowchart LR
 | [0375 · Contrato final de la lectura del lote](../../tareas/0375-contrato-final-de-la-lectura-del-lote.md) | M | 0313, 0314 |
 | [0315 · Modo lote en «Añadir canción»](../../tareas/0315-modo-lote-en-anadir-cancion.md) | L | 0314, 0304, 0375 |
 | [0316 · Cola del lote en la interfaz](../../tareas/0316-cola-de-lote-en-progreso-y-biblioteca.md) | M | 0309, 0315 |
+| [0384 · Datos de cada vídeo al descargar, nombre de la carpeta y tiempo de enlaces sueltos](../../tareas/0384-datos-de-cada-video-al-descargar-y-remates-de-la-lectura-del-lote.md) | S–M | 0316 (alpha.3 si cabe; si no, alpha.4) |
 | [0317 · Verificación e informe](../../tareas/0317-verificacion-e-informe-de-la-feature-7.md) | S | 0313–0316 |
 
 **Hecha cuando**: un álbum real de YouTube y una carpeta real entran en una acción, los duplicados vienen desmarcados, el resumen avisa de espacio y tiempo, y la decisión legal sobre listas está confirmada o anotada.

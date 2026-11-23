@@ -148,3 +148,14 @@ Corrige §5:
 - **Lote detenido** por `SIN_ESPACIO` o `DESTINO_NO_DISPONIBLE`: las canciones que faltan quedan con `estado: 'terminada'`, `resultado: 'cancelada'` y `error: { codigo }`. Una cancelación del usuario va sin `error`. `reintentarLote` reencola las fallidas y estas «no intentadas»; nunca las canceladas por el usuario ni las omitidas al iniciar.
 - `ExportacionIpc.loteId?: string`, solo en las exportaciones de un lote.
 - **Acciones por lotes (§4)**: son cinco, «Preparar», «A la cola», «Exportar video…», «Editar datos…» y «Eliminar…», más «Aplicar tema…», que ya existía. «Marcar como lista» por lotes **no** está en el alcance: la spec 02 no la incluye (F8-1) y marcar varias a la vez se saltaría el aviso de líneas dudosas por canción (feature 11). Si se quiere, va como propuesta.
+
+## Revisión 2026-11-22 · Datos de cada vídeo al descargar y remates de la lectura (pregunta 0285)
+
+- **Lista de YouTube sin consultas vídeo a vídeo** (§1 y §3, cambio de la spec 03, provisional para el usuario):
+  - La tabla usa solo `infoLista`.
+  - Los datos propios de cada vídeo (campos de YouTube Music) los devuelve la **descarga** en `musica`, con el mismo `info` de yt-dlp y sin otra petición. Main los aplica al completar la fuente, antes de que empiece la preparación.
+  - **Regla de origen por campo**: título y artista solo se sustituyen si su origen está ausente o es `nombre` y el dato nuevo es de origen `fuente`. El álbum, solo si está vacío. Nunca se toca un campo `usuario`, `fuente` o `lrclib`. Se escribe con origen `fuente`.
+  - Hasta que exista, se acepta la consulta vídeo a vídeo con la pausa entre peticiones de ADR 0025 §5 y `add.lote.completando`.
+  - Tarea [0384](../tareas/0384-datos-de-cada-video-al-descargar-y-remates-de-la-lectura-del-lote.md): alpha.3 si cabe, si no alpha.4.
+- **`fuente.leerCarpeta`** devuelve además `carpeta?: string`: solo el nombre de la carpeta, nunca la ruta.
+- **`fuente.espacioLibre()`** → `{ libreBytes, factorMinutos }`, para estimar el tiempo de un lote de enlaces sueltos.
