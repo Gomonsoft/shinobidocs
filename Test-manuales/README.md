@@ -11,7 +11,9 @@ Test-manuales/
 ├── flujo-principal.md        recorrido básico de la app; se repite al cerrar cada fase
 ├── 0.2.0/
 │   └── fase-N-<nombre>.md    una guía por fase de la versión
-└── 0.2.2/
+├── 0.2.2/
+│   └── feature-N-<nombre>.md una guía por feature de la versión
+└── 0.2.3/
     └── feature-N-<nombre>.md una guía por feature de la versión
 ```
 
@@ -45,3 +47,12 @@ Test-manuales/
 | 0.2.2 | [Feature 7 · Importación por lotes](0.2.2/feature-7-importacion-por-lotes.md) | Lista (6 casos: álbum real de YouTube Music, carpeta real, pausa/cierre/reanudar, parada por bloqueo, privacidad con monitor de red, lector de pantalla). **La decisión legal de las listas de YouTube está pendiente de ti (pregunta 0159).** No ejecutada |
 | 0.2.2 | [Feature 8 · Acciones por lotes](0.2.2/feature-8-acciones-por-lotes.md) | Lista (6 casos: barra, «Preparar» con red real, exportar 3 canciones a una carpeta y a un USB que se desconecta, eliminar y recuperar de la papelera en cada sistema, editar datos y lector de pantalla). No ejecutada |
 | 0.2.2 | [Feature 9 · Copia de seguridad, paquete y `.lrc`](0.2.2/feature-9-copia-paquete-y-lrc.md) | Lista (6 casos: copia de la biblioteca real restaurada en otro usuario o equipo, paquete ligero que recupera su audio, copia de más de 4 GB (ZIP64), interrupciones, `.lrc` en un reproductor externo y teclado/lector). **La decisión legal del paquete con audio está pendiente de ti (pregunta 0159).** No ejecutada |
+| 0.2.3 | [Feature 1 · Cantantes por línea](0.2.3/feature-1-cantantes-por-linea.md) | Lista (8 casos: dúo real con y sin ratón, arrastre real, coros de tus canciones, legibilidad a 5 m, ventana secundaria, video, abrir en 0.2.1 y el coro que no cabe). No ejecutada |
+| 0.2.3 | [Feature 2 · Voz en los coros](0.2.3/feature-2-voz-en-los-coros.md) | Lista (5 casos: **de oído**, chasquidos con 3 canciones, voz guía silenciada y al 30 %, secundaria, memoria con 4 y 10 min, video con y sin la casilla). No ejecutada |
+| 0.2.3 | [Feature 3 · Voces a la vez](0.2.3/feature-3-voces-a-la-vez.md) | Lista (5 casos: semilla en el editor, dúo real con frases cruzadas, video, sin solapes y abrir en 0.2.1 y 0.2.2). Provisional. No ejecutada |
+
+## Ejecuciones e incidencias
+
+| Fecha | Nota |
+|---|---|
+| 2026-11-23 | [Incidencias de las pruebas manuales en Windows (0.2.3-alpha.1)](0.2.3/incidencias-2026-11-23-windows.md): 3 fallos, 4 mejoras pedidas (propuestas 040–043) y la medida de la versión automática frente a la ajustada a mano |

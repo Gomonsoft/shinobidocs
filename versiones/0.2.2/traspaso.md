@@ -67,3 +67,18 @@ Todas con la opción recomendada aplicada: 0154, 0155, 0158 y 0159 (0.2.2); 0160
 - Proteger las etiquetas `v*` y hacer inmutables las Releases.
 - Firma de código: [pendientes-usuario/001](../../pendientes-usuario/001-solicitar-signpath.md).
 - Prueba del reproductor en una segunda pantalla real.
+
+## Features 4 y 5 con canciones reales: criterio de «hecha» no cumplido (2026-11-23)
+
+- **Hecho medido** por el usuario en Windows ([incidencias](../../Test-manuales/0.2.3/incidencias-2026-11-23-windows.md), sección «Medida»): con 7 canciones de YouTube y letra de LRCLIB, la elección automática eligió sola **0 de 7**. El caso 1 de la [guía de la feature 5](../../Test-manuales/0.2.2/feature-5-preparacion-desatendida.md) («llegan solos a Lista para revisar»), criterio de «hecha», **no se cumple**. Tampoco el caso 1 de la [feature 4](../../Test-manuales/0.2.2/feature-4-comprobar-la-letra-con-la-voz.md): letras correctas, adelantadas 0,1–0,5 s, salen `no_coincide`.
+- **Causa:** era la consecuencia aceptada de las guardas (ADR 0024 y ADR 0025, revisiones de las preguntas 0295 y 0311): con letras sin fines nunca se afirma `coincide`. Además, la señal de inicios era demasiado estricta con las letras adelantadas. `desfaseMinimoMs` (500 ms) **no** era la causa: la letra ya se evalúa con el desfase aplicado.
+- **Segundo defecto:** la preparación registró 0 fines en las dos canciones medidas. Ocurre si el editor está abierto sobre la canción cuando corre el paso de fines; además, el 0 bloquea volver a ofrecerlos.
+- **Qué se hace (en 0.2.3, plan 6, punto 2; provisional en la [pregunta 0393](../../preguntas/0393-elegir-la-letra-sin-comprobarla-con-tu-audio.md)):**
+  - ventana de inicio del encaje de 400 a 800 ms ([0392](../../tareas/0392-ventana-de-inicio-del-encaje-a-800-ms.md));
+  - elección «sin comprobar con tu audio» cuando el encaje no puede decidir ([0393](../../tareas/0393-elegir-la-letra-sin-comprobar-con-tu-audio.md), con la interfaz de [0395](../../tareas/0395-aviso-de-letra-elegida-sin-comprobar.md) tras la [pregunta 0394](../../preguntas/0394-texto-de-la-letra-elegida-sin-comprobar.md));
+  - fines aplazados al cerrar el editor ([0394](../../tareas/0394-fines-de-la-preparacion-aplazados-con-el-editor-abierto.md)).
+  - Los desfases pequeños **no** se corrigen solos: medido, no es fiable.
+- **Nuevo criterio de «hecha» de la feature 5** (provisional): en la guía, caso 1, con canciones nuevas de YouTube, la mayoría llegan solas a «Lista para revisar», con o sin «sin comprobar», y ninguna con la letra de otra canción.
+- **Pendiente en el equipo con Windows:**
+  - `calibrar:encaje --variantes` sobre las canciones revisadas a mano, para confirmar que la ventana de 800 ms no acepta ajenas (ADR 0024, «Medida pendiente»);
+  - repetir la reconstrucción de `46700fe1` y `701572c1`: la nota dice `no_coincide` y la app guardó `duda`.

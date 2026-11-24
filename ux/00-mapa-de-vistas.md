@@ -20,6 +20,8 @@
 
 Diálogos transversales (definidos en las specs que los originan): aviso legal de YouTube (03), confirmar cierre con trabajos (04), eliminar canción (02), volver a borrador (02/06), atajos de teclado (06/07).
 
+Pantalla transversal de emergencia (0.2.3): [Pantalla de error de la interfaz](#pantalla-de-error-de-la-interfaz), cuando una vista o la ventana falla al dibujarse.
+
 ### 0.2.0, fase 3 · Temas y biblioteca
 - **Biblioteca** (02): «Agrupar por» Sin agrupar / Artista / Álbum, búsqueda en título, artista y álbum, modo selección con «Aplicar tema…» y [Tema…] en los encabezados de artista y álbum.
 - **Editor › Estilo** (06): sección «Tema» (Temas definidos / Tema personalizado, procedencia, editar, guardar como, renombrar, duplicar, eliminar, tema del álbum o artista).
@@ -519,3 +521,142 @@ Códigos estables en el [ADR 0017](../adr/0017-ventana-secundaria-sesion-en-vivo
 Todo «Copiar detalles» termina con la línea de versión común `Versión: {identificador}` (número de compilación, canal y commit): [08 · Fase 10](08-ajustes-y-acerca.md#línea-de-versión-en-los-detalles-copiados) (0.2.0).
 
 Tono del microcopy: tuteo, frases cortas, sin jerga técnica (no se dice "worker", "modelo ONNX", "venv"); cada error dice **qué pasó** y **qué puede hacer** el usuario.
+
+## Pantalla de error de la interfaz
+
+> 0.2.3 · [plan 6](../versiones/0.2.3/plan-6.md), punto 1a (incidencia [I-1](../Test-manuales/0.2.3/incidencias-2026-11-23-windows.md#i-1--el-editor-se-queda-en-negro-al-arrastrar-una-región-al-carril-de-otro-cantante)). Decisiones provisionales: [0389](../preguntas/0389-pantalla-de-error-de-la-interfaz-decisiones-provisionales.md).
+
+**Problema.** Una excepción al dibujar la interfaz desmonta todo el árbol de React: la ventana queda vacía con el fondo de la app, sin mensaje, sin salida y sin rastro en `app.log`; el usuario solo puede reiniciar. Esta pantalla la sustituye. **No arregla la causa**: es la red de seguridad para cualquier fallo de dibujo, presente o futuro.
+
+**Usuario y tarea.** Alguien que estaba trabajando (casi siempre en el editor) y ve que algo se ha roto. Necesita saber en un vistazo que **sus canciones están a salvo**, si ha perdido algo, y cómo seguir **sin reiniciar la app**. Con un segundo objetivo: dejar el detalle para informar del fallo.
+
+### Alcance: tres límites
+
+| Límite | Envuelve | Si falla algo dentro | Se reinicia |
+|---|---|---|---|
+| **De vista** | Solo el contenido de la vista (lo que va dentro de `Marco`, bajo la barra superior) | Pantalla de error **en el área de contenido**; la barra superior (logotipo, actividad, ⚙, stepper si se puede dibujar) **sigue viva** y navegable. Así, un fallo del editor no se lleva el resto de la app. | Al navegar a otra vista (el límite se identifica por la vista: tipo, canción y paso) o con «Volver a cargar esta pantalla». |
+| **Del reproductor** | La capa del reproductor a pantalla completa (encima de la Biblioteca o del Editor) | Pantalla de error a pantalla completa del reproductor (variante R, abajo). Lo de debajo (p. ej. el editor con su historial) no se toca. | Al cerrar el reproductor. |
+| **Global** | Toda la aplicación de la ventana principal (proveedores, barra superior y contenido) | Pantalla de error de ventana (variante G): ocupa toda la ventana, sin barra superior. | Solo con «Volver a cargar la ventana». |
+
+- La **ventana secundaria** (reproductor en otra pantalla, 7b) lleva su propio límite global con la variante P (pública: sin detalles ni botones). La **ventana de exportación** también: si falla al dibujar, la exportación termina con error por el camino de siempre (spec 10, «Algo salió mal» + «Copiar detalles»), nunca se queda colgada.
+- Los límites solo capturan errores **al dibujar**. Los errores de manejadores de eventos, temporizadores y promesas no desmontan nada: **no** muestran esta pantalla, pero **sí** van a `app.log` (requisito técnico del punto 1a, para el programador).
+- Cada captura escribe en `app.log` una entrada de error con la vista, el mensaje, la pila de la excepción y la pila de componentes. Nunca letras ni títulos de canciones (sí el id de la canción).
+
+### Wireframe · variante V (de vista, en el área de contenido)
+
+```
+┌ BARRA SUPERIOR (sigue funcionando) ───────────────────────────────────────┐
+│ [◆ Shinobi Karaoke]  ‹ Biblioteca │ «…» (stepper)        [⟳ 1 en curso] [⚙]│
+├───────────────────────────────────────────────────────────────────────────┤
+│                                                                           │
+│                 ⚠  (icono alerta 40 px, `error`)                          │
+│                 Esta pantalla ha tenido un problema          h1 t-titulo │
+│                 Algo falló al dibujarla. Tus canciones están              │
+│                 a salvo y el resto de la app sigue funcionando.  t-cuerpo │
+│                                                                           │
+│                 ✓ Tus cambios del editor están guardados.    (solo editor)│
+│                 Se ha perdido el historial para deshacer.     t-pequeno   │
+│                                                                           │
+│                 [Volver a cargar esta pantalla]  [Ir a la Biblioteca]     │
+│                  primario                          secundario             │
+│                                                                           │
+│                 ▸ Detalles para informar del fallo        (plegable)      │
+│                   ┌───────────────────────────────────────────┐           │
+│                   │ TypeError: Cannot read properties of …    │ t-pequeno │
+│                   └───────────────────────────────────────────┘ monoesp.  │
+│                   [Copiar detalles] [Abrir la carpeta de registros]       │
+└───────────────────────────────────────────────────────────────────────────┘
+```
+
+- Columna centrada de 560 px de ancho máximo, alineada arriba con 64 px de margen (no centrada en vertical: en ventanas altas quedaría lejos de la barra). Fondo `fondo-0`. Texto `texto-1` / `texto-2`. Sin ilustración ni animación.
+- El recuadro de detalles: `fondo-2`, `r-s`, máximo 4 renglones con desplazamiento propio, texto seleccionable, pila monoespaciada de sistema-visual §3. Solo el **mensaje** de la excepción; la pila completa va en lo copiado y en el registro.
+- Plegado por defecto (`<details>`/botón con `aria-expanded`). Se recuerda abierto durante la sesión.
+
+### Variante G (global) y variantes R y P
+
+- **G**: mismo bloque, a ventana completa (sin barra superior), con el logotipo pequeño arriba a la izquierda (no es botón). Título `err.global.titulo`. Acciones: **[Volver a cargar la ventana]** (primario) y, en el plegable, [Copiar detalles] y [Abrir la carpeta de registros]. No hay «Ir a la Biblioteca»: recargar ya lleva a ella.
+- **R** (reproductor): fondo `#000000`, bloque centrado con texto `#FFFFFF` y `t-subtitulo` como mínimo; acciones **[Salir del reproductor (Esc)]** (primario) y [Copiar detalles]. Al salir se vuelve a donde se estaba, como al cerrar el reproductor normalmente. El audio del reproductor se detiene.
+- **P** (ventana secundaria, la ve el público): fondo `#000000`, solo el texto `err.publico` centrado en `máx(t-subtitulo, 3vh)`. Sin detalles ni botones; la ventana principal recibe el aviso de siempre de secundaria caída o sin respuesta (spec 02) y desde ahí se cierra. Escribe en `app.log` como las demás.
+
+### Acciones
+
+| Acción | Qué hace |
+|---|---|
+| **Volver a cargar esta pantalla** (V) | Vuelve a montar la misma vista (misma canción y paso) **sin recargar la ventana**: no reinicia la app, ni los trabajos en segundo plano, ni la sesión de otra pantalla. Antes espera al guardado pendiente del editor (abajo), con el botón en estado cargando «Guardando…». Si la vista vuelve a fallar **en menos de 10 s**, se muestra `err.vista.repetido` y el primario pasa a ser «Ir a la Biblioteca» (para no ofrecer un bucle). |
+| **Ir a la Biblioteca** (V) | Navega a la Biblioteca, como «‹ Biblioteca». Si la vista que falló es la propia Biblioteca, este botón no aparece. **Esc** hace lo mismo (atajo global de siempre en el espacio de canción). |
+| **Volver a cargar la ventana** (G) | Espera al guardado pendiente (tope 2 s) y recarga la ventana principal (`webContents.reload`). La app no se cierra: los trabajos y la cola siguen en el proceso principal; la ventana arranca en la Biblioteca. |
+| **Copiar detalles** | Copia al portapapeles: `Shinobi Karaoke · error de la interfaz`, la hora, la vista (p. ej. `cancion/editor`, con el id de la canción), el mensaje, la pila de la excepción, la pila de componentes y la línea de versión común (`Versión: {identificador}`, spec 08). Sin letras ni títulos. Toast `err.copiado`. |
+| **Abrir la carpeta de registros** | Abre en el explorador del sistema la carpeta de `app.log`. Si falla, toast `error` `err.carpeta.error`. Necesita una llamada nueva al proceso principal: si el arquitecto no la quiere ahora, el botón se omite y basta con «Copiar detalles» (no se deja un botón muerto). |
+
+### El trabajo del editor
+
+Hoy el editor **guarda solo** (spec 06, «Guardado, borrador y lista»): cada cambio sale ~1 s después (como máximo 2 s). Lo que puede perderse en un fallo es solo **el último lote aún sin enviar**. Pero, leído en el código, al desmontarse el editor su guardado **descarta** ese lote en lugar de enviarlo (`GuardadoEditor.destruir()` borra lo pendiente; solo `vaciar()` lo envía). Por eso:
+
+- **Requisito (programador)**: cuando el editor se desmonta por un fallo, el lote pendiente **se envía** antes de destruir el guardado (lo mismo que hace hoy al salir o al cerrar la ventana). El proceso principal lo valida como siempre: si no es válido, se rechaza y se cuenta como «no se pudo guardar». La pantalla de error sabe el resultado y lo muestra:
+
+| Resultado | Línea bajo el texto (V, solo si la vista era el editor) |
+|---|---|
+| Nada pendiente o enviado bien | ✓ `err.editor.guardado` (`exito`) |
+| Enviándose | spinner 14 px + `err.editor.guardando` (`texto-2`); se actualiza en vivo |
+| Falló | ⚠ `err.editor.noGuardado` (`aviso`) |
+
+- Siempre, debajo, `err.editor.historial` (`texto-3`): el historial de deshacer de la visita se pierde (vive en la vista desmontada). Es honesto y no alarma.
+- El borrador abierto del **editor preciso** (sin aplicar) se pierde; ya cuenta como «últimos cambios» y no se menciona aparte.
+- En la variante G, la misma regla: «Volver a cargar la ventana» espera al envío (tope 2 s).
+- El audio del editor se detiene al desmontarse (nunca sigue sonando detrás de la pantalla de error).
+
+### Estados
+
+| Estado | Qué se ve |
+|---|---|
+| Primer fallo | Título, texto, línea de guardado (editor), dos acciones, plegable cerrado. |
+| Guardando | Línea `err.editor.guardando`; «Volver a cargar…» en estado cargando hasta terminar. |
+| Fallo repetido (< 10 s tras recargar) | Texto `err.vista.repetido`; primario «Ir a la Biblioteca», secundario «Volver a cargar esta pantalla». |
+| Detalles copiados | Toast `err.copiado`. |
+| La pantalla de error también falla | El límite global la captura (variante G). Si la G no se puede dibujar, la ventana queda como hoy, pero la entrada en `app.log` existe. La pantalla de error no usa contextos de la app (navegación, biblioteca…) salvo para «Ir a la Biblioteca», y solo componentes base. |
+
+### Accesibilidad
+
+- Al aparecer, el **foco va al título** (`h1`, `tabindex="-1"`), que forma parte de un bloque con `role="alert"` (título + texto + línea de guardado): se anuncia una vez. Tab sigue por el orden visual: primario, secundario, plegable, sus botones. En V, la barra superior queda antes en el orden, como siempre.
+- La línea de guardado está dentro de una región `role="status"` aparte: al pasar de «Guardando…» a «guardados» se anuncia el cambio.
+- Contraste: textos `texto-1/2/3` sobre `fondo-0` (≥ 6,6:1); en R y P, blanco sobre negro.
+- Todo es operable con teclado; Esc en V = «Ir a la Biblioteca»; en R = «Salir del reproductor».
+- **Movimiento reducido**: la pantalla nunca se anima (ni fundido ni desplazamiento), con o sin la preferencia. Con `prefers-reduced-motion: reduce`, el spinner de «Guardando…» se sustituye por el icono estático de reloj.
+
+### Microcopy
+
+| Clave | Texto |
+|---|---|
+| `err.vista.titulo` | Esta pantalla ha tenido un problema |
+| `err.vista.texto` | Algo falló al dibujarla. Tus canciones están a salvo y el resto de la app sigue funcionando. |
+| `err.vista.repetido` | Ha vuelto a fallar. Ve a la Biblioteca y abre la canción de nuevo. Si sigue pasando, cierra y vuelve a abrir Shinobi Karaoke. |
+| `err.vista.recargar` | Volver a cargar esta pantalla |
+| `err.vista.biblioteca` | Ir a la Biblioteca |
+| `err.global.titulo` | Shinobi Karaoke ha tenido un problema |
+| `err.global.texto` | Algo falló al dibujar la ventana. Tus canciones están a salvo en el disco. |
+| `err.global.recargar` | Volver a cargar la ventana |
+| `err.rep.titulo` | El reproductor ha tenido un problema |
+| `err.rep.salir` | Salir del reproductor (Esc) |
+| `err.publico` | El reproductor se ha detenido. |
+| `err.editor.guardado` | Tus cambios del editor están guardados. |
+| `err.editor.guardando` | Guardando tus últimos cambios… |
+| `err.editor.noGuardado` | No se pudieron guardar los cambios de los últimos segundos. Lo anterior sí está guardado. |
+| `err.editor.historial` | Se ha perdido el historial para deshacer de esta visita. |
+| `err.detalles` | Detalles para informar del fallo |
+| `err.copiar` | Copiar detalles |
+| `err.copiado` | Detalles copiados. Pégalos en tu informe del fallo. |
+| `err.carpeta` | Abrir la carpeta de registros |
+| `err.carpeta.error` | No se pudo abrir la carpeta de registros. |
+
+### Criterios de aceptación
+
+- ERR-1. Con una excepción forzada al dibujar el editor (doble de prueba), el área de contenido muestra la variante V con `err.vista.titulo`; la barra superior sigue visible y su logotipo y ⚙ navegan. Lo mismo forzando el fallo en la Biblioteca (sin «Ir a la Biblioteca») y en Letra.
+- ERR-2. Con una excepción forzada en la barra superior o en un proveedor, se muestra la variante G; «Volver a cargar la ventana» recarga solo la ventana (el proceso principal y un trabajo en curso siguen; test con un trabajo simulado) y aparece la Biblioteca.
+- ERR-3. Navegar a otra vista desde la variante V (logotipo, Esc, «Ir a la Biblioteca») la monta con normalidad; volver a la canción que falló vuelve a intentarlo desde cero.
+- ERR-4. «Volver a cargar esta pantalla» monta de nuevo la misma vista sin recargar la ventana (un contador del proceso de la ventana no se reinicia). Si vuelve a fallar en menos de 10 s, se ve `err.vista.repetido` y el primario es «Ir a la Biblioteca».
+- ERR-5. Con un cambio del editor pendiente de guardar (dentro del *debounce*) y un fallo forzado, el cambio llega a `cancion.json` y la pantalla muestra `err.editor.guardado`; con el guardado simulado fallando, muestra `err.editor.noGuardado`. Siempre aparece `err.editor.historial`. Test unitario: desmontar el editor por un error envía el lote pendiente (hoy lo descarta).
+- ERR-6. Cada captura escribe en `app.log` una entrada de error con la vista, el mensaje, la pila y la pila de componentes; no contiene texto de letras ni títulos. Un error en un manejador de eventos o en una promesa sin capturar también llega a `app.log` y **no** muestra la pantalla.
+- ERR-7. «Copiar detalles» pone en el portapapeles el texto descrito, terminado en la línea `Versión: …`, y muestra `err.copiado`. «Abrir la carpeta de registros» abre la carpeta de `app.log` (o el botón no existe si no se implementa la llamada).
+- ERR-8. Un fallo dentro del reproductor a pantalla completa muestra la variante R; Esc o «Salir del reproductor» vuelve al editor con su historial de deshacer intacto. El audio se detiene. En la ventana secundaria, la variante P muestra solo `err.publico`.
+- ERR-9. Al aparecer, el foco está en el título, el bloque tiene `role="alert"` y todo se recorre con Tab en orden visual; Esc en V va a la Biblioteca. Sin ninguna transición con o sin movimiento reducido (con él, sin spinner animado).
+- ERR-10. Tras un fallo en el editor no se oye audio.

@@ -101,6 +101,8 @@ Clasificación de las specs de `app/e2e/` (actualizada el 2026-11-20, con las fa
 | `importar-lote.spec.ts` | Secundaria | 0.2.2 · Feature 7 ([0314](tareas/0314-lote-en-main.md), [0384](tareas/0384-datos-de-cada-video-al-descargar-y-remates-de-la-lectura-del-lote.md); 1 prueba, ~15 s): carpeta de 3 WAV y lista falsa de 2 vídeos hasta las 5 tarjetas con el separador falso; **0 peticiones a LRCLIB con el interruptor apagado** y 0 consultas por vídeo (contador del doble de yt-dlp) |
 | `paquetes.spec.ts` | Secundaria | 0.2.2 · Feature 9 ([0326](tareas/0326-paquete-y-copia-en-la-interfaz.md); 1 prueba, ~3 s): exportar con audio una canción de la semilla e importarla con «Conservar las dos». La seguridad de los paquetes (rutas, bombas, truncados) vive en Vitest (`main/copias/paqueteHostil.test.ts`) |
 | `sin-red-real.spec.ts` | Secundaria | Vigilante de la regla «sin red real» (abajo): 2 pruebas, ~5 s |
+| `editor-reparto.spec.ts` | Secundaria | 0.2.3 · Features 1, 2 y 3 (0341–0346, 0365, 0359; 7 pruebas, ~30 s, semilla `reparto`): C › 2 reparte tres líneas y Ctrl + Z, fila «Canta» del panel, cantante nuevo con carril vacío y Alt + ↓, «Marcarlas como coro», deslizador «Voz en los coros», alargar el fin de Ana sobre la línea de Luis (voces a la vez) y C1-E23 (256/300 px sin cortes; **falla en Linux, pregunta 0385**). **No es crítica**: el reparto es opcional y el flujo principal no cambia (los dos críticos siguen siendo los de la rama sin reparto) |
+| `capturas-023.spec.ts` | Secundaria (opt-in) | Capturas de revisión de 0.2.3 (`SHINOBI_CAPTURAS_023_1=1`, destino con `SHINOBI_CAPTURAS_RAIZ`); omitida en el CI |
 
 ## Fallos conocidos clasificados
 
@@ -137,6 +139,28 @@ Resumen: con las pruebas locales, **4 de las 8 intermitentes se reproducen** y 3
 ## Verificación de la entrega alpha.3 (2026-11-23, Mac M1, HEAD `81aed30`)
 
 Vitest 342 archivos / 4527 pasan / 13 omitidas; pytest 379; E2E completo 230 pasan, 80 omitidas y 3 fallan (`reproductor:252`, `editor:447` y `ventana`, de entorno) en la pasada 2, y 229 / 63 / 4 en la 1; críticos 2 de 2. Informes: [7](versiones/0.2.2/informe-feature-7.md), [8](versiones/0.2.2/informe-feature-8.md) y [9](versiones/0.2.2/informe-feature-9.md). Paquetes hostiles propios: se prueban en Vitest con `montajeDePrueba.ts`; **todo ensayo con un `uncaughtException`** (Vitest lo informa como error aparte aunque los tests pasen) debe contarse como fallo. `SHINOBI_CAPTURAS_DEPURAR=<carpeta>` hace que las capturas de las features 7 a 9 dejen una imagen, `config.json` y los registros si una prueba falla (`conBib`).
+
+## Verificación de 0.2.3 (2026-11-23, Mac M1, HEAD `d50facd`)
+
+Vitest 363 archivos / **4 896 pasan** / 13 omitidas; pytest **400**; críticos **2 de 2**; regresión E2E completa dos veces: **240 pasan / 3 fallan / 91 omitidas** (7,4 min) y **241 / 2 / 91** (6,6 min). Las 91 omitidas son capturas opt-in, red y viewports que macOS no concede. Informes: [feature 1](versiones/0.2.3/informe-feature-1.md), [2](versiones/0.2.3/informe-feature-2.md) y [3](versiones/0.2.3/informe-feature-3.md). Guías: [`Test-manuales/0.2.3/`](Test-manuales/README.md).
+
+**Clasificación de los fallos (E2E local y CI)**
+
+| Fallo | Clase | Causa y estado |
+|---|---|---|
+| `ventana.spec.ts:4` | De entorno | Retina (DPR 2). Conocido; lo cubre el CI |
+| `reproductor.spec.ts:274` (antes 252) «la pantalla final vuelve sola…» | **Inestable por el entorno** (no es de 0.2.3) | Con otras ventanas de Electron abriéndose y cerrándose a la vez, el sistema entrega a la ventana `pointermove` de confianza que la prueba no envió (medido con un registro de eventos: trusted, en ráfagas de 1–2,5 s sobre `_pantallaFinal`), y cualquier actividad detiene la cuenta atrás **por diseño**. Medido con ventanas de relleno: la cuenta se detiene en 9 de 40 intentos en HEAD y en 9 de 40 en `version-0.2.2` (mismo porcentaje: no es de 0.2.3). **Arreglada** en la prueba: detecta la cuenta detenida al instante y repite el final (hasta 90 s); 8 de 8 con relleno y 168 de 168 en la tanda larga |
+| `biblioteca.spec.ts:96`, `temas-migracion.spec.ts:53` | Inestable (prueba) | Esc llega antes de que el reproductor atienda el teclado (esta prueba no simula la pantalla completa): se repite la tecla dentro de `toPass`. Arreglado |
+| `editor-layout.spec.ts:875` | Inestable por el entorno | El tooltip del divisor nace con `mouseenter` + 500 ms; un `mousemove` ajeno saca el puntero y cancela el temporizador (2 de 2 pasadas). Arreglado: se vuelve a entrar hasta que sale |
+| `reproductor.spec.ts:75`, `:232`, `:317` | Inestable (prueba) | Los controles se ocultan a los 3 s sin actividad (`aria-hidden`) y `getByRole('slider')` no los encuentra si la prueba llega tarde; fallaban 3 de 107 con carga. Arreglado con `conControles` (mueve el puntero antes de cada intento) |
+| `editor-reparto.spec.ts:174` (C1-E23) y `temas-editor.spec.ts:577` | **Producto, solo Linux (CI)** | No reproducibles en macOS; pregunta [0385](preguntas/0385-fallos-de-e2e-solo-en-linux-del-ci-en-0-2-3.md) |
+| Vitest `Editor.reparto.test.tsx` (Ubuntu, CI 45234965863) | Inestable (prueba) | La primera C llegaba antes de tener línea principal: arreglado con espera repetida |
+| Vitest `exportacion/servicio.test.ts` «voz en los coros… lote» (Windows, CI 45234965863 y 45244958888) | Prueba (plataforma) | `includes('/id/')` con rutas de Windows (`\`): arreglado |
+| Vitest `LetraElegida.test.tsx` (macOS, CI 45244958888) | Inestable bajo carga | Ya clasificada en la sección de intermitentes; no es de 0.2.3 |
+
+La regla de oro (una voz, sin reparto y sin solapes) se mide con copias del código de cada versión en worktrees: ver los informes.
+
+**Suite crítica**: sin cambios. No se añade un caso de reparto (justificación en el [informe de la feature 1](versiones/0.2.3/informe-feature-1.md#suite-crítica)).
 
 ## Regla: sin red real en las pruebas (2026-11-22)
 

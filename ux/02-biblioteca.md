@@ -1693,7 +1693,7 @@ El estado **guardado** sigue teniendo dos valores (borrador y lista). «Lista pa
 | Elemento | Comportamiento |
 |---|---|
 | **Insignia** | `bib.estado.revisar` con icono `list-checks` 14 px, fondo `info-tenue` y texto `info`. `title` con `bib.estado.revisar.ayuda`. Se distingue de «✎ Borrador» (contorno `aviso`) y de «✓ Lista» (`exito`) por icono y texto, no solo por color. |
-| **Línea de origen** | `bib.prep.origen.auto` mientras la letra la haya elegido la app y la canción no se haya revisado (0153 §4). Si además se corrigió el desfase: `bib.prep.origen.autoCorregida`. Cuando la letra la eligió, pegó o importó el usuario, no hay línea de origen. |
+| **Línea de origen** | `bib.prep.origen.auto` mientras la letra la haya elegido la app y la canción no se haya revisado (0153 §4). Si además se corrigió el desfase: `bib.prep.origen.autoCorregida`. Si la eligió **sin poder comprobarla con tu audio** (`eleccionSinComprobar`, revisión 2026-11-23): `bib.prep.origen.autoSinComprobar`, ver [Línea de origen «sin comprobar con tu audio»](#línea-de-origen-sin-comprobar-con-tu-audio). Cuando la letra la eligió, pegó o importó el usuario, no hay línea de origen. |
 | **Revisar** (secundario, icono `list-checks`) | Abre el Editor de la canción (con la feature 11, en su revisión guiada). Es la acción de la **portada**, de **Intro** y de **Espacio**. Durante una sesión en otra pantalla: candado y diálogo `edi.bloqueo`. |
 | **▶ Probar** (fantasma, icono `play`) | Abre el reproductor local a pantalla completa con la canción tal como está, igual que «▶ Reproducir» de una Lista (pantalla de título, instrumental, voz guía con su ajuste), pero **sin** cambiar su estado. Al salir se vuelve a la Biblioteca con el foco en la tarjeta y aparece el toast `bib.prep.toast.probada` con [Marcar como lista] y [Revisar] (10 s). [Marcar como lista] hace lo mismo que el botón del editor (con el aviso de líneas dudosas de la feature 11 si procede). Durante una sesión en otra pantalla: `aria-disabled` con `bib.prep.probar.sesion` (solo hay un transporte audible). **(Decisión provisional: una «Lista para revisar» se puede probar desde la Biblioteca, pero no encolar.)** |
 | **Ancho** | Los dos botones caben en una fila desde 240 px, como «Reproducir» y «Editar». |
@@ -1701,6 +1701,35 @@ El estado **guardado** sigue teniendo dos valores (borrador y lista). «Lista pa
 | **Modo selección** | Se puede seleccionar; los botones se ocultan como en las demás tarjetas. |
 | **Lectores de pantalla** | `bib.aria.tarjeta` usa como estado «Lista para revisar» y, como línea de paso, la de origen (y la de la feature 11). |
 | **Al llegar a este estado con la Biblioteca abierta** | La insignia y los botones cambian en vivo, sin mover la tarjeta ni el foco (regla de siempre). |
+
+### Línea de origen «sin comprobar con tu audio»
+
+Revisión 2026-11-23, **provisional** ([ADR 0025, revisión del 2026-11-23, punto 1](../adr/0025-preparacion-desatendida-y-datos-de-la-cancion-automaticos.md); [pregunta 0393](../preguntas/0393-elegir-la-letra-sin-comprobarla-con-tu-audio.md); [pregunta 0394](../preguntas/0394-texto-de-la-letra-elegida-sin-comprobar.md); tarea [0395](../tareas/0395-aviso-de-letra-elegida-sin-comprobar.md)). Vista Letra: [05 · Letra elegida sin comprobar con tu audio](05-letra.md#letra-elegida-sin-comprobar-con-tu-audio).
+
+```
+│ (◔ Lista para revisar)      [⋯]  │  insignia: sin cambios
+│ ? Letra elegida automáticamente  │  ← icono `circle-help` 14 px + `bib.prep.origen.autoSinComprobar`
+│   · sin comprobar                │     (t-pequeno, texto-2; puede partirse en 2 líneas)
+│ ⚑ 4 líneas por revisar           │  feature 11 (si existe)
+│ [Revisar]  [▶ Probar]            │
+```
+
+| Aspecto | Regla |
+|---|---|
+| **Cuándo** | Resumen con `eleccionSinComprobar: true`, mientras se cumplan las condiciones de la línea de origen de siempre (letra elegida por la app y canción sin revisar). Sustituye a `bib.prep.origen.auto`; nunca se combina con `.autoCorregida` (esta letra no se corrige sola; si llegaran las dos marcas, manda `.autoSinComprobar`). |
+| **Texto visible** | `bib.prep.origen.autoSinComprobar`, corto para la tarjeta. Si no cabe en una línea (240 px), se parte por « · » en dos líneas; **no** se recorta con puntos suspensivos (lo importante va al final). |
+| **Estado visual** | `t-pequeno`, `texto-2`, como la línea de origen de siempre: **sin** color de `aviso` ni de `error` **(provisional)**. Se distingue de «Letra elegida automáticamente» sin depender del color: icono `circle-help` 14 px (en `texto-2`, `aria-hidden`) delante del texto, que la línea normal no lleva, y la coletilla «· sin comprobar». La insignia «◔ Lista para revisar» no cambia. |
+| **Ayuda** | `title` de la línea: `bib.prep.origen.autoSinComprobar.ayuda`. |
+| **Lectores de pantalla** | `bib.aria.tarjeta` usa `bib.prep.origen.autoSinComprobar.ayuda` como línea de origen (frase completa, no la versión corta). |
+| **Desaparece** | Cuando desaparecería la línea de siempre: al revisar la canción (0153 §4), sustituir la letra o marcarla como lista. |
+
+**Criterios de aceptación (línea de origen sin comprobar)**
+
+- F5-B14. Una tarjeta «Lista para revisar» con `eleccionAutomatica: true, eleccionSinComprobar: true` muestra el icono `circle-help` y el texto exacto `bib.prep.origen.autoSinComprobar`, y no muestra `bib.prep.origen.auto`; con `eleccionSinComprobar: false` (o ausente), muestra `bib.prep.origen.auto` sin icono, como hasta ahora.
+- F5-B15. La línea usa `texto-2` (ni `aviso` ni `error`); a 240 px de ancho se parte en dos líneas sin puntos suspensivos y los botones [Revisar] y [▶ Probar] siguen en una fila.
+- F5-B16. Su `title` y la línea de origen de `bib.aria.tarjeta` son el texto exacto de `bib.prep.origen.autoSinComprobar.ayuda`; el icono es `aria-hidden`.
+- F5-B17. La línea desaparece en los mismos casos que `bib.prep.origen.auto` (F5-B5).
+- F5-B18. Captura `docs/ux/revisiones/0.2.3-tarea-0395/biblioteca-1280x800-100-elegida-sin-comprobar.png` con una tarjeta comprobada y otra sin comprobar, una junto a otra.
 
 ### Línea de paso de un borrador: filas nuevas
 
@@ -1807,6 +1836,8 @@ Encima de la bandeja, como aviso en línea (`info`) que se puede cerrar:
 | `bib.estado.revisar.ayuda` | Ya tiene pistas y letra sincronizada. Escúchala y márcala como lista para poder cantarla. |
 | `bib.prep.origen.auto` | Letra elegida automáticamente |
 | `bib.prep.origen.autoCorregida` | Letra elegida automáticamente · desfase corregido |
+| `bib.prep.origen.autoSinComprobar` | Letra elegida automáticamente · sin comprobar (revisión 2026-11-23) |
+| `bib.prep.origen.autoSinComprobar.ayuda` | Letra elegida automáticamente, sin comprobar con tu audio. Al revisarla, fíjate en que vaya a tiempo con la voz. (`title` de la línea y texto de la línea de origen en `bib.aria.tarjeta`) |
 | `bib.accion.revisar` | Revisar |
 | `bib.accion.revisar.aria` | Revisar «{título}» |
 | `bib.accion.probar` | Probar |

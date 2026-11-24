@@ -62,7 +62,7 @@ Opciones **1A, 2A y 3A**.
 }
 "estilo": {
   "letra": { …, "colores_partes": {             // opcional; cada clave opcional; ausente = predeterminado de la ranura
-    "c2": "#4ADEDE", "c3": "#FF5C8A", "c4": "#7CFF6B", "todos": "#B388FF", "coro": "#FF9F1C" } },
+    "c2": "#35C6E8", "c3": "#FF5C8A", "c4": "#7CFF6B", "todos": "#B388FF", "coro": "#FF9F1C" } },
   "pantalla": { …, "zonas": "por_parte" }       // opcional: "por_parte" | "una"; ausente = "por_parte" (§4 bis)
 }
 ```
@@ -150,7 +150,7 @@ Cada parte tiene, además de su carril y su color, **su espacio en pantalla**. U
 
 **Puertas que no se cierran** (nada de esto se implementa ni se reserva en las features 1 y 2):
 
-- **Voces a la vez**: el reparto ya dice de quién es cada línea y las zonas ya separan las secuencias en pantalla; solaparlas solo exige relajar el invariante del fin «por parte» (ADR 0006), sin campo nuevo. Es la feature 3 condicionada (§7).
+- **Voces a la vez**: el reparto ya dice de quién es cada línea y las zonas ya separan las secuencias en pantalla; solaparlas solo exige relajar el invariante del fin «por parte» (ADR 0006), sin campo nuevo. Es la feature 3 condicionada (§7). **Resultado de la prueba (2026-11-23)**: sirve. Una canción **con solapes** no se abre en versiones anteriores, que la ven dañada sin perder nada. Ver «Resultado de la prueba técnica de voces a la vez».
 - **Texto sin cantar teñido por cantante** (una de las referencias): cabe como clave hermana opcional `estilo.letra.colores_partes_texto` con las mismas ranuras, sin tocar `colores_partes`. No entra en 0.2.3 (resta contraste a la letra, decisión 7 de 0160); el usuario puede pedirlo.
 - **Cambio de cantante dentro de una línea**: `palabras[].parte` opcional (ausente = la de la línea), factibilidad §7.
 - Como 0.2.3 no reserva esas claves, una versión posterior que las use las perdería al volver a 0.2.3; si hace falta, esa versión decide reservarlas antes (como 0.2.2 hizo con estas).
@@ -195,3 +195,76 @@ Si sirve, las tareas 0357–0360 se ejecutan y la feature 3 entra en la misma al
 
 Cambios respecto a la primera redacción, ya integrados arriba: «canción con reparto» pasa a ser un derivado (2 o más cantantes o alguna línea de coro) y `partes` puede existir sin reparto (§1); «Todos» exige 2 o más cantantes (§1, §4); carriles de Coro siempre y de Todos según el número de cantantes (§3); `inicial` e `insignia` separadas, con número de ranura e icono (§3); 80 % e insignias solo con varios cantantes (§4); zonas con los valores de la spec, la variante `subidaAlSalir` y la opacidad por zona (§4 bis); primera línea corregida, que hereda de la siguiente (§2); orden de Esc y `Alt + ↑/↓` en la lista (§5).
 
+
+## Revisión 2026-11-23 · Firmas de `shared/reparto.ts` (pregunta 0330)
+
+Completa §3 con lo implementado en la tarea 0340:
+- `parteDe(linea, letra?)`: con la letra aplica la lectura tolerante de §1 (un cantante que no existe, o `todos` con un solo cantante, se lee como `c1`). Sin la letra, solo mira el campo. Quien pinta, cuenta o exporta pasa siempre la letra.
+- `textoEnPantalla(linea)` → `{ texto, parentesis }`: `texto` es el guardado, sin tocar; `parentesis`, si el render debe dibujarlos.
+- `recuentoPorParte(letra)` → `Record<Parte, number>` con las seis partes (líneas, no pausas).
+- `inicial` e `insignia` → `{ tipo: "texto", texto } | { tipo: "icono", icono: "users" }` (`insignia` puede dar `null`). Con iniciales en choque, dos letras («An», «Al»). Un nombre que no empieza por letra ni número usa el número de ranura.
+- `asignar`, `anadirCantante` (con 4 cantantes) y `quitarCantante('c1')` imposibles devuelven **la misma letra**, sin lanzar. Main valida al escribir.
+- Funciones auxiliares: `cantantesDe`, `vozEnCoros` (nivel o 0,5), `nombreNormalizado` y `validarReparto` (invariantes de §1; lista vacía si es válido).
+- `normalizarReparto` conserva un `voz_en_coros` explícito mientras exista `partes`. La regla de quitar `partes` de §1 trata 0,5 explícito como ausente.
+- `estilosIguales` compara también `pantalla.zonas` (ausente = `por_parte`) y los colores efectivos.
+- `colores_partes` no tiene ranura `c1` en el esquema: una clave `c1` se descarta al leer y no se vuelve a escribir.
+- `guardarTiemposSchema`: con `partes`, cada `parte` apunta a un cantante de la lista y `todos` exige 2 o más. Con `partes: null`, solo se admite `coro`. «`parte` solo en líneas» lo comprueba main.
+- Semilla de reparto opt-in (`sembrar(datos, { reparto: true })`, `npm run semilla -- --reparto`).
+
+## Revisión 2026-11-23 · Guardado del reparto, partes en pausas y color del Cantante 2 (preguntas 0341 y 0345)
+
+- **Quién envía `partes`** (§2): `GuardadoEditor` normaliza con `normalizarReparto` y manda `partes: letra.partes ?? null` en cada guardado. Main trata `null` como «quitar» y nunca escribe la clave con `null`, así que una canción sin reparto no cambia en disco.
+- **`parte` en una pausa**: main la **descarta en silencio** al escribir (`guardarTiempos`) y no rechaza la petición. Es una excepción acotada al «estricto» de §1, que sigue rigiendo para todo lo demás. Motivo:
+  - el elemento de tiempos no lleva `tipo` y es un dato inofensivo;
+  - rechazar la petición haría fallar el guardado del editor y arriesgaría las ediciones del usuario por un detalle que no se pinta.
+  - El reducer no debe enviarla nunca: lo fija un test del reducer (0342).
+- **Paleta predeterminada** (§4): el Cantante 2 pasa de `#4ADEDE` a **`#35C6E8`** (pregunta 0345, diseñador). Con el tema «Shinobi» tiene 5,63:1 frente al fondo, ΔE 46,0 frente a la letra blanca y ΔE simulado 31,9 en daltonismo: pasa las tres comprobaciones, mientras que `#4ADEDE` hacía saltar el aviso de daltonismo frente a la letra. Las demás ranuras no cambian. El ejemplo de §1 ya está corregido.
+
+## Resultado de la prueba técnica de voces a la vez (tarea 0356, 2026-11-23)
+
+Informe: [`docs/spikes/0029-voces-a-la-vez/informe.md`](../spikes/0029-voces-a-la-vez/informe.md). Letra inventada con los tres patrones de las referencias; no hay dúo real anotado.
+
+**Veredicto: sirve, con cuatro condiciones resueltas aquí** (preguntas 0365–0368).
+
+| Criterio de §7 | Resultado | Qué demuestra y qué no |
+|---|---|---|
+| 1 · Regla y pruebas existentes | Los tres patrones caben con un único desvío de 1 ms. **0 de 908** pruebas existentes (51 archivos) cambian. 2 000 letras aleatorias sin solapes dan lo mismo que el código actual en las funciones de la regla. El cambio son 8 funciones en 5 archivos (+52 −13 líneas) | Demuestra que la regla es local y no rompe nada sin solapes. No se ejecutaron las pruebas de componentes del editor (las corre el CI de 0357) |
+| 2 · Coste del render | 1,01 × con 3 zonas y 1,02 × con 4, frente a 0.2.2 con 5 líneas a 1920 × 1080 (umbral 1,25 ×). 4 zonas a 60 FPS: 1 800 fotogramas, 0 sin asentar | Medido sobre un **prototipo** de zonas con el `PantallaLetra` y el anfitrión de exportación reales, no sobre la 0364 (hoy hecha): sin `S_zona`, `subidaAlSalir` ni opacidad por zona. El coste lo domina la captura (≈ 14 de 18 ms), que no depende de los nodos, así que el margen es amplio. **Se repite con la 0364 real en la 0360**; si supera 1,25 ×, se para la feature. Un solo equipo (M1), con ruido de ±30 % |
+| 3 · Funciones automáticas | Silencios y dudosas **excluyen** las líneas solapadas, el encaje las **fusiona** y el `.lrc` escribe una sola marca vacía por grupo: 0 falsos positivos (sin adaptador, 8). La alineación no existe (`shared/alineacion.ts` no está): solo se fija su regla | Demuestra el comportamiento con voz sintética «perfecta». Con voz real habrá más exclusiones, y una canción con muchos solapes recibirá poca ayuda automática. Es aceptable, porque se dice |
+
+No se prototipó la interfaz del editor (0359): es el riesgo que queda. 0359 se queda en M con riesgo y se hace después de 0357.
+
+**Regla definitiva** (sustituye la fila «Invariantes» de la tabla de §7; pregunta 0366):
+- Los **inicios** son estrictamente crecientes en toda la letra. Dos líneas que empiezan a la vez se separan 1 ms.
+- Un **fin fijado** (`fin_ms` explícito) y las **palabras** no pasan del inicio de la siguiente línea que **choca**:
+  - la misma parte;
+  - «Todos» con cualquier cantante (no con el coro);
+  - coro con coro;
+  - una **pausa** choca con todo.
+  Para todo esto se usa `parteDe(linea, letra)`.
+- El **fin automático** (`fin_ms: null`) sigue llegando al inicio de la siguiente línea **de cualquier parte**. Un solape solo existe si alguien fija un fin a mano o con los tiradores. Las funciones automáticas de fines (silencios, preparación, «Ajustar los fines…») nunca crean solapes.
+- Sin reparto, todas las líneas son `c1` y chocan entre sí, así que la regla es exactamente la de 0.2.2.
+
+**Funciones con solapes** (pregunta 0367): el predicado `solapadas(letra, duracionMs)` (barrido por inicio sobre los tramos de `finEfectivo`) y adaptadores finos alrededor de cada función, sin cambiar su código:
+- «Ajustar los silencios», «Fin al final de la voz», los fines prudentes de la preparación y de «Ajustar los fines…» **excluyen** las solapadas y lo dicen;
+- las líneas dudosas **excluyen** las solapadas, salvo `sinInicio`;
+- el encaje («Comprobar la letra», candidatos de la vista Letra y preparación) **fusiona** los tramos solapados (`aplanarSolapes`) sin tocar `encaje.ts`, y mantiene las guardas de prudencia de ADR 0024;
+- el `.lrc` escribe una sola marca vacía por grupo, en el fin de la línea que acaba la última;
+- la alineación forzada (ADR 0028), si entra, **excluye** las solapadas; su tarea lo incluye.
+
+**Orden de la letra** (pregunta 0368): el texto va en orden de inicio. El editor avisa cuando un inicio no puede pasar del de la línea anterior (`inicio_anterior`), sin acción nueva. «Mover una línea» queda como [propuesta 039](../propuestas/039-mover-una-linea-en-el-editor.md).
+
+**Compatibilidad** (pregunta 0365; sustituye la fila «Voces a la vez» de las «Puertas que no se cierran» de §6):
+- Una canción **con solapes** no se abre en versiones anteriores a 0.2.3. `letraSchema` valida los invariantes al leer, así que 0.2.1 (y una 0.2.2) la ve **dañada**.
+- **No se pierde nada**: una canción dañada no se reescribe, y vuelve a abrirse con 0.2.3.
+- Una canción **sin solapes**, con reparto o sin él, sigue abriéndose como dice §6.
+- Un paquete con una canción con solapes, importado en una versión anterior, falla solo en esa canción.
+- Se aceptan esa pérdida y la falta de campo nuevo. Motivos:
+  - la versión anterior publicada que importa es 0.2.1 y no se puede cambiar;
+  - 0.2.2 no se publicará por separado, así que hacerla tolerante no ayuda a nadie;
+  - un campo aparte (`fin_solapado_ms`) protegería 0.2.1 a cambio de duplicar la regla del fin y de las palabras;
+  - subir `esquema` daría el mismo «dañada» en 0.2.1.
+- Las notas de la versión lo dicen («quita los solapes antes de volver a una versión anterior»).
+- Decisión del usuario: pregunta 0165, fila 10.
+
+**Dictamen**: la feature 3 **entra en 0.2.3** (entrega alpha.2), pendiente de la confirmación del usuario en la pregunta 0165, fila 10. Tareas 0357–0360 con los tamaños revisados (backlog).

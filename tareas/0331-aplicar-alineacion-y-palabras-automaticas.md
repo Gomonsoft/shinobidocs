@@ -14,6 +14,8 @@ Función pura que combina la propuesta con la letra y las casillas; palabras `au
 - [ ] Solo fines no hechos a mano, nunca inicios, nunca palabras manuales; umbrales de la prueba; salida «solo fines».
 - [ ] Las palabras `auto` se pintan y pasan a `manual` al editarlas en el editor preciso.
 
+- [ ] (Añadido el 2026-11-23, feature 3 de 0.2.3) Si la letra tiene voces a la vez, las líneas solapadas (`solapadas`, tarea 0358) se **excluyen** de la alineación y se dice, como en «Ajustar los silencios». `aplicarAlineacion` conserva `parte`.
+
 ## Pruebas de feedback
 - Unitarias: `alineacion.test.ts`; `render.test.ts` con palabras `auto`.
 - E2E: Ninguna.

@@ -326,3 +326,45 @@ Con la confianza de alinear la letra entera (tarea 0387) el criterio de adopció
 - no ve desplazamientos.
 
 Con tres medidas negativas sobre el mismo material, **el encaje se queda como está** (0378, prudente). No se mide nada más sin canciones revisadas a mano (pregunta 0280).
+
+## Revisión 2026-11-23 · Letras de LRCLIB adelantadas: ventana de inicio a 800 ms; el desfase mínimo no cambia (pregunta 0393)
+
+**Provisional.** Origen: la medida del usuario en Windows ([incidencias 2026-11-23](../Test-manuales/0.2.3/incidencias-2026-11-23-windows.md), sección «Medida»): 0 de 7 canciones con letra de LRCLIB elegidas solas; en las dos medidas, letras correctas (mismo texto, duración a 0,15 y 0,37 s del audio) salen `no_coincide` y van adelantadas una mediana de 120 y 460 ms frente a la versión ajustada a mano.
+
+### Qué dice el código (lo que la nota suponía)
+
+- **`desfaseMinimoMs` no deja la letra en `no_coincide`.** Con |d\*| < 500 ms el veredicto ya es el mejor de `v0` y `vMejor` (`shared/encaje.ts:223-224`, regla de la revisión «Medida con canciones reales»): la letra **sí** se evalúa con el desfase aplicado; lo único que no se hace es proponer la corrección. En `701572c1` (F(0) = 0,804) el `no_coincide` lo pone **F < 0,85**, que el desplazamiento de 340 ms no arregla (F apenas cambia al mover una letra sin fines, §«Qué se midió», punto 1). Bajar `desfaseMinimoMs` no la habría elegido.
+- **Aunque F e I pasaran, las guardas la dejarían en `dudosa`** (16/17 letras sin fines con contraste < 0,02). La elección automática exige `coincide` o `desfasada`: con letras de LRCLIB sin fines no elige nunca. Era la consecuencia aceptada en ADR 0025 (revisiones de las preguntas 0295 y 0311). El 0 de 7 la confirma con canciones reales.
+- En `46700fe1` sí manda I: 0,886 < 0,90, con 4 de 35 líneas sin voz en los 400 ms que siguen a su inicio. Un adelanto de 130 ms basta para suspender la señal de inicios.
+- **Discrepancia sin explicar**: la reconstrucción de la nota da `no_coincide` en `701572c1`, pero la app guardó `busqueda.no_elige: "duda"`, que solo sale si algún candidato fue `dudosa`. Se repite la medida en Windows (abajo).
+
+### Medido (copia de las 18 canciones del MVP en el Mac, solo lectura; 17 con letra y picos; 16 son LRC de LRCLIB sin fines)
+
+Script de la sesión fuera del repositorio sobre `evaluarEncaje` con parámetros cambiados. «Adelanto» = la letra propia movida antes (−150, −300 y −450 ms), como las de la nota. Ajenas: 272 pares letra × voz de otra canción; 10 de ellos con las duraciones a ≤ 2 s (el filtro de la elección).
+
+| Variante | Propias `no_coincide` (0 / −150 / −300 / −450 ms) | Propias `coincide` | Ajenas aceptadas (con guardas · sin guardas) | Desplazadas ±0,8–3 s `coincide` (con guardas · sin guardas) |
+|---|---|---|---|---|
+| Actual (400 ms, I ≥ 0,90, 500 ms) | 4 / 5 / 6 / 7 | 0/17 | 0 · 14 de 272 | 0 · 51 de 102 |
+| `desfaseMinimoMs` 200 | 4 / 5 / 6 / 7 | 0/17 | 0 · — | 0 · — (0 correcciones) |
+| `noCoincideI` 0,85 | 3 / 4 / 5 / 5 | 0/17 | 0 · — | 0 · — |
+| `ventanaInicioMs` 600 | 4 / 4 / 5 / 5 | 0/17 | 0 · 14 | 0 · 51 |
+| **`ventanaInicioMs` 800** | **4 / 4 / 4 / 5** | 0/17 | **0 · 15** | **0 · 50** |
+| 800 + `noCoincideF` 0,80 | 3 / 3 / 3 / 4 | 0/17 | 0 · — (ajenas `dudosa` 34 → 48) | 0 · — |
+
+- **Ningún ajuste de umbral hace que la elección elija** una letra de LRCLIB sin fines: 0/17 `coincide` en todas las variantes (las guardas). El 0 de 7 no se arregla con umbrales; lo trata ADR 0025 (revisión de hoy, elección sin comprobar).
+- **La ventana de 800 ms quita el falso `no_coincide` por adelanto** hasta −300 ms (4 = las 4 de la letra sin mover, que son otra versión, desfase creciente o fines que cortan la voz) y deja 5 a −450 ms. Con guardas no acepta ninguna ajena ni ninguna desplazada. Sin guardas cuesta 1 ajena más (15/272).
+- **Corregir desfases pequeños no es fiable**: un estimador por inicios (el máximo de I(d) entre 0 y +600 ms) recupera entre el 0 y el 80 % de un adelanto de 150, 300 o 450 ms, y en 2 de las 17 canciones se va en sentido contrario. Los errores van de −60 a −990 ms. I satura en una meseta de varios cientos de ms. F tampoco sirve (ganancia de +0,001 a +0,06 a ±0,4 s, §1). **No se corrige ningún desfase por debajo de 500 ms.**
+
+No medido: las letras **revisadas a mano con fines** (las 10 de §1 viven en el equipo con Windows) ni las 7 canciones de la nota. La seguridad de §1 con 800 ms (10/10 propias, 0/90 ajenas) es un supuesto hasta repetirla allí.
+
+### Decisión
+
+- `ventanaInicioMs`: 400 → **800**. `vozMinimaInicio` sigue en 0,25: hacen falta más de 200 ms de voz en los 800 ms que siguen al inicio, así que se toleran adelantos de hasta unos 600 ms.
+- `desfaseMinimoMs` (500), `noCoincideI` (0,90), `noCoincideF` (0,85), `coincideF`/`coincideI` y las guardas **no cambian**. Bajar F convierte ajenas en `dudosa` sin ganar ninguna propia; bajar el desfase mínimo no corrige nada medible.
+- `shared/dudosas.ts` (`vozTarde`, 500 ms) no cambia: es otra señal, por línea.
+- Tarea [0392](../tareas/0392-ventana-de-inicio-del-encaje-a-800-ms.md).
+
+### Medida pendiente (equipo con Windows)
+
+1. `npm run calibrar:encaje -- <copia de la biblioteca> --variantes` con la constante nueva sobre las canciones revisadas a mano. Criterio: 0 ajenas aceptadas y 0 desplazadas ≥ 0,8 s que digan `coincide`. Si no se cumple, `ventanaInicioMs` vuelve a 600 (que en el Mac no añade ninguna ajena sin guardas) y se anota aquí.
+2. Repetir la reconstrucción de la nota con `46700fe1` y `701572c1`, para explicar la discrepancia `no_coincide` / `duda`.

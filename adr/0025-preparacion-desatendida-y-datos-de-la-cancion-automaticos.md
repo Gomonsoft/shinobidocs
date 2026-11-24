@@ -306,3 +306,53 @@ Corrige §5:
 - `SIN_ESPACIO` y tres fallos seguidos siguen parando todo.
 - Se libera con «Reanudar» o al reparar el motor.
 - Tarea [0390](../tareas/0390-ruta-fuera-del-contrato-del-lote-y-parada-solo-de-separaciones.md).
+
+## Revisión 2026-11-23 · Elegir sin comprobar con tu audio, y fines aplazados con el editor abierto (preguntas 0393 y 0394)
+
+**Provisional** (pregunta [0393](../preguntas/0393-elegir-la-letra-sin-comprobarla-con-tu-audio.md)). Origen: medida del usuario en Windows ([incidencias 2026-11-23](../Test-manuales/0.2.3/incidencias-2026-11-23-windows.md), sección «Medida»). 0 de 7 canciones de YouTube con letra de LRCLIB llegaron solas a «Lista para revisar». En las dos medidas la letra era la correcta, y además la preparación registró 0 fines.
+
+### 1. Elección «sin comprobar con tu audio» (punto 2 de la pregunta 0280, generalizado)
+
+**Por qué.** Con LRC sin fines el encaje no puede afirmar `coincide` (ADR 0024, revisiones del 2026-11-22 y de hoy). Ningún umbral lo cambia: 0/17 en todas las variantes medidas. La elección automática de §3 queda inservible con el material real del usuario. La revisión de la pregunta 0311 decía que se reabriría con evidencia nueva: el 0 de 7 lo es.
+
+**Regla nueva (se añade a §3; las condiciones 1, 2 y 4 no cambian).** Si **ningún** candidato cumple la condición 3 (`coincide` o `desfasada`):
+- Son **elegibles sin comprobar** los candidatos con tiempos por línea, a ≤ 2000 ms de la duración del audio y con veredicto `dudosa` **con `limitacion`** (`vozContinua` o `sinContraste`): la comprobación no puede decir nada, no que dude.
+- Una `dudosa` sin limitación (F o I entre los umbrales), un `no_coincide` y un `no_comprobable` **no** son elegibles.
+- Si todos los elegibles sin comprobar tienen el mismo texto tras normalizar (`claveFlexible`, como la condición 4), se elige el primero en el orden de ADR 0005. Si hay dos textos distintos: `elige_letra` con motivo `varias`.
+- Elegida así, la letra **nunca** se corrige sola (`desfaseMs: null`) y la canción queda en «Lista para revisar», nunca «Lista».
+- `preparacion.eleccion` gana **`sin_comprobar: true`** (opcional, con lectura tolerante; ausente = comprobada). El resumen de la IPC gana `eleccionSinComprobar: boolean`.
+- La interfaz no puede decir «coincide con tu audio» de esta letra. El texto lo define el diseñador ([pregunta 0394](../preguntas/0394-texto-de-la-letra-elegida-sin-comprobar.md)).
+
+**Medido** (Mac, 17 canciones, letras tal cual, con la ventana de inicio de 800 ms de ADR 0024):
+
+| | Elegibles sin comprobar |
+|---|---|
+| Propias (sin mover / adelantadas 150 / 300 / 450 ms) | 12 / 12 / 12 / 11 de 17 (las 5 restantes son `no_coincide`) |
+| Ajenas, todas | 15 de 272 (todas `vozContinua`) |
+| Ajenas con duraciones a ≤ 2 s | **1 de 10** |
+| Propias desplazadas ±0,8, ±1,5 y ±3 s | 62 de 102 |
+
+- **Riesgo aceptado (provisional):** la regla elige el **texto**, no garantiza la **sincronía**. Una letra desplazada 0,8–3 s se elegiría igual (62/102): esa letra no tiene forma de saberlo, y lo dice el aviso. En 1 de los 10 pares de canciones distintas con duración parecida se elegiría la letra de la otra.
+- **No medido**: el filtro real de LRCLIB (título y artista). El par ajeno que pasa es una canción distinta, que una búsqueda por título y artista no devolvería (supuesto). Tampoco se ha medido el caso de varias versiones de la misma canción en LRCLIB: se mide con la guía de la feature 5.
+- **Alternativa descartada: solo `sinContraste`** (0 ajenas, pero 4/17 propias). Las 8 canciones de voz continua del usuario no se elegirían nunca.
+
+### 2. Fines de la preparación con el editor abierto (causa de los 0 fines)
+
+**Verificado en el código** y con un arnés sobre datos temporales con los servicios reales:
+- Sin `intacta`, `pasoFines` sale antes de escribir nada (`main/preparacion/servicio.ts:731-739`): el registro no tendría `fines`. Un `fines.lineas = 0` solo sale de `aplicarFinesPreparacion`, que devuelve 0 **si el editor tiene abierta la canción** (`main/letras/servicio.ts:358`).
+- Con la vista Letra abierta (elegir en «Elige la letra» → `preparar([id])`) los fines **sí** se ponen: 6 de 6 en el arnés. Con el editor abierto sobre la canción en ese instante: `fines: { lineas: 0 }`.
+- Ese registro con 0 **bloquea** el paso de fines para siempre: `aplicaPreparar` exige `!preparacion.fines` (`shared/derivados.ts:285, 291, 299`). En el arnés, `previsualizar` después solo ofrece `comprobando`.
+- Que el usuario tuviera el editor abierto en ese instante es un **supuesto**: ni `app.log` ni el registro guardan nada de los fines. Cuadra con `46700fe1`: «lista para revisar» a las 22:31:48 y el editor en uso antes del reinicio de las 22:33.
+
+**Diseñado**: no escribir con el editor abierto (su copia en memoria lo revertiría). **Defecto**: anotarlo como hecho con 0 y no volver a intentarlo. Además, no queda rastro en el registro.
+
+**Decisión:**
+- `aplicarFinesPreparacion` distingue «el editor está abierto» (`null`) de «0 puestos».
+- Con el editor abierto, `pasoFines` **no** escribe `preparacion.fines`: los aplaza. La corrida sigue hasta «Lista para revisar», como hoy.
+- Al cerrarse el editor sobre esa canción, main pone los fines aplazados. Solo lo hace si la letra sigue `intacta`, la canción sigue en borrador y no hay sesión en vivo. Después escribe `fines` y vuelve a contar las dudosas.
+- Si el usuario tocó tiempos en el editor (la letra ya no es `intacta`), no se pone nada solo. Como no hay registro `fines`, «Preparar» y «Ajustar los fines…» los ofrecen con confirmación (revisión de la pregunta 0278).
+- Lo aplazado vive en memoria: tras reiniciar la app se recupera por el mismo camino de «Preparar».
+- `app.log` registra siempre el resultado del paso: `fines puestos=N`, `fines aplazados (editor abierto)` y `fines aplazados puestos=N`.
+- **Alternativa descartada:** esperar en `pasoFines` a que se cierre el editor (como con la sesión en vivo). La canción seguiría «Preparando» mientras el usuario trabaja en ella, sin revisión guiada, y los fines calculados antes de esperar podrían no valer.
+
+Tareas: [0393](../tareas/0393-elegir-la-letra-sin-comprobar-con-tu-audio.md) (main y contrato), [0394](../tareas/0394-fines-de-la-preparacion-aplazados-con-el-editor-abierto.md) (fines) y [0395](../tareas/0395-aviso-de-letra-elegida-sin-comprobar.md) (interfaz, tras la spec del diseñador).

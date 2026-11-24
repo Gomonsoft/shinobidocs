@@ -1041,7 +1041,7 @@ Cada parte tiene **su espacio en pantalla**: una **zona**, una franja horizontal
 | **Tamaño** | `S` de siempre si cabe; si la línea en curso (hasta 2 renglones) no cabe en el alto de su zona, la zona usa `S_zona = alto de la zona / (2 × 1,2 + 0,7 × 1,2 si hay siguiente)`, con un mínimo del **75 % de `S`**; por debajo, la zona deja de mostrar la siguiente. Se calcula **una vez por canción y tamaño de ventana**, igual para todas las zonas de cantante (no por línea). |
 | **«Letra en pantalla» del tema** | En canciones con reparto, «Líneas a la vez» y «Líneas ya cantadas» no se aplican (cada zona muestra su línea y la siguiente); «Cambio de línea» sí, dentro de cada zona. El editor lo dice bajo esos controles (`edi.pantalla.zonas`). |
 | **«Varias voces: todas en un bloque»** | El tema puede elegir no usar zonas (`estilo.pantalla.zonas = "una"`, [ADR 0029](../adr/0029-reparto-de-la-letra-entre-cantantes-y-coro.md) §4 bis; control en [06](06-editor.md#023--feature-1--cantantes-por-línea), «Letra en pantalla»): entonces la canción con reparto se ve en el bloque único de 0.2.2 (con `N`, `P` y ancla), con los colores, las insignias y los paréntesis de esta sección. Por defecto, zonas. |
-| **Indicadores de espera** | Se dibujan **en la zona de la línea que viene**, con las mismas posiciones relativas a esa línea (barra encima, cuenta en su sitio, puntos sobre ella) y en el color de su parte. Si la línea que viene es de **Todos** (que se repite en todas las zonas de cantante), se dibujan **una sola vez, en la primera zona de cantante** (la del Cantante 1), en el color de Todos: repetirlos en cada zona sería ruido y todos los cantantes miran la misma cuenta. |
+| **Indicadores de espera** | Se dibujan **en la zona de la línea que viene** y en el color de su parte, **en una sola fila encima de la línea**, sin tocar nunca su texto (en una zona la próxima ya espera en el sitio principal, así que la cuenta no puede ir «en su sitio» como en 0.2.2; revisión 2026-11-23, respuesta a 0360). Fila centrada a `0,9 × S_zona` por encima del centro del primer renglón; de izquierda a derecha: **puntos ●●● · barra · cuenta 3·2·1**, con los que estén activos y centrados como grupo; la barra mide el 40 % del ancho de la zona (25 % si hay cuenta o puntos al lado), la cuenta a `0,6 × S_zona` y los puntos a su tamaño de siempre. La fila forma parte del alto reservado de la zona (también en la del coro). Si la línea que viene es de **Todos** (que se repite en todas las zonas de cantante), se dibujan **una sola vez, en la primera zona de cantante** (la del Cantante 1), en el color de Todos: repetirlos en cada zona sería ruido y todos los cantantes miran la misma cuenta. |
 | **Pantalla de título, silencio previo, final** | Sin cambios. |
 
 **Dueto con coro** (Ana canta; Luis y el coro esperan)
@@ -1063,7 +1063,7 @@ Cada parte tiene **su espacio en pantalla**: una **zona**, una franja horizontal
 
 **Línea de Todos** (cantan los dos): la misma frase en la zona de Ana y en la de Luis, las dos con el barrido en el color de Todos y la insignia «A·L» (con 3 o 4 cantantes, el icono `users`).
 
-**Un solo cantante con coros**: dos zonas, la del Cantante 1 (sin insignias) y la del Coro, abajo.
+**Un solo cantante con coros**: dos zonas, la del Coro arriba (como en el resto de la disposición) y la del Cantante 1 debajo, sin insignias (corregido en la revisión 2026-11-23: aquí decía «abajo», en contra de la regla «Orden»).
 
 ### Reglas de color
 
@@ -1136,9 +1136,12 @@ La disposición por zonas no cambia: lo único nuevo es que **varias zonas puede
 | **Todos con solape** | No aplica: Todos ya ocupa las zonas de todos los cantantes; una línea de un cantante no puede solaparse con una de Todos (lo impide el editor). |
 | **Indicadores de espera** | Solo cuando **ninguna** zona suena; en la zona de la próxima línea. |
 | **Rendimiento** | Hasta 5 barridos a la vez; lo mide la prueba técnica del arquitecto (factibilidad §4.3). |
+| **Color del barrido en un solape** | Cada barrido usa el color de su parte **exacto**, igual que sin solape: sonar a la vez no mezcla, aclara ni atenúa colores (revisión 2026-11-23). |
+| **«Todas en un bloque»** | El bloque de 0.2.2 tiene una sola línea activa: con un solape, la línea que empieza después toma el puesto activo y la anterior acaba su barrido en el puesto que le toque. Es una limitación aceptada ([0380](../preguntas/0380-todas-en-un-bloque-con-voces-a-la-vez.md)) y el editor la avisa con `edi.pantalla.bloqueSolapes`. |
 
 - C1S-R1. En un tramo en que se solapan una línea de Ana y una de coro, las dos zonas están al 100 % y cada barrido avanza con sus propios tiempos (test del modelo en 10 instantes del solape).
 - C1S-R2. Fuera de los solapes, el modelo es idéntico al de la disposición sin solapes (mismos tests C1-R2 a C1-R9).
+- C1S-R4. En cada instante del solape de C1S-R1, el color de lo ya cantado de cada línea es exactamente el de su parte (comparación del modelo y de píxeles en una captura sin desenfoque), igual que la misma línea fuera del solape.
 - C1S-R3. En la exportación a 60 FPS de un solape de 4 zonas no se pierden fotogramas en el equipo de referencia del arquitecto (medida de la prueba técnica).
 
 ## 0.2.3 · Feature 2 — Voz en los coros

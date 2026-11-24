@@ -417,7 +417,7 @@ R4 · Letra pendiente
 | `prog.prep.omitido.sinMarca` | Letra de una versión anterior: no se comprueba |
 | `prog.boton.verLetra` | Ver la letra |
 | `prog.prep.r1.titulo` | Lista para revisar |
-| `prog.prep.r1.letra` | Letra de LRCLIB, coincidencia exacta. |
+| `prog.prep.r1.letra` | Letra de LRCLIB, coincidencia exacta. · (`eleccionSinComprobar`, revisión 2026-11-23) Letra de LRCLIB, coincidencia exacta. No hemos podido comprobarla con tu audio: al revisarla, fíjate en que vaya a tiempo con la voz. |
 | `prog.prep.r1.pie` | Escúchala, corrige lo que no coincida y márcala como lista. |
 | `prog.boton.revisar` | Revisar |
 | `prog.boton.probar` | Probar |
@@ -450,6 +450,7 @@ R4 · Letra pendiente
 - F5-P11. La app no cambia nunca por sí sola el estado de una canción a Lista o Letra lista (test: tras preparar 3 canciones con dobles, las 3 siguen en borrador).
 - F5-P13. Con un resultado R1–R4 a 1280 × 800 y a 1024 × 640, sin desplazar se ven el título `prog.prep.titulo.fin`, el bloque R entero y sus botones (incluido [Volver a la biblioteca], secundario en la misma fila); el foco está en el primario del bloque. Con el artista vacío, R2 y la vista Letra usan el motivo `sinArtista`.
 - F5-P12. Capturas en `docs/ux/revisiones/0.2.2-feature-5/`, nombre `progreso-1280x800-100-{estado}.png`: `preparando`, `lista-para-revisar`, `elige-la-letra`, `no-encontrada`, `letra-pendiente`.
+- F5-P14. (Revisión 2026-11-23, provisional; [05 · Letra elegida sin comprobar con tu audio](05-letra.md#letra-elegida-sin-comprobar-con-tu-audio).) **Enmienda F5-P4**: una `dudosa` con limitación ya no lleva siempre a R2; si cumple la regla de «elegir sin comprobar» del ADR 0025, llega a R1. En ese caso el renglón de la letra de R1 es la variante `eleccionSinComprobar` de `prog.prep.r1.letra` (texto exacto), con el mismo «·» que los demás renglones y sin cambiar el título, los botones ni el foco de R1; el subpaso «Comprobar la letra con la voz» sigue mostrando `prog.prep.res.duda`. Ningún texto de la vista dice «coincide» de esa letra.
 
 **Verificación manual** (guía de `docs/Test-manuales/0.2.2/`): añadir tres canciones reales conocidas y no tocar nada; comprobar que llegan solas a «Lista para revisar» y que la letra elegida es la correcta al cantarlas; añadir una versión en directo o una canción poco conocida y comprobar que queda en «Elige la letra» o «No encontramos la letra» y no con una letra equivocada; desconectar la red al añadir y comprobar «Letra pendiente»; cerrar la app a mitad de una separación y comprobar que se retoma.
 

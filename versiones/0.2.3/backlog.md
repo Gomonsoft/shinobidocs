@@ -11,7 +11,8 @@ Ver el [plan](plan-5.md) y el [flujo de Git](../../workflow.md). **Una feature =
 | 0 | Contratos compartidos | [0340](../../tareas/0340-contratos-compartidos-de-0-2-3.md) | M | 0.2.2 integrada | — |
 | 1 | **1** · Cantantes por línea (zonas incluidas) | 0341–0349, 0362–0364 | L | 0340 | alpha.1 |
 | 2 | **2** · Voz en los coros | 0350–0354, 0365, 0366 | M | 0340; 0365 tras 0346 | alpha.1 (o alpha.2) |
-| 1 (prueba) · 3 | **3** · Voces a la vez (**condicionada** a su prueba técnica) | 0356 · 0357–0361 | M + L | 0340; 0357–0360 tras 0356 si sirve, 0341, 0345 y 0364 | prueba en alpha.1 · feature en alpha.2 |
+| 1 (prueba) · 3 | **3** · Voces a la vez (**prueba: sirve**; pendiente de confirmación del usuario) | 0356 · 0357–0361 | M + L | 0340; 0357–0360 tras 0356 si sirve, 0341, 0345 y 0364 | prueba en alpha.1 · feature en alpha.2 |
+| — | **10 (de 0.2.2)** · Sincronizar con la voz (**condicionada**; provisional, pregunta 0280) | 0329–0333 | L | fase 2 de 0328 («sirve»); 0340; con reparto, 0341 | alpha.2 o posterior |
 | — | Cierre de cada entrega | [0355](../../tareas/0355-cierre-de-una-entrega-0-2-3-alpha.md) | S | las features de la entrega | — |
 
 ```mermaid
@@ -80,15 +81,25 @@ Indicación del usuario del 2026-11-22: dúo, trío, «Todos» y coro tienen la 
 | Tarea | Tamaño | Depende de |
 |---|---|---|
 | [0356 · Prueba técnica](../../tareas/0356-prueba-tecnica-de-voces-a-la-vez.md) | M | 0340 (solo `docs/spikes/`) |
-| [0357 · Fin por parte en las reglas de la letra](../../tareas/0357-fin-por-parte-en-las-reglas-de-la-letra.md) | M–L | 0356 (si sirve), 0341 |
+| [0357 · Fin por parte en las reglas de la letra](../../tareas/0357-fin-por-parte-en-las-reglas-de-la-letra.md) | M | 0356 (sirve), 0341 |
 | [0358 · Funciones automáticas con solapes](../../tareas/0358-funciones-automaticas-con-voces-a-la-vez.md) | M | 0357 |
-| [0359 · Editor con regiones solapadas](../../tareas/0359-editor-con-regiones-solapadas.md) | M | 0357, 0345 |
-| [0360 · Voces a la vez en pantalla](../../tareas/0360-voces-a-la-vez-en-pantalla.md) | S–M | 0357, 0364 |
+| [0359 · Editor con regiones solapadas](../../tareas/0359-editor-con-regiones-solapadas.md) | M, con riesgo (sin prototipo) | 0357, 0345 |
+| [0360 · Voces a la vez en pantalla](../../tareas/0360-voces-a-la-vez-en-pantalla.md) | S (y repetir la medida con la 0364 real) | 0357, 0364 |
 | [0361 · Verificación e informe (o cierre sin ella)](../../tareas/0361-verificacion-e-informe-de-la-feature-3-de-0-2-3.md) | S | 0356 y, si sirve, 0357–0360 |
+
+**Resultado de la prueba (2026-11-23)**: **sirve**, con las condiciones resueltas en las preguntas 0365–0368 (ADR 0029, «Resultado de la prueba técnica de voces a la vez»). **Entra en alpha.2**, pendiente de la confirmación del usuario (0165, fila 10). Orden: 0357 → 0358 y 0360 a la vez → 0359 (cuando B haya cerrado 0345) → 0361. Compatibilidad aceptada: una canción con solapes se ve dañada en versiones anteriores, sin perder nada.
 
 **Hecha cuando**: (a) la prueba técnica tiene su resultado escrito en ADR 0029 con el criterio de §7; y (b) si sirve, dos cantantes con frases cruzadas y un coro que acompaña a la voz principal se ven a la vez, cada uno en su zona con su barrido, en el reproductor y en el video, y una letra sin solapes da los mismos resultados que antes en todas las funciones automáticas; si no sirve, la propuesta 037 queda aplazada con el informe.
 
 **Criterios de la spec por tarea**: cada criterio `C1-`, `C2-` y `C1S-` de las specs 02, 05, 06, 07 y 10 aparece citado en el texto de al menos una tarea (73 de 73, comprobado el 2026-11-22).
+
+## Feature 10 de 0.2.2 · Sincronizar con la voz (condicionada)
+
+Pasó de 0.2.2 a 0.2.3 de forma provisional (ADR 0028, revisión del 2026-11-23; pregunta 0280, punto 4, pendiente del usuario).
+- **Condición**: la fase 2 de la prueba técnica [0328](../../tareas/0328-prueba-tecnica-de-alineacion-forzada.md) da «todo» o «solo fines» con los fines hechos a mano del usuario (V1). La fase 1 pasó el filtro, pero no demuestra fines ni palabras.
+- **Tareas**: las de 0.2.2, sin tareas nuevas. Son [0329](../../tareas/0329-worker-alinear-letra.md), [0330](../../tareas/0330-modelos-de-alineacion-y-servicio-en-main.md), [0331](../../tareas/0331-aplicar-alineacion-y-palabras-automaticas.md), [0332](../../tareas/0332-sincronizar-con-la-voz-en-la-interfaz.md) y [0333](../../tareas/0333-verificacion-e-informe-de-la-feature-10.md). Si entra, primero la acción explícita del editor y sin el paso de la preparación (propuesta [038](../../propuestas/038-sincronizar-con-la-voz-solo-a-peticion.md)). Al retomarlas, el arquitecto añade dos criterios: `aplicarAlineacion` conserva `parte`, y la pestaña Funciones con «Cantantes y coros» (0346) tiene sitio para la acción.
+- **Si no sirve o no llega**: plan B de ADR 0028 §4 (propuesta 027), en la versión que decida el usuario.
+- **Lote**: F (el de la prueba). Las tareas 0329–0333 no comparten archivos con la feature 1 salvo el panel Funciones (después de 0346) y `shared/alineacion.ts`, que también toca 0358 (la toma primero quien llegue y la otra espera).
 
 ## Preparación pedida a 0.2.2 (sin efecto visible)
 
@@ -113,7 +124,7 @@ Cada archivo tiene **un solo dueño a la vez**. La 0340 va primero y deja declar
 | **A · Main y letra** | 0341 → 0362 | `main/letras/**`, `shared/letras/**` (`editar.ts`, `lrc.ts`), los tests de `main/copias/` y `main/preparacion/` que toca 0341; `vistas/letra/**` (0362) |
 | **B · Editor** | 0342 → 0343 → 0344 → 0346; 0345 en paralelo con 0343–0344 | `vistas/editor/**` salvo la sección Estilo y `preciso/`; el reducer `estado.ts` es de 0342 (después, 0343–0346 piden sus acciones al dueño del lote); `atajos.ts` es de 0343 (0345 añade `Alt + ↑/↓` cuando 0343 termine); `PistaSincronia.tsx`, su CSS y `distribucion.ts` son de 0345; `e2e/editor-reparto.spec.ts` |
 | **C · Render y estilo** | 0348 → 0364; 0347 → 0363 a la vez | `renderer/src/karaoke/PantallaLetra.tsx`, su CSS, `render.ts`, `barrido.ts`, `estiloCss.ts` (0348), y además `zonas.ts` (nuevo) y `pantalla.ts` (0364); `renderer/src/karaoke/contraste.ts`, la sección Estilo de `vistas/editor/` (incluida «Letra en pantalla») y `main/temas/**` (0347 y después 0363) |
-| **F · Voces a la vez** | 0356 (en paralelo desde el principio); si sirve, 0357 → 0358, y 0359 y 0360 cuando B haya cerrado 0345 y C haya cerrado 0364 | `docs/spikes/0029-voces-a-la-vez/**` (0356); después, `shared/letra.ts` y `shared/letras/tiempos.ts` (0357, con permiso del lote 0), `shared/silencios.ts`, `shared/encaje.ts`, `shared/dudosas.ts`, `shared/alineacion.ts` y `shared/letras/lrc.ts` (0358); la pista de la línea de tiempo (0359, tras B) y `zonas.ts`/`PantallaLetra.tsx` (0360, tras C) |
+| **F · Voces a la vez** | 0356 (en paralelo desde el principio); si sirve, 0357 → 0358, y 0359 y 0360 cuando B haya cerrado 0345 y C haya cerrado 0364 | `docs/spikes/0029-voces-a-la-vez/**` (0356); después, `shared/letra.ts` y `shared/letras/tiempos.ts` (0357, con permiso del lote 0), `shared/solapes.ts` (nuevo) y los adaptadores alrededor de silencios, encaje, dudosas y `.lrc`, sin cambiar el código de esas funciones (0358); la pista de la línea de tiempo (0359, tras B) y `zonas.ts`/`PantallaLetra.tsx` (0360, tras C) |
 | **D · Audio** | 0350 → 0351, 0352 y 0353 (a la vez); 0365 tras 0352 y con B cerrado en 0346; 0366 tras 0353 | `shared/coros.ts` (0350); `karaoke/motorReproductor.ts`, `vistas/reproductor/**` y la secundaria (0351); `karaoke/motorAudio.ts` y `estiramiento*.ts` o el worker de mezcla nuevo (0352); la sección de coros de Funciones (0365, con permiso de B); `worker/shinobi_worker/exportar.py` y `main/exportacion/**` (0353); `vistas/exportacion/**` y el diálogo de varias de `vistas/biblioteca/` (0366) |
 
 Reglas de convivencia:
