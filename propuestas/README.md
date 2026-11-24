@@ -49,3 +49,7 @@ Ideas de mejora **todavía sin definir ni autorizar**. No forman parte del alcan
 | [036](036-varios-cantantes-y-coros.md) | Varios cantantes y coros (dúos a cuartetos, «Todos», coros con voz guía) | Usuario (2026-11-22) | Aceptada para 0.2.3 |
 | [038](038-sincronizar-con-la-voz-solo-a-peticion.md) | «Sincronizar con la voz» solo a petición, sin automatismos | Arquitecto, medidas de las features 4, 5 y 10 (2026-11-23) | Idea (condicionada a la fase 2 de ADR 0028) |
 | [039](039-mover-una-linea-en-el-editor.md) | Mover una línea en el editor sin perder sus tiempos | Prueba técnica 0356, pregunta 0368 (2026-11-23) | Idea |
+| [040](040-anticipar-quien-canta-despues.md) | Anticipar en pantalla quién canta después | Prueba manual del usuario en Windows (2026-11-23) | Idea |
+| [041](041-anadir-cantantes-solo-desde-funciones.md) | Añadir cantantes solo desde Funciones, sin la franja de arrastre «cantante nuevo» | Prueba manual del usuario en Windows (2026-11-23) | Idea |
+| [042](042-carril-del-coro-opcional.md) | Carril del Coro opcional en la línea de tiempo | Prueba manual del usuario en Windows (2026-11-23) | Idea |
+| [043](043-fin-de-linea-tras-la-ultima-voz-antes-del-inicio-siguiente.md) | «Ajustar los silencios»: que el fin no corte la voz que sigue a una pausa interior | Prueba manual del usuario en Windows, con medidas (2026-11-23) | Idea |

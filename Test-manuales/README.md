@@ -50,3 +50,9 @@ Test-manuales/
 | 0.2.3 | [Feature 1 · Cantantes por línea](0.2.3/feature-1-cantantes-por-linea.md) | Lista (8 casos: dúo real con y sin ratón, arrastre real, coros de tus canciones, legibilidad a 5 m, ventana secundaria, video, abrir en 0.2.1 y el coro que no cabe). No ejecutada |
 | 0.2.3 | [Feature 2 · Voz en los coros](0.2.3/feature-2-voz-en-los-coros.md) | Lista (5 casos: **de oído**, chasquidos con 3 canciones, voz guía silenciada y al 30 %, secundaria, memoria con 4 y 10 min, video con y sin la casilla). No ejecutada |
 | 0.2.3 | [Feature 3 · Voces a la vez](0.2.3/feature-3-voces-a-la-vez.md) | Lista (5 casos: semilla en el editor, dúo real con frases cruzadas, video, sin solapes y abrir en 0.2.1 y 0.2.2). Provisional. No ejecutada |
+
+## Ejecuciones e incidencias
+
+| Fecha | Nota |
+|---|---|
+| 2026-11-23 | [Incidencias de las pruebas manuales en Windows (0.2.3-alpha.1)](0.2.3/incidencias-2026-11-23-windows.md): 3 fallos, 4 mejoras pedidas (propuestas 040–043) y la medida de la versión automática frente a la ajustada a mano |
