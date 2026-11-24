@@ -440,7 +440,7 @@ Origen: [plan 0.2.2, feature 5](../versiones/0.2.2/plan-4.md) y [propuesta 020](
 
 | Resultado de la preparación | Vista | Qué muestra |
 |---|---|---|
-| **Letra elegida sola** | C | Aviso `let.prep.elegida` sobre el resumen, con [Ver otras candidatas] (pasa a A con la lista ya cargada, la letra actual marcada con `let.prep.actual` y seleccionada) y [×]. El aviso sigue hasta que el usuario lo cierra, cambia el texto, sustituye la letra o marca la canción como lista. |
+| **Letra elegida sola** | C | Aviso `let.prep.elegida` sobre el resumen, con [Ver otras candidatas] (pasa a A con la lista ya cargada, la letra actual marcada con `let.prep.actual` y seleccionada) y [×]. El aviso sigue hasta que el usuario lo cierra, cambia el texto, sustituye la letra o marca la canción como lista. Si la app la eligió **sin poder comprobarla con tu audio** (`eleccionSinComprobar`), el aviso es `let.prep.elegida.sinComprobar`: ver [Letra elegida sin comprobar con tu audio](#letra-elegida-sin-comprobar-con-tu-audio). |
 | **«Elige la letra»** (hay candidatas, ninguna segura) | A | La lista ya cargada, comprobada y ordenada, **sin consultar la red**, con el aviso `let.prep.elige` y su motivo (`let.prep.motivo.*`). Foco en la lista. Al pulsar «Usar esta letra», la preparación **continúa sola** (corrige el desfase si hace falta y ajusta los fines, spec 04) y la canción queda «Lista para revisar». |
 | **No encontrada** | A | El banner `let.error.LETRA_NO_ENCONTRADA` de siempre, sin repetir la búsqueda; foco en Título. Editar título o artista y «Buscar» consulta de nuevo. |
 | **Instrumental** | A | `let.error.INSTRUMENTAL` (o la lista con `let.aviso.instrumentalConCandidatos`). |
@@ -481,6 +481,7 @@ Origen: [plan 0.2.2, feature 5](../versiones/0.2.2/plan-4.md) y [propuesta 020](
 |---|---|
 | `let.prep.elegida` | Elegimos esta letra por ti: es la coincidencia exacta de LRCLIB y coincide con tu audio. — [Ver otras candidatas] |
 | `let.prep.elegida.corregida` | Elegimos esta letra por ti: es la coincidencia exacta de LRCLIB. Iba {d} s adelantada y la hemos corregido. — [Ver otras candidatas] · (atrasada) … Iba {d} s atrasada … |
+| `let.prep.elegida.sinComprobar` | Elegimos esta letra por ti: es la coincidencia exacta de LRCLIB, pero **no hemos podido comprobarla con tu audio**. Pasa a menudo y no quiere decir que esté mal: al revisarla, fíjate en que vaya a tiempo con la voz. — [Ver otras candidatas] (revisión 2026-11-23; [sección](#letra-elegida-sin-comprobar-con-tu-audio)) |
 | `let.prep.boton.otras` | Ver otras candidatas |
 | `let.prep.actual` | Letra actual |
 | `let.prep.elige` | **Elige la letra.** No la elegimos por ti porque {motivo}. |
@@ -504,6 +505,45 @@ Origen: [plan 0.2.2, feature 5](../versiones/0.2.2/plan-4.md) y [propuesta 020](
 - F5-L6. Una canción con letra (del usuario o elegida sola) no recibe otra letra por «Preparar» ni por la preparación automática: solo cambia su línea de comprobación.
 - F5-L7. Con «Buscar la letra automáticamente» desactivado, la vista se comporta como en 0.2.1 (criterio 1 original).
 - F5-L8. Capturas en `docs/ux/revisiones/0.2.2-feature-5/`: `letra-1280x800-100-elegida-sola`, `letra-1280x800-100-elige-la-letra`.
+
+### Letra elegida sin comprobar con tu audio
+
+Revisión 2026-11-23, **provisional**. Origen: [ADR 0025, revisión del 2026-11-23, punto 1](../adr/0025-preparacion-desatendida-y-datos-de-la-cancion-automaticos.md), [pregunta 0393](../preguntas/0393-elegir-la-letra-sin-comprobarla-con-tu-audio.md) (para el usuario) y [pregunta 0394](../preguntas/0394-texto-de-la-letra-elegida-sin-comprobar.md). Tarea [0395](../tareas/0395-aviso-de-letra-elegida-sin-comprobar.md).
+
+**Cuándo.** La preparación eligió sola una letra de LRCLIB que la comprobación con la voz **no puede juzgar** (`dudosa` con limitación `vozContinua` o `sinContraste`): todas las elegibles tienen el mismo texto y duran lo mismo que tu audio (±2 s). El resumen trae `preparacion.eleccionAutomatica && preparacion.eleccionSinComprobar`. La letra no se ha movido en el tiempo y la canción está en «Lista para revisar».
+
+**Qué tiene que entender el usuario**, en este orden: (1) la letra la eligió la app; (2) es la de LRCLIB que coincide en título, artista y duración; (3) la app **no** ha podido confirmar que vaya a tiempo, y eso es frecuente, no un fallo; (4) al revisarla debe fijarse en la sincronía. No se usa el tono de error ni de advertencia: no ha pasado nada malo.
+
+**C con letra elegida sin comprobar**
+```
+│  ┌──────────────────────────────────────────────────────────────────┐   │
+│  │ ? Elegimos esta letra por ti: es la coincidencia exacta de       │   │  icono `circle-help`
+│  │   LRCLIB, pero **no hemos podido comprobarla con tu audio**.     │   │  fragmento en negrita
+│  │   Pasa a menudo y no quiere decir que esté mal: al revisarla,    │   │
+│  │   fíjate en que vaya a tiempo con la voz.                        │   │
+│  │                              [ Ver otras candidatas ]     [ × ]  │   │
+│  └──────────────────────────────────────────────────────────────────┘   │
+│  Letra actual · de LRCLIB · sincronizada por línea · 52 líneas           │
+│  ? No podemos comprobar esta letra con tu audio: la letra no marca      │  `let.comp.actual.limitada` (feature 4)
+│    dónde acaba cada línea. No hemos cambiado nada.                       │
+```
+
+| Elemento | Comportamiento |
+|---|---|
+| **Texto** | `let.prep.elegida.sinComprobar` en lugar de `let.prep.elegida`. Nunca aparece «coincide con tu audio» ni «Coincide con la voz de tu audio» en esta vista para esta letra. No lleva el motivo técnico: ya lo dice la línea de comprobación de debajo (`let.comp.actual.limitada`, con su motivo corto), que no cambia. |
+| **Estado visual** | El mismo aviso en línea `info` que `let.prep.elegida` (fondo `info-tenue`, borde izquierdo `info`, texto `texto-1`), **no** `aviso` ni `error` **(provisional)**. Se distingue de la letra comprobada **sin depender del color**: (a) icono `circle-help` 16 px en lugar del icono `info` (el mismo que usa `dudosa` en la feature 4); (b) el fragmento «no hemos podido comprobarla con tu audio» en negrita (peso 600); (c) el texto es más largo y tiene otra frase final. En escala de grises se reconoce por el icono y la negrita. |
+| **Botones** | [Ver otras candidatas] y [×], **iguales** que en `let.prep.elegida` (F5-L1): misma acción, mismo orden, mismo foco. No se añade ningún botón. |
+| **Cuánto dura** | Como `let.prep.elegida`: hasta que el usuario lo cierra con [×], cambia el texto, sustituye la letra o marca la canción como lista. |
+| **Variante corregida** | No existe: una letra elegida sin comprobar nunca se corrige sola, así que `let.prep.elegida.corregida` y `.sinComprobar` no se combinan. Si llegara un resumen con las dos marcas, manda `.sinComprobar`. |
+| **Accesibilidad** | El aviso sigue siendo `role="status"` (no `alert`), con el mismo foco al entrar que hoy (F5-L1). El icono es decorativo (`aria-hidden`); el texto completo es el nombre accesible, y la negrita no añade marcado que se lea aparte. Contraste: `texto-1` sobre `info-tenue`, el mismo par ya validado (≥ 4,5:1). A 1024 × 640 el texto se parte en más líneas; los botones no se salen del aviso. |
+
+**Criterios de aceptación (letra elegida sin comprobar, Letra)**
+
+- F5-L9. Con un resumen `eleccionAutomatica: true, eleccionSinComprobar: true`, Letra abre en C, sin consultar la red, con el texto exacto de `let.prep.elegida.sinComprobar` y sin la cadena «coincide con tu audio» en ningún sitio de la vista. Con `eleccionSinComprobar: false` (o ausente), el aviso es `let.prep.elegida` como hasta ahora.
+- F5-L10. El aviso sin comprobar tiene el icono `circle-help` (no el de `info`) y el fragmento «no hemos podido comprobarla con tu audio» en negrita; usa los colores `info` (no `aviso` ni `error`).
+- F5-L11. [Ver otras candidatas] y [×] se comportan exactamente como en F5-L1 (A con la lista de la preparación y la letra actual marcada y seleccionada; [×] lo cierra y no vuelve a salir).
+- F5-L12. El aviso es `role="status"` con el mismo foco inicial que F5-L1; su nombre accesible es el texto completo; bajo él, C sigue mostrando `let.comp.actual.limitada` con su motivo.
+- F5-L13. Captura `docs/ux/revisiones/0.2.3-tarea-0395/letra-1280x800-100-elegida-sin-comprobar.png`.
 
 ## 0.2.3 · Feature 1 — Cantantes al corregir o cambiar la letra
 

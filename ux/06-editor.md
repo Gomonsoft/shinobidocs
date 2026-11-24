@@ -263,7 +263,7 @@ Si hay varios ⚠ se muestran todos, en el orden de la tabla. Cada acción rápi
 ### Vista previa
 - Área 16:9 con el motor de render compartido con el reproductor y los valores fijos de [sistema-visual §10](sistema-visual.md) escalados a su alto; fondo y fuente del estilo actual. Se actualiza en < 100 ms tras cada cambio de estilo, tiempo o desplazamiento.
 - **Reproduciendo**: dibuja lo que vería el reproductor en esa posición (línea actual y siguiente, barrido o resaltado por palabra, indicador de entrada `●●●`, pantalla de título antes de la primera línea; `●●●` siempre antes de la primera línea, desde la Fase 6, sistema-visual §10). Sin el silencio previo del reproductor, que solo existe a pantalla completa. Las líneas sin inicio se omiten; las pausas no se dibujan. No muestra el aviso `rep.incompleta`.
-- **En pausa**: muestra la línea seleccionada (aunque no tenga tiempo) con la **mitad resaltada** y la siguiente línea debajo, para juzgar ambos colores. Si no hay selección, la primera línea.
+- **En pausa**: ~~muestra la línea seleccionada (aunque no tenga tiempo) con la **mitad resaltada** y la siguiente línea debajo, para juzgar ambos colores. Si no hay selección, la primera línea.~~ **Sustituido en 0.2.3** por [Vista previa en pausa: manda el cabezal (I-2)](#vista-previa-en-pausa-manda-el-cabezal-i-2): en pausa se ve el instante del cabezal; la línea seleccionada (modo Línea) solo tras seleccionarla o cambiarla en pausa.
 - Es decorativa para lectores de pantalla (`aria-hidden`), con una descripción `edi.previa.aria` en la región.
 
 ### Guardado, borrador y lista
@@ -2231,11 +2231,11 @@ Para que no haya dos formas de editar lo mismo a la vez, la **línea abierta que
 | **Vista** | Fija, sin zoom propio: va de `inicio − margen` a `fin + margen` (mínimo 0,25 s a cada lado aunque el margen sea 0, para poder agarrar los tiradores de la línea), recortada a `[0, duración]`. Las zonas de margen se pintan sombreadas (`░`). Para ver más detalle, se agranda la ventana. Si la línea cambia de límites, la vista se recalcula al soltar. |
 | **Voz de la línea** | Picos de la pista de voz (ADR 0015) con la resolución adaptada a la vista (mucho más detalle que la línea de tiempo). Estados como la fase 2: pendiente `edi.timeline.voz.pendiente`, preparando `edi.timeline.voz.generando`, error `edi.timeline.voz.error` + [Reintentar]. Regla, palabras y tiradores funcionan en todos. Decorativa (`aria-hidden`). |
 | **Límites de la línea** | Dos tiradores altos (toda la altura de onda y palabras): «Inicio de la línea» y «Fin de la línea» (discontinuo si el fin es automático). Se pueden ajustar dentro de las reglas del editor y **sin cruzar las palabras**: el inicio no pasa del inicio de la primera palabra **marcada** ni el fin del fin de la última marcada (las sin marcar se vuelven a repartir). Cambiar los límites aquí **no** descarta las palabras. |
-| **Tira de palabras** | Un segmento por palabra entre su inicio y su fin, con su texto (cortado con «…» si no cabe; completo en tooltip y nombre accesible). Marcada: borde continuo `texto-2`, fondo `fondo-3`, texto `texto-1`. Sin marcar: borde discontinuo `borde-control`, sin relleno, texto `texto-3`. Seleccionada: borde 2 px `acento-texto` y sus tiradores. Clic: selecciona (no busca). Doble clic: escucha esa palabra (como [▶ Palabra]). |
+| **Tira de palabras** | Un segmento por palabra entre su inicio y su fin, con su texto (cortado con «…» si no cabe; completo en tooltip y nombre accesible). Marcada: borde continuo `texto-2`, fondo `fondo-3`, texto `texto-1`. Sin marcar: borde discontinuo `borde-control`, sin relleno, texto `texto-3`. Seleccionada: borde 2 px `acento-texto` y sus tiradores. Clic: selecciona (no busca). Doble clic: ~~escucha esa palabra (como [▶ Palabra])~~ **reproduce desde la palabra y no vuelve** (0.2.3, [I-3](#doble-clic-en-una-palabra-del-editor-preciso-reproduce-desde-ahí-i-3)). |
 | **Tiradores de palabra** | Solo en la palabra seleccionada: «Inicio de la palabra» y «Fin de la palabra», con el aspecto y los objetivos de los tiradores de la línea de tiempo (≥ 24 × 24, escalonados si casi coinciden con los de la palabra vecina). Arrastre con captura, tiempo provisional junto al puntero y parada en el último valor válido (entre el fin de la palabra anterior —o el inicio de la línea— y el inicio de la siguiente —o el fin de la línea—, con 20 ms de mínimo). Tooltip de límite 2 s: `edi.preciso.limite.*`. Esc cancela el arrastre. Mover un tirador **marca** la palabra. |
 | **Detalle de la palabra** | `edi.preciso.palabra` («Palabra {k} de {m} · «{palabra}»»), campos Inicio y Fin (`mm:ss.cc`, mismas reglas que los del panel), [Fijar inicio (I)] y [Fijar fin (O)] en la posición del cabezal (fuera de límites: no cambian nada y muestran el tooltip de límite). Debajo, `edi.preciso.recuento` («{a} de {m} palabras marcadas a mano»). |
 | **Bucle de la línea** | Botón con `aria-pressed` (`edi.preciso.bucle`, icono `repeat` + ▶/❚❚): suena de `inicio − margen` a `fin + margen` y vuelve a empezar, hasta pausarlo. Espacio lo inicia y lo pausa (con el foco en la ventana, fuera del campo de texto). Al reanudar sigue donde estaba. |
-| **▶ Palabra** | Escucha una vez la palabra seleccionada, de `inicio − 250 ms` a `fin + 250 ms`, y vuelve a la posición previa (como la escucha de comprobación). **Mayús + Espacio**. Pausa el bucle si sonaba y lo reanuda al terminar. |
+| **▶ Palabra** | Escucha una vez la palabra seleccionada, de `inicio − 250 ms` a `fin + 250 ms`, y vuelve a la posición previa (como la escucha de comprobación). **Mayús + Espacio**. Pausa el bucle si sonaba y lo reanuda al terminar. (0.2.3: también con el transporte sonando, sigue sonando desde la posición previa; ya no es lo que hace el doble clic, ver [I-3](#doble-clic-en-una-palabra-del-editor-preciso-reproduce-desde-ahí-i-3).) |
 | **Margen** | Control segmentado 0 s · 0,5 s · 1 s, por defecto **0,5 s** (el mismo valor que el doble clic de la fase 8). Se aplica antes y después de la línea. Se recuerda (ver «Recordar»). |
 | **Velocidad** | El **mismo** control y el mismo estado que el del transporte (0,5× · 0,75× · 1×): cambiar uno cambia el otro. Los tiempos se guardan siempre en tiempo real de la canción. **Dentro de la ventana el tono se conserva** por debajo de 1× (bucle de la línea, «▶ Palabra» y escuchas dentro de su tramo; estiramiento WSOLA propio, [ADR 0021](../adr/0021-sincronia-simplificada-y-editor-preciso-de-linea.md), [0145](../preguntas/0145-contratos-de-las-fases-8-y-9-para-las-specs.md) §5). Mientras se prepara el tramo (< 300 ms), la primera vuelta del bucle puede sonar con el tono bajado; no se avisa. La nota `edi.preciso.tono` (`info`) **solo** aparece si la preparación del tramo falla (respaldo: suena con el tono bajado). **Fuera de la ventana** (transporte, modo al ritmo, doble clic) el tono sigue bajando como hoy y el tooltip `edi.velocidad.tooltip` del transporte **no cambia**. |
 | **Marcar al vuelo** | Botón grande «MARCAR (Intro)» (44 px de alto, marca en `pointerdown` y suelta en `pointerup`) + ayuda `edi.preciso.vuelo.ayuda`. Ver «Marcar al vuelo». |
@@ -2296,7 +2296,7 @@ Mismo gesto que «Sincronizar al ritmo», a escala de palabra.
 | Panel Sincronía y riel de la línea abierta | Campos Inicio y Fin, «Fijar inicio/fin aquí», «Usar fin automático», «Borrar tiempos», «Bloquear enunciado» e «I»/«Fijar fin (O)» de los rieles: inactivos con `edi.preciso.ocupado`. I, O, Supr, Retroceso y Alt/Ctrl + flechas con el foco en el editor no hacen nada y muestran ese tooltip. |
 | Bloquear enunciado | Si estaba activo al abrir, termina (sin restaurar la posición): el bucle de la ventana lo sustituye. |
 | Transporte | Funciona: Espacio con el foco en el editor reproduce o pausa; buscar fuera del intervalo del bucle termina el bucle de la ventana (regla de la fase 2). La velocidad es la misma. Escuchar Original / Voz / Instrumental (1/2/3) funciona también con el foco en la ventana. |
-| Vista previa | Muestra la línea con el **borrador** (barrido palabra a palabra con los tiempos de la ventana); en pausa, el estado de siempre. |
+| Vista previa | Muestra la línea con el **borrador** (barrido palabra a palabra con los tiempos de la ventana); en pausa, ~~el estado de siempre~~ los modos Cabezal o Línea de [I-2](#vista-previa-en-pausa-manda-el-cabezal-i-2) (las acciones sobre palabras no cambian el modo). |
 | Otras líneas | Se seleccionan con la lista, la línea de tiempo o ↑/↓: la ventana pasa a esa línea (aplicando). No se editan otras líneas mientras la ventana está abierta. |
 | Estilo, Funciones, zoom, divisores, minimizar | Funcionan. |
 | Sincronizar al ritmo, «Ajustar los silencios», «Corregir la letra», salir del editor (cualquier vía), Ctrl/Cmd + N / , | Aplican el borrador y **cierran** la ventana antes de seguir. |
@@ -2323,6 +2323,7 @@ Con el foco dentro de la ventana y fuera del campo de texto. Las flechas sin mod
 |---|---|
 | Espacio | Reproducir / pausar el bucle de la línea |
 | Mayús + Espacio | Escuchar la palabra seleccionada |
+| Mayús + Intro (en la tira) | Reproducir desde la palabra seleccionada, como el doble clic (0.2.3, I-3) |
 | Intro (pulsar · mantener) | Marcar el inicio de la palabra seleccionada · y su fin al soltar (con el foco en la tira o en «MARCAR»; en un botón, Intro lo activa) |
 | Retroceso | Deshacer la última marca de la pasada |
 | ← / → (en la tira) | Palabra anterior / siguiente |
@@ -2551,7 +2552,7 @@ Esta sección **amplía** el panel Estilo y la vista previa. Respeta la [subfase
 
 - Mismo render que el reproductor y el video: muestra las `N` líneas con su cambio de línea mientras suena. Es más pequeña, así que con 7 líneas las lejanas son diminutas: es una vista de composición, y «Probar a pantalla completa» sigue a un clic.
 - **Escala (precisión de la revisión de capturas, 2026-11-22)**: la vista previa es el fotograma del reproductor **reducido**: `S` = 7,5 % del alto del lienzo, **sin** el mínimo de 32 px (ese mínimo es para pantallas reales, sistema visual §10), y todas las demás medidas (ancho del 88 %, ancla, separaciones, recorte, indicadores) se calculan sobre el lienzo. Así, a cualquier tamaño del lienzo y escala de la interfaz, la vista previa muestra **las mismas líneas en las mismas posiciones relativas** que el reproductor (amplía F1-E11 y F1-E15). La píldora «Ejemplo» va arriba a la izquierda, a 8 px de los bordes, y nunca sobre la letra.
-- **En pausa** (modo estático): la línea seleccionada como activa con la mitad resaltada, las `P` líneas anteriores como ya cantadas (en gris) y las `F` siguientes como futuras, en orden de lista y saltando las pausas, **tengan o no tiempos**. Cambiar de selección no anima. No se aplica la retirada a los 2 s (no hay tiempo que corra).
+- **En pausa** (modo estático): la línea seleccionada como activa con la mitad resaltada, las `P` líneas anteriores como ya cantadas (en gris) y las `F` siguientes como futuras, en orden de lista y saltando las pausas, **tengan o no tiempos**. Cambiar de selección no anima. No se aplica la retirada a los 2 s (no hay tiempo que corra). **Desde 0.2.3 este es el modo «Línea»**, que ya no es el de toda pausa: ver [Vista previa en pausa: manda el cabezal (I-2)](#vista-previa-en-pausa-manda-el-cabezal-i-2).
 - **Reproduciendo**: lo que vería el reproductor en esa posición, sin el silencio previo. Las líneas sin inicio no ocupan puesto.
 - **Editor preciso de línea**: no cambia.
 - La descripción `edi.previa.aria` no cambia.
@@ -2949,7 +2950,7 @@ Primera sección de la pestaña, solo si la canción tiene registro de preparaci
 | `edi.prep.titulo` | Preparación automática |
 | `edi.prep.intro` | Shinobi Karaoke preparó esta canción el {fecha}: |
 | `edi.prep.intro.fines` | El {fecha} pediste ajustar los fines que faltaban: |
-| `edi.prep.letra` | Letra de LRCLIB, coincidencia exacta. · (elegida por el usuario entre candidatas) Letra de LRCLIB, elegida por ti. |
+| `edi.prep.letra` | Letra de LRCLIB, coincidencia exacta. · (elegida por el usuario entre candidatas) Letra de LRCLIB, elegida por ti. · (`eleccionSinComprobar`, revisión 2026-11-23) Letra de LRCLIB, coincidencia exacta, sin comprobar con tu audio: fíjate en que vaya a tiempo con la voz. |
 | `edi.prep.letra.boton` | Ver otras candidatas |
 | `edi.prep.desfase` | (= `edi.desfase.corregido`) |
 | `edi.prep.fines` | Fin de {n} líneas ajustado con la voz. · (n = 1) Fin de 1 línea ajustado con la voz. |
@@ -2963,6 +2964,7 @@ Primera sección de la pestaña, solo si la canción tiene registro de preparaci
 - F5-E3. [Quitar esos fines] deja en automático exactamente los fines fijados por la preparación que no se han cambiado después (test con una línea tocada a mano: conserva su fin).
 - F5-E4. Una canción añadida sin preparación automática (interruptor desactivado y letra elegida a mano) no muestra ni el banner ni el bloque.
 - F5-E5. Captura `docs/ux/revisiones/0.2.2-feature-5/editor-1280x720-100-preparacion-automatica.png`, entrando con «Editar» (no con «Revisar»): lista con `edi.banner.revision` y «Funciones» con el bloque.
+- F5-E7. (Revisión 2026-11-23, provisional; [05 · Letra elegida sin comprobar con tu audio](05-letra.md#letra-elegida-sin-comprobar-con-tu-audio).) En una canción con la letra elegida sin comprobar, el renglón «Letra» del bloque «Preparación automática» muestra la variante `eleccionSinComprobar` de `edi.prep.letra` (texto exacto), con su [Ver otras candidatas] igual que siempre; no hay renglón de desfase (esa letra no se corrige sola). Con `eleccionSinComprobar` falso o ausente, el renglón no cambia.
 - F5-E6. En una canción preparada y sin revisar: entrando con «Revisar» (con y sin dudosas) no se muestra en ningún momento banner de preparación ni `yaSync` (comprobado en fotogramas cada 50 ms durante el primer segundo); entrando con «Editar», el banner de la tabla aparece una vez y sigue a los 2 s; salir del recorrido no añade ningún banner; `yaSync` no aparece nunca en una canción con registro de preparación.
 
 ## 0.2.2 · Feature 9 — Exportar la letra desde el editor
@@ -4085,5 +4087,110 @@ Solo en **canciones con coros**, al final de la sección, tras un separador:
 - C2-E6. Cambiar el nivel o asignar una línea al Coro rehace la mezcla 300 ms después del último cambio sin cortar el audio; si el cálculo tarda más de 500 ms, se ve `edi.coros.preparando`. Con un fallo simulado de la mezcla, suena el instrumental y aparece `edi.coros.error` una sola vez.
 - C2-E7. La sección y el deslizador se manejan solo con teclado y el deslizador anuncia «{n} %».
 - C2-E8. Capturas en `docs/ux/revisiones/0.2.3-feature-2/`, nombre `editor-1280x720-100-{estado}.png`: `coros-nivel`, `coros-sin-voz`, `coros-preparando`. En las tres, la sección «Voz en los coros» se ve entera (deslizador, valor, ayuda, límite y «Escuchar un coro»), desplazando el panel o bajando el divisor de la línea de tiempo; `coros-preparando` se fuerza con una mezcla de prueba que tarda más de 500 ms y muestra `edi.coros.preparando` junto a «Escuchar» con «Instrumental» elegido.
+
+## 0.2.3 · Correcciones tras las pruebas en Windows (plan 6)
+
+Origen: [plan 6](../versiones/0.2.3/plan-6.md) e [incidencias del 2026-11-23](../Test-manuales/0.2.3/incidencias-2026-11-23-windows.md) (I-2 e I-3). Decisiones provisionales: [0387](../preguntas/0387-vista-previa-en-pausa-muestra-el-cabezal.md) (I-2) y [0388](../preguntas/0388-doble-clic-en-una-palabra-reproduce-desde-ahi.md) (I-3). La pantalla de error de la interfaz (I-1) está en [00 · Pantalla de error de la interfaz](00-mapa-de-vistas.md#pantalla-de-error-de-la-interfaz).
+
+### Vista previa en pausa: manda el cabezal (I-2)
+
+**Diagnóstico.** No es un fallo de programación: el código hace lo que decía esta spec («En pausa: muestra la línea seleccionada con la mitad resaltada», §«Vista previa» y feature 1 de 0.2.2). Pero el diseño falla: esa regla venía del MVP, cuando la vista previa servía sobre todo para juzgar colores. Hoy el usuario pausa para ver **dónde va** la canción, y la vista previa le enseña la línea seleccionada, que puede estar a minutos del cabezal. **Se cambia el diseño.** Esta sección sustituye las dos reglas «En pausa» citadas.
+
+**Dos modos de la vista previa en pausa**
+
+| Modo | Qué dibuja |
+|---|---|
+| **Cabezal** (el normal) | **Exactamente el fotograma del reproductor en la posición del cabezal**, congelado: las mismas líneas, el mismo barrido (por línea o palabra a palabra), la retirada de las líneas ya cantadas, el indicador de espera `●●●`, la pantalla de título antes de la primera línea y lo que haya tras la última. Es lo que se veía reproduciendo, parado. Sin el silencio previo del reproductor (como al reproducir). |
+| **Línea** | El modo estático de siempre: la línea seleccionada como activa con la **mitad resaltada**, las anteriores como cantadas y las siguientes como futuras, tengan o no tiempos (feature 1 de 0.2.2). Arriba a la izquierda, a 8 px de los bordes, la píldora `edi.previa.linea` (mismo aspecto que la píldora «Ejemplo»; si hay un ejemplo en marcha, se ve solo «Ejemplo»). La píldora es decorativa (`aria-hidden`), como la vista previa. |
+
+**Qué cambia de modo** (lo último que hizo el usuario manda):
+
+| Acción | Modo que queda en pausa |
+|---|---|
+| Pausar (Espacio, ❚❚, la ventana pierde el foco), o una escucha que **se pausa sola** al final de su tramo (Mayús + L, «Escuchar la línea», autoescucha de la revisión guiada, «Escuchar un coro»), o terminar el modo «Sincronizar al ritmo» | Cabezal |
+| Mover el cabezal en pausa: barra de tiempo, clic en la regla (también la del editor preciso), ⏮ / Inicio, ←/→ en la barra, volver de «Probar a pantalla completa» | Cabezal |
+| Con la canción **en pausa**: seleccionar una línea (clic en una fila o en una región, ↑/↓, Ctrl/Cmd + ↓/↑, contador «{a}/{b} sincronizadas», «Ir a la primera», llegar a una línea en la revisión guiada **sin** autoescucha, «‹ Anterior / Siguiente ›» del editor preciso), o **clic en la línea ya seleccionada** | Línea |
+| Con la canción en pausa: cambiar algo de la línea seleccionada (inicio, fin, I, O, «Usar fin automático», cantante, texto, «Fin al final de la voz», aplicar el editor preciso) | Línea |
+| Escuchas que **vuelven solas** a la posición de antes: escucha de comprobación («Escuchar al ajustar»), «▶ Palabra» | Mientras suenan, se ve lo que suena; al terminar, **el modo que había antes** |
+| Seleccionar una línea **mientras suena** | Nada: la vista previa sigue mostrando lo que suena; al pausar, Cabezal |
+| Cambios de estilo, de pestaña, de zoom, de paneles; «Deshacer» de un cambio de estilo | No cambian el modo (se redibuja el mismo instante o la misma línea con el estilo nuevo) |
+| Entrar en el editor (cabezal en 0) | Línea (en 0 el cabezal solo enseñaría la pantalla de título) |
+
+Así no se pierde la vista de la línea que se está editando: basta con hacer clic en ella (o tocar sus tiempos) para verla; y en cuanto se escucha y se pausa, la vista previa vuelve a contar dónde va la canción.
+
+**La selección no sigue al cabezal** (ni al reproducir ni al pausar; sin cambios). Motivo: I, O, L, P, Supr y los campos del panel actúan sobre la línea seleccionada, y el gesto habitual es «escucho, pauso donde empieza la línea que estoy arreglando y pulso I». Si la selección saltara al pausar, ese I iría a la línea anterior (la última que había empezado). Lo que sí indica dónde está el cabezal en pausa:
+- la **vista previa** (modo Cabezal);
+- el marcador **▶ de la lista** (fila «actual»), que se queda en pausa donde estaba al reproducir: en la línea que suena en ese instante, en todas si suenan varias a la vez y en ninguna si el cabezal está en un hueco;
+- el cabezal de la línea de tiempo y el tiempo del transporte.
+El panel sigue diciendo «Línea {n} de {total}» de la **seleccionada**: es la línea que se edita, no la que suena.
+
+**Casos**
+
+| Caso | Regla |
+|---|---|
+| **Cabezal en un hueco entre líneas** | Modo Cabezal: el fotograma del reproductor en ese instante (p. ej., a 1 s del fin de la línea 1 y antes del inicio de la 2: la línea 1 ya cantada y la 2 por empezar, o el `●●●` si el hueco lo pide). Ninguna fila con ▶. |
+| **Voces a la vez** (varias líneas activas) | Modo Cabezal: cada zona con su línea y su barrido en ese instante, como el reproductor ([07 · Voces a la vez](07-reproductor.md#voces-a-la-vez-condicionada-a-la-factibilidad-que-dictamine-el-arquitecto)). Modo Línea: como hoy. ▶ en todas las filas que suenan. |
+| **Revisión guiada abierta** | Al llegar a una línea, queda seleccionada: sin autoescucha (la primera del recorrido, o con la casilla desmarcada), modo Línea; con autoescucha, suena su tramo, se pausa sola al final y queda el modo Cabezal (la línea recién cantada, entera, en su sitio). «▶ Escuchar otra vez», igual. «Está bien», «Siguiente» y «Anterior» siguen la misma regla. |
+| **Editor preciso abierto** | La línea abierta es la seleccionada. La vista previa usa el **borrador** de la ventana en los dos modos. Las acciones **sobre palabras** (seleccionar una palabra, tiradores, I/O de palabra, marcar al vuelo, repartir) **no** cambian el modo: así, tras pausar el bucle, se sigue viendo el barrido palabra a palabra en el punto exacto del cabezal mientras se ajusta. Cambiar de línea en la ventana, modo Línea. |
+| **Modo «Sincronizar al ritmo»** | Pausar dentro del modo (Espacio): modo Cabezal. Sin otros cambios. |
+| **Bloquear enunciado** | Al pausar el bucle, modo Cabezal. |
+| **Sin ninguna línea con tiempo** | Modo Línea siempre (el Cabezal solo mostraría la pantalla de título). |
+
+**Microcopy**
+
+| Clave | Texto |
+|---|---|
+| `edi.previa.linea` | Línea {n} (en pausa) |
+
+La descripción `edi.previa.aria` no cambia.
+
+**Criterios de aceptación (I-2)**
+
+- I2-1. Reproducir desde 00:00 y pausar en 02:06 con la línea 1 seleccionada: la vista previa muestra el mismo fotograma que el reproductor a 02:06 (test del modelo de fotograma: vista previa en pausa y reproductor, mismo tiempo, mismo resultado), no la línea 1. El panel sigue diciendo «Línea 1 de {total}» y la lista lleva ▶ en la línea que suena a 02:06.
+- I2-2. Con el cabezal en un hueco (p. ej. 23,3 s entre una línea que acaba en 22,25 s y otra que empieza en 24,16 s), la vista previa en pausa no muestra ninguna línea a medio barrer y ninguna fila lleva ▶.
+- I2-3. En pausa, clic en otra fila (o ↑/↓, o clic en una región): la vista previa muestra esa línea con la mitad resaltada y la píldora `edi.previa.linea`; el cabezal no se mueve. Clic en la barra de tiempo: vuelve el modo Cabezal en la posición nueva y la píldora desaparece.
+- I2-4. En modo Cabezal, clic en la línea ya seleccionada pasa al modo Línea sin cambiar la selección ni el cabezal.
+- I2-5. En modo Línea, un ajuste de inicio con «Escuchar al ajustar» suena la comprobación (la vista previa muestra lo que suena) y al terminar vuelve al modo Línea; con la casilla desmarcada, el ajuste deja el modo Línea.
+- I2-6. Pausar, buscar, seleccionar y cambiar el estilo nunca cambian la línea seleccionada (test: la selección es la misma antes y después de reproducir y pausar en cualquier punto); pulsar I tras pausar fija el inicio de la línea que estaba seleccionada.
+- I2-7. Con voces a la vez y el cabezal dentro de un solape, la vista previa en pausa muestra las dos líneas activas en sus zonas, cada una con su barrido en ese instante, y las dos filas llevan ▶.
+- I2-8. Con el editor preciso abierto y el bucle pausado a mitad de la línea, la vista previa muestra el barrido palabra a palabra del borrador en ese instante; seleccionar otra palabra o mover un tirador de palabra no lo cambia al modo Línea; «Siguiente ›» sí.
+- I2-9. Revisión guiada: al empezar el recorrido, la primera línea se ve en modo Línea; con «Escuchar cada línea al llegar», tras «Está bien» suena la siguiente y, al pausarse sola, queda el modo Cabezal.
+- I2-10. Al entrar en el editor, la vista previa está en modo Línea con la línea seleccionada de entrada.
+
+### Doble clic en una palabra del editor preciso: reproduce desde ahí (I-3)
+
+**Diagnóstico.** La tira de palabras decía «Doble clic: escucha esa palabra (como [▶ Palabra])», y «▶ Palabra» escucha y **vuelve a la posición previa**. Con la canción sonando, eso es un salto atrás que el usuario lee como un fallo. **Confirmado por el usuario (2026-11-23): el doble clic en una palabra reproduce desde ahí y no vuelve.** Se separan los dos gestos: el **doble clic** es «reproducir desde aquí» (como el doble clic en una región de la línea de tiempo, §8.4), y **«▶ Palabra» / Mayús + Espacio** sigue siendo «escuchar solo la palabra y volver». Esta sección sustituye la parte «Doble clic» de la fila «Tira de palabras» de la fase 9.
+
+| Gesto | Canción | Qué pasa |
+|---|---|---|
+| **Un clic** en una palabra | Sonando o en pausa, con o sin bucle | **Solo selecciona** la palabra (y sus tiradores). No mueve el cabezal, no pausa, no lanza ninguna escucha, no cambia el modo de la vista previa. El primer clic de un doble clic hace solo esto. |
+| **Doble clic** en una palabra | **Sonando, sin bucle** (por el transporte) | Selecciona la palabra y el cabezal salta a `máx(0, inicio de la palabra − 250 ms)` (`MARGEN_ESCUCHA_PALABRA_MS`). **La canción sigue sonando desde ahí**: no se pausa al final de la palabra ni de la línea y **no vuelve** a donde estaba. **(Confirmado por el usuario.)** |
+| **Doble clic** | **En pausa, sin bucle** | Igual: salta al mismo punto y **empieza a sonar** desde ahí, sin pausa al final y sin volver. Antes escuchaba la palabra y volvía **(decisión provisional, [0388](../preguntas/0388-doble-clic-en-una-palabra-reproduce-desde-ahi.md))**: así el gesto significa lo mismo con la canción sonando o parada, igual que el doble clic en una región. |
+| **Doble clic** | **Bucle de la línea activo** (sonando o en pausa) | El bucle sigue: el cabezal salta a `máx(inicio − 250 ms, inicio del bucle)` y el bucle suena desde ahí (si estaba en pausa, arranca). Al llegar al final del bucle vuelve a empezar por el principio de la línea, como siempre. No se vuelve a la posición anterior. La pasada de «Marcar al vuelo» empieza en esa palabra **(decisión provisional, 0388)**. |
+| **Doble clic** con una escucha que vuelve sola en curso (comprobación, «▶ Palabra») | — | La escucha se cancela **sin volver** a su posición previa y se aplica la fila que toque de arriba. |
+| **▶ Palabra / Mayús + Espacio** | Cualquiera | Sin cambios de intención: suena de `inicio − 250 ms` a `fin + 250 ms` y **vuelve a la posición previa**. Precisión: después queda **como estaba** — si sonaba (bucle o transporte), sigue sonando desde la posición previa; si estaba en pausa, en pausa. |
+
+**Convivencia con «Escuchar al ajustar».** La escucha de comprobación es del panel Sincronía y de la línea de tiempo, y solo actúa **con la canción en pausa** (§«Ajuste fino»). Con el editor preciso abierto:
+- mover un borde de **palabra** o un límite de la línea **dentro de la ventana** no lanza la escucha de comprobación (para oír, el bucle o «▶ Palabra»); es lo que ya hace el código y no cambia;
+- tras un doble clic la canción **suena**, así que ningún ajuste posterior lanza la comprobación hasta que se pause: nada puede devolver el cabezal a la posición de antes del doble clic;
+- si una escucha de comprobación estaba sonando al abrir la ventana o al hacer el doble clic, se cancela sin volver (fila anterior).
+
+**Accesibilidad.** El doble clic sigue teniendo equivalente de teclado: con la palabra seleccionada en la tira, **Mayús + Intro** «Reproducir desde esta palabra» (añadido; Intro solo marca). Se añade a la tabla «Teclado de la ventana» y al diálogo de atajos. Sin anuncio (es audio).
+
+| Clave | Texto |
+|---|---|
+| `edi.preciso.desdePalabra` | Reproducir desde esta palabra (doble clic · Mayús + Intro) |
+
+**Criterios de aceptación (I-3)**
+
+- I3-1. Con la canción sonando por el transporte (sin bucle) en 61,5 s y la palabra 1 de 58,82 a 59,06 s, un doble clic en ella deja el cabezal en 58,57 s (± 50 ms) y, 3 s después, el cabezal está en 61,57 s (± 150 ms) y sigue sonando: no hay ningún salto atrás ni adelante (test con el motor simulado, posición muestreada cada 100 ms).
+- I3-2. El mismo doble clic con la canción en pausa empieza a sonar desde 58,57 s y no vuelve a la posición previa ni se pausa al final de la palabra o de la línea.
+- I3-3. Con el bucle de la línea sonando, un doble clic en una palabra salta a `máx(inicio − 250 ms, inicio del bucle)`, el bucle sigue y al final vuelve al principio de la línea; nunca vuelve a la posición previa al doble clic.
+- I3-4. Un solo clic en una palabra, con la canción sonando, no altera la posición (la diferencia con el reloj es < 50 ms) ni la reproducción; en pausa, el cabezal no se mueve.
+- I3-5. «▶ Palabra» y Mayús + Espacio suenan de `inicio − 250 ms` a `fin + 250 ms` y vuelven a la posición previa; si la canción sonaba por el transporte, sigue sonando desde ahí; si estaba en pausa, queda en pausa.
+- I3-6. Con «Escuchar al ajustar» activado y el editor preciso abierto, mover un tirador de palabra o de límite de la línea no lanza ninguna escucha de comprobación; un doble clic durante una escucha de comprobación en curso la sustituye sin volver.
+- I3-7. Mayús + Intro con una palabra seleccionada en la tira hace lo mismo que el doble clic y **no marca** (hoy el código trata Mayús + Intro como Intro); Intro sin modificador sigue marcando; el diálogo de atajos lo incluye.
+
+**Verificación manual** (guía de 0.2.3): repetir el gesto del video de I-3 (canción sonando, doble clic en la primera palabra de una línea de «Todos») y comprobar que se oye desde la palabra sin volver; pausar en varios puntos de un dúo y comprobar que la vista previa coincide con lo que se vería en el reproductor en ese instante.
 
 **Verificación manual** (guía de 0.2.3): con 3 canciones con coros, escuchar con «Instrumental» al 0, 50 y 100 % y anotar si se oyen chasquidos al entrar y salir de los coros, y si la voz principal se cuela (límite esperado).
